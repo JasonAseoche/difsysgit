@@ -49,7 +49,7 @@ const Loginpages = () => {
         console.log('Login attempt with:', { email, password });
 
         try {
-            const response = await axios.post('http://sql100.infinityfree.com/difsysapi/login.php', {
+            const response = await axios.post('http://sql100.infinityfree.com/htdocs/difsysapi/login.php', {
                 email,
                 password
             }, {
