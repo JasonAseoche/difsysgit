@@ -1,0 +1,259 @@
+/* Signup.css - with more specific selectors */
+
+.difsys-signup * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.difsys-signup {
+  --primary-blue: #003D7C;
+  --button-blue: #003D7C;
+  --text-color: #333;
+  --light-gray: #f5f5f5;
+  --border-color: #ccc;
+}
+
+.difsys-signup .signup-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.difsys-signup .blue-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 90%;
+  background-color: #003979;
+  z-index: -2;
+}
+
+.difsys-signup .white-background {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 30%;
+  background-color: #ffffff;
+  z-index: -2;
+}
+
+.difsys-signup .form-container {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 600px;
+  min-height: 700px;
+  padding: 80px;
+  background-color: #ffffff;
+  border-radius: 50px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.466);
+  text-align: center;
+  z-index: 1;
+}
+
+.difsys-signup h1 {
+  color: #003979;
+  font-size: 35px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.difsys-signup .subheading {
+  color: #666666;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.difsys-signup .form-row {
+  display: flex;
+  gap: 15px;
+}
+
+.difsys-signup .form-group {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  flex: 1;
+  margin-bottom: 15px;
+}
+
+.difsys-signup label {
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #333333;
+}
+
+.difsys-signup input {
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  font-size: 14px;
+  padding: 12px;
+  height: 45px;
+  width: 100%;
+}
+
+.difsys-signup .password-group {
+  position: relative;
+}
+
+.difsys-signup .password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 37px;
+  cursor: pointer;
+  color: #666666;
+  margin-bottom: 20px;
+}
+
+.difsys-signup .sign-up-button {
+  background-color: #003979;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 10px;
+  width: 100%;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 5px;
+  font-size: 15px;
+}
+
+.difsys-signup .account-prompt {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #666666;
+}
+
+.difsys-signup .account-prompt a {
+  color: #003979;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.difsys-signup .error-message {
+  color: #d9534f;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.difsys-signup .success-message {
+  color: #5cb85c;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .difsys-signup .form-container {
+    width: 90%;
+    max-width: 450px;
+    height: 80%;
+    border-radius: 15px;
+    padding: 40px 35px;
+    
+  }
+
+  .difsys-signup h1 {
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+  
+  .difsys-signup .subheading {
+    margin-bottom: 15px;
+  }
+
+  .form-row{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .difsys-signup .form-group {
+    margin-bottom: 12px;
+  }
+
+  .difsys-signup label {
+    margin-bottom: 4px;
+  }
+
+  .difsys-signup input {
+    padding: 10px;
+    font-size: 15px;
+    height: 40px;
+    margin-bottom: 5px;
+  }
+
+  .difsys-signup .password-toggle {
+    top: 32px;
+    right: 10px;
+  }
+
+  .difsys-signup .sign-up-button {
+    padding: 12px;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .difsys-signup .form-container {
+    width: 90%;
+    padding: 45px 35px 0 35px;
+    border-radius: 15px;
+    margin-top: 0;
+  }
+  
+  .difsys-signup .blue-background {
+    height: 90%;
+  }
+  
+  .difsys-signup .white-background {
+    height: 30%;
+  }
+
+  .difsys-signup h1 {
+    font-size: 20px;
+    margin-top: 0;
+  }
+  
+  .difsys-signup .subheading {
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
+  
+  .difsys-signup label {
+    font-size: 13px;
+    margin-bottom: 3px;
+  }
+  
+  .difsys-signup input {
+    margin-bottom: 0;
+    height: 38px;
+  }
+
+  .difsys-signup .form-row {
+    gap: 0;
+    margin-bottom: 0px;
+  }
+  
+  .difsys-signup .form-group {
+    margin-bottom: 26px;
+  }
+  
+  .difsys-signup .password-toggle {
+    top: 30px;
+    right: 10px;
+  }
+  
+  .difsys-signup .sign-up-button {
+    margin-top: 8px;
+    height: 45px;
+  }
+}

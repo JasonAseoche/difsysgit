@@ -1,0 +1,33 @@
+/* DashboardPage.css */
+.dashboard-containers1 {
+    display: flex;
+    background-color: #f9fafb;
+    min-height: 100vh;
+    
+    
+  }
+  
+  .dashboard-contents1 {
+    margin-left: 300px;
+    flex: 1;
+    transition: margin-left 0.3s ease;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+  
+  /* Media query for tablets and mobile devices */
+  @media (max-width: 768px) {
+    .dashboard-contents1 {
+      margin-left: 0;
+      padding: 16px;
+      padding-top: 70px; /* Add extra padding for the mobile header */
+    }
+  }
+  
+  /* Media query for smaller mobile devices */
+  @media (max-width: 480px) {
+    .dashboard-contents1 {
+      padding: 12px;
+      padding-top: 65px;
+    }
+  }

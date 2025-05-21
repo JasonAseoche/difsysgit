@@ -1,0 +1,737 @@
+/* ManageEmployee.css */
+.me-page {
+    padding: 0;
+    background-color: #f8fafc;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    width: 100%;
+    height: 100vh; /* Full viewport height */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Prevent whole page scrolling */
+  }
+  
+  /* Fixed Header Container - with animation */
+  .me-header-container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    margin: 20px;
+    border: 1px solid #f0f0f0;
+    flex-shrink: 0; /* Prevent header from shrinking */
+    z-index: 10; /* Ensure header stays on top */
+    transition: all 0.3s ease-in-out;
+  }
+  
+  /* Header highlight animation */
+  .me-header-highlight {
+    box-shadow: 0 4px 15px rgba(0, 57, 121, 0.15);
+    transform: translateY(-3px);
+    border-color: rgba(59, 130, 246, 0.3);
+  }
+  
+  .me-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .me-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #003979;
+    margin: 0;
+    letter-spacing: 0.2px;
+    position: relative;
+    display: inline-block;
+  }
+  
+  /* Title animation */
+  .me-title::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 3px;
+    bottom: -5px;
+    left: 0;
+    background-color: #003979;
+    visibility: hidden;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .me-title:hover::after {
+    visibility: visible;
+    width: 100%;
+  }
+  
+  /* Search and Add Button Container */
+  .me-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  /* Search Box with animation */
+  .me-search-box {
+    position: relative;
+    width: 240px;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .me-search-focused {
+    transform: scale(1.02);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .me-search-box input {
+    width: 100%;
+    margin-top: 18px;
+    padding: 8px 35px 8px 15px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    height: 45px;
+    box-sizing: border-box;
+    color: #4b5563;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .me-search-box input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  }
+  
+  .me-search-box input::placeholder {
+    color: #9ca3af;
+  }
+  
+  .me-search-button {
+    position: absolute;
+    right: 10px;
+    top: 49%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+  }
+  
+  .me-search-button:hover {
+    color: #3b82f6;
+    transform: translateY(-50%) scale(1.1);
+  }
+  
+  /* Add Button with animation */
+  .me-add-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 18px;
+    background-color: #1e40af;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    height: 45px;
+    white-space: nowrap;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .me-add-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg, 
+      rgba(255, 255, 255, 0) 0%, 
+      rgba(255, 255, 255, 0.2) 50%, 
+      rgba(255, 255, 255, 0) 100%
+    );
+    transition: left 0.5s;
+  }
+  
+  .me-add-button:hover::before {
+    left: 100%;
+  }
+  
+  .me-add-button:hover {
+    background-color: #1e3a8a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(30, 64, 175, 0.25);
+  }
+  
+  .me-button-active {
+    background-color: #1e3a8a;
+    transform: scale(0.98);
+    box-shadow: none;
+  }
+  
+  .me-add-button svg {
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+    transition: transform 0.3s ease;
+  }
+  
+  .me-add-button:hover svg {
+    transform: rotate(90deg);
+  }
+  
+  /* Scrollable Content Area */
+  .me-content {
+    flex: 1;
+    z-index: 0;
+    overflow-y: auto; /* Enable scrolling for content only */
+    padding: 0 20px 20px 20px;
+  }
+  
+  /* Employee Grid Styling */
+  .me-employee-grid {
+    display: grid;
+    z-index: 1;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding-bottom: 20px; /* Add space at bottom of scrollable area */
+  }
+  
+  /* Card with animations */
+  .me-employee-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 1;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+    position: relative;
+  }
+  
+  /* Card appearance animation */
+  .me-card-appear {
+    animation: cardAppear 0.5s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+    z-index: 1;
+  }
+  
+  @keyframes cardAppear {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .me-employee-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Card viewing animation */
+  .me-card-viewing {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.25);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    z-index: 5;
+  }
+  
+  .me-card-header {
+    padding: 16px;
+    display: flex;
+    gap: 14px;
+  }
+  
+  /* Avatar with animation */
+  .me-avatar {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background-color: #0D6275;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 600;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .me-avatar::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    top: -2px;
+    left: -2px;
+    transition: all 0.3s ease;
+  }
+  
+  .me-employee-card:hover .me-avatar::after {
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.1);
+  }
+  
+  .me-employee-info {
+    flex: 1;
+    min-width: 0; /* To ensure text truncation works */
+  }
+  
+  .me-employee-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 2px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.2s ease;
+  }
+  
+  .me-employee-card:hover .me-employee-name {
+    color: #1e40af;
+  }
+  
+  .me-employee-role {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0 0 2px 0;
+  }
+  
+  .me-employee-email {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0 0 8px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .me-schedule {
+    margin-top: 4px;
+  }
+  
+  .me-time {
+    font-size: 13px;
+    font-weight: 500;
+    color: #334155;
+    margin: 0 0 4px 0;
+  }
+  
+  .me-schedule-pills {
+    display: flex;
+    gap: 8px;
+    font-size: 12px;
+  }
+  
+  .me-day-pill {
+    background-color: #f1f5f9;
+    color: #334155;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .me-employee-card:hover .me-day-pill {
+    background-color: #e2e8f0;
+  }
+  
+  .me-status-pill {
+    color: #64748b;
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% {
+      opacity: 0.7;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.7;
+    }
+  }
+  
+  /* Button Actions with animations */
+  .me-card-actions {
+    display: flex;
+    border-top: 1px solid #e2e8f0;
+  }
+  
+  .me-action-button {
+    flex: 1;
+    padding: 10px;
+    background: transparent;
+    border: none;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .me-button-text {
+    position: relative;
+    z-index: 1;
+    transition: transform 0.2s ease;
+  }
+  
+  .me-button-icon {
+    position: absolute;
+    right: -20px;
+    opacity: 0;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+  }
+  
+  .me-action-button:hover .me-button-text {
+    transform: translateX(-10px);
+  }
+  
+  .me-action-button:hover .me-button-icon {
+    opacity: 1;
+    right: 10px;
+  }
+  
+  .me-view-button {
+    color: #3b82f6;
+  }
+  
+  .me-view-button:hover {
+    background-color: #eff6ff;
+  }
+  
+  .me-shift-button {
+    color: #10b981;
+    border-left: 1px solid #e2e8f0;
+    border-right: 1px solid #e2e8f0;
+  }
+  
+  .me-shift-button:hover {
+    background-color: #ecfdf5;
+  }
+  
+  .me-manage-button {
+    color: #ef4444;
+  }
+  
+  .me-manage-button:hover {
+    background-color: #fef2f2;
+  }
+  
+  /* Status Indicators with animations */
+  .me-loading,
+  .me-error,
+  .me-no-results {
+    text-align: center;
+    padding: 30px;
+    color: #64748b;
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    min-height: 200px;
+  }
+  
+  .me-loading {
+    animation: fadeIn 0.3s ease-in;
+  }
+  
+  .me-loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(59, 130, 246, 0.2);
+    border-radius: 50%;
+    border-top-color: #3b82f6;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  .me-error {
+    color: #ef4444;
+    animation: shake 0.5s ease-in-out;
+  }
+  
+  @keyframes shake {
+    0%, 100% {
+      transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+      transform: translateX(-5px);
+    }
+    20%, 40%, 60%, 80% {
+      transform: translateX(5px);
+    }
+  }
+  
+  .me-error-icon {
+    color: #ef4444;
+    animation: pulse 2s infinite;
+  }
+  
+  .me-no-results {
+    animation: fadeIn 0.5s ease-in;
+  }
+  
+  .me-no-results-icon {
+    color: #94a3b8;
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+  
+  /* Hiding scrollbar for cleaner look but keeping functionality */
+  .me-content::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .me-content::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .me-content::-webkit-scrollbar-thumb {
+    background-color: rgba(203, 213, 225, 0.5);
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .me-content::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(148, 163, 184, 0.7);
+  }
+  
+  /* Responsive Design - Mobile-specific adjustments */
+  @media screen and (max-width: 767px) {
+    .me-header-container {
+      padding: 15px;
+      margin: 10px;
+    }
+    
+    .me-header-content {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+    }
+    
+    .me-title {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    
+    .me-actions {
+      width: 100%;
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .me-search-box {
+      width: 100%;
+    }
+    
+    .me-add-button {
+      width: 100%;
+    }
+    
+    .me-employee-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .me-action-button {
+      padding: 12px 10px; /* Larger touch targets on mobile */
+    }
+    
+    .me-content {
+      padding: 0 10px 10px 10px;
+    }
+    
+    /* Animation adjustments for mobile */
+    .me-card-appear {
+      animation-duration: 0.3s;
+    }
+  }
+
+ /* Critical fix: First, ensure the employee card doesn't cut off the dropdown */
+.me-employee-card {
+  overflow: visible !important;
+  z-index: auto !important; /* Don't create a stacking context */
+  position: relative;
+}
+
+/* Dropdown Container Styling with correct z-index */
+.me-dropdown-container {
+  position: relative;
+  flex: 1;
+  display: flex;
+  z-index: 100; /* Higher base z-index */
+}
+
+/* Keep the original manage button styling intact */
+.me-dropdown-container .me-manage-button {
+  flex: 1;
+  padding: 10px;
+  color: #ef4444;
+  background: transparent;
+  border: none;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Active dropdown container gets much higher z-index */
+.me-dropdown-active {
+  z-index: 10000 !important; /* Very high z-index */
+}
+
+/* Fix for the dropdown icon rotation */
+.me-icon-rotated {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
+}
+
+/* Dropdown Menu - position fixed to break out of all stacking contexts */
+.me-dropdown-menu {
+  display: block;
+  position: fixed;
+  width: 160px;
+  top: 65px;
+  left: 420px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  z-index: 99999; /* Extremely high z-index */
+  animation: dropdownAppear 0.3s ease forwards;
+  border: 1px solid #e5e7eb;
+}
+
+/* Card actions needs proper z-index */
+.me-card-actions {
+  display: flex;
+  border-top: 1px solid #e2e8f0;
+  position: relative;
+  z-index: 99; /* High enough to be clickable */
+}
+
+/* Dropdown Items styling */
+.me-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-size: 14px;
+  color: #1f2937;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap; /* Prevent text wrapping */
+}
+
+/* Styling for the "Edit" option */
+.me-dropdown-item.me-edit-item:hover {
+  background-color: #eff6ff;
+  color: #3b82f6;
+}
+
+.me-dropdown-item.me-edit-item:hover svg {
+  color: #3b82f6;
+}
+
+/* Styling for the "Archive" option */
+.me-dropdown-item.me-archive-item:hover {
+  background-color: #fef2f2;
+  color: #ef4444;
+}
+
+.me-dropdown-item.me-archive-item:hover svg {
+  color: #ef4444;
+}
+
+/* Divider between dropdown items */
+.me-dropdown-item:not(:last-child) {
+  border-bottom: 1px solid #f3f4f6;
+}
+
+@media screen and (max-width: 767px) {
+
+  .me-dropdown-menu{
+    left: 213px;
+  }
+}
+
+/* Animation for dropdown appearance */
+@keyframes dropdownAppear {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
