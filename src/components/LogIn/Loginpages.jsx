@@ -101,7 +101,9 @@ const getRedirectPath = async (userData) => {
         console.log('Login attempt with:', { email, password });
 
         try {
+
             const response = await axios.post('http://localhost/difsysapi/login.php', {
+
                 email,
                 password
             }, {
