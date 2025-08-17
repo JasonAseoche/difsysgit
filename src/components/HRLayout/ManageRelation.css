@@ -1,0 +1,1279 @@
+/* ManageInquiries Component Styles */
+
+/* Main Container */
+.miMainContainer {
+    padding: 20px;
+    background-color: #f8fafc;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+  }
+  
+  /* Loading Spinner */
+  .miLoadingSpinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    font-size: 18px;
+    color: #64748b;
+  }
+  
+  /* Summary Cards Styling */
+  .miSummaryCards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  
+  .miSummaryCard {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .miSummaryCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .miCardIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    margin-right: 15px;
+    color: white;
+  }
+  
+  .miCardIcon svg {
+    width: 24px;
+    height: 24px;
+    fill: white;
+  }
+  
+  .miTotalTickets .miCardIcon {
+    background-color: #4CAF50;
+  }
+  
+  .miOpenTickets .miCardIcon {
+    background-color: #f59e0b;
+  }
+  
+  .miInProgressTickets .miCardIcon {
+    background-color: #3b82f6;
+  }
+  
+  .miClosedTickets .miCardIcon {
+    background-color: #10b981;
+  }
+  
+  .miCardContent {
+    flex: 1;
+  }
+  
+  .miCardLabel {
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 5px;
+  }
+  
+  .miCardValue {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e293b;
+    animation: countUp 0.8s ease-out forwards;
+  }
+  
+  /* Filter Section */
+  .miFilterSection {
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .miFilterContainer {
+    position: relative;
+  }
+  
+  .miFilterBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    border: 1px solid #d1d5db;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+  
+  .miFilterBtn:hover {
+    background-color: #f9fafb;
+    border-color: #3b82f6;
+  }
+  
+  .miFilterBadge {
+    background-color: #dc2626;
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 16px;
+    text-align: center;
+    line-height: 1.2;
+  }
+  
+  .miDropdownIcon {
+    transition: transform 0.2s ease;
+  }
+  
+  .miFilterDropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    min-width: 200px;
+    margin-top: 4px;
+  }
+  
+  .miFilterOption {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 12px 16px;
+    background: none;
+    border: none;
+    text-align: left;
+    font-size: 14px;
+    color: #374151;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .miFilterOption:hover {
+    background-color: #f3f4f6;
+  }
+  
+  .miFilterOption:first-child {
+    border-radius: 8px 8px 0 0;
+  }
+  
+  .miFilterOption:last-child {
+    border-radius: 0 0 8px 8px;
+  }
+  
+  .miFilterActive {
+    background-color: #eff6ff !important;
+    color: #1d4ed8 !important;
+    font-weight: 600;
+  }
+  
+  .miOptionBadge {
+    background-color: #dc2626;
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 5px;
+    border-radius: 8px;
+    min-width: 14px;
+    text-align: center;
+    line-height: 1.2;
+  }
+  
+  /* Table Section */
+  .miTableSection {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+  }
+  
+  .miDataTable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .miTableHeader th {
+    background-color: #f8fafc;
+    padding: 16px 20px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  .miTableRow {
+    border-bottom: 1px solid #f1f5f9;
+    transition: background-color 0.15s ease;
+  }
+  
+  .miTableRow:hover {
+    background-color: #f8fafc;
+  }
+  
+  .miTableRow:last-child {
+    border-bottom: none;
+  }
+  
+  .miUnreadRow {
+    background-color: #fef3c7;
+  }
+  
+  .miUnreadRow:hover {
+    background-color: #fef08a;
+  }
+  
+  .miTableRow td {
+    padding: 16px 20px;
+    font-size: 14px;
+    color: #374151;
+    vertical-align: middle;
+  }
+  
+  .miTicketIdCell {
+    font-weight: 600;
+    color: #1e293b;
+    position: relative;
+  }
+  
+  .miUnreadDot {
+    position: absolute;
+    top: 50%;
+    right: -8px;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    background-color: #dc2626;
+    border-radius: 50%;
+  }
+  
+  .miEmployeeCell {
+    color: #374151;
+    font-weight: 500;
+  }
+  
+  .miSubjectCell {
+    color: #374151;
+    font-weight: 500;
+  }
+  
+  .miDateCell {
+    color: #64748b;
+    font-weight: 400;
+  }
+  
+  .miStatusCell {
+    text-align: left;
+  }
+  
+  .miStatusBadge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+  }
+  
+  .miStatusOpen {
+    background-color: #fef3c7;
+    color: #92400e;
+  }
+  
+  .miStatusProgress {
+    background-color: #dbeafe;
+    color: #1e40af;
+  }
+  
+  .miStatusClosed {
+    background-color: #dcfce7;
+    color: #166534;
+  }
+  
+  .miActionsCell {
+    text-align: left;
+  }
+  
+  .miViewBtn {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .miViewBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+  
+  .miEmptyState {
+    text-align: center;
+    color: #64748b;
+    font-style: italic;
+    padding: 40px 20px;
+  }
+  
+  /* Pagination */
+  .miPaginationArea {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background-color: #ffffff;
+    border-top: 1px solid #e2e8f0;
+  }
+  
+  .miPaginationInfo {
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 400;
+  }
+  
+  .miPaginationButtons {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .miPaginationBtn {
+    padding: 8px 12px;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-weight: 500;
+    min-width: 36px;
+    text-align: center;
+  }
+  
+  .miPaginationBtn:hover {
+    background-color: #f8fafc;
+    border-color: #94a3b8;
+  }
+  
+  .miPaginationActive {
+    background-color: #3b82f6 !important;
+    color: #ffffff !important;
+    border-color: #3b82f6 !important;
+    font-weight: 600 !important;
+  }
+  
+  .miPaginationDots {
+    color: #94a3b8;
+    font-weight: 400;
+    padding: 0 8px;
+    font-size: 12px;
+  }
+  
+  /* Modal Styles */
+  .miModalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+  }
+  
+  /* Form Modal */
+  .miFormModal {
+    background: white;
+    border-radius: 16px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Details Modal */
+  .miDetailsModal {
+    background: white;
+    border-radius: 16px;
+    max-width: 1200px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+  
+  .miFormHeader,
+  .miDetailsHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 32px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  .miDetailsTitle h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 4px 0;
+  }
+  
+  .miDetailsSubtext {
+    font-size: 14px;
+    color: #64748b;
+    margin: 0;
+  }
+  
+  .miFormHeader h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+  }
+  
+  .miCloseBtn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #64748b;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+  
+  .miCloseBtn:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+  }
+  
+  /* Details Content */
+  .miDetailsContent {
+    padding: 32px;
+  }
+  
+  .miDetailsGrid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+  }
+  
+  /* Messages Container */
+  .miMessagesContainer {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 20px;
+    max-height: 500px;
+    overflow-y: auto;
+  }
+  
+  .miMessagesList {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .miMessageCard {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .miHRMessage {
+    border-left: 4px solid #3b82f6;
+  }
+  
+  .miEmployeeMessage {
+    border-left: 4px solid #10b981;
+  }
+  
+  .miMessageHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  
+  .miMessageSender {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .miSenderAvatar {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  
+  .miSenderInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  
+  .miSenderName {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+  }
+  
+  .miSenderType {
+    font-size: 12px;
+    color: #64748b;
+    margin: 0;
+  }
+  
+  .miMessageTime {
+    font-size: 12px;
+    color: #94a3b8;
+  }
+  
+  .miMessageContent p {
+    margin: 0;
+    font-size: 14px;
+    color: #374151;
+    line-height: 1.5;
+  }
+  
+  .miMessageAttachments {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .miAttachmentItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #f3f4f6;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #374151;
+  }
+  
+  .miFileIcon {
+    color: #6b7280;
+    flex-shrink: 0;
+  }
+  
+  /* Ticket Summary */
+  .miTicketSummary {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    height: fit-content;
+  }
+  
+  .miTicketSummary h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 16px 0;
+  }
+  
+  .miSummaryItem {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 16px;
+  }
+  
+  .miSummaryItem label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .miSummaryItem span,
+  .miSummaryItem p {
+    font-size: 14px;
+    color: #374151;
+    margin: 0;
+  }
+  
+  .miDescriptionItem p {
+    line-height: 1.5;
+  }
+  
+  .miPriorityBadge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+    width: fit-content;
+  }
+  
+  .miPriorityHigh {
+    background-color: #fecaca;
+    color: #991b1b;
+  }
+  
+  .miPriorityMedium {
+    background-color: #fef3c7;
+    color: #92400e;
+  }
+  
+  .miPriorityLow {
+    background-color: #dcfce7;
+    color: #166534;
+  }
+  
+  /* Reply Section */
+  .miReplySection {
+    border-top: 1px solid #e2e8f0;
+    padding-top: 32px;
+  }
+  
+  .miReplySection h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 16px 0;
+  }
+  
+  .miReplyForm {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .miReplyTextarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #374151;
+    background: white;
+    transition: all 0.2s ease;
+    resize: vertical;
+    min-height: 100px;
+    box-sizing: border-box;
+  }
+  
+  .miReplyTextarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  
+  .miReplyAttachment {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .miReplyDropZone {
+    padding: 20px;
+  }
+  
+  .miCompactDrop {
+    flex-direction: row;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .miReplyActions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+  }
+  
+  .miSendBtn,
+  .miCloseTicketBtn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+  }
+  
+  .miSendBtn {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+  }
+  
+  .miSendBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+  
+  .miCloseTicketBtn {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+  }
+  
+  .miCloseTicketBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  }
+  
+  /* Closed Ticket Section */
+  .miClosedTicketSection {
+    border-top: 1px solid #e2e8f0;
+    padding-top: 32px;
+    text-align: center;
+  }
+  
+  .miClosedMessage {
+    font-size: 16px;
+    color: #64748b;
+    margin: 0;
+  }
+  
+  .miTicketLink {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 600;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  
+  .miTicketLink:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+  }
+  
+  /* Form Styles */
+  .miForm {
+    padding: 32px;
+  }
+  
+  .miFormGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .miFormGroup label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+  }
+  
+  .miFormGroup input,
+  .miFormGroup select,
+  .miFormGroup textarea {
+    padding: 12px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #374151;
+    background: white;
+    transition: all 0.2s ease;
+  }
+  
+  .miFormGroup input:focus,
+  .miFormGroup select:focus,
+  .miFormGroup textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  
+  .miFormGroup textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+  
+  /* File Upload Styles */
+  .miFileDropZone {
+    position: relative;
+    border: 2px dashed #d1d5db;
+    border-radius: 12px;
+    padding: 40px 20px;
+    text-align: center;
+    background-color: #f9fafb;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .miFileDropZone:hover {
+    border-color: #3b82f6;
+    background-color: #f0f8ff;
+  }
+  
+  .miFileDropZone.miDragActive {
+    border-color: #3b82f6;
+    background-color: #e0f2fe;
+    transform: scale(1.02);
+  }
+  
+  .miFileInput {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+  }
+  
+  .miDropContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .miUploadIcon {
+    color: #6b7280;
+    margin-bottom: 8px;
+  }
+  
+  .miDropText {
+    font-size: 16px;
+    color: #374151;
+    margin: 0;
+  }
+  
+  .miDropTextBold {
+    font-weight: 600;
+    color: #3b82f6;
+  }
+  
+  .miDropSubtext {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0;
+  }
+  
+  .miFilePreview {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    background-color: #f0f8ff;
+    border: 1px solid #3b82f6;
+    border-radius: 8px;
+    margin-top: 12px;
+  }
+  
+  .miFileInfo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .miFileDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .miFileName {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin: 0;
+  }
+  
+  .miFileSize {
+    font-size: 12px;
+    color: #6b7280;
+    margin: 0;
+  }
+  
+  .miRemoveFile {
+    background: none;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .miRemoveFile:hover {
+    background-color: #fee2e2;
+  }
+  
+  .miFormActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #e2e8f0;
+  }
+  
+  .miCancelBtn,
+  .miSubmitBtn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+  }
+  
+  .miCancelBtn {
+    background: #f3f4f6;
+    color: #374151;
+  }
+  
+  .miCancelBtn:hover {
+    background: #e5e7eb;
+  }
+  
+  .miSubmitBtn {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+  }
+  
+  .miSubmitBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  }
+  
+  /* Details Page View Styles */
+  .miDetailsPage {
+    background: #f8fafc;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  
+  .miDetailsPageHeader {
+    margin-bottom: 20px;
+  }
+  
+  .miBackBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    border: 1px solid #d1d5db;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+  
+  .miBackBtn:hover {
+    background-color: #f9fafb;
+    border-color: #3b82f6;
+    color: #3b82f6;
+  }
+  
+  .miDetailsPageTitle {
+    background: white;
+    border-radius: 12px;
+    padding: 24px 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+  }
+  
+  .miDetailsPageTitle h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 8px 0;
+  }
+  
+  .miDetailsPageSubtext {
+    font-size: 16px;
+    color: #64748b;
+    margin: 0;
+  }
+  
+  .miDetailsPageContent {
+    background: white;
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+  }
+  
+  .miDetailsPageGrid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+  }
+  
+  .miDetailsPageContent .miMessagesContainer {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 24px;
+    max-height: 600px;
+    overflow-y: auto;
+  }
+  
+  .miDetailsPageContent .miMessagesContainer h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 20px 0;
+  }
+
+  .miPriorityLow {
+    background-color: #dcfce7;
+    color: #166534;
+  }
+  
+  /* Details View Status and Priority Badges - Separate Classes */
+  .miDetailsStatusBadge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+    width: fit-content;
+  }
+  
+  .miDetailsStatusOpen {
+    background-color: #fef3c7;
+    color: #92400e;
+  }
+  
+  .miDetailsStatusInProgress {
+    background-color: #dbeafe;
+    color: #1e40af;
+  }
+  
+  .miDetailsStatusClosed {
+    background-color: #dcfce7;
+    color: #166534;
+  }
+  
+  .miDetailsStatusCancelled {
+    background-color: #f3f4f6;
+    color: #374151;
+  }
+  
+  .miDetailsPriorityBadge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+    width: fit-content;
+  }
+  
+  .miDetailsPriorityHigh {
+    background-color: #fecaca;
+    color: #991b1b;
+  }
+  
+  .miDetailsPriorityMedium {
+    background-color: #fef3c7;
+    color: #92400e;
+  }
+  
+  .miDetailsPriorityLow {
+    background-color: #dcfce7;
+    color: #166534;
+  }
+  
+  /* Responsive adjustments for page view */
+  @media (max-width: 1200px) {
+    .miDetailsPageGrid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    
+    .miDetailsPage {
+      padding: 16px;
+    }
+    
+    .miDetailsPageTitle {
+      padding: 20px;
+    }
+    
+    .miDetailsPageContent {
+      padding: 24px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .miDetailsPageTitle h1 {
+      font-size: 24px;
+    }
+    
+    .miDetailsPageContent {
+      padding: 20px;
+    }
+    
+    .miDetailsPageContent .miMessagesContainer {
+      padding: 16px;
+    }
+  }
+  
+  /* Responsive Design */
+  @media screen and (max-width: 1200px) {
+    .miDetailsGrid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    
+    .miSummaryCards {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media screen and (max-width: 768px) {
+    .miMainContainer {
+      padding: 16px;
+    }
+    
+    .miSummaryCards {
+      grid-template-columns: 1fr;
+    }
+    
+    .miFilterSection {
+      justify-content: stretch;
+    }
+    
+    .miFilterBtn {
+      width: 100%;
+      justify-content: center;
+    }
+    
+    .miFilterDropdown {
+      left: 0;
+      right: 0;
+    }
+    
+    .miFormModal,
+    .miDetailsModal {
+      margin: 10px;
+      max-width: calc(100% - 20px);
+    }
+    
+    .miForm,
+    .miDetailsContent {
+      padding: 24px;
+    }
+    
+    .miTableSection {
+      overflow-x: auto;
+    }
+    
+    .miDataTable {
+      min-width: 800px;
+    }
+    
+    .miTableRow td {
+      padding: 12px 16px;
+    }
+    
+    .miPaginationArea {
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .miReplyActions {
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .miReplyActions button {
+      width: 100%;
+    }
+    
+    .miFormActions {
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .miFormActions button {
+      width: 100%;
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    .miDetailsHeader {
+      padding: 20px;
+    }
+    
+    .miDetailsTitle h2 {
+      font-size: 20px;
+    }
+    
+    .miFormHeader {
+      padding: 20px;
+    }
+    
+    .miForm,
+    .miDetailsContent {
+      padding: 20px;
+    }
+    
+    .miMessagesContainer {
+      padding: 16px;
+    }
+    
+    .miTicketSummary {
+      padding: 16px;
+    }
+  }

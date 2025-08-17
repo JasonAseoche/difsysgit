@@ -47,6 +47,8 @@ const PrivateRoute = ({ children, allowedRoles = [] }) => {
         return '/dashboard-accountant';
       case 'employee':
         return '/dashboard-employee';
+      case 'supervisor':  // Add this line
+        return '/dashboard-supervisor';  // Add this line
       case 'applicant':
         return '/dashboard-applicant';
       default:

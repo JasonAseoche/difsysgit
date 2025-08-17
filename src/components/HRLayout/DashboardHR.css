@@ -431,6 +431,14 @@
   .card-values11 {
     animation: countUp 0.8s ease-out forwards;
   }
+
+
+  @media (max-height: 700px) {
+
+    .chart-cards11 {
+      max-height: 240px;
+    }
+}
   
   /* Responsive Design - Updated for better layout */
   @media screen and (min-width: 1601px) {

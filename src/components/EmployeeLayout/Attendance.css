@@ -1,0 +1,520 @@
+/* Updated Attendance.css with Simplified Late/Undertime Styling */
+
+/* Main Container */
+.attendanceMainContainer {
+  padding: 10px 32px 32px 32px;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Inter', sans-serif;
+}
+
+/* Header Section */
+.attendanceHeaderSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  gap: 32px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+}
+
+.attendanceProfileArea {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.attendanceAvatarCircle {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 20px;
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+}
+
+.attendanceAvatarText {
+  color: white;
+  letter-spacing: 1px;
+}
+
+.attendanceProfileDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.attendanceProfileName {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.attendanceProfileRole {
+  font-size: 16px;
+  color: #64748b;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Info Cards */
+.attendanceInfoCards {
+  display: flex;
+  gap: 20px;
+}
+
+.attendanceInfoCard {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #f8fafc;
+  padding: 16px 20px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.attendanceInfoCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.attendanceInfoIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.attendanceIconGreen {
+  background: #10b981;
+}
+
+.attendanceIconBlue {
+  background: #3b82f6;
+}
+
+.attendanceIconPurple {
+  background: #8b5cf6;
+}
+
+.attendanceInfoContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.attendanceInfoLabel {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.attendanceInfoValue {
+  font-size: 16px;
+  color: #1e293b;
+  margin: 0;
+  font-weight: 700;
+}
+
+/* Enhanced Time Stats Grid */
+.attendanceTimeStatsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.attendanceTimeStatCard {
+  background: #ffffff;
+  padding: 24px 20px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.attendanceTimeStatCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.attendanceTimeStatIcon {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.attendanceIconBlueCard {
+  background: #3b82f6;
+}
+
+.attendanceIconGreenCard {
+  background: #10b981;
+}
+
+.attendanceIconOrangeCard {
+  background: #f59e0b;
+}
+
+.attendanceIconPurpleCard {
+  background: #8b5cf6;
+}
+
+.attendanceTimeValue {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 8px;
+}
+
+.attendanceTimeLabel {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Table Section */
+.attendanceTableSection {
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+}
+
+.attendanceDataTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Simplified Table Headers - No Special Colors */
+.attendanceTableHeader th {
+  background-color: #f8fafc;
+  padding: 16px 20px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.attendanceTableRow {
+  border-bottom: 1px solid #f1f5f9;
+  transition: background-color 0.15s ease;
+}
+
+.attendanceTableRow:hover {
+  background-color: #f8fafc;
+}
+
+.attendanceTableRow:last-child {
+  border-bottom: none;
+}
+
+.attendanceTableRow td {
+  padding: 16px 20px;
+  font-size: 14px;
+  color: #374151;
+  vertical-align: middle;
+}
+
+.attendanceDateCell {
+  font-weight: 600;
+  color: #1e293b;
+  position: relative;
+}
+
+.attendanceWeekendTag {
+  display: inline-block;
+  background: #8b5cf6;
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 8px;
+  font-weight: 500;
+}
+
+.attendanceTimeCell {
+  color: #64748b !important;
+  font-weight: 600;
+}
+
+.attendanceTotalCell {
+  color: #2563eb !important;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.attendanceOvertimeCell {
+  color: #f59e0b !important;
+  padding-left: 27px !important;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Simplified Late/Undertime Cell - No Special Styling */
+.attendanceLateUndertimeCell {
+  color: #f30e07 !important;
+  font-weight: 500;
+  font-size: 14px;
+  text-align: left;
+  padding-left: 60px !important;
+}
+
+.attendanceStatusCell {
+  text-align: left;
+}
+
+.attendanceStatusBadge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-block;
+  transition: all 0.2s ease;
+}
+
+/* Status Badge Colors */
+.attendanceStatusPresent {
+  background-color: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.attendanceStatusAbsent {
+  background-color: #fecaca;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+.attendanceStatusLeave {
+  background-color: #dbeafe;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+}
+
+.attendanceStatusOvertime {
+  background-color: #fed7d7;
+  color: #c53030;
+  border: 1px solid #feb2b2;
+  animation: pulse-overtime 2s infinite;
+}
+
+.attendanceStatusWeekend {
+  background-color: #e0e7ff;
+  color: #5b21b6;
+  border: 1px solid #c7d2fe;
+}
+
+/* Animations for status badges */
+@keyframes pulse-overtime {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.02);
+  }
+}
+
+/* Pagination */
+.attendancePaginationArea {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background-color: #ffffff;
+  border-top: 1px solid #e2e8f0;
+}
+
+.attendancePaginationInfo {
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 400;
+}
+
+.attendancePaginationButtons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.attendancePaginationBtn {
+  padding: 8px 12px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-weight: 500;
+  min-width: 36px;
+  text-align: center;
+}
+
+.attendancePaginationBtn:hover {
+  background-color: #f8fafc;
+  border-color: #94a3b8;
+  color: #003D7C !important;  
+}
+
+.attendancePaginationActive {
+  background-color: #003D7C;
+  color: #ffffff !important;
+  border-color: #3b82f6 !important;
+  font-weight: 600 !important;
+}
+
+.attendancePaginationDots {
+  color: #94a3b8;
+  font-weight: 400;
+  padding: 0 8px;
+  font-size: 12px;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .attendanceHeaderSection {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .attendanceInfoCards {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 12px;
+  }
+  
+  .attendanceTimeStatsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .attendanceMainContainer {
+    padding: 20px;
+  }
+  
+  .attendanceHeaderSection {
+    padding: 24px;
+  }
+  
+  .attendanceInfoCards {
+    flex-direction: column;
+  }
+  
+  .attendanceTimeStatsGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .attendanceTimeStatCard {
+    padding: 20px 16px;
+  }
+  
+  .attendanceTableSection {
+    overflow-x: auto;
+  }
+  
+  .attendanceDataTable {
+    min-width: 700px; /* Increased for Late/Undertime column */
+  }
+  
+  .attendanceTableRow td {
+    padding: 12px 16px;
+  }
+  
+  .attendancePaginationArea {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .attendanceProfileName {
+    font-size: 24px;
+  }
+  
+  .attendanceTimeValue {
+    font-size: 20px;
+  }
+  
+  .attendanceAvatarCircle {
+    width: 56px;
+    height: 56px;
+    font-size: 18px;
+  }
+  
+  .attendanceStatusBadge {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+}
+
+/* Weekend day highlighting */
+.attendanceTableRow.weekend-row {
+  background-color: #faf8ff;
+}
+
+.attendanceTableRow.weekend-row:hover {
+  background-color: #f3f0ff;
+}
+
+/* Loading states */
+.loading-row {
+  opacity: 0.6;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* Enhanced weekend styling */
+.weekend-notice {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+}

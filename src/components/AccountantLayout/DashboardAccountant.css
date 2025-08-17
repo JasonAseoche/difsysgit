@@ -1,0 +1,644 @@
+/* DashboardAccountant.css */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Container */
+.acc-dash-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1rem 1rem 2rem;
+
+    background-color: #f8fafc;
+    overflow: hidden;
+}
+
+/* Header Section with Cards */
+.acc-dash-header-section {
+    flex-shrink: 0;
+    margin-bottom: 2rem;
+}
+
+.acc-dash-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.acc-dash-stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.acc-dash-stat-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.acc-dash-card-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.acc-dash-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+}
+
+.acc-dash-employee-icon {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+
+.acc-dash-new-tasks-icon {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.acc-dash-completed-tasks-icon {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.acc-dash-payroll-icon {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+.acc-dash-card-info {
+    flex: 1;
+}
+
+.acc-dash-card-title {
+    font-size: 0.9rem;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.acc-dash-card-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+/* Main Content */
+.acc-dash-main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.acc-dash-content-grid {
+    display: grid;
+    grid-template-columns: 1fr 374px;
+    gap: 1.5rem;
+    height: 100%;
+    margin-top: -4.7%;
+}
+
+.acc-dash-table-card {
+    background: rgb(247, 247, 247);
+    border-radius: 12px;
+    padding: 6rem 1.5rem 1.5rem 1.5rem ;
+    top: -55px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 0;
+}
+
+/* Calendar Styles */
+.acc-dash-calendar-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+}
+
+.acc-dash-calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.acc-dash-calendar-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+.acc-dash-calendar-nav {
+    background: none;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.acc-dash-calendar-nav:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+.acc-dash-calendar-grid {
+    margin-bottom: 1.5rem;
+}
+
+.acc-dash-calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.acc-dash-weekday {
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #64748b;
+    padding: 0.5rem 0;
+}
+
+.acc-dash-calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.25rem;
+}
+
+.acc-dash-calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.acc-dash-calendar-day:hover {
+    background: #f1f5f9;
+}
+
+.acc-dash-calendar-day.acc-dash-other-month {
+    color: #cbd5e1;
+}
+
+.acc-dash-calendar-day.acc-dash-today {
+    background: #f59e0b;
+    color: white;
+    font-weight: 600;
+}
+
+.acc-dash-calendar-day.acc-dash-has-event::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background: #3b82f6;
+    border-radius: 50%;
+}
+
+.acc-dash-calendar-day.acc-dash-today.acc-dash-has-event::after {
+    background: white;
+}
+
+/* Events Section */
+.acc-dash-upcoming-events {
+    margin-top: 0.5rem;
+}
+
+.acc-dash-events-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 1rem;
+    letter-spacing: 0.05em;
+}
+
+.acc-dash-events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.acc-dash-event-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.acc-dash-event-item:hover {
+    background: #f1f5f9;
+}
+
+.acc-dash-event-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.acc-dash-event-indicator.acc-dash-development {
+    background: #f59e0b;
+}
+
+.acc-dash-event-indicator.acc-dash-ux {
+    background: #10b981;
+}
+
+.acc-dash-event-info {
+    flex: 1;
+}
+
+.acc-dash-event-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #1e293b;
+    text-align: center;
+    margin-bottom: 0.25rem;
+}
+
+.acc-dash-event-time {
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+.acc-dash-table-header-card {
+    background: white;
+    border-radius: 12px 12px 0px 0px ;
+    padding: 1rem;
+    width: 73.39rem;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1;
+}
+
+.acc-dash-table-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+.acc-dash-filter-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.acc-dash-filter-button:hover {
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+}
+
+.acc-dash-filter-button svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Table */
+.acc-dash-table-container {
+    flex: 1;
+    overflow-y: auto;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.acc-dash-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+.acc-dash-table-header-row {
+    background: #0b3d91;
+}
+
+.acc-dash-table-header-cell {
+    padding: 1rem;
+    text-align: center;
+    font-weight: 600;
+    color: #fdfdfd;
+    border-bottom: 1px solid #e2e8f0;
+    border-right: 1px solid #e2e8f0;
+    font-size: 0.9rem;
+}
+
+.acc-dash-table-row {
+    transition: background-color 0.2s ease;
+}
+
+.acc-dash-table-row:hover {
+    background-color: #f8fafc;
+}
+
+.acc-dash-table-cell {
+    padding: 1rem;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.acc-dash-task-name {
+    font-weight: 500;
+    color: #1e293b;
+    font-size: 0.9rem;
+}
+
+.acc-dash-status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-align: center;
+    min-width: 80px;
+}
+
+.acc-dash-status-completed {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.acc-dash-status-progress {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.acc-dash-status-pending {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.acc-dash-status-default {
+    background-color: #f1f5f9;
+    color: #64748b;
+}
+
+.acc-dash-due-date {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.acc-dash-view-detail-btn {
+    background: #0b3d91;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.acc-dash-view-detail-btn:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+}
+
+.acc-dash-view-detail-btn:active {
+    transform: translateY(0);
+}
+
+/* Responsive Design */
+
+/* Tablet - 768px and below */
+@media (max-width: 768px) {
+    .acc-dash-container {
+        padding: 0.75rem;
+    }
+
+    .acc-dash-cards-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .acc-dash-stat-card {
+        padding: 1.25rem;
+    }
+
+    .acc-dash-card-value {
+        font-size: 1.3rem;
+    }
+
+    .acc-dash-content-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .acc-dash-table-card,
+    .acc-dash-calendar-card {
+        padding: 1.25rem;
+    }
+
+    .acc-dash-table-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .acc-dash-table-header-cell,
+    .acc-dash-table-cell {
+        padding: 0.75rem;
+    }
+
+    .acc-dash-calendar-card {
+        order: -1;
+    }
+}
+
+/* Mobile - 480px and below */
+@media (max-width: 480px) {
+    .acc-dash-container {
+        padding: 0.5rem;
+    }
+
+    .acc-dash-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .acc-dash-stat-card {
+        padding: 1rem;
+    }
+
+    .acc-dash-card-content {
+        gap: 0.75rem;
+    }
+
+    .acc-dash-card-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .acc-dash-card-title {
+        font-size: 0.8rem;
+    }
+
+    .acc-dash-card-value {
+        font-size: 1.2rem;
+    }
+
+    .acc-dash-content-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .acc-dash-table-card,
+    .acc-dash-calendar-card {
+        padding: 1rem;
+    }
+
+    .acc-dash-table-title {
+        font-size: 1.1rem;
+    }
+
+    .acc-dash-filter-button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+
+    .acc-dash-table-container {
+        overflow-x: auto;
+    }
+
+    .acc-dash-table {
+        min-width: 600px;
+    }
+
+    .acc-dash-table-header-cell,
+    .acc-dash-table-cell {
+        padding: 0.5rem;
+    }
+
+    .acc-dash-task-name {
+        font-size: 0.8rem;
+    }
+
+    .acc-dash-status-badge {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.6rem;
+        min-width: 70px;
+    }
+
+    .acc-dash-due-date {
+        font-size: 0.8rem;
+    }
+
+    .acc-dash-view-detail-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.7rem;
+    }
+
+    .acc-dash-calendar-card {
+        order: -1;
+    }
+
+    .acc-dash-calendar-title {
+        font-size: 1rem;
+    }
+
+    .acc-dash-calendar-day {
+        font-size: 0.8rem;
+    }
+
+    .acc-dash-event-name {
+        font-size: 0.8rem;
+    }
+
+    .acc-dash-event-time {
+        font-size: 0.7rem;
+    }
+}
+
+/* Very small screens */
+@media (max-width: 320px) {
+    .acc-dash-header-section {
+        margin-bottom: 1rem;
+    }
+
+    .acc-dash-table-header {
+        gap: 0.75rem;
+    }
+
+    .acc-dash-table-title {
+        font-size: 1rem;
+    }
+
+    .acc-dash-filter-button {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.75rem;
+    }
+
+    .acc-dash-calendar-header {
+        margin-bottom: 1rem;
+    }
+
+    .acc-dash-calendar-title {
+        font-size: 0.9rem;
+    }
+}
+
+/* Scrollbar styling */
+.acc-dash-table-container::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.acc-dash-table-container::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 3px;
+}
+
+.acc-dash-table-container::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.acc-dash-table-container::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}

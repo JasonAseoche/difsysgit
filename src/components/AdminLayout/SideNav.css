@@ -219,6 +219,18 @@
   display: none;
 }
 
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  /* Show mobile header */
+
+  .sidenav1 {
+    min-width: 300px;
+  }
+  
+}
+
+
 /* Responsive Design */
 @media (max-width: 768px) {
   /* Show mobile header */

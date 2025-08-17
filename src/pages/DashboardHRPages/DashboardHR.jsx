@@ -99,6 +99,9 @@ const DashboardHR = () => {
 
   // Add animation effect on load
   useEffect(() => {
+
+    document.title = "DIFSYS | HR DASHBOARD";
+
     setIsLoaded(true);
     
     // Animate count-up for card values
@@ -273,9 +276,10 @@ const DashboardHR = () => {
         
         <div className="summary-cards11 total-applicantss11">
           <div className="card-icons11">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M15.75 17.25v1.5a1.5 1.5 0 0 1-1.5 1.5H4.5a1.5 1.5 0 0 1-1.5-1.5V5.25a1.5 1.5 0 0 1 1.5-1.5h9.75a1.5 1.5 0 0 1 1.5 1.5v1.5m0 10.5V6.75m0 10.5h5.25a1.5 1.5 0 0 0 1.5-1.5v-7.5a1.5 1.5 0 0 0-1.5-1.5H15.75" />
-            </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zM8 11c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5C15 14.17 10.33 13 8 13zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+          </svg>
+
           </div>
           <div className="card-contents11">
             <div className="card-labels11">Total of Applicants</div>

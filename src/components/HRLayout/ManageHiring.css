@@ -1,0 +1,750 @@
+/* ManageHiring.css - Professional Version */
+
+:root {
+  --primary-blue: #2563eb;
+  --primary-light: #3b82f6;
+  --primary-dark: #1d4ed8;
+  --success: #059669;
+  --danger: #dc2626;
+  --warning: #d97706;
+  --info: #0891b2;
+  --secondary: #64748b;
+  --light: #f8fafc;
+  --dark: #1e293b;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+  --border-radius: 8px;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.managehiring-container {
+  background-color: var(--gray-50);
+  min-height: 100vh;
+  padding: 24px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.managehiring-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  max-width: 1600px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 32px;
+  background-color: white;
+  box-shadow: var(--shadow);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--gray-200);
+  padding: 32px;
+}
+
+.managehiring-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin: 0;
+  letter-spacing: -0.025em;
+}
+
+.managehiring-create-btn {
+  background-color: var(--primary-blue);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.managehiring-create-btn:hover {
+  background-color: var(--primary-dark);
+  box-shadow: var(--shadow-md);
+}
+
+.managehiring-create-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(37 99 235 / 0.1);
+}
+
+.managehiring-loading {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 16px;
+  color: var(--gray-500);
+}
+
+.managehiring-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.managehiring-card {
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-200);
+  overflow: hidden;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.managehiring-card:hover {
+  border-color: var(--primary-blue);
+  box-shadow: var(--shadow-md);
+}
+
+.managehiring-card-image {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  background-color: var(--gray-100);
+  position: relative;
+}
+
+.managehiring-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.2s ease;
+}
+
+.managehiring-card:hover .managehiring-card-image img {
+  transform: scale(1.02);
+}
+
+.managehiring-card-body {
+  padding: 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.managehiring-card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin: 0 0 12px 0;
+  line-height: 1.3;
+}
+
+.managehiring-card-text {
+  color: var(--gray-600);
+  margin: 0 0 20px 0;
+  line-height: 1.5;
+  flex: 1;
+  font-size: 14px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.managehiring-card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.managehiring-edit-btn {
+  background-color: var(--secondary);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  flex: 1;
+  font-size: 13px;
+  text-align: center;
+}
+
+.managehiring-edit-btn:hover {
+  background-color: var(--gray-600);
+}
+
+.managehiring-edit-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(100 116 139 / 0.1);
+}
+
+.managehiring-delete-btn {
+  background-color: var(--danger);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  flex: 1;
+  font-size: 13px;
+  text-align: center;
+}
+
+.managehiring-delete-btn:hover {
+  background-color: #b91c1c;
+}
+
+.managehiring-delete-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(220 38 38 / 0.1);
+}
+
+/* Modal Styles */
+.managehiring-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.managehiring-modal-card {
+  background: white;
+  border-radius: var(--border-radius);
+  max-width: 700px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--gray-200);
+}
+
+.managehiring-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--gray-400);
+  z-index: 10;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.managehiring-modal-close:hover {
+  color: var(--gray-600);
+  background-color: var(--gray-100);
+}
+
+.managehiring-modal-header {
+  padding: 24px 24px 16px 24px;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.managehiring-modal-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin: 0;
+  padding-right: 32px;
+}
+
+/* Form Styles */
+.managehiring-form {
+  padding: 24px;
+}
+
+.managehiring-form-group {
+  margin-bottom: 20px;
+}
+
+.managehiring-label {
+  display: block;
+  font-weight: 500;
+  color: var(--gray-900);
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.managehiring-input,
+.managehiring-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background: white;
+  font-family: inherit;
+}
+
+.managehiring-input:focus,
+.managehiring-textarea:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgb(37 99 235 / 0.1);
+}
+
+.managehiring-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.managehiring-file-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  background: white;
+  cursor: pointer;
+}
+
+.managehiring-file-input:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgb(37 99 235 / 0.1);
+}
+
+.managehiring-current-image {
+  margin-top: 8px;
+  color: var(--gray-500);
+  font-size: 13px;
+  padding: 8px 12px;
+  background-color: var(--gray-50);
+  border-radius: 4px;
+  border: 1px solid var(--gray-200);
+}
+
+.managehiring-list-item {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+
+.managehiring-list-input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.managehiring-list-input:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgb(37 99 235 / 0.1);
+}
+
+.managehiring-remove-btn {
+  background-color: var(--danger);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: var(--border-radius);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.managehiring-remove-btn:hover {
+  background-color: #b91c1c;
+}
+
+.managehiring-add-btn {
+  background-color: var(--success);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-weight: 500;
+  margin-top: 8px;
+}
+
+.managehiring-add-btn:hover {
+  background-color: #047857;
+}
+
+.managehiring-add-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(5 150 105 / 0.1);
+}
+
+.managehiring-form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--gray-200);
+}
+
+.managehiring-cancel-btn {
+  background-color: white;
+  color: var(--gray-700);
+  border: 1px solid var(--gray-300);
+  padding: 12px 24px;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+.managehiring-cancel-btn:hover {
+  background-color: var(--gray-50);
+  border-color: var(--gray-400);
+}
+
+.managehiring-cancel-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(107 114 128 / 0.1);
+}
+
+.managehiring-submit-btn {
+  background-color: var(--primary-blue);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  font-size: 14px;
+}
+
+.managehiring-submit-btn:hover {
+  background-color: var(--primary-dark);
+  box-shadow: var(--shadow-md);
+}
+
+.managehiring-submit-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(37 99 235 / 0.1);
+}
+
+.managehiring-submit-btn:disabled {
+  background-color: var(--gray-400);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.managehiring-submit-btn:disabled:hover {
+  background-color: var(--gray-400);
+}
+
+/* Loading States */
+.managehiring-loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: var(--gray-500);
+  font-size: 16px;
+}
+
+/* Empty States */
+.managehiring-empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--gray-500);
+}
+
+.managehiring-empty-state h3 {
+  color: var(--gray-700);
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.managehiring-empty-state p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* Required Field Indicator */
+.managehiring-label::after {
+  content: '';
+}
+
+.managehiring-label[data-required]::after {
+  content: ' *';
+  color: var(--danger);
+}
+
+/* Form Validation States */
+.managehiring-input.error,
+.managehiring-textarea.error,
+.managehiring-list-input.error {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgb(220 38 38 / 0.1);
+}
+
+.managehiring-error-message {
+  color: var(--danger);
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+}
+
+/* Responsive Design */
+
+/* Large Desktop */
+@media (min-width: 1400px) {
+  .managehiring-container {
+    padding: 32px;
+  }
+  
+  .managehiring-grid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 32px;
+  }
+  
+  .managehiring-header {
+    padding: 40px;
+  }
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .managehiring-container {
+    padding: 20px;
+  }
+  
+  .managehiring-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  
+  .managehiring-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 24px;
+  }
+  
+  .managehiring-create-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .managehiring-container {
+    padding: 16px;
+  }
+  
+  .managehiring-title {
+    font-size: 24px;
+  }
+  
+  .managehiring-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .managehiring-modal-card {
+    width: 95%;
+    margin: 12px;
+    max-height: 90vh;
+  }
+  
+  .managehiring-modal-header,
+  .managehiring-form {
+    padding: 20px;
+  }
+  
+  .managehiring-modal-title {
+    font-size: 18px;
+    padding-right: 40px;
+  }
+  
+  .managehiring-form-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .managehiring-cancel-btn,
+  .managehiring-submit-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .managehiring-list-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  
+  .managehiring-remove-btn {
+    align-self: flex-end;
+    width: fit-content;
+  }
+  
+  .managehiring-card-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .managehiring-card-body {
+    padding: 20px;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .managehiring-container {
+    padding: 12px;
+  }
+  
+  .managehiring-title {
+    font-size: 22px;
+  }
+  
+  .managehiring-create-btn {
+    font-size: 13px;
+    padding: 10px 20px;
+  }
+  
+  .managehiring-header {
+    padding: 20px;
+  }
+  
+  .managehiring-card-body {
+    padding: 16px;
+  }
+  
+  .managehiring-modal-header,
+  .managehiring-form {
+    padding: 16px;
+  }
+  
+  .managehiring-modal-title {
+    font-size: 16px;
+  }
+  
+  .managehiring-modal-close {
+    top: 12px;
+    right: 12px;
+  }
+}
+
+/* Focus States for Accessibility */
+.managehiring-edit-btn:focus,
+.managehiring-delete-btn:focus,
+.managehiring-create-btn:focus,
+.managehiring-cancel-btn:focus,
+.managehiring-submit-btn:focus,
+.managehiring-add-btn:focus,
+.managehiring-remove-btn:focus {
+  outline: none;
+}
+
+/* Custom Scrollbar */
+.managehiring-modal-card::-webkit-scrollbar {
+  width: 6px;
+}
+
+.managehiring-modal-card::-webkit-scrollbar-track {
+  background: var(--gray-100);
+  border-radius: 3px;
+}
+
+.managehiring-modal-card::-webkit-scrollbar-thumb {
+  background: var(--gray-400);
+  border-radius: 3px;
+}
+
+.managehiring-modal-card::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-500);
+}
+
+/* Print Styles */
+@media print {
+  .managehiring-container {
+    background: white;
+    padding: 0;
+  }
+  
+  .managehiring-header {
+    border-bottom: 2px solid #000;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .managehiring-create-btn {
+    display: none;
+  }
+  
+  .managehiring-card-actions {
+    display: none;
+  }
+  
+  .managehiring-card {
+    border: 1px solid #000;
+    break-inside: avoid;
+    margin-bottom: 20px;
+  }
+  
+  .managehiring-modal-overlay {
+    display: none;
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .managehiring-card {
+    border-width: 2px;
+  }
+  
+  .managehiring-edit-btn,
+  .managehiring-delete-btn,
+  .managehiring-create-btn,
+  .managehiring-submit-btn,
+  .managehiring-add-btn,
+  .managehiring-remove-btn {
+    border: 2px solid currentColor;
+  }
+}
+

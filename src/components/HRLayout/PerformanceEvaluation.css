@@ -1,0 +1,1054 @@
+/* PerformanceEvaluation.css - Fixed with unique performance-evaluation- selectors and original status colors */
+
+/* Container and Layout */
+.performance-evaluation-page {
+  padding: 0;
+  background-color: #f8fafc;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  width: 100%;
+  height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header Container */
+.performance-evaluation-header-container {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 20px;
+  margin: 20px;
+  border: 1px solid #f0f0f0;
+  flex-shrink: 0;
+  z-index: 10;
+  transition: all 0.3s ease-in-out;
+}
+
+.performance-evaluation-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  overflow: hidden;
+}
+
+.performance-evaluation-title {
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 700;
+  color: #003979;
+  margin: 0;
+  letter-spacing: 0.2px;
+  position: relative;
+  display: inline-block;
+}
+
+/* Actions Container */
+.performance-evaluation-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  min-width: 420px;
+}
+
+/* Date Picker Box */
+.performance-evaluation-date-picker-box {
+  position: relative;
+  width: 240px;
+  min-width: 200px;
+  transition: all 0.3s ease-in-out;
+}
+
+.performance-evaluation-date-picker-box input {
+  width: 100%;
+  margin-top: 18px;
+  padding: 8px 35px 8px 15px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  height: 45px;
+  box-sizing: border-box;
+  color: #4b5563;
+  transition: all 0.2s ease-in-out;
+}
+
+.performance-evaluation-date-picker-box input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.performance-evaluation-date-picker-button {
+  position: absolute;
+  right: 10px;
+  top: 49%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.performance-evaluation-date-picker-button:hover {
+  color: #3b82f6;
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Generate PDF Button */
+.performance-evaluation-generate-pdf-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #003D7C 0%, #002a5c 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 61, 124, 0.2);
+  min-width: 160px;
+  justify-content: center;
+  height: 45px;
+}
+
+.performance-evaluation-generate-pdf-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #002a5c 0%, #001f3f 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 61, 124, 0.3);
+}
+
+.performance-evaluation-generate-pdf-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Content Area */
+.performance-evaluation-content {
+  flex: 1;
+  z-index: 0;
+  overflow-y: hidden;
+  padding: 0 20px 20px 20px;
+}
+
+/* Statistics Grid */
+.performance-evaluation-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.performance-evaluation-stat-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease-in-out;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.performance-evaluation-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.performance-evaluation-stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16px;
+  flex-shrink: 0;
+}
+
+.performance-evaluation-stat-icon.performance-evaluation-present {
+  background: linear-gradient(135deg, #48bb78, #38a169);
+}
+
+.performance-evaluation-stat-icon.performance-evaluation-late {
+  background: linear-gradient(135deg, #ed8936, #dd6b20);
+}
+
+.performance-evaluation-stat-icon.performance-evaluation-absent {
+  background: linear-gradient(135deg, #f56565, #e53e3e);
+}
+
+.performance-evaluation-stat-icon.performance-evaluation-on-leave {
+  background: linear-gradient(135deg, #003D7C, #002a5c);
+}
+
+.performance-evaluation-stat-icon svg {
+  color: white;
+}
+
+.performance-evaluation-stat-content {
+  flex: 1;
+}
+
+.performance-evaluation-stat-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin: 0;
+  line-height: 1;
+}
+
+.performance-evaluation-stat-label {
+  color: #718096;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-top: 5px;
+}
+
+/* Table Container */
+.performance-evaluation-table-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  border: 1px solid #f0f0f0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.performance-evaluation-table-header1 {
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #ffffff;
+}
+
+.performance-evaluation-table-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* Table Wrapper */
+.performance-evaluation-table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.performance-evaluation-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  box-sizing: border-box;
+}
+
+.performance-evaluation-table-header-row {
+  background: #f9fafb;
+}
+
+.performance-evaluation-table-th {
+  padding: 12px 24px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #e5e7eb;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Performance Table Column Widths */
+.performance-evaluation-table-th:nth-child(1) { width: 25%; } /* Employee Name */
+.performance-evaluation-table-th:nth-child(2) { width: 18.75%; } /* Avg Present Days */
+.performance-evaluation-table-th:nth-child(3) { width: 18.75%; } /* Avg Late Days */
+.performance-evaluation-table-th:nth-child(4) { width: 18.75%; } /* Avg Absent Days */
+.performance-evaluation-table-th:nth-child(5) { width: 18.75%; } /* Avg Leave Days */
+
+.performance-evaluation-table-row {
+  border-bottom: 1px solid #f3f4f6;
+  transition: background-color 0.2s ease;
+}
+
+.performance-evaluation-table-row:hover {
+  background: #f8fafc;
+}
+
+.performance-evaluation-table-td {
+  padding: 16px 24px;
+  font-size: 14px;
+  vertical-align: middle;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.performance-evaluation-employee-info {
+  display: flex;
+  align-items: center;
+}
+
+.performance-evaluation-employee-avatar {
+  width: 55px;
+  height: 55px;
+  background: linear-gradient(135deg, #003D7C 0%, #002a5c 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.performance-evaluation-employee-name {
+  font-weight: 500;
+  font-size: 14px;
+  color: #1f2937;
+}
+
+/* PDF Notification Styles */
+.perf-eval-pdf-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  min-width: 300px;
+  max-width: 400px;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+  animation: perf-eval-slide-in 0.3s ease-out;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.perf-eval-pdf-notification-loading {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-left: 4px solid #4f46e5;
+}
+
+.perf-eval-pdf-notification-success {
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+  color: white;
+  border-left: 4px solid #16a34a;
+}
+
+.perf-eval-pdf-notification-error {
+  background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+  color: white;
+  border-left: 4px solid #dc2626;
+}
+
+.perf-eval-pdf-notification-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.perf-eval-pdf-notification-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: perf-eval-spin 1s linear infinite;
+  flex-shrink: 0;
+}
+
+.perf-eval-pdf-notification-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.perf-eval-pdf-notification-message {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* Animations */
+@keyframes perf-eval-slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes perf-eval-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+  .perf-eval-pdf-notification {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    min-width: auto;
+    max-width: none;
+  }
+}
+
+/* Original Status Badge Colors - Keep these exact colors */
+.performance-evaluation-status-badge {
+  padding: 6px 19px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: capitalize;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.performance-evaluation-status-badge.performance-evaluation-present {
+  background: rgba(72, 187, 120, 0.1);
+  color: #38a169;
+  border: 1px solid rgba(72, 187, 120, 0.2);
+}
+
+.performance-evaluation-status-badge.performance-evaluation-late {
+  background: rgba(237, 137, 54, 0.1);
+  color: #dd6b20;
+  border: 1px solid rgba(237, 137, 54, 0.2);
+}
+
+.performance-evaluation-status-badge.performance-evaluation-absent {
+  background: rgba(245, 101, 101, 0.1);
+  color: #e53e3e;
+  border: 1px solid rgba(245, 101, 101, 0.2);
+}
+
+.performance-evaluation-status-badge.performance-evaluation-on-leave {
+  background: rgba(0, 61, 124, 0.1);
+  color: #003D7C;
+  border: 1px solid rgba(0, 61, 124, 0.2);
+}
+
+/* Pagination */
+.performance-evaluation-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-top: 1px solid #e2e8f0;
+  background: #ffffff;
+}
+
+.performance-evaluation-pagination-info {
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.performance-evaluation-pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.performance-evaluation-pagination-btn {
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  font-weight: 500;
+  color: #4a5568;
+  font-size: 14px;
+}
+
+.performance-evaluation-pagination-btn:hover:not(:disabled) {
+  background: #f8fafc;
+  border-color: #cbd5e0;
+  transform: translateY(-1px);
+}
+
+.performance-evaluation-pagination-btn.performance-evaluation-active {
+  background: linear-gradient(135deg, #003D7C 0%, #002a5c 100%);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 2px 4px rgba(0, 61, 124, 0.3);
+}
+
+.performance-evaluation-pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #f8fafc;
+}
+
+.performance-evaluation-pagination-dots {
+  color: #94a3b8;
+  font-weight: 400;
+  padding: 0 8px;
+  font-size: 14px;
+}
+
+/* Date Picker Overlay */
+.performance-evaluation-date-picker-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: performanceOverlayFadeIn 0.3s ease-out;
+}
+
+.performance-evaluation-date-picker-modal {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  animation: performanceModalSlideIn 0.3s ease-out;
+  min-width: 320px;
+  max-width: 90vw;
+}
+
+.performance-evaluation-date-picker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.performance-evaluation-date-picker-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #003D7C;
+  margin: 0;
+}
+
+.performance-evaluation-date-picker-close {
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.performance-evaluation-date-picker-close:hover {
+  background: #f1f5f9;
+  color: #003D7C;
+}
+
+.performance-evaluation-date-picker-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.performance-evaluation-date-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.performance-evaluation-date-input-label {
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.performance-evaluation-date-picker-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.performance-evaluation-date-picker-input:focus {
+  border-color: #003D7C;
+  box-shadow: 0 0 0 3px rgba(0, 61, 124, 0.1);
+}
+
+.performance-evaluation-date-picker-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.performance-evaluation-date-picker-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.performance-evaluation-date-picker-btn.performance-evaluation-primary {
+  background: #003D7C;
+  color: white;
+}
+
+.performance-evaluation-date-picker-btn.performance-evaluation-primary:hover {
+  background: #002a5c;
+  transform: translateY(-1px);
+}
+
+.performance-evaluation-date-picker-btn.performance-evaluation-secondary {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.performance-evaluation-date-picker-btn.performance-evaluation-secondary:hover {
+  background: #e2e8f0;
+}
+
+/* No Data Message */
+.performance-evaluation-no-data {
+  text-align: center;
+  padding: 60px 20px;
+  color: #64748b;
+}
+
+.performance-evaluation-no-data svg {
+  color: #cbd5e1;
+  margin-bottom: 16px;
+}
+
+.performance-evaluation-no-data h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 8px;
+}
+
+.performance-evaluation-no-data p {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Loading States */
+.performance-evaluation-loading {
+  text-align: center;
+  padding: 30px;
+  color: #64748b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 200px;
+}
+
+.performance-evaluation-loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(59, 130, 246, 0.2);
+  border-radius: 50%;
+  border-top-color: #3b82f6;
+  animation: performanceSpin 1s linear infinite;
+}
+
+/* Animations */
+@keyframes performanceOverlayFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes performanceModalSlideIn {
+  from { 
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to { 
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes performanceSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+
+/* Large Desktop (1600px and above) */
+@media (min-width: 1600px) {
+  .performance-evaluation-table-th:nth-child(1) { width: 22%; }
+  .performance-evaluation-table-th:nth-child(2) { width: 19.5%; }
+  .performance-evaluation-table-th:nth-child(3) { width: 19.5%; }
+  .performance-evaluation-table-th:nth-child(4) { width: 19.5%; }
+  .performance-evaluation-table-th:nth-child(5) { width: 19.5%; }
+}
+
+/* Laptop (1500px and below) */
+@media (max-width: 1600px) {
+  .performance-evaluation-header-container {
+    padding: 18px;
+    margin: 18px;
+  }
+
+  .performance-evaluation-content {
+    overflow-y: auto;
+  }
+
+  .performance-evaluation-stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+  }
+
+  .performance-evaluation-stat-card {
+    padding: 18px;
+  }
+
+  .performance-evaluation-table-th,
+  .performance-evaluation-table-td {
+    padding: 14px 20px;
+  }
+}
+
+/* Tablet (768px and below) */
+@media (max-width: 768px) {
+  .performance-evaluation-header-container {
+    padding: 15px;
+    margin: 15px;
+  }
+
+  .performance-evaluation-content {
+    padding: 0 15px 15px 15px;
+  }
+
+  .performance-evaluation-title {
+    font-size: 20px;
+  }
+
+  .performance-evaluation-header-content {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .performance-evaluation-actions {
+    width: 100%;
+    justify-content: stretch;
+    flex-direction: column;
+    gap: 10px;
+    min-width: auto;
+  }
+
+  .performance-evaluation-date-picker-box {
+    flex: 1;
+    width: 100%;
+    min-width: 200px;
+    max-width: none;
+  }
+
+  .performance-evaluation-generate-pdf-btn {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .performance-evaluation-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 0 0 20px 0;
+    width: 100%;
+  }
+
+  .performance-evaluation-stat-card {
+    padding: 12px;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .performance-evaluation-stat-icon {
+    width: 36px;
+    height: 36px;
+    margin-right: 12px;
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .performance-evaluation-stat-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .performance-evaluation-stat-number {
+    font-size: 1.8rem;
+  }
+
+  .performance-evaluation-stat-label {
+    font-size: 0.8rem;
+  }
+
+  .performance-evaluation-table-container {
+    min-height: 500px;
+  }
+
+  .performance-evaluation-table-header1 {
+    padding: 15px;
+  }
+
+  .performance-evaluation-table-title {
+    font-size: 16px;
+  }
+
+  .performance-evaluation-table-wrapper {
+    overflow-x: auto;
+    min-height: 400px;
+  }
+
+  .performance-evaluation-table {
+    table-layout: auto;
+    min-width: 800px;
+  }
+
+  .performance-evaluation-table-th,
+  .performance-evaluation-table-td {
+    padding: 16px 12px; /* Increased from 12px 16px */
+    font-size: 13px;
+    min-height: 60px; /* Add minimum height */
+  }
+
+  .performance-evaluation-table-row {
+    min-height: 70px; /* Add minimum row height */
+  }
+
+  .performance-evaluation-employee-info {
+    padding: 8px 0; /* Add vertical padding */
+  }
+
+  .performance-evaluation-employee-avatar {
+    width: 36px; /* Increased from 28px */
+    height: 36px; /* Increased from 28px */
+    font-size: 12px; /* Increased from 11px */
+    margin-right: 16px; /* Increased margin */
+  }
+
+  .performance-evaluation-pagination {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px 20px;
+  }
+  
+  .performance-evaluation-pagination-info {
+    text-align: center;
+    font-size: 13px;
+  }
+  
+  .performance-evaluation-pagination-controls {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .performance-evaluation-pagination-btn {
+    min-width: 35px;
+    height: 35px;
+    padding: 6px 10px;
+  }
+
+  .performance-evaluation-date-picker-modal {
+    padding: 20px;
+    margin: 10px;
+    min-width: 280px;
+  }
+
+  .performance-evaluation-status-badge {
+    padding: 8px 12px; /* Increased from 4px 8px */
+    font-size: 12px; /* Increased from 10px */
+    min-width: 80px; /* Add minimum width */
+  }
+}
+
+/* Small Mobile (400px and below) */
+@media (max-width: 400px) {
+  .performance-evaluation-header-container {
+    padding: 12px;
+    margin: 10px;
+  }
+
+  .performance-evaluation-content {
+    padding: 0 10px 10px 10px;
+  }
+
+  .performance-evaluation-title {
+    font-size: 18px;
+  }
+
+  .performance-evaluation-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin: 0 0 15px 0;
+    width: 100%;
+  }
+
+  .performance-evaluation-stat-card {
+    padding: 10px;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .performance-evaluation-stat-icon {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .performance-evaluation-stat-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .performance-evaluation-stat-number {
+    font-size: 1.5rem;
+  }
+
+  .performance-evaluation-stat-label {
+    font-size: 0.7rem;
+    margin-top: 2px;
+  }
+
+  .performance-evaluation-table-container {
+    min-height: 450px;
+  }
+
+  .performance-evaluation-table-header1 {
+    padding: 12px;
+  }
+
+  .performance-evaluation-table-title {
+    font-size: 14px;
+  }
+
+  .performance-evaluation-table-wrapper {
+    min-height: 350px;
+  }
+
+  .performance-evaluation-table {
+    font-size: 12px;
+    min-width: 700px;
+  }
+
+  .performance-evaluation-table-th,
+  .performance-evaluation-table-td {
+    padding: 14px 8px; /* Increased vertical padding */
+    min-height: 55px; /* Add minimum height */
+  }
+
+  .performance-evaluation-table-row {
+    min-height: 65px; /* Add minimum row height */
+  }
+
+  .performance-evaluation-employee-avatar {
+    width: 32px; /* Increased from 24px */
+    height: 32px; /* Increased from 24px */
+    font-size: 11px; /* Increased from 10px */
+    margin-right: 14px; /* Increased margin */
+  }
+
+  .performance-evaluation-pagination-btn {
+    min-width: 30px;
+    height: 30px;
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+
+  .performance-evaluation-date-picker-modal {
+    padding: 15px;
+    margin: 15px;
+    min-width: 250px;
+  }
+
+  .performance-evaluation-date-picker-title {
+    font-size: 16px;
+  }
+
+  .performance-evaluation-status-badge {
+    padding: 6px 10px; /* Increased from 3px 6px */
+    font-size: 11px; /* Increased from 9px */
+    min-width: 70px; /* Add minimum width */
+  }
+
+  .performance-evaluation-generate-pdf-btn {
+    padding: 10px 16px;
+    font-size: 12px;
+    min-width: auto;
+    height: 40px;
+  }
+}
+
+/* Scrollbar Styling */
+.performance-evaluation-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.performance-evaluation-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.performance-evaluation-content::-webkit-scrollbar-thumb {
+  background-color: rgba(203, 213, 225, 0.5);
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.performance-evaluation-content::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(148, 163, 184, 0.7);
+}

@@ -23,7 +23,7 @@ const ManageAccounts = () => {
   const [message, setMessage] = useState({ text: '', type: '' });
 
   // API base URL
-  const API_URL = 'http://http://sql100.infinityfree.com/difsysapi/';
+  const API_URL = 'http://localhost/difsysapi/';
 
   // Fetch all accounts
   useEffect(() => {
@@ -67,12 +67,11 @@ const ManageAccounts = () => {
   const openEditModal = (account) => {
     setCurrentAccount({
       ...account,
-      password: '' // Don't populate password for security
+      password: '', // Don't populate password for security
     });
     setModalMode('edit');
     setShowModal(true);
   };
-
   const confirmDelete = (id) => {
     setDeleteId(id);
     setShowDeleteConfirm(true);
@@ -185,20 +184,23 @@ const ManageAccounts = () => {
   const getRoleBadgeClass = (role) => {
     switch (role.toLowerCase()) {
       case 'admin':
-        return 'role-admin';
+        return 'manage-account-role-admin';
       case 'hr':
-        return 'role-hr';
+        return 'manage-account-role-hr';
       case 'accountant':
-        return 'role-accountant';
+        return 'manage-account-role-accountant';
       case 'employee':
-        return 'role-employee';
+        return 'manage-account-role-employee';
       case 'applicant':
-        return 'role-applicant';
+        return 'manage-account-role-applicant';
+      case 'supervisor':  // Add this line
+        return 'manage-account-role-supervisor';  // Add this line
       default:
-        return 'role-user';
+        return 'manage-account-role-user';
     }
   };
 
+  
   // Clear message after 5 seconds
   useEffect(() => {
     if (message.text) {
@@ -210,26 +212,26 @@ const ManageAccounts = () => {
   }, [message]);
 
   return (
-    <div className="manage-accounts-container">
+    <div className="manage-account-container">
       {/* Header */}
-      <div className="content-wrapper">
-        <div className="header-card">
-          <div className="header-content">
-            <h1 className="page-title">Manage User Accounts</h1>
-            <div className="header-actions">
-              <div className="search-container">
+      <div className="manage-account-content-wrapper">
+        <div className="manage-account-header-card">
+          <div className="manage-account-header-content">
+            <h1 className="manage-account-page-title">Manage User Accounts</h1>
+            <div className="manage-account-header-actions">
+              <div className="manage-account-search-container">
                 <input
                   type="text"
                   placeholder="Search accounts..."
-                  className="search-input"
+                  className="manage-account-search-input"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <Search className="search-icon" size={18} />
+                <Search className="manage-account-search-icon" size={18} />
                 {searchTerm && (
                   <button 
                     onClick={() => setSearchTerm('')}
-                    className="search-clear"
+                    className="manage-account-search-clear"
                   >
                     <X size={18} />
                   </button>
@@ -237,9 +239,9 @@ const ManageAccounts = () => {
               </div>
               <button
                 onClick={openAddModal}
-                className="add-button"
+                className="manage-account-add-button"
               >
-                <PlusCircle size={18} className="button-icon" />
+                <PlusCircle size={18} className="manage-account-button-icon" />
                 Add New Account
               </button>
             </div>
@@ -248,90 +250,90 @@ const ManageAccounts = () => {
 
         {/* Message */}
         {message.text && (
-          <div className={`message ${message.type === 'success' ? 'message-success' : 'message-error'}`}>
-            <AlertCircle size={20} className="message-icon" />
+          <div className={`manage-account-message ${message.type === 'success' ? 'manage-account-message-success' : 'manage-account-message-error'}`}>
+            <AlertCircle size={20} className="manage-account-message-icon" />
             <span>{message.text}</span>
           </div>
         )}
 
         {/* Table */}
-        <div className="table-container">
+        <div className="manage-account-table-container">
           {isLoading ? (
-            <div className="loading-container">
-              <div className="loading-spinner"></div>
-              <p className="loading-text">Loading accounts...</p>
+            <div className="manage-account-loading-container">
+              <div className="manage-account-loading-spinner"></div>
+              <p className="manage-account-loading-text">Loading accounts...</p>
             </div>
           ) : isError ? (
-            <div className="error-container">
-              <AlertCircle size={40} className="error-icon" />
-              <p className="error-text">Failed to load accounts</p>
+            <div className="manage-account-error-container">
+              <AlertCircle size={40} className="manage-account-error-icon" />
+              <p className="manage-account-error-text">Failed to load accounts</p>
               <button 
                 onClick={fetchAccounts}
-                className="retry-button"
+                className="manage-account-retry-button"
               >
                 Try Again
               </button>
             </div>
           ) : filteredAccounts.length === 0 ? (
-            <div className="empty-container">
+            <div className="manage-account-empty-container">
               {searchTerm ? (
                 <>
-                  <p className="empty-text">No accounts found matching "{searchTerm}"</p>
+                  <p className="manage-account-empty-text">No accounts found matching "{searchTerm}"</p>
                   <button 
                     onClick={() => setSearchTerm('')}
-                    className="empty-action"
+                    className="manage-account-empty-action"
                   >
                     Clear search
                   </button>
                 </>
               ) : (
                 <>
-                  <p className="empty-text">No accounts available</p>
+                  <p className="manage-account-empty-text">No accounts available</p>
                   <button 
                     onClick={openAddModal}
-                    className="empty-action"
+                    className="manage-account-empty-action"
                   >
-                    <PlusCircle size={16} className="button-icon-small" />
+                    <PlusCircle size={16} className="manage-account-button-icon-small" />
                     Add your first account
                   </button>
                 </>
               )}
             </div>
           ) : (
-            <div className="table-scroll">
-                <table className="accounts-table">
+            <div className="manage-account-table-scroll">
+                <table className="manage-account-accounts-table">
                   <thead>
                     <tr>
                       <th>Name</th>
                       <th>Email</th>
                       <th>Role</th>
-                      <th className="actions-header">Actions</th>
+                      <th className="manage-account-actions-header">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredAccounts.map((account) => (
                       <tr key={account.id}>
                         <td data-label="Name: ">
-                          <div className="account-name">{account.firstName} {account.lastName}</div>
+                          <div className="manage-account-account-name">{account.firstName} {account.lastName}</div>
                         </td>
-                        <td data-label="Email: " className="account-email">{account.email}</td>
+                        <td data-label="Email: " className="manage-account-account-email">{account.email}</td>
                         <td data-label="Role: ">
-                          <span className={`role-badge ${getRoleBadgeClass(account.role)}`}>
+                          <span className={`manage-account-role-badge ${getRoleBadgeClass(account.role)}`}>
                             {account.role.charAt(0).toUpperCase() + account.role.slice(1)}
                           </span>
                         </td>
-                        <td data-label="Actions: " className="actions-cell">
-                          <div className="actions-buttons">
+                        <td data-label="Actions: " className="manage-account-actions-cell">
+                          <div className="manage-account-actions-buttons">
                             <button
                               onClick={() => openEditModal(account)}
-                              className="action-button edit-button"
+                              className="manage-account-action-button manage-account-edit-button"
                               title="Edit account"
                             >
                               <Edit2 size={18} />
                             </button>
                             <button
                               onClick={() => confirmDelete(account.id)}
-                              className="action-button delete-button"
+                              className="manage-account-action-button manage-account-delete-button"
                               title="Delete account"
                             >
                               <Trash2 size={18} />
@@ -349,16 +351,16 @@ const ManageAccounts = () => {
 
       {/* Add/Edit Modal */}
       {showModal && (
-        <div className="modal-overlay">
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-body">
-              <h2 className="modal-title">
+        <div className="manage-account-modal-overlay">
+          <div className="manage-account-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="manage-account-modal-body">
+              <h2 className="manage-account-modal-title">
                 {modalMode === 'add' ? 'Add New Account' : 'Edit Account'}
               </h2>
               <form onSubmit={handleSubmit}>
-                <div className="form-row">
-                  <div className="form-group">
-                    <label htmlFor="firstName" className="form-label">
+                <div className="manage-account-form-row">
+                  <div className="manage-account-form-group">
+                    <label htmlFor="firstName" className="manage-account-form-label">
                       First Name*
                     </label>
                     <input
@@ -367,12 +369,12 @@ const ManageAccounts = () => {
                       name="firstName"
                       value={currentAccount.firstName}
                       onChange={handleInputChange}
-                      className="form-input"
+                      className="manage-account-form-input"
                       required
                     />
                   </div>
-                  <div className="form-group">
-                    <label htmlFor="lastName" className="form-label">
+                  <div className="manage-account-form-group">
+                    <label htmlFor="lastName" className="manage-account-form-label">
                       Last Name*
                     </label>
                     <input
@@ -381,13 +383,13 @@ const ManageAccounts = () => {
                       name="lastName"
                       value={currentAccount.lastName}
                       onChange={handleInputChange}
-                      className="form-input"
+                      className="manage-account-form-input"
                       required
                     />
                   </div>
                 </div>
-                <div className="form-group">
-                  <label htmlFor="email" className="form-label">
+                <div className="manage-account-form-group">
+                  <label htmlFor="email" className="manage-account-form-label">
                     Email Address*
                   </label>
                   <input
@@ -396,12 +398,12 @@ const ManageAccounts = () => {
                     name="email"
                     value={currentAccount.email}
                     onChange={handleInputChange}
-                    className="form-input"
+                    className="manage-account-form-input"
                     required
                   />
                 </div>
-                <div className="form-group">
-                  <label htmlFor="password" className="form-label">
+                <div className="manage-account-form-group">
+                  <label htmlFor="password" className="manage-account-form-label">
                     {modalMode === 'add' ? 'Password*' : 'Password (leave empty to keep current)'}
                   </label>
                   <input
@@ -410,15 +412,15 @@ const ManageAccounts = () => {
                     name="password"
                     value={currentAccount.password}
                     onChange={handleInputChange}
-                    className="form-input"
+                    className="manage-account-form-input"
                     required={modalMode === 'add'}
                   />
                   {modalMode === 'add' && (
-                    <p className="form-hint">Password must be at least 6 characters</p>
+                    <p className="manage-account-form-hint">Password must be at least 6 characters</p>
                   )}
                 </div>
-                <div className="form-group">
-                  <label htmlFor="role" className="form-label">
+                <div className="manage-account-form-group">
+                  <label htmlFor="role" className="manage-account-form-label">
                     Role
                   </label>
                   <select
@@ -426,29 +428,30 @@ const ManageAccounts = () => {
                     name="role"
                     value={currentAccount.role}
                     onChange={handleInputChange}
-                    className="form-select"
+                    className="manage-account-form-select"
                   >
-                    <option value="user">User</option>
                     <option value="admin">Admin</option>
+                    <option value="supervisor">Supervisor</option>  {/* Add this line */}
                     <option value="hr">HR</option>
                     <option value="accountant">Accountant</option>
                     <option value="employee">Employee</option>
                     <option value="applicant">Applicant</option>
                   </select>
                 </div>
-                <div className="modal-actions">
+                    
+                <div className="manage-account-modal-actions">
                   <button
                     type="button"
                     onClick={() => setShowModal(false)}
-                    className="button button-secondary"
+                    className="manage-account-button manage-account-button-secondary"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="button button-primary"
+                    className="manage-account-button manage-account-button-primary"
                   >
-                    <Save size={18} className="button-icon" />
+                    <Save size={18} className="manage-account-button-icon" />
                     {modalMode === 'add' ? 'Create Account' : 'Update Account'}
                   </button>
                 </div>
@@ -460,22 +463,22 @@ const ManageAccounts = () => {
 
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
-        <div className="modal-overlay">
-          <div className="confirm-modal">
-            <h3 className="confirm-title">Confirm Delete</h3>
-            <p className="confirm-text">Are you sure you want to delete this account? This action cannot be undone.</p>
-            <div className="confirm-actions">
+        <div className="manage-account-modal-overlay">
+          <div className="manage-account-confirm-modal">
+            <h3 className="manage-account-confirm-title">Confirm Delete</h3>
+            <p className="manage-account-confirm-text">Are you sure you want to delete this account? This action cannot be undone.</p>
+            <div className="manage-account-confirm-actions">
               <button
                 onClick={() => setShowDeleteConfirm(false)}
-                className="button button-secondary"
+                className="manage-account-button manage-account-button-secondary"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDelete}
-                className="button button-danger"
+                className="manage-account-button manage-account-button-danger"
               >
-                <Trash2 size={18} className="button-icon" />
+                <Trash2 size={18} className="manage-account-button-icon" />
                 Delete
               </button>
             </div>

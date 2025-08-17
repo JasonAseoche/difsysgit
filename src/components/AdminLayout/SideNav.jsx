@@ -13,7 +13,8 @@ function SideNav({ userRole = "admin" }) {
   const [userData, setUserData] = useState({
     firstName: "",
     lastName: "",
-    role: userRole
+    role: userRole,
+    profileImage: null
   });
   const dropdownRef = useRef(null);
 
@@ -29,16 +30,37 @@ function SideNav({ userRole = "admin" }) {
           
           // If we already have the name and role, use it directly
           if (parsedUser.firstName && parsedUser.lastName && parsedUser.role) {
-            setUserData({
+            const userDataToSet = {
               firstName: parsedUser.firstName,
               lastName: parsedUser.lastName,
-              role: parsedUser.role
-            });
+              role: parsedUser.role,
+              profileImage: null
+            };
+            
+            setUserData(userDataToSet);
+            
+            // Also fetch profile image if user ID exists
+            if (parsedUser.id) {
+              try {
+                // Fix: Use fetch() properly and parse JSON response
+                const profileResponse = await fetch(`http://localhost/difsysapi/profile_management.php?id=${parsedUser.id}&type=user`);
+                const profileData = await profileResponse.json(); // Parse JSON
+                
+                if (profileData.success && profileData.data && profileData.data.profile_image) {
+                  setUserData(prev => ({
+                    ...prev,
+                    profileImage: profileData.data.profile_image
+                  }));
+                }
+              } catch (error) {
+                console.log('Could not fetch profile image:', error);
+              }
+            }
           } 
           // Otherwise fetch from the database using email
           else if (parsedUser.email) {
             const response = await axios.post(
-              'http://sql100.infinityfree.com/difsysapi/get_user_data.php',
+              'http://localhost/difsysapi/get_user_data.php',
               { email: parsedUser.email },
               {
                 headers: {
@@ -51,11 +73,14 @@ function SideNav({ userRole = "admin" }) {
               const user = response.data.user;
               
               // Update userData state
-              setUserData({
+              const userDataToSet = {
                 firstName: user.firstName,
                 lastName: user.lastName,
-                role: user.role
-              });
+                role: user.role,
+                profileImage: null
+              };
+              
+              setUserData(userDataToSet);
               
               // Update the localStorage with complete user data
               const updatedUser = {
@@ -69,6 +94,24 @@ function SideNav({ userRole = "admin" }) {
               
               // Update userRole if it's being used elsewhere
               localStorage.setItem('userRole', user.role);
+              
+              // Also fetch profile image if user ID exists
+              if (user.id) {
+                try {
+                  // Fix: Use fetch() properly and parse JSON response
+                  const profileResponse = await fetch(`http://localhost/difsysapi/profile_management.php?id=${user.id}&type=user`);
+                  const profileData = await profileResponse.json(); // Parse JSON
+                  
+                  if (profileData.success && profileData.data && profileData.data.profile_image) {
+                    setUserData(prev => ({
+                      ...prev,
+                      profileImage: profileData.data.profile_image
+                    }));
+                  }
+                } catch (error) {
+                  console.log('Could not fetch profile image:', error);
+                }
+              }
             }
           }
         }
@@ -223,6 +266,15 @@ function SideNav({ userRole = "admin" }) {
             text: "Upload Requirements" 
           },
           { 
+            path: "/take-exam", 
+            icon: (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="currentColor"/>
+              </svg>
+            ), 
+            text: "Take Exam" 
+          },
+          { 
             path: "/setup-profile", 
             icon: (
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -269,20 +321,20 @@ function SideNav({ userRole = "admin" }) {
           { 
             path: "/performance-evaluation", 
             icon: (
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M17 2H14V5L12.35 3.35C11.155 2.155 9.515 1.5 7.75 1.5C4.31 1.5 1.5 4.31 1.5 7.75C1.5 11.19 4.31 14 7.75 14C9.215 14 10.565 13.505 11.645 12.645L13.06 14.06C11.565 15.25 9.74 16 7.75 16C3.2 16 0 12.645 0 7.75C0 2.855 3.2 0 7.75 0C10.085 0 12.26 0.91 13.75 2.4L14 2H17V5H20V2C20 0.9 19.1 0 18 0H3C1.9 0 1 0.9 1 2V18C1 19.1 1.9 20 3 20H18C19.1 20 20 19.1 20 18V9H17V18H3V2H17Z" fill="currentColor"/>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M3 3H5V21H3V3ZM10 10H12V21H10V10ZM17 5H19V21H17V5Z" fill="currentColor"/>
               </svg>
             ), 
             text: "Performance Evaluation" 
           },
           { 
-            path: "/timekeeping-tracking", 
+            path: "/leave-management", 
             icon: (
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M10 0C4.5 0 0 4.5 0 10C0 15.5 4.5 20 10 20C15.5 20 20 15.5 20 10C20 4.5 15.5 0 10 0ZM10 18C5.59 18 2 14.41 2 10C2 5.59 5.59 2 10 2C14.41 2 18 5.59 18 10C18 14.41 14.41 18 10 18ZM10.5 5H9V11L14.2 14.2L15 12.9L10.5 10.2V5Z" fill="currentColor"/>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M7 2V4H5C3.9 4 3 4.9 3 6V20C3 21.1 3.9 22 5 22H19C20.1 22 21 21.1 21 20V6C21 4.9 20.1 4 19 4H17V2H15V4H9V2H7ZM19 20H5V9H19V20ZM16.59 13.58L11 19.17L8.41 16.58L7 18L11 22L18 15L16.59 13.58Z" fill="currentColor"/>
               </svg>
             ), 
-            text: "Time-Keeping Tracking" 
+            text: "Leave Management" 
           },
           { 
             path: "/applicants-tracking", 
@@ -294,13 +346,41 @@ function SideNav({ userRole = "admin" }) {
             text: "Applicants Tracking" 
           },
           { 
-            path: "/list-of-onboard", 
+            path: "/manage-hiring", 
             icon: (
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M2 4H0V18C0 19.1 0.9 20 2 20H16V18H2V4ZM18 0H6C4.9 0 4 0.9 4 2V14C4 15.1 4.9 16 6 16H18C19.1 16 20 15.1 20 14V2C20 0.9 19.1 0 18 0ZM18 14H6V2H18V14ZM8 8H16V10H8V8ZM8 11H14V13H8V11ZM8 5H16V7H8V5Z" fill="currentColor"/>
+                <path d="M12 6C12 8.21 10.21 10 8 10C5.79 10 4 8.21 4 6C4 3.79 5.79 2 8 2C10.21 2 12 3.79 12 6ZM14 6C14 2.69 11.31 0 8 0C4.69 0 2 2.69 2 6C2 9.31 4.69 12 8 12C11.31 12 14 9.31 14 6ZM2 17V18H14V17C14 14.34 8.67 13 8 13C7.33 13 2 14.34 2 17ZM0 17C0 13.67 5.33 11 8 11C10.67 11 16 13.67 16 17V20H0V17Z" fill="currentColor"/>
               </svg>
             ), 
-            text: "List of Onboard" 
+            text: "Manage Hiring" 
+          },
+          { 
+            path: "/manage-examination", 
+            icon: (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M9 2C8.45 2 8 2.45 8 3V4H6C4.9 4 4 4.9 4 6V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V6C20 4.9 19.1 4 18 4H16V3C16 2.45 15.55 2 15 2H9ZM10 4H14V5H10V4ZM12 17L8.5 13.5L9.91 12.09L12 14.17L16.09 10.09L17.5 11.5L12 17Z" fill="currentColor"/>
+              </svg>
+            ), 
+            text: "Manage Examination" 
+          },
+          { 
+            path: "/employee-relation", 
+            icon: (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M20 2H4C2.9 2 2 2.9 2 4V20L6 16H20C21.1 16 22 15.1 22 14V4C22 2.9 21.1 2 20 2ZM20 14H5.17L4 15.17V4H20V14Z" fill="currentColor"/>
+              </svg>
+
+            ), 
+            text: "Employee Relation" 
+          },
+          { 
+            path: "/profile", 
+            icon: (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z" fill="currentColor"/>
+              </svg>
+                  ), 
+            text: "Profile" 
           }
         ];
       
@@ -319,29 +399,44 @@ function SideNav({ userRole = "admin" }) {
             text: "Dashboard" 
           },
           { 
-            path: "/list-of-employee", 
+            path: "/employee-attendance", 
+            icon: (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14c0 1.11.89 2 2 2h14c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 16H5V9h14v10zm0-12H5V5h14v2zm-6.5 8.29l2.79-2.79-1.42-1.42L12.5 13.17l-1.29-1.29-1.42 1.42L12.5 17z" fill="currentColor"/>
+              </svg>
+
+
+            ), 
+            text: "Employee Attendance" 
+          },
+          { 
+            path: "/payroll-account", 
             icon: (
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M16 8C17.1 8 18 7.1 18 6C18 4.9 17.1 4 16 4C14.9 4 14 4.9 14 6C14 7.1 14.9 8 16 8ZM8 8C9.1 8 10 7.1 10 6C10 4.9 9.1 4 8 4C6.9 4 6 4.9 6 6C6 7.1 6.9 8 8 8ZM8 10C5.67 10 1 11.17 1 13.5V16H15V13.5C15 11.17 10.33 10 8 10ZM16 10C15.71 10 15.38 10.02 15.03 10.05C16.19 10.89 17 12.02 17 13.5V16H19V13.5C19 11.17 17.33 10 16 10Z" fill="currentColor"/>
               </svg>
             ), 
-            text: "List of Employee" 
+            text: "Payroll Account" 
           },
           { 
             path: "/generate-payroll", 
             icon: (
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M19.5 8H17.5V1.5C17.5 0.67 16.83 0 16 0H4C3.17 0 2.5 0.67 2.5 1.5V8H0.5C0.22 8 0 8.22 0 8.5V19.5C0 19.78 0.22 20 0.5 20H19.5C19.78 20 20 19.78 20 19.5V8.5C20 8.22 19.78 8 19.5 8ZM14.5 8H5.5V3H14.5V8Z" fill="currentColor"/>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 2C4.9 2 4 2.9 4 4v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6H6z" fill="currentColor"/>
+                <path d="M13 3.5L18.5 9H13V3.5z" fill="currentColor"/>
+                <path d="M9 14h2.5c1.1 0 2-.9 2-2s-.9-2-2-2H9v-1H8v1H7v1h1v4H7v1h1v1h1v-1h1.5c1.66 0 3-1.34 3-3s-1.34-3-3-3H9v4z" fill="#fff"/>
+                <path d="M9 10h2.5a2 2 0 010 4H9v-4z" fill="currentColor"/>
               </svg>
+
             ), 
             text: "Generate Payroll" 
           },
           { 
             path: "/manage-payroll", 
             icon: (
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M2 4H0V18C0 19.1 0.9 20 2 20H16V18H2V4ZM18 0H6C4.9 0 4 0.9 4 2V14C4 15.1 4.9 16 6 16H18C19.1 16 20 15.1 20 14V2C20 0.9 19.1 0 18 0ZM18 14H6V2H18V14ZM10 10.5C11.38 10.5 12.5 9.38 12.5 8C12.5 6.62 11.38 5.5 10 5.5C8.62 5.5 7.5 6.62 7.5 8C7.5 9.38 8.62 10.5 10 10.5ZM10 7C10.55 7 11 7.45 11 8C11 8.55 10.55 9 10 9C9.45 9 9 8.55 9 8C9 7.45 9.45 7 10 7ZM15 13.5V12.5C15 11.12 12.88 10 10 10C7.12 10 5 11.12 5 12.5V13.5H15Z" fill="currentColor"/>
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" fill="currentColor"></path></svg>
+              
+
             ), 
             text: "Manage Payroll" 
           },
@@ -353,6 +448,15 @@ function SideNav({ userRole = "admin" }) {
               </svg>
             ), 
             text: "Benefits" 
+          },
+          { 
+            path: "/profile", 
+            icon: (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z" fill="currentColor"/>
+              </svg>
+                  ), 
+            text: "Profile" 
           }
         ];
       
@@ -382,8 +486,10 @@ function SideNav({ userRole = "admin" }) {
           { 
             path: "/manage-documents", 
             icon: (
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M6 2C4.9 2 4.01 2.9 4.01 4L4 16C4 17.1 4.89 18 5.99 18H14C15.1 18 16 17.1 16 16V8L10 2H6ZM13 9V3.5L14.5 5L16 6.5V16H4V4H10V9H13Z" fill="currentColor"/>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 7V5a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v2"/>
+                <path d="M3 7h18v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
               </svg>
             ), 
             text: "Manage myDocuments" 
@@ -391,9 +497,12 @@ function SideNav({ userRole = "admin" }) {
           { 
             path: "/my-payroll", 
             icon: (
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M19.5 8H17.5V1.5C17.5 0.67 16.83 0 16 0H4C3.17 0 2.5 0.67 2.5 1.5V8H0.5C0.22 8 0 8.22 0 8.5V19.5C0 19.78 0.22 20 0.5 20H19.5C19.78 20 20 19.78 20 19.5V8.5C20 8.22 19.78 8 19.5 8ZM14.5 8H5.5V3H14.5V8Z" fill="currentColor"/>
-              </svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="6" width="20" height="12" rx="2" ry="2"/>
+              <circle cx="12" cy="12" r="2"/>
+              <path d="M6 12h.01M18 12h.01"/>
+            </svg>
             ), 
             text: "My Payroll" 
           },
@@ -405,8 +514,99 @@ function SideNav({ userRole = "admin" }) {
               </svg>
             ), 
             text: "Time-Keeping" 
+          },
+          { 
+            path: "/file-ticket", 
+            icon: (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
+                  stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            ), 
+            text: "File A Inquiries" 
+          },
+          { 
+            path: "/profile", 
+            icon: (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z" fill="currentColor"/>
+              </svg>
+                  ), 
+            text: "Profile" 
           }
         ];
+
+        case "supervisor":
+  return [
+    { 
+      path: "/dashboard-supervisor", 
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <rect x="3" y="3" width="6" height="6" rx="1" fill="currentColor"/>
+          <rect x="11" y="3" width="6" height="6" rx="1" fill="currentColor"/>
+          <rect x="3" y="11" width="6" height="6" rx="1" fill="currentColor"/>
+          <rect x="11" y="11" width="6" height="6" rx="1" fill="currentColor"/>
+        </svg>
+      ), 
+      text: "Dashboard" 
+    },
+    { 
+      path: "/team-management", 
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M16 8C17.1 8 18 7.1 18 6C18 4.9 17.1 4 16 4C14.9 4 14 4.9 14 6C14 7.1 14.9 8 16 8ZM8 8C9.1 8 10 7.1 10 6C10 4.9 9.1 4 8 4C6.9 4 6 4.9 6 6C6 7.1 6.9 8 8 8ZM8 10C5.67 10 1 11.17 1 13.5V16H15V13.5C15 11.17 10.33 10 8 10ZM16 10C15.71 10 15.38 10.02 15.03 10.05C16.19 10.89 17 12.02 17 13.5V16H19V13.5C19 11.17 17.33 10 16 10Z" fill="currentColor"/>
+        </svg>
+      ), 
+      text: "Team Management" 
+    },
+    { 
+      path: "/supervisor-attendance", 
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M9 0C4.03 0 0 4.03 0 9C0 13.97 4.03 18 9 18C13.97 18 18 13.97 18 9C18 4.03 13.97 0 9 0ZM9 16C5.13 16 2 12.87 2 9C2 5.13 5.13 2 9 2C12.87 2 16 5.13 16 9C16 12.87 12.87 16 9 16ZM9.5 4.5H8V10.25L12.75 13L13.5 11.75L9.5 9.5V4.5Z" fill="currentColor"/>
+        </svg>
+      ), 
+      text: "Team Attendance" 
+    },
+    { 
+      path: "/performance-review", 
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M3 3H5V21H3V3ZM10 10H12V21H10V10ZM17 5H19V21H17V5Z" fill="currentColor"/>
+        </svg>
+      ), 
+      text: "Performance Review" 
+    },
+    { 
+      path: "/leave-approval", 
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M7 2V4H5C3.9 4 3 4.9 3 6V20C3 21.1 3.9 22 5 22H19C20.1 22 21 21.1 21 20V6C21 4.9 20.1 4 19 4H17V2H15V4H9V2H7ZM19 20H5V9H19V20ZM16.59 13.58L11 19.17L8.41 16.58L7 18L11 22L18 15L16.59 13.58Z" fill="currentColor"/>
+        </svg>
+      ), 
+      text: "Leave Approval" 
+    },
+    { 
+      path: "/reports", 
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M6 2C4.9 2 4 2.9 4 4v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6H6z" fill="currentColor"/>
+          <path d="M13 3.5L18.5 9H13V3.5z" fill="currentColor"/>
+        </svg>
+      ), 
+      text: "Reports" 
+    },
+    { 
+      path: "/profile", 
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z" fill="currentColor"/>
+        </svg>
+      ), 
+      text: "Profile" 
+    }
+  ];
         
       // For admin role (default)
       default:
@@ -434,13 +634,13 @@ function SideNav({ userRole = "admin" }) {
             text: "Manage Accounts" 
           },
           { 
-            path: "/home", 
+            path: "/manage-fingerprint", 
             icon: (
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M10 3L2 10H4V17H7V13H13V17H16V10H18L10 3Z" fill="currentColor"/>
               </svg>
             ), 
-            text: "Home" 
+            text: "Manage Fingerprint" 
           },
           { 
             path: "/about", 
@@ -459,6 +659,15 @@ function SideNav({ userRole = "admin" }) {
               </svg>
             ), 
             text: "Contact" 
+          },
+          { 
+            path: "/profile", 
+            icon: (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z" fill="currentColor"/>
+              </svg>
+                  ), 
+            text: "Profile" 
           }
         ];
     }
@@ -487,7 +696,25 @@ function SideNav({ userRole = "admin" }) {
         {/* User Profile Section - Visible on both Desktop and Mobile */}
         <div className="user-profile1">
           <div className="user-avatar1">
-            <span>{getUserInitials()}</span>
+          {userData.profileImage ? (
+            <img 
+              src={userData.profileImage.startsWith('http') ? userData.profileImage : `http://localhost/difsysapi/${userData.profileImage}`} 
+              alt="Profile" 
+              style={{
+                width: '100%',
+                height: '100%',
+                borderRadius: '50%',
+                objectFit: 'cover'
+              }}
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'block';
+              }}
+            />
+          ) : null}
+          <span style={{ display: userData.profileImage ? 'none' : 'block' }}>
+            {getUserInitials()}
+          </span>
           </div>
           <div className="user-info1" ref={dropdownRef}>
             <div className="user-details1">

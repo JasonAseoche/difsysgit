@@ -1,0 +1,460 @@
+/* ApplyNow Component Styles */
+.applynow-container {
+  background-color: #f8fafc;
+  max-width: 3000px;
+  min-height: 90vh;
+  border-radius: 5PX;
+  margin: 40px 100px 0 100px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.applynow-header {
+  text-align: left;
+  margin-bottom: 3rem;
+  max-width: 1400px;
+  margin: 4rem auto 3rem auto;
+  display: flex;
+  border-bottom: 1px solid #003D7C;
+  flex-direction: row;
+  
+}
+
+.applynow-title {
+  font-family: 'Courier New', monospace;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #003D7C;
+  margin: 0;
+}
+
+
+.applynow-loading {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #64748b;
+  font-size: 1.2rem;
+}
+
+.applynow-no-positions {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #64748b;
+  font-size: 1.1rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.applynow-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.applynow-card {
+  background: #fcfcfc;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.applynow-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.applynow-card-image {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.applynow-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.applynow-card-body {
+  padding: 1.5rem;
+}
+
+.applynow-card-title {
+  font-family: 'Courier New', monospace;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #003D7C;
+  margin: 0 0 0.75rem 0;
+}
+
+.applynow-card-text {
+  font-family: "Courier New", Courier, monospace;
+  color: #64748b;
+  margin: 0 0 1.5rem 0;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.applynow-btn {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.applynow-btn:hover {
+  background-color: #2563eb;
+}
+
+/* Modal Styles */
+.applynow-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: applynow-fade-in 0.3s ease;
+}
+
+.applynow-modal-card {
+  background: white;
+  border-radius: 10px;
+  max-width: 1000px;
+  width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  animation: applynow-zoom-in 0.3s ease;
+}
+
+.applynow-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #64748b;
+  z-index: 10;
+}
+
+.applynow-modal-close:hover {
+  color: #1e293b;
+}
+
+.applynow-modal-header {
+  padding: 2rem 2rem 1rem 2rem;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.applynow-modal-title {
+  font-size: 1.875rem;
+  font-weight: bold;
+  color: #1e293b;
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+}
+
+.applynow-signup-btn {
+  background-color: #072a66;
+  color: white;
+  border: none;
+  margin-right: 20px;
+  margin-top: -15px;
+  padding: 0.55rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+}
+
+.applynow-signup-btn:hover {
+  background-color: #325288;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(16, 109, 185, 0.3);
+}
+
+.applynow-modal-content {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.applynow-modal-top {
+  display: grid;
+  grid-template-columns: 40% 60%;
+  gap: 1rem;
+}
+
+.applynow-modal-image {
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.applynow-modal-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.applynow-modal-about {
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 5px;
+  padding: 16px 10px;
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Changed from 35rem to 100% */
+  max-width: 35rem; /* Added max-width to maintain design on larger screens */
+  box-sizing: border-box; /* Ensures padding is included in width calculation */
+}
+
+.applynow-modal-bottom {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  gap: 1.2rem;
+}
+
+.applynow-modal-section {
+  margin-bottom: 0;
+}
+
+.applynow-section-title {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color:#003D7C;
+  margin: 0;
+  padding-bottom: 0.5rem;
+}
+
+.applynow-about-text {
+  font-family: "Courier New", Courier, monospace;
+  padding-right: 20px;
+  text-align: justify;
+  color: #475569;
+  line-height: 1.6;
+  font-size: 15px;
+  margin: 0;
+}
+
+.applynow-requirements-list,
+.applynow-duties-list {
+  list-style: none;
+  padding: 5px;
+  margin: 0;
+}
+
+.applynow-requirements-list li,
+.applynow-duties-list li {
+  font-family: "Courier New", Courier, monospace;
+  padding: 0.5rem 0;
+  color: #475569;
+  line-height: 1.3;
+  position: relative;
+  padding-left: 1.5rem;
+  font-size: 15px;
+}
+
+.applynow-requirements-list li:before,
+.applynow-duties-list li:before {
+  content: "•";
+  color: #3b82f6;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}
+
+/* Animations */
+@keyframes applynow-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes applynow-zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .applynow-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .applynow-modal-card {
+    max-width: 900px;
+  }
+
+  .applynow-modal-about {
+    max-width: none; /* Remove max-width constraint on tablets */
+    width: 100%;
+  }
+  
+  .applynow-modal-top {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .applynow-modal-bottom {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .applynow-modal-image {
+    height: 200px;
+  }
+  
+  .applynow-modal-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .applynow-signup-btn {
+    margin-top: -60px;
+    align-self: flex-end;
+  }
+  
+  .applynow-modal-close {
+    margin-top: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .applynow-container {
+    padding: 1rem;
+  }
+  
+  .applynow-title {
+    font-size: 2rem;
+  }
+  
+  .applynow-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .applynow-modal-about {
+    padding: 12px 8px; /* Slightly reduce padding on mobile */
+  }
+  
+  .applynow-modal-card {
+    width: 95%;
+    margin: 1rem;
+  }
+  
+  .applynow-modal-header,
+  .applynow-modal-content {
+    padding: 1.5rem;
+  }
+  
+  .applynow-modal-title {
+    font-size: 1.5rem;
+  }
+  
+  .applynow-modal-top {
+    grid-template-columns: 1fr;
+  }
+  
+  .applynow-modal-bottom {
+    grid-template-columns: 1fr;
+  }
+  
+  .applynow-modal-image {
+    height: 180px;
+  }
+  
+  .applynow-modal-header {
+    text-align: center;
+  }
+  
+  .applynow-signup-btn {
+    align-self: flex-end;
+    width: 100%;
+    max-width: 190px;
+    margin-top: -50px;
+  }
+
+  .applynow-modal-close {
+    margin-top: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .applynow-container {
+    padding: 0.5rem;
+  }
+
+  .applynow-modal-about {
+    padding: 10px 6px; /* Further reduce padding on small screens */
+  }
+  
+  .applynow-title {
+    font-size: 1.75rem;
+  }
+  
+  .applynow-modal-header {
+    display: block;
+    padding: 1rem;
+  }
+  
+  .applynow-modal-content {
+    padding: 1rem;
+  }
+  
+  .applynow-modal-title {
+    font-size: 1.25rem;
+    margin-bottom: 7px;
+  }
+  
+  .applynow-signup-btn {
+    padding: 0.5rem 0.7rem;
+    font-size: 0.875rem;
+    margin-left: 20px;
+  }
+}

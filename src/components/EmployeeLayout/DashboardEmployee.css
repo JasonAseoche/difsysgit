@@ -1,0 +1,845 @@
+/* DashboardEmployee.css - Updated with Business Rules */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    background-color: #f8fafc;
+    color: #334155;
+    line-height: 1.6;
+    height: 100vh;
+}
+
+.emp-dash-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1rem 0 1rem;
+    background-color: #f8fafc;
+}
+
+.emp-dash-content::-webkit-scrollbar {
+    display: none; /* WebKit */
+}
+
+/* Header Section */
+.emp-dash-header {
+    flex-shrink: 0;
+    margin: 5px 15px 0 15px;
+}
+
+.emp-dash-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+}
+
+.emp-dash-user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.emp-dash-user-avatar {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.emp-dash-greeting {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+}
+
+.emp-dash-date {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.emp-dash-status-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: #f1f5f9;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #475569;
+}
+
+.emp-dash-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.emp-dash-status-dot.emp-dash-active-status {
+    background-color: #10b981;
+    animation: emp-dash-pulse-dot 2s infinite;
+}
+
+.emp-dash-status-dot.emp-dash-inactive-status {
+    background-color: #ef4444;
+}
+
+.emp-dash-status-dot.emp-dash-break-status {
+    background-color: #f59e0b;
+    animation: emp-dash-pulse-dot 2s infinite;
+}
+
+.emp-dash-status-dot.emp-dash-overtime-status {
+    background-color: #ef4444;
+    animation: emp-dash-pulse-dot 2s infinite;
+}
+
+.emp-dash-status-dot.emp-dash-late-status {
+    background-color: #f97316;
+    animation: emp-dash-pulse-dot 2s infinite;
+}
+
+.emp-dash-status-dot.emp-dash-weekend-status {
+    background-color: #8b5cf6;
+}
+
+/* Main Content */
+.emp-dash-content {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin: 15px;
+    padding: 0px;
+    flex: 1;
+    overflow-y: auto;
+    max-height: calc(100vh - 120px);
+    padding-bottom: 2rem;
+}
+
+/* Status Message */
+.emp-dash-status-message {
+    flex-shrink: 0;
+}
+
+.emp-dash-message-card {
+    background: linear-gradient(135deg, #003D7C 0%, #002a5c 100%);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.emp-dash-status-text {
+    font-size: 1rem;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* Time Section */
+.emp-dash-time-section {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+
+.emp-dash-main-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 200px;
+}
+
+.emp-dash-main-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.emp-dash-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.emp-dash-card-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #003979;
+}
+
+.emp-dash-timer-display {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
+}
+
+.emp-dash-status-indicators {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.emp-dash-time-text {
+    font-size: 3.2rem;
+    font-weight: 700;
+    color: #003979;
+    font-family: 'Monaco', 'Consolas', monospace;
+    letter-spacing: -0.02em;
+}
+
+.emp-dash-break-indicator {
+    background: #f59e0b;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    animation: emp-dash-pulse-break 1.5s infinite;
+}
+
+.emp-dash-lunch-indicator {
+    background: #10b981;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    animation: emp-dash-pulse-lunch 1.5s infinite;
+}
+
+.emp-dash-overtime-indicator {
+    background: #ef4444;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    animation: emp-dash-pulse-overtime 1.5s infinite;
+}
+
+.emp-dash-late-indicator {
+    background: #f97316;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    animation: emp-dash-pulse-late 1.5s infinite;
+}
+
+.emp-dash-time-controls {
+    display: flex;
+    flex-direction: column;
+}
+
+.emp-dash-session-info {
+    color: #64748b;
+    font-size: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 2.5rem;
+    margin-bottom: 0.5rem;
+    order: -1;
+}
+
+.emp-dash-button-group {
+    display: flex;
+    gap: 1rem;
+}
+
+.emp-dash-time-button {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 0.875rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex: 1;
+}
+
+.emp-dash-time-button:hover:not(:disabled) {
+    background: #2563eb;
+    transform: translateY(-1px);
+}
+
+.emp-dash-time-button:active {
+    transform: translateY(0);
+}
+
+.emp-dash-time-button:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.emp-dash-time-button.emp-dash-time-out {
+    background: #ef4444;
+}
+
+.emp-dash-time-button.emp-dash-time-out:hover:not(:disabled) {
+    background: #dc2626;
+}
+
+.emp-dash-break-button {
+    background: #f59e0b;
+    color: white;
+    border: none;
+    padding: 0.875rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex: 1;
+}
+
+.emp-dash-break-button:hover:not(.emp-dash-disabled) {
+    background: #d97706;
+    transform: translateY(-1px);
+}
+
+.emp-dash-break-button.emp-dash-end-break {
+    background: #10b981;
+}
+
+.emp-dash-break-button.emp-dash-end-break:hover {
+    background: #059669;
+}
+
+.emp-dash-break-button.emp-dash-disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.emp-dash-info-text {
+    text-align: center;
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.emp-dash-info-text p {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+/* Hours Card */
+.emp-dash-hours-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 200px;
+}
+
+.emp-dash-hours-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.emp-dash-hours-content {
+    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.emp-dash-hours-display {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.emp-dash-hours-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #3b82f6;
+    font-family: 'Monaco', 'Consolas', monospace;
+}
+
+.emp-dash-hours-unit {
+    font-size: 1.2rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.emp-dash-progress-section {
+    text-align: center;
+}
+
+.emp-dash-progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+}
+
+.emp-dash-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+.emp-dash-progress-text {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.emp-dash-overtime-text {
+    color: #ef4444;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: block;
+    margin-top: 0.25rem;
+}
+
+/* Stats Grid */
+.emp-dash-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    flex-shrink: 0;
+    margin-bottom: 0;
+}
+
+.emp-dash-stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.emp-dash-stat-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.emp-dash-stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+}
+
+.emp-dash-clock-icon {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+
+.emp-dash-calendar-icon {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.emp-dash-chart-icon {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.emp-dash-user-icon {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+.emp-dash-stat-content {
+    flex: 1;
+}
+
+.emp-dash-stat-content h4 {
+    font-size: 0.9rem;
+    color: #64748b;
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+}
+
+.emp-dash-stat-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+/* Activity Section */
+.emp-dash-activity-section {
+    flex-shrink: 0;
+    margin-top: -10px;
+}
+
+.emp-dash-activity-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    height: 390px;
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+}
+
+.emp-dash-activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    overflow-y: auto;
+    flex: 1;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.emp-dash-activity-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.875rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.emp-dash-activity-item:hover {
+    background: #f1f5f9;
+}
+
+.emp-dash-activity-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+}
+
+.emp-dash-activity-icon.emp-dash-work-start-icon {
+    background: #3b82f6;
+}
+
+.emp-dash-activity-icon.emp-dash-lunch-icon {
+    background: #10b981;
+}
+
+.emp-dash-activity-icon.emp-dash-overtime-icon {
+    background: #ef4444;
+}
+
+.emp-dash-activity-icon.emp-dash-weekend-icon {
+    background: #8b5cf6;
+}
+
+.emp-dash-activity-icon.emp-dash-time-in-icon {
+    background: #10b981;
+}
+
+.emp-dash-activity-icon.emp-dash-time-out-icon {
+    background: #ef4444;
+}
+
+.emp-dash-activity-icon.emp-dash-break-icon {
+    background: #f59e0b;
+}
+
+.emp-dash-activity-content {
+    flex: 1;
+}
+
+.emp-dash-activity-title {
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+}
+
+.emp-dash-activity-time {
+    color: #64748b;
+    font-size: 0.9rem;
+    padding-bottom: 10px;
+}
+
+/* Animations */
+@keyframes emp-dash-pulse-dot {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes emp-dash-pulse-break {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+@keyframes emp-dash-pulse-lunch {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+        background: #10b981;
+    }
+    50% {
+        opacity: 0.9;
+        transform: scale(1.02);
+        background: #059669;
+    }
+}
+
+@keyframes emp-dash-pulse-overtime {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+        background: #ef4444;
+    }
+    50% {
+        opacity: 0.9;
+        transform: scale(1.02);
+        background: #dc2626;
+    }
+}
+
+@keyframes emp-dash-pulse-late {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+        background: #f97316;
+    }
+    50% {
+        opacity: 0.9;
+        transform: scale(1.02);
+        background: #ea580c;
+    }
+}
+
+/* Responsive Design */
+
+/* Tablet - 768px and below */
+@media (max-width: 768px) {
+    .emp-dash-container {
+        padding: 0.75rem;
+    }
+    
+    .emp-dash-header-content {
+        padding: 1rem;
+    }
+    
+    .emp-dash-greeting {
+        font-size: 1.3rem;
+    }
+    
+    .emp-dash-time-section {
+        grid-template-columns: 1fr;
+    }
+    
+    .emp-dash-main-card,
+    .emp-dash-hours-card {
+        padding: 1.25rem;
+        min-height: 180px;
+    }
+    
+    .emp-dash-time-text {
+        font-size: 2.6rem;
+    }
+    
+    .emp-dash-hours-number {
+        font-size: 2rem;
+    }
+    
+    .emp-dash-stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+    
+    .emp-dash-stat-card {
+        padding: 1rem;
+    }
+    
+    .emp-dash-activity-card {
+        padding: 1.25rem;
+    }
+
+    .emp-dash-button-group {
+        flex-direction: column;
+    }
+}
+
+/* Mobile - 480px and below */
+@media (max-width: 480px) {
+    .emp-dash-container {
+        padding: 0.5rem;
+        height: 100vh;
+        overflow: hidden;
+    }
+    
+    .emp-dash-content {
+        max-height: calc(100vh - 140px);
+        padding-bottom: 3rem;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .emp-dash-header-content {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+        text-align: center;
+    }
+    
+    .emp-dash-user-info {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.75rem;
+    }
+    
+    .emp-dash-greeting {
+        font-size: 1.2rem;
+    }
+    
+    .emp-dash-main-card,
+    .emp-dash-hours-card,
+    .emp-dash-activity-card {
+        padding: 1rem;
+        min-height: 160px;
+    }
+    
+    .emp-dash-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .emp-dash-timer-display {
+        text-align: left;
+        align-items: flex-start;
+    }
+    
+    .emp-dash-time-text {
+        font-size: 2.4rem;
+    }
+    
+    .emp-dash-hours-number {
+        font-size: 1.8rem;
+    }
+    
+    .emp-dash-stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .emp-dash-stat-card {
+        padding: 1rem;
+    }
+    
+    .emp-dash-time-button,
+    .emp-dash-break-button {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.95rem;
+    }
+    
+    .emp-dash-activity-item {
+        padding: 0.75rem;
+    }
+    
+    .emp-dash-activity-icon {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .emp-dash-activity-card {
+        height: auto;
+        min-height: 300px;
+    }
+
+    .emp-dash-status-message {
+        margin-bottom: 0.5rem;
+    }
+
+    .emp-dash-message-card {
+        padding: 1rem;
+    }
+
+    .emp-dash-status-text {
+        font-size: 0.9rem;
+    }
+}
+
+/* Weekend status styling */
+.emp-dash-status-badge.weekend {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: white;
+}
+
+.emp-dash-timer-display .emp-dash-lunch-indicator,
+.emp-dash-timer-display .emp-dash-break-indicator,
+.emp-dash-timer-display .emp-dash-overtime-indicator,
+.emp-dash-timer-display .emp-dash-late-indicator {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    margin-top: 0; /* Remove the margin-top */
+    white-space: nowrap;
+}
+
+/* Disabled state for weekend */
+.emp-dash-time-button:disabled,
+.emp-dash-break-button:disabled {
+    background: #cbd5e1;
+    color: #64748b;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.emp-dash-time-button:disabled:hover,
+.emp-dash-break-button:disabled:hover {
+    background: #cbd5e1;
+    transform: none;
+}

@@ -1,0 +1,384 @@
+/* Dashboard Container */
+.supervisor-dashboard-container {
+    padding: 2rem;
+    background-color: #f8fafc;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  
+  /* Header Section */
+  .supervisor-dashboard-header {
+    margin-bottom: 2rem;
+  }
+  
+  .supervisor-dashboard-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 0.5rem 0;
+  }
+  
+  .supervisor-dashboard-subtitle {
+    font-size: 1.125rem;
+    color: #64748b;
+    margin: 0;
+  }
+  
+  /* Stats Grid */
+  .supervisor-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .supervisor-stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .supervisor-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .supervisor-stat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .supervisor-stat-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+  }
+  
+  .supervisor-stat-trend {
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+  }
+  
+  .supervisor-stat-trend.up {
+    color: #059669;
+    background-color: #d1fae5;
+  }
+  
+  .supervisor-stat-trend.down {
+    color: #dc2626;
+    background-color: #fee2e2;
+  }
+  
+  .supervisor-stat-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1e293b;
+  }
+  
+  /* Main Content Grid */
+  .supervisor-content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  /* Card Base Styles */
+  .supervisor-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+  }
+  
+  .supervisor-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 1.5rem 1rem 1.5rem;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  
+  .supervisor-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+  }
+  
+  .supervisor-view-all-btn {
+    background: none;
+    border: none;
+    color: #3b82f6;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  
+  .supervisor-view-all-btn:hover {
+    color: #2563eb;
+  }
+  
+  /* Activities Card */
+  .supervisor-activities-list {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+  }
+  
+  .supervisor-activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  
+  .supervisor-activity-item:last-child {
+    border-bottom: none;
+  }
+  
+  .supervisor-activity-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  
+  .supervisor-activity-content {
+    flex: 1;
+  }
+  
+  .supervisor-activity-user {
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+  }
+  
+  .supervisor-activity-action {
+    color: #64748b;
+    margin-bottom: 0.25rem;
+    font-size: 0.875rem;
+  }
+  
+  .supervisor-activity-time {
+    color: #94a3b8;
+    font-size: 0.75rem;
+  }
+  
+  /* Deadlines Card */
+  .supervisor-deadlines-list {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+  }
+  
+  .supervisor-deadline-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  
+  .supervisor-deadline-item:last-child {
+    border-bottom: none;
+  }
+  
+  .supervisor-deadline-info {
+    flex: 1;
+  }
+  
+  .supervisor-deadline-project {
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+  }
+  
+  .supervisor-deadline-time {
+    color: #64748b;
+    font-size: 0.875rem;
+  }
+  
+  .supervisor-priority-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+  
+  .supervisor-priority-badge.high {
+    background-color: #fee2e2;
+    color: #dc2626;
+  }
+  
+  .supervisor-priority-badge.medium {
+    background-color: #fef3c7;
+    color: #d97706;
+  }
+  
+  .supervisor-priority-badge.low {
+    background-color: #d1fae5;
+    color: #059669;
+  }
+  
+  /* Quick Actions Card */
+  .supervisor-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding: 0 1.5rem 1.5rem 1.5rem;
+  }
+  
+  .supervisor-action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1.5rem 1rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .supervisor-action-btn:hover {
+    background: #3b82f6;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+  
+  .supervisor-action-icon {
+    font-size: 1.5rem;
+  }
+  
+  .supervisor-action-text {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  /* Performance Card */
+  .supervisor-period-select {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: white;
+    font-size: 0.875rem;
+    color: #64748b;
+    cursor: pointer;
+  }
+  
+  .supervisor-performance-content {
+    padding: 1.5rem;
+  }
+  
+  .supervisor-performance-metric {
+    display: grid;
+    grid-template-columns: 1fr 2fr auto;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .supervisor-performance-metric:last-child {
+    margin-bottom: 0;
+  }
+  
+  .supervisor-metric-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #64748b;
+  }
+  
+  .supervisor-progress-bar {
+    height: 8px;
+    background-color: #f1f5f9;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .supervisor-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+  
+  .supervisor-metric-value {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1e293b;
+    min-width: 40px;
+    text-align: right;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .supervisor-dashboard-container {
+      padding: 1rem;
+    }
+    
+    .supervisor-dashboard-title {
+      font-size: 2rem;
+    }
+    
+    .supervisor-stats-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .supervisor-content-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .supervisor-actions-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .supervisor-performance-metric {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+      text-align: left;
+    }
+    
+    .supervisor-metric-value {
+      text-align: left;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .supervisor-card-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    
+    .supervisor-deadline-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    
+    .supervisor-activity-item {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }

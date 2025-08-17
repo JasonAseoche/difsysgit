@@ -19,7 +19,7 @@
   
   .period-selector {
     display: flex;
-    background-color: #f0f2f5;
+    background-color: white;
     border-radius: 8px;
     overflow: hidden;
   }

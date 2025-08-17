@@ -1,0 +1,1832 @@
+/* MyPayroll Component Styles - Updated to match Attendance design */
+
+/* Main Container */
+.myPayrollMainContainer {
+    padding: 10px 32px 32px 32px;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Inter', sans-serif;
+    background-color: #f8fafc;
+    position: relative;
+}
+
+/* Overlay for expanded card */
+.myPayrollCardOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+    animation: myPayrollFadeIn 0.3s ease-out;
+}
+
+@keyframes myPayrollFadeIn {
+    from { 
+        opacity: 0; 
+        backdrop-filter: blur(0px);
+    }
+    to { 
+        opacity: 1; 
+        backdrop-filter: blur(4px);
+    }
+}
+
+/* Header Section - Same as Attendance */
+.myPayrollHeaderSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+    gap: 32px;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+}
+
+.myPayrollProfileArea {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.myPayrollAvatarCircle {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 20px;
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+    position: relative;
+}
+
+.myPayrollAvatarText {
+    color: white;
+    letter-spacing: 1px;
+}
+
+.myPayrollProfileDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.myPayrollProfileName {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+.myPayrollProfileRole {
+    font-size: 16px;
+    color: #64748b;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Info Cards */
+.myPayrollInfoCards {
+    display: flex;
+    gap: 20px;
+}
+
+.myPayrollInfoCard {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #f8fafc;
+    padding: 16px 20px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
+}
+
+.myPayrollInfoCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.myPayrollClickableCard {
+    cursor: pointer;
+}
+
+.myPayrollClickableCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    border-color: #cbd5e1;
+}
+
+.myPayrollInfoIcon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.myPayrollIconGreen {
+    background: #10b981;
+}
+
+.myPayrollIconBlue {
+    background: #3b82f6;
+}
+
+.myPayrollInfoContent {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.myPayrollInfoLabel {
+    font-size: 12px;
+    color: #64748b;
+    margin: 0;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.myPayrollInfoValue {
+    font-size: 16px;
+    color: #1e293b;
+    margin: 0;
+    font-weight: 700;
+}
+
+/* Expanded Card Styles */
+.myPayrollExpandedCard {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 700px;
+    max-width: 90vw;
+    max-height: 85vh;
+    z-index: 1001;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 32px 64px rgba(0,0,0,0.25);
+    border: 1px solid #cbd5e1;
+    overflow-y: auto;
+    animation: myPayrollExpandCard 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes myPayrollExpandCard {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.85);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.myPayrollExpandedHeader {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 32px 32px 24px 32px;
+    border-bottom: 1px solid #e2e8f0;
+    position: relative;
+}
+
+.myPayrollExpandedIcon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+}
+
+.myPayrollExpandedTitle {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+    flex: 1;
+    letter-spacing: -0.025em;
+}
+
+.myPayrollCloseButton {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: #f1f5f9;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.myPayrollCloseButton:hover {
+    background: #e2e8f0;
+    color: #334155;
+    transform: scale(1.05);
+}
+
+.myPayrollExpandedContent {
+    padding: 24px 32px 32px 32px;
+}
+
+.myPayrollExpandedGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+.myPayrollExpandedItem {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.myPayrollExpandedItem:last-child,
+.myPayrollExpandedItem:nth-last-child(2) {
+    border-bottom: none;
+}
+
+.myPayrollExpandedLabel {
+    font-weight: 600;
+    color: #64748b;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+}
+
+.myPayrollExpandedValue {
+    color: #1e293b;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+/* Table Section */
+.myPayrollTableSection {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+}
+
+.myPayrollTableHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 32px 16px 32px;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.myPayrollTableTitle {
+    font-size: 24px;
+    font-weight: 700;
+    color: #003D7C;
+    margin: 0;
+}
+
+/* Toggle Button */
+.myPayrollToggleBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: #10b981;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.myPayrollToggleBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
+    background: linear-gradient(135deg, #059669 0%, #065f46 100%);
+}
+
+.myPayrollToggleBtn:active {
+    transform: translateY(0);
+}
+
+.myPayrollToggleBtn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.myPayrollTableWrapper {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+.myPayrollDataTable {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+}
+
+.myPayrollTableHeaderRow th {
+    background-color: #f8fafc;
+    padding: 18px 24px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #e2e8f0;
+    white-space: nowrap;
+}
+
+.myPayrollTableRow {
+    border-bottom: 1px solid #f1f5f9;
+    transition: all 0.2s ease;
+}
+
+.myPayrollTableRow:hover {
+    background-color: #f8fafc;
+}
+
+.myPayrollTableRow:last-child {
+    border-bottom: none;
+}
+
+.myPayrollTableRow td {
+    padding: 20px 24px;
+    font-size: 14px;
+    color: #374151;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.myPayrollIdCell {
+    font-weight: 700;
+    color: #3b82f6;
+    font-family: 'Monaco', 'Menlo', monospace;
+}
+
+.myPayrollPeriodCell {
+    font-weight: 500;
+    color: #1e293b;
+}
+
+.myPayrollDateCell {
+    color: #64748b;
+    font-weight: 500;
+}
+
+.myPayrollActionCell {
+    text-align: left;
+}
+
+.myPayrollNoDataCell {
+    text-align: center;
+    color: #94a3b8;
+    font-style: italic;
+    padding: 40px 24px;
+}
+
+/* View Button */
+.myPayrollViewBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: #003D7C;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.myPayrollViewBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
+    background: #003D7C;
+}
+
+.myPayrollViewBtn:active {
+    transform: translateY(0);
+}
+
+.myPayrollViewBtn svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Pagination */
+.myPayrollPaginationArea {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 32px;
+    background-color: #ffffff;
+    border-top: 1px solid #e2e8f0;
+}
+
+.myPayrollPaginationInfo {
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.myPayrollPaginationButtons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.myPayrollPaginationBtn {
+    padding: 10px 14px;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 12px;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-weight: 600;
+    min-width: 40px;
+    text-align: center;
+}
+
+.myPayrollPaginationBtn:hover {
+    background-color: #ffffff;
+    border-color: #94a3b8;
+    color: #003D7C !important;
+}
+
+.myPayrollPaginationActive {
+    background: #003D7C;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+}
+
+.myPayrollPaginationDots {
+    color: #94a3b8;
+    font-weight: 500;
+    padding: 0 8px;
+    font-size: 12px;
+}
+
+/* Responsive Design */
+
+/* Large Tablets and Small Laptops (1200px and below) */
+@media (max-width: 1200px) {
+    .myPayrollMainContainer {
+        padding: 24px;
+    }
+    
+    .myPayrollHeaderSection {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .myPayrollInfoCards {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 12px;
+    }
+    
+    .myPayrollExpandedCard {
+        width: 600px !important;
+        padding: 24px !important;
+    }
+    
+    .myPayrollExpandedGrid {
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+    
+    .myPayrollProfileName {
+        font-size: 24px;
+    }
+}
+
+/* Standard Tablets (768px and below) */
+@media (max-width: 768px) {
+    .myPayrollMainContainer {
+        padding: 16px;
+    }
+    
+    .myPayrollHeaderSection {
+        padding: 24px;
+    }
+    
+    .myPayrollInfoCards {
+        flex-direction: column;
+    }
+    
+    .myPayrollTableHeader {
+        flex-direction: row;
+        gap: 12px;
+        align-items: flex-start;
+        padding: 20px 24px 16px 24px;
+    }
+    
+    .myPayrollToggleBtn {
+        align-self: flex-end;
+    }
+    
+    .myPayrollExpandedCard {
+        width: 95vw !important;
+        max-height: 85vh !important;
+        border-radius: 16px !important;
+    }
+    
+    .myPayrollExpandedHeader {
+        padding: 24px 24px 20px 24px;
+    }
+    
+    .myPayrollExpandedContent {
+        padding: 20px 24px 24px 24px;
+    }
+    
+    .myPayrollExpandedGrid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .myPayrollExpandedTitle {
+        font-size: 20px;
+    }
+    
+    .myPayrollExpandedIcon {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .myPayrollCloseButton {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .myPayrollTableSection {
+        overflow-x: auto;
+    }
+    
+    .myPayrollTableRow td {
+        padding: 12px 16px;
+    }
+    
+    .myPayrollPaginationArea {
+        flex-direction: column;
+        gap: 16px;
+    }
+}
+
+/* Large Mobile Phones (480px and below) */
+@media (max-width: 480px) {
+    .myPayrollMainContainer {
+        padding: 12px;
+    }
+    
+    .myPayrollHeaderSection {
+        padding: 20px;
+        gap: 20px;
+    }
+    
+    .myPayrollProfileName {
+        font-size: 22px;
+    }
+    
+    .myPayrollAvatarCircle {
+        width: 56px;
+        height: 56px;
+        font-size: 18px;
+    }
+    
+    .myPayrollExpandedCard {
+        width: 95vw !important;
+        max-height: 90vh !important;
+        border-radius: 12px !important;
+    }
+    
+    .myPayrollExpandedHeader {
+        padding: 20px 20px 16px 20px;
+        gap: 12px;
+    }
+    
+    .myPayrollExpandedContent {
+        padding: 16px 20px 20px 20px;
+    }
+    
+    .myPayrollExpandedTitle {
+        font-size: 18px;
+    }
+    
+    .myPayrollExpandedIcon {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .myPayrollCloseButton {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .myPayrollExpandedValue {
+        font-size: 15px;
+    }
+    
+    .myPayrollExpandedLabel {
+        font-size: 12px;
+    }
+}
+
+/* Extra Small Mobile Phones (360px and below) */
+@media (max-width: 360px) {
+    .myPayrollMainContainer {
+        padding: 8px;
+    }
+    
+    .myPayrollHeaderSection {
+        padding: 16px;
+    }
+    
+    .myPayrollExpandedCard {
+        padding: 16px !important;
+    }
+    
+    .myPayrollExpandedHeader {
+        padding: 16px 16px 12px 16px;
+    }
+    
+    .myPayrollExpandedContent {
+        padding: 12px 16px 16px 16px;
+    }
+    
+    .myPayrollProfileName {
+        font-size: 20px;
+    }
+    
+    .myPayrollAvatarCircle {
+        width: 48px;
+        height: 48px;
+        font-size: 16px;
+    }
+    
+    .myPayrollExpandedValue {
+        font-size: 14px;
+    }
+    
+    .myPayrollExpandedLabel {
+        font-size: 11px;
+    }
+}
+
+/* Landscape Mobile Phones */
+@media (max-height: 500px) and (orientation: landscape) {
+    .myPayrollMainContainer {
+        padding: 8px 16px;
+    }
+    
+    .myPayrollHeaderSection {
+        flex-direction: row;
+        margin-bottom: 16px;
+    }
+    
+    .myPayrollExpandedCard {
+        max-height: 95vh !important;
+        overflow-y: auto;
+    }
+    
+    .myPayrollExpandedGrid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .myPayrollMainContainer {
+        padding: 0;
+        background: white;
+    }
+    
+    .myPayrollTableSection {
+        box-shadow: none;
+        border: 1px solid #000;
+        overflow: visible;
+    }
+    
+    .myPayrollViewBtn,
+    .myPayrollToggleBtn {
+        display: none;
+    }
+    
+    .myPayrollPaginationArea {
+        display: none;
+    }
+    
+    .myPayrollTableRow:hover {
+        background-color: transparent;
+    }
+    
+    .myPayrollDataTable {
+        min-width: auto;
+    }
+    
+    .myPayrollCardOverlay,
+    .myPayrollExpandedCard,
+    .myPayrollCloseButton {
+        display: none;
+    }
+}
+
+/* Exit Animation */
+.myPayrollCardOverlay.myPayrollExiting {
+    animation: myPayrollFadeOut 0.3s ease-out forwards;
+}
+
+.myPayrollExpandedCard.myPayrollExiting {
+    animation: myPayrollCollapseCard 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes myPayrollFadeOut {
+    from { 
+        opacity: 1; 
+        backdrop-filter: blur(4px);
+    }
+    to { 
+        opacity: 0; 
+        backdrop-filter: blur(0px);
+    }
+}
+
+@keyframes myPayrollCollapseCard {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.85);
+    }
+}
+
+/* MyPayroll Benefits Modal Styles - Unique selectors to avoid conflicts */
+
+/* Modal Overlay */
+.myPayrollBenefitsModalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+    /* Remove animation to prevent fade effect */
+  }
+  
+  /* Modal Content */
+  .myPayrollBenefitsModalContent {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 1000px;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    /* Remove animation to prevent fade effect */
+  }
+  
+  /* Modal Header */
+  .myPayrollBenefitsModalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+  }
+  
+  .myPayrollBenefitsModalNav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .myPayrollBenefitsModalNav h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+    /* Add smooth transition only for text content */
+    transition: opacity 0.2s ease;
+  }
+  
+  .myPayrollBenefitsNavBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: white;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #6b7280;
+  }
+  
+  .myPayrollBenefitsNavBtn:hover {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+    color: #374151;
+  }
+  
+  .myPayrollBenefitsCloseModal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: none;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #6b7280;
+  }
+  
+  .myPayrollBenefitsCloseModal:hover {
+    background: #f3f4f6;
+    color: #374151;
+  }
+  
+  /* Modal Body */
+  .myPayrollBenefitsModalBody {
+    display: flex;
+    flex: 1;
+    min-height: 500px;
+  }
+  
+  /* Modal Left Section */
+  .myPayrollBenefitsModalLeft {
+    width: 300px;
+    padding: 24px;
+    border-right: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .myPayrollBenefitsModalAvatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 auto;
+  }
+  
+  .myPayrollBenefitsModalEmployeeInfo {
+    text-align: center;
+  }
+  
+  .myPayrollBenefitsModalEmployeeInfo h4 {
+    margin: 0 0 4px 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #1f2937;
+  }
+  
+  .myPayrollBenefitsModalEmployeeInfo p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 14px;
+  }
+  
+  .myPayrollBenefitsModalFileSelector {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .myPayrollBenefitsModalFileSelector label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+  }
+  
+  .myPayrollBenefitsFileSelector {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .myPayrollBenefitsFileSelector:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    outline: none;
+  }
+  
+  /* File Summary Styles */
+  .myPayrollBenefitsFileSummary {
+    margin-top: 16px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+  }
+  
+  .myPayrollBenefitsFileSummary h5 {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+  }
+  
+  .myPayrollBenefitsFileSummary ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .myPayrollBenefitsFileSummary li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    font-size: 13px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .myPayrollBenefitsFileSummary li:hover {
+    background: rgba(59, 130, 246, 0.1);
+  }
+  
+  .myPayrollBenefitsFileSummary li.available {
+    color: #059669;
+  }
+  
+  .myPayrollBenefitsFileSummary li.unavailable {
+    color: #9ca3af;
+  }
+  
+  .myPayrollBenefitsFileSummary li.current {
+    background: rgba(59, 130, 246, 0.15);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+  }
+  
+  .file-status-indicator {
+    width: 16px;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .file-type-name {
+    flex: 1;
+  }
+  
+  /* Modal Right Section */
+  .myPayrollBenefitsModalRight {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    /* Add smooth transition only for content opacity */
+    transition: opacity 0.15s ease;
+  }
+  
+  .myPayrollBenefitsModalPreview {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .myPayrollBenefitsFilePreviewHeader {
+    padding: 16px 20px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .myPayrollBenefitsFilePreviewHeader span {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+  }
+  
+  .file-size {
+    font-size: 12px;
+    color: #6b7280;
+    margin-left: 8px;
+  }
+  
+  .myPayrollBenefitsFilePreviewContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 40px;
+    text-align: center;
+  }
+  
+  .myPayrollBenefitsPdfPreview {
+    flex: 1;
+    width: 100%;
+    min-height: 400px;
+    border: none;
+    border-radius: 8px;
+  }
+  
+  .myPayrollBenefitsImagePreview {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .myPayrollBenefitsPreviewImage {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .myPayrollBenefitsFilePreviewPlaceholder {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 40px;
+    text-align: center;
+  }
+  
+  .myPayrollBenefitsPreviewFileIcon {
+    color: #6b7280;
+    opacity: 0.7;
+  }
+  
+  .myPayrollBenefitsFilePreviewPlaceholder p {
+    font-size: 18px;
+    font-weight: 500;
+    color: #374151;
+    margin: 0;
+  }
+  
+  .myPayrollBenefitsFilePreviewPlaceholder span {
+    font-size: 14px;
+    color: #6b7280;
+  }
+  
+  .myPayrollBenefitsDownloadBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 8px;
+  }
+  
+  .myPayrollBenefitsDownloadBtn:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+  }
+  
+  /* No File State */
+  .myPayrollBenefitsNoFile {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 40px;
+    text-align: center;
+  }
+  
+  .myPayrollBenefitsNoFileIcon {
+    color: #9ca3af;
+    opacity: 0.5;
+  }
+  
+  .myPayrollBenefitsNoFile p {
+    font-size: 16px;
+    font-weight: 500;
+    color: #6b7280;
+    margin: 0;
+  }
+  
+  /* Remove all fade animations that cause the issue */
+  /* No keyframe animations for modal show/hide */
+  
+  /* Responsive Design */
+  @media (max-width: 1200px) {
+    .myPayrollBenefitsModalContent {
+      margin: 10px;
+      max-height: 95vh;
+    }
+  
+    .myPayrollBenefitsModalLeft {
+      padding: 16px;
+    }
+  
+    .myPayrollBenefitsModalAvatar {
+      width: 60px;
+      height: 60px;
+      font-size: 18px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .myPayrollBenefitsModalContent {
+      margin: 5px;
+      max-height: 98vh;
+    }
+  
+    .myPayrollBenefitsModalBody {
+      flex-direction: column;
+    }
+  
+    .myPayrollBenefitsModalLeft {
+      width: 100%;
+      border-right: none;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 16px;
+    }
+  
+    .myPayrollBenefitsModalHeader {
+      padding: 16px;
+    }
+  
+    .myPayrollBenefitsModalNav h3 {
+      font-size: 16px;
+    }
+  
+    .myPayrollBenefitsModalAvatar {
+      width: 50px;
+      height: 50px;
+      font-size: 16px;
+    }
+  
+    .myPayrollBenefitsModalEmployeeInfo h4 {
+      font-size: 18px;
+    }
+  
+    .myPayrollBenefitsFilePreviewContent {
+      padding: 20px;
+    }
+  
+    .myPayrollBenefitsPdfPreview {
+      min-height: 300px;
+    }
+  }
+  
+  @media (max-width: 500px) {
+    .myPayrollBenefitsModalOverlay {
+      padding: 10px;
+    }
+  
+    .myPayrollBenefitsModalContent {
+      margin: 0;
+      max-height: 100vh;
+      border-radius: 8px;
+    }
+  
+    .myPayrollBenefitsModalHeader {
+      padding: 12px;
+    }
+  
+    .myPayrollBenefitsModalNav {
+      gap: 12px;
+    }
+  
+    .myPayrollBenefitsModalNav h3 {
+      font-size: 14px;
+    }
+  
+    .myPayrollBenefitsNavBtn,
+    .myPayrollBenefitsCloseModal {
+      width: 32px;
+      height: 32px;
+    }
+  
+    .myPayrollBenefitsModalLeft {
+      padding: 12px;
+    }
+  
+    .myPayrollBenefitsModalAvatar {
+      width: 40px;
+      height: 40px;
+      font-size: 14px;
+    }
+  
+    .myPayrollBenefitsModalEmployeeInfo h4 {
+      font-size: 16px;
+    }
+  
+    .myPayrollBenefitsModalEmployeeInfo p {
+      font-size: 12px;
+    }
+  
+    .myPayrollBenefitsFilePreviewContent {
+      padding: 15px;
+    }
+  
+    .myPayrollBenefitsFilePreviewPlaceholder p {
+      font-size: 16px;
+    }
+  
+    .myPayrollBenefitsFilePreviewPlaceholder span {
+      font-size: 12px;
+    }
+  
+    .myPayrollBenefitsPdfPreview {
+      min-height: 250px;
+    }
+  
+    .myPayrollBenefitsDownloadBtn {
+      padding: 8px 16px;
+      font-size: 12px;
+    }
+  }
+  
+  /* Modal Header */
+  .myPayrollBenefitsModalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+  }
+  
+  .myPayrollBenefitsModalNav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .myPayrollBenefitsModalNav h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+  }
+  
+  .myPayrollBenefitsNavBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: white;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #6b7280;
+  }
+  
+  .myPayrollBenefitsNavBtn:hover {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+    color: #374151;
+  }
+  
+  .myPayrollBenefitsCloseModal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: none;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #6b7280;
+  }
+  
+  .myPayrollBenefitsCloseModal:hover {
+    background: #f3f4f6;
+    color: #374151;
+  }
+  
+  /* Modal Body */
+  .myPayrollBenefitsModalBody {
+    display: flex;
+    flex: 1;
+    min-height: 500px;
+  }
+  
+  /* Modal Left Section */
+  .myPayrollBenefitsModalLeft {
+    width: 300px;
+    padding: 24px;
+    border-right: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .myPayrollBenefitsModalAvatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 auto;
+  }
+  
+  .myPayrollBenefitsModalEmployeeInfo {
+    text-align: center;
+  }
+  
+  .myPayrollBenefitsModalEmployeeInfo h4 {
+    margin: 0 0 4px 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #1f2937;
+  }
+  
+  .myPayrollBenefitsModalEmployeeInfo p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 14px;
+  }
+  
+  .myPayrollBenefitsModalFileSelector {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .myPayrollBenefitsModalFileSelector label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+  }
+  
+  .myPayrollBenefitsFileSelector {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .myPayrollBenefitsFileSelector:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    outline: none;
+  }
+  
+  /* Modal Right Section */
+  .myPayrollBenefitsModalRight {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .myPayrollBenefitsModalPreview {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .myPayrollBenefitsFilePreviewHeader {
+    padding: 16px 20px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+  }
+  
+  .myPayrollBenefitsFilePreviewHeader span {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+  }
+  
+  .myPayrollBenefitsFilePreviewContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 40px;
+    text-align: center;
+  }
+  
+  .myPayrollBenefitsPdfPreview {
+    flex: 1;
+    width: 100%;
+    min-height: 400px;
+    border: none;
+    border-radius: 8px;
+  }
+  
+  .myPayrollBenefitsImagePreview {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .myPayrollBenefitsPreviewImage {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .myPayrollBenefitsFilePreviewPlaceholder {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 40px;
+    text-align: center;
+  }
+  
+  .myPayrollBenefitsPreviewFileIcon {
+    color: #6b7280;
+    opacity: 0.7;
+  }
+  
+  .myPayrollBenefitsFilePreviewPlaceholder p {
+    font-size: 18px;
+    font-weight: 500;
+    color: #374151;
+    margin: 0;
+  }
+  
+  .myPayrollBenefitsFilePreviewPlaceholder span {
+    font-size: 14px;
+    color: #6b7280;
+  }
+  
+  .myPayrollBenefitsDownloadBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 8px;
+  }
+  
+  .myPayrollBenefitsDownloadBtn:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+  }
+  
+  /* No File State */
+  .myPayrollBenefitsNoFile {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 40px;
+    text-align: center;
+  }
+  
+  .myPayrollBenefitsNoFileIcon {
+    color: #9ca3af;
+    opacity: 0.5;
+  }
+  
+  .myPayrollBenefitsNoFile p {
+    font-size: 16px;
+    font-weight: 500;
+    color: #6b7280;
+    margin: 0;
+  }
+  
+  /* Focus Styles for Accessibility */
+  .myPayrollBenefitsFileSelector:focus,
+  .myPayrollBenefitsNavBtn:focus,
+  .myPayrollBenefitsCloseModal:focus,
+  .myPayrollBenefitsDownloadBtn:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+  
+  /* Smooth Transitions - Only for specific elements */
+  .myPayrollBenefitsNavBtn,
+  .myPayrollBenefitsCloseModal,
+  .myPayrollBenefitsFileSelector,
+  .myPayrollBenefitsDownloadBtn,
+  .myPayrollBenefitsFileSummary li {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Custom Scrollbar for Modal */
+  .myPayrollBenefitsModalContent::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .myPayrollBenefitsModalContent::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .myPayrollBenefitsModalContent::-webkit-scrollbar-thumb {
+    background-color: rgba(203, 213, 225, 0.5);
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .myPayrollBenefitsModalContent::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(148, 163, 184, 0.7);
+  }
+  @media (max-width: 1200px) {
+    .myPayrollBenefitsModalContent {
+      margin: 10px;
+      max-height: 95vh;
+    }
+  
+    .myPayrollBenefitsModalLeft {
+      padding: 16px;
+    }
+  
+    .myPayrollBenefitsModalAvatar {
+      width: 60px;
+      height: 60px;
+      font-size: 18px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .myPayrollBenefitsModalContent {
+      margin: 5px;
+      max-height: 98vh;
+    }
+  
+    .myPayrollBenefitsModalBody {
+      flex-direction: column;
+    }
+  
+    .myPayrollBenefitsModalLeft {
+      width: 100%;
+      border-right: none;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 16px;
+    }
+  
+    .myPayrollBenefitsModalHeader {
+      padding: 16px;
+    }
+  
+    .myPayrollBenefitsModalNav h3 {
+      font-size: 16px;
+    }
+  
+    .myPayrollBenefitsModalAvatar {
+      width: 50px;
+      height: 50px;
+      font-size: 16px;
+    }
+  
+    .myPayrollBenefitsModalEmployeeInfo h4 {
+      font-size: 18px;
+    }
+  
+    .myPayrollBenefitsFilePreviewContent {
+      padding: 20px;
+    }
+  
+    .myPayrollBenefitsPdfPreview {
+      min-height: 300px;
+    }
+  }
+  
+  @media (max-width: 500px) {
+    .myPayrollBenefitsModalOverlay {
+      padding: 10px;
+    }
+  
+    .myPayrollBenefitsModalContent {
+      margin: 0;
+      max-height: 100vh;
+      border-radius: 8px;
+    }
+  
+    .myPayrollBenefitsModalHeader {
+      padding: 12px;
+    }
+  
+    .myPayrollBenefitsModalNav {
+      gap: 12px;
+    }
+  
+    .myPayrollBenefitsModalNav h3 {
+      font-size: 14px;
+    }
+  
+    .myPayrollBenefitsNavBtn,
+    .myPayrollBenefitsCloseModal {
+      width: 32px;
+      height: 32px;
+    }
+  
+    .myPayrollBenefitsModalLeft {
+      padding: 12px;
+    }
+  
+    .myPayrollBenefitsModalAvatar {
+      width: 40px;
+      height: 40px;
+      font-size: 14px;
+    }
+  
+    .myPayrollBenefitsModalEmployeeInfo h4 {
+      font-size: 16px;
+    }
+  
+    .myPayrollBenefitsModalEmployeeInfo p {
+      font-size: 12px;
+    }
+  
+    .myPayrollBenefitsFilePreviewContent {
+      padding: 15px;
+    }
+  
+    .myPayrollBenefitsFilePreviewPlaceholder p {
+      font-size: 16px;
+    }
+  
+    .myPayrollBenefitsFilePreviewPlaceholder span {
+      font-size: 12px;
+    }
+  
+    .myPayrollBenefitsPdfPreview {
+      min-height: 250px;
+    }
+  
+    .myPayrollBenefitsDownloadBtn {
+      padding: 8px 16px;
+      font-size: 12px;
+    }
+  }
+  
+  /* Focus Styles for Accessibility */
+  .myPayrollBenefitsFileSelector:focus,
+  .myPayrollBenefitsNavBtn:focus,
+  .myPayrollBenefitsCloseModal:focus,
+  .myPayrollBenefitsDownloadBtn:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+  
+  /* Smooth Transitions */
+  .myPayrollBenefitsModalContent * {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* File Summary Styles */
+  .myPayrollBenefitsFileSummary {
+    margin-top: 16px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+  }
+  
+  .myPayrollBenefitsFileSummary h5 {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+  }
+  
+  .myPayrollBenefitsFileSummary ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .myPayrollBenefitsFileSummary li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    font-size: 13px;
+  }
+  
+  .myPayrollBenefitsFileSummary li.available {
+    color: #059669;
+  }
+  
+  .myPayrollBenefitsFileSummary li.unavailable {
+    color: #9ca3af;
+  }
+  
+  .file-status-indicator {
+    width: 16px;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .file-size {
+    font-size: 12px;
+    color: #6b7280;
+    margin-left: 8px;
+  }
+  
+  /* Custom Scrollbar for Modal */
+  .myPayrollBenefitsModalContent::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .myPayrollBenefitsModalContent::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .myPayrollBenefitsModalContent::-webkit-scrollbar-thumb {
+    background-color: rgba(203, 213, 225, 0.5);
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .myPayrollBenefitsModalContent::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(148, 163, 184, 0.7);
+  }

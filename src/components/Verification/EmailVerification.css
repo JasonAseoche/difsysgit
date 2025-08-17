@@ -1,0 +1,436 @@
+/* EmailVerification.css - Unique Classes to Prevent Conflicts */
+
+.difsys-email-verification-container-unique {
+    min-height: 100vh;
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.difsys-email-verification-card-unique {
+    background: white;
+    border: 1px solid #000;
+    border-radius: 12px;
+    padding: 40px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.difsys-email-verification-header-unique {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.difsys-email-verification-logo-unique {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 20px;
+    object-fit: contain;
+}
+
+.difsys-email-verification-title-unique {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 12px 0;
+}
+
+.difsys-email-verification-subtitle-unique {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.difsys-email-verification-otp-container-unique {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.difsys-email-verification-otp-inputs-unique {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.difsys-email-verification-otp-input-unique {
+    width: 50px;
+    height: 50px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    background: white;
+    transition: all 0.2s ease;
+}
+
+.difsys-email-verification-otp-input-unique:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.difsys-email-verification-otp-input-unique:disabled {
+    background: #f5f5f5;
+    cursor: not-allowed;
+}
+
+.difsys-email-verification-error-message-unique {
+    color: #dc3545;
+    font-size: 14px;
+    text-align: center;
+    padding: 8px 12px;
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 6px;
+    margin: 10px 0;
+}
+
+.difsys-email-verification-success-message-unique {
+    color: #155724;
+    font-size: 14px;
+    text-align: center;
+    padding: 8px 12px;
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    border-radius: 6px;
+    margin: 10px 0;
+}
+
+.difsys-email-verification-actions-unique {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+.difsys-email-verification-verify-button-unique {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.difsys-email-verification-verify-button-unique:hover:not(:disabled) {
+    background: #0056b3;
+    transform: translateY(-1px);
+}
+
+.difsys-email-verification-verify-button-unique:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.difsys-email-verification-resend-button-unique {
+    background: transparent;
+    color: #007bff;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: underline;
+    border-radius: 4px;
+}
+
+.difsys-email-verification-resend-button-unique:hover:not(:disabled) {
+    background: rgba(0, 123, 255, 0.1);
+    text-decoration: none;
+}
+
+.difsys-email-verification-resend-button-unique:disabled {
+    color: #6c757d;
+    cursor: not-allowed;
+    text-decoration: none;
+}
+
+/* Loading animation */
+.difsys-email-verification-verify-button-unique:disabled {
+    position: relative;
+}
+
+.difsys-email-verification-verify-button-unique:disabled::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    margin: auto;
+    border: 2px solid transparent;
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: difsys-loading-spin-unique 1s linear infinite;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+@keyframes difsys-loading-spin-unique {
+    0% { transform: translateY(-50%) rotate(0deg); }
+    100% { transform: translateY(-50%) rotate(360deg); }
+}
+
+/* SUCCESS MODAL - COMPLETELY UNIQUE CLASSES */
+
+.difsys-success-overlay-unique {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    /* NO ANIMATION ON OVERLAY */
+}
+
+.difsys-success-modal-unique {
+    background: white;
+    border-radius: 16px;
+    padding: 48px 40px;
+    text-align: center;
+    max-width: 420px;
+    width: 90%;
+    box-shadow: 
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(229, 231, 235, 0.8);
+    /* NO ANIMATION ON MODAL CONTAINER */
+    position: relative;
+}
+
+.difsys-success-icon-wrapper-unique {
+    margin-bottom: 32px;
+    display: flex;
+    justify-content: center;
+}
+
+.difsys-success-icon-unique {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+    color: white;
+    font-size: 36px;
+    font-weight: bold;
+    line-height: 1;
+    /* NO ANIMATION */
+}
+
+.difsys-success-title-unique {
+    color: #1f2937;
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 12px 0;
+    /* NO ANIMATION */
+}
+
+.difsys-success-subtitle-unique {
+    color: #6b7280;
+    font-size: 16px;
+    margin: 0 0 32px 0;
+    line-height: 1.5;
+    /* NO ANIMATION */
+}
+
+.difsys-success-progress-unique {
+    width: 100%;
+    height: 8px;
+    background-color: #f3f4f6;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 8px;
+    /* NO ANIMATION */
+}
+
+.difsys-success-progress-bar-unique {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #059669);
+    border-radius: 4px;
+    width: 0%;
+    /* Use transition instead of animation to prevent looping */
+    transition: width 4s ease-out;
+}
+
+.difsys-success-progress-text-unique {
+    font-size: 14px;
+    color: #9ca3af;
+    margin-top: 8px;
+    /* NO ANIMATION */
+}
+
+/* Verified States */
+.difsys-verified-state-unique {
+    border-color: #10b981 !important;
+    background-color: #f0fdf4 !important;
+    color: #059669 !important;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
+}
+
+.difsys-verified-button-state-unique {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    color: white !important;
+    cursor: default !important;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3) !important;
+}
+
+/* Progress bar class for triggering transition */
+.difsys-success-progress-bar-unique.difsys-progress-active-unique {
+    width: 100%;
+}
+
+/* Enhanced Button States */
+.difsys-email-verification-verify-button-unique:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.25);
+}
+
+/* Error Message with Simple Shake */
+.difsys-email-verification-error-message-unique {
+    background: linear-gradient(135deg, #fef2f2, #fee2e2);
+    border: 1px solid #fca5a5;
+    color: #dc2626;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 15px 0;
+    font-weight: 500;
+    animation: difsys-shake-once-unique 0.4s ease-in-out;
+}
+
+@keyframes difsys-shake-once-unique {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+}
+
+/* Success Message */
+.difsys-email-verification-success-message-unique {
+    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    border: 1px solid #86efac;
+    color: #059669;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 15px 0;
+    font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .difsys-email-verification-container-unique {
+        padding: 15px;
+    }
+    
+    .difsys-email-verification-card-unique {
+        padding: 30px 20px;
+        max-width: 400px;
+    }
+    
+    .difsys-email-verification-title-unique {
+        font-size: 20px;
+    }
+    
+    .difsys-email-verification-subtitle-unique {
+        font-size: 13px;
+    }
+    
+    .difsys-email-verification-otp-inputs-unique {
+        gap: 8px;
+    }
+    
+    .difsys-email-verification-otp-input-unique {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+    
+    .difsys-email-verification-logo-unique {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .difsys-success-modal-unique {
+        padding: 40px 32px;
+        max-width: 380px;
+    }
+    
+    .difsys-success-icon-unique {
+        width: 70px;
+        height: 70px;
+        font-size: 30px;
+    }
+    
+    .difsys-success-title-unique {
+        font-size: 22px;
+    }
+    
+    .difsys-success-subtitle-unique {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .difsys-email-verification-card-unique {
+        padding: 25px 15px;
+        max-width: 350px;
+    }
+    
+    .difsys-email-verification-otp-inputs-unique {
+        gap: 6px;
+    }
+    
+    .difsys-email-verification-otp-input-unique {
+        width: 35px;
+        height: 35px;
+        font-size: 14px;
+    }
+    
+    .difsys-email-verification-title-unique {
+        font-size: 18px;
+    }
+    
+    .difsys-email-verification-subtitle-unique {
+        font-size: 12px;
+    }
+    
+    .difsys-success-modal-unique {
+        padding: 32px 24px;
+        max-width: 340px;
+        margin: 20px;
+    }
+    
+    .difsys-success-icon-unique {
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+    }
+    
+    .difsys-success-title-unique {
+        font-size: 20px;
+    }
+    
+    .difsys-success-subtitle-unique {
+        font-size: 14px;
+    }
+}

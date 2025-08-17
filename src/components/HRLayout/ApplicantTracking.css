@@ -1,0 +1,1812 @@
+/* ApplicantTracking.css - Enhanced Responsive Design */
+
+/* Main Container */
+.apptrack-container {
+  padding: 10px 32px 32px 32px;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Inter', sans-serif;
+  background-color: #f8fafc;
+}
+
+/* Header Section - Based on Attendance Style */
+.apptrack-header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 25px;
+  gap: 32px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+}
+
+.apptrack-profile-area {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Remove avatar circle styles */
+.apptrack-avatar-circle {
+  display: none;
+}
+
+.apptrack-avatar-text {
+  display: none;
+}
+
+.apptrack-profile-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.apptrack-profile-name {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.apptrack-profile-role {
+  font-size: 16px;
+  color: #64748b;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Info Cards */
+.apptrack-info-cards {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.apptrack-info-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #f8fafc;
+  padding: 16px 20px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+  min-width: 180px;
+}
+
+.apptrack-info-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.apptrack-info-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+
+.apptrack-icon-blue {
+  background: #3b82f6;
+}
+
+.apptrack-icon-green {
+  background: #10b981;
+}
+
+.apptrack-icon-purple {
+  background: #8b5cf6;
+}
+
+.apptrack-icon-red {
+  background: #ef4444;
+}
+
+.apptrack-info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.apptrack-info-label {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.apptrack-info-value {
+  font-size: 16px;
+  color: #1e293b;
+  margin: 0;
+  font-weight: 700;
+}
+
+/* Search Section - Fixed to align right */
+.apptrack-search-section {
+  display: flex !important;
+  gap: 14px !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  margin-bottom: 15px !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.apptrack-search-container {
+  position: relative;
+  flex: 0 0 400px !important;
+  max-width: 400px;
+}
+
+.apptrack-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 35%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: #64748b;
+}
+
+.apptrack-search-input {
+  width: 100%;
+  padding: 12px 16px 12px 40px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+  background: white;
+  height: 44px;
+  box-sizing: border-box;
+}
+
+.apptrack-search-input:focus {
+  border-color: #3b82f6;
+}
+
+.apptrack-filters {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.apptrack-filter-select {
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  font-size: 14px;
+  cursor: pointer;
+  min-width: 140px;
+  outline: none;
+  transition: border-color 0.2s ease;
+  height: 44px;
+  box-sizing: border-box;
+}
+
+.apptrack-filter-select:focus {
+  border-color: #3b82f6;
+}
+
+/* Filter Button and Dropdown */
+.apptrack-filter-container {
+  position: relative;
+  top: -10px;
+}
+
+.apptrack-filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  font-size: 14px;
+  cursor: pointer;
+  min-width: 140px;
+  outline: none;
+  transition: all 0.2s ease;
+  color: #374151;
+  height: 44px;
+  box-sizing: border-box;
+}
+
+.apptrack-filter-btn:hover {
+  border-color: #94a3b8;
+  background: #f8fafc;
+}
+
+.apptrack-filter-text {
+  flex: 1;
+  text-align: left;
+}
+
+.apptrack-filter-chevron {
+  transition: transform 0.2s ease;
+  color: #64748b;
+}
+
+.apptrack-filter-chevron.rotated {
+  transform: rotate(180deg);
+}
+
+.apptrack-filter-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  z-index: 1000;
+  padding: 8px 0;
+  animation: fadeInDown 0.2s ease;
+  margin-top: 4px;
+}
+
+.apptrack-filter-option {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #374151;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.apptrack-filter-option:hover {
+  background: #f8fafc;
+  color: #1e293b;
+}
+
+.apptrack-filter-option.active {
+  background: #3b82f6;
+  color: white;
+}
+
+.apptrack-filter-option.active:hover {
+  background: #2563eb;
+}
+
+/* Candidates Grid */
+.apptrack-candidates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+.apptrack-candidate-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #f1f5f9;
+  position: relative;
+}
+
+.apptrack-candidate-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.apptrack-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.apptrack-candidate-avatar {
+  flex-shrink: 0;
+}
+
+.apptrack-avatar-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.apptrack-candidate-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.apptrack-candidate-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 4px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.apptrack-candidate-position {
+  color: #64748b;
+  font-size: 14px;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Menu and Dropdown */
+.apptrack-card-menu {
+  position: relative;
+}
+
+.apptrack-menu-btn {
+  padding: 8px;
+  border: none;
+  background: #f8fafc;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #64748b;
+  transition: all 0.2s ease;
+}
+
+.apptrack-menu-btn:hover {
+  background: #e2e8f0;
+  color: #374151;
+}
+
+.apptrack-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  z-index: 1000;
+  min-width: 180px;
+  padding: 8px 0;
+  animation: fadeInDown 0.2s ease;
+}
+
+.apptrack-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #374151;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.apptrack-dropdown-item:hover {
+  background: #f8fafc;
+  color: #1e293b;
+}
+
+.apptrack-dropdown-item-danger {
+  color: #ef4444 !important;
+}
+
+.apptrack-dropdown-item-danger:hover {
+  background: #fef2f2 !important;
+  color: #dc2626 !important;
+}
+
+/* Card Body */
+.apptrack-card-body {
+  margin-bottom: 16px;
+}
+
+.apptrack-contact-info {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.apptrack-contact-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.apptrack-contact-item span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.apptrack-status-section {
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* Status Badges */
+.apptrack-status-badge {
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-block;
+}
+
+.apptrack-status-new {
+  background: #dbeafe;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}
+
+.apptrack-status-scheduled {
+  background: #fed7aa;
+  color: #c2410c;
+  border: 1px solid #fdba74;
+}
+
+.apptrack-status-approved {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.apptrack-status-declined {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+.apptrack-status-default {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+/* Button Styles */
+.apptrack-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.apptrack-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.apptrack-btn-cancel {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+.apptrack-btn-cancel:hover {
+  background: #e2e8f0;
+}
+
+.apptrack-btn-confirm {
+  background: #3b82f6;
+  color: white;
+}
+
+.apptrack-btn-confirm:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.apptrack-btn-schedule {
+  background: #f59e0b;
+  color: white;
+}
+
+.apptrack-btn-schedule:hover {
+  background: #d97706;
+}
+
+.apptrack-btn-approve {
+  background: #10b981;
+  color: white;
+}
+
+.apptrack-btn-approve:hover {
+  background: #059669;
+}
+
+.apptrack-btn-decline {
+  background: #ef4444;
+  color: white;
+}
+
+.apptrack-btn-decline:hover {
+  background: #dc2626;
+}
+
+.apptrack-btn-download {
+  background: #6366f1;
+  color: white;
+}
+
+.apptrack-btn-download:hover {
+  background: #4f46e5;
+}
+
+.apptrack-btn-view {
+  background: #06b6d4;
+  color: white;
+  padding: 8px;
+  min-width: auto;
+}
+
+.apptrack-btn-view:hover {
+  background: #0891b2;
+}
+
+/* Modal Styles */
+.apptrack-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.apptrack-schedule-modal {
+  background: white;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 450px;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15);
+}
+
+.apptrack-approval-modal {
+  background: white;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15);
+}
+
+.apptrack-detail-modal {
+  background: white;
+  border-radius: 12px;
+  width: 95%;
+  max-width: 900px;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+}
+
+.apptrack-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f1f5f9;
+  background: #f8fafc;
+}
+
+.apptrack-modal-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+.apptrack-modal-close {
+  padding: 8px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #64748b;
+  transition: all 0.2s ease;
+}
+
+.apptrack-modal-close:hover {
+  background: #e2e8f0;
+  color: #374151;
+}
+
+.apptrack-modal-body {
+  padding: 24px;
+  max-height: 60vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.apptrack-modal-body::-webkit-scrollbar {
+  display: none;
+}
+
+.apptrack-modal-body-large {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.apptrack-modal-body-large::-webkit-scrollbar {
+  display: none;
+}
+
+.apptrack-candidate-section {
+  flex: 1;
+  padding: 24px;
+  overflow: visible;
+}
+
+.apptrack-candidate-info-modal,
+.apptrack-candidate-header-modal {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.apptrack-modal-avatar-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.apptrack-candidate-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.apptrack-candidate-details h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+.apptrack-candidate-details p {
+  color: #64748b;
+  font-size: 14px;
+  margin: 0;
+}
+
+.apptrack-schedule-form {
+  display: grid;
+  gap: 16px;
+}
+
+.apptrack-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.apptrack-form-group label {
+  font-weight: 500;
+  color: #374151;
+  font-size: 14px;
+}
+
+.apptrack-date-input,
+.apptrack-time-select {
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.apptrack-date-input:focus,
+.apptrack-time-select:focus {
+  border-color: #3b82f6;
+}
+
+.apptrack-contact-details {
+  margin-bottom: 24px;
+}
+
+.apptrack-contact-details h5 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 16px 0;
+}
+
+.apptrack-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #64748b;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+/* Requirements Form Styles */
+.apptrack-requirements-form {
+  margin-top: 16px;
+}
+
+.apptrack-requirements-header {
+  margin-bottom: 20px;
+}
+
+.apptrack-requirements-header h4 {
+  color: #1e293b;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.apptrack-requirements-header p {
+  color: #64748b;
+  font-size: 14px;
+  margin: 0;
+}
+
+.apptrack-requirements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.apptrack-requirement-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.apptrack-requirement-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.apptrack-requirement-input:focus {
+  border-color: #3b82f6;
+}
+
+.apptrack-requirement-remove {
+  padding: 8px;
+  border: none;
+  background: #fee2e2;
+  color: #dc2626;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.apptrack-requirement-remove:hover {
+  background: #fecaca;
+}
+
+.apptrack-add-requirement {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border: 2px dashed #e2e8f0;
+  background: transparent;
+  color: #64748b;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.apptrack-add-requirement:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+  background: #f8fafc;
+}
+
+/* Files Section */
+.apptrack-files-section {
+  margin-bottom: 24px;
+}
+
+.apptrack-files-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.apptrack-files-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.apptrack-files-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.apptrack-file-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f8fafc;
+  transition: all 0.2s ease;
+}
+
+.apptrack-file-card:hover {
+  border-color: #cbd5e1;
+  background: #f1f5f9;
+}
+
+.apptrack-file-icon {
+  width: 40px;
+  height: 40px;
+  background: #3b82f6;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+
+.apptrack-file-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.apptrack-file-info h6 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 4px 0;
+}
+
+.apptrack-file-info p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0 0 2px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.apptrack-file-info span {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.apptrack-file-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.apptrack-no-files {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+  border: 2px dashed #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.apptrack-no-files p {
+  color: #64748b;
+  font-size: 16px;
+  margin: 16px 0 0 0;
+  font-weight: 500;
+}
+
+.apptrack-modal-actions {
+  padding: 20px 24px;
+  background: #f8fafc;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+/* Animations */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Loading States */
+.apptrack-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  gap: 16px;
+}
+
+.apptrack-loading-spinner {
+  width: 40px;
+  height: 40px;
+  color: #3b82f6;
+  animation: spin 1s linear infinite;
+}
+
+.apptrack-loading p {
+  color: #64748b;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* Action Loading Overlay */
+.apptrack-action-loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  gap: 16px;
+}
+
+.apptrack-action-loading .apptrack-loading-spinner {
+  width: 48px;
+  height: 48px;
+  color: #3b82f6;
+}
+
+.apptrack-action-loading p {
+  color: #374151;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Error Message */
+.apptrack-error {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: #991b1b;
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.apptrack-error button {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: #dc2626;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.apptrack-error button:hover {
+  background: #fee2e2;
+}
+
+/* No Results State */
+.apptrack-no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 32px;
+  text-align: center;
+  background: white;
+  border-radius: 12px;
+  border: 2px dashed #e2e8f0;
+  grid-column: 1 / -1;
+}
+
+.apptrack-no-results p {
+  color: #64748b;
+  font-size: 16px;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Avatar Fallback */
+.apptrack-avatar-fallback {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.apptrack-avatar-fallback span {
+  color: white;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.apptrack-candidate-avatar {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+/* Additional Information Section */
+.apptrack-additional-info {
+  margin-bottom: 24px;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.apptrack-additional-info h5 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 16px 0;
+}
+
+.apptrack-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.apptrack-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.apptrack-info-item label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.apptrack-info-item span {
+  font-size: 14px;
+  color: #374151;
+  font-weight: 500;
+}
+
+/* Objective Section */
+.apptrack-objective-section {
+  margin-bottom: 24px;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.apptrack-objective-section h5 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 12px 0;
+}
+
+.apptrack-objective-section p {
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* RESPONSIVE DESIGN - IMPROVED */
+
+@media (max-height: 700px) {
+  .apptrack-header-section{
+    display: block;
+  }
+
+  .apptrack-info-cards {
+      flex-wrap: nowrap;
+      margin-left: 60px !important;
+      width: 50px;
+      height: 100px;
+  }
+  
+  .apptrack-info-card{
+    margin-top: 20px;
+    max-width: 50px;
+  }
+  
+  .apptrack-info-label {
+    font-size: 10px;
+  }
+}
+
+/* Large Desktop (1440px and up) */
+@media (min-width: 1441px) {
+  .apptrack-candidates-grid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+  
+  .apptrack-container {
+    padding: 10px 48px 48px 48px;
+  }
+}
+
+/* Small Desktop / Large Laptop (1200px - 1440px) */
+@media (max-width: 1440px) {
+  .apptrack-header-section {
+    gap: 24px;
+  }
+  
+  .apptrack-info-cards {
+    gap: 16px;
+  }
+  
+  .apptrack-candidates-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 18px;
+  }
+}
+
+/* Standard Laptop (1024px - 1200px) */
+@media (max-width: 1200px) {
+  .apptrack-container {
+    padding: 10px 24px 24px 24px;
+  }
+  
+  .apptrack-header-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 24px;
+  }
+  
+  .apptrack-profile-area {
+    width: 100%;
+  }
+  
+  .apptrack-info-cards {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 12px;
+    gap: 12px;
+  }
+  
+  .apptrack-info-card {
+    min-width: 160px;
+    flex-shrink: 0;
+  }
+  
+  .apptrack-search-section {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  
+  .apptrack-search-container {
+    flex: 1 1 300px !important;
+    max-width: none;
+  }
+  
+  .apptrack-candidates-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+  
+  .apptrack-detail-modal {
+    max-width: 95vw;
+    width: 95vw;
+  }
+}
+
+/* Small Laptop / Large Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+  .apptrack-header-section {
+    padding: 20px;
+  }
+  
+  .apptrack-profile-name {
+    font-size: 24px;
+  }
+  
+  .apptrack-info-cards {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+  }
+  
+  .apptrack-info-card {
+    min-width: auto;
+  }
+  
+  .apptrack-search-section {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 12px;
+  }
+  
+  .apptrack-search-container {
+    flex: 1 !important;
+    max-width: none;
+  }
+  
+  .apptrack-filters {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .apptrack-filter-container {
+    width: 100%;
+  }
+  
+  .apptrack-filter-btn {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .apptrack-candidates-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
+  }
+}
+
+/* Tablet Portrait (600px - 768px) */
+@media (max-width: 768px) {
+  .apptrack-container {
+    padding: 16px;
+  }
+  
+  .apptrack-header-section {
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+  
+  .apptrack-profile-area {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .apptrack-candidates-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .apptrack-candidate-card {
+    padding: 16px;
+  }
+  
+  .apptrack-modal-overlay {
+    padding: 8px;
+  }
+  
+  .apptrack-detail-modal {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    border-radius: 8px;
+  }
+  
+  .apptrack-candidate-section {
+    padding: 16px;
+  }
+  
+  .apptrack-modal-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .apptrack-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .apptrack-files-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .apptrack-file-actions {
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+
+/* Large Mobile (480px - 600px) */
+@media (max-width: 600px) {
+  .apptrack-container {
+    padding: 12px;
+  }
+  
+  .apptrack-header-section {
+    padding: 30px;
+  }
+
+  .apptrack-search-container {
+    width: 63%;
+  }
+  
+  .apptrack-filter-container {
+    width: 35%;
+    left: 65%;
+    top: -77px;
+  }
+  
+  .apptrack-profile-name {
+    font-size: 20px;
+  }
+  
+  .apptrack-profile-role {
+    font-size: 14px;
+  }
+  
+  .apptrack-info-icon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .apptrack-info-value {
+    font-size: 14px;
+  }
+  
+  .apptrack-candidate-card {
+    padding: 12px;
+  }
+  
+  .apptrack-candidate-name {
+    font-size: 15px;
+  }
+  
+  .apptrack-candidate-position {
+    font-size: 13px;
+  }
+  
+  .apptrack-contact-item {
+    font-size: 12px;
+  }
+  
+  .apptrack-schedule-modal,
+  .apptrack-approval-modal {
+    max-width: none;
+    width: 100%;
+    margin: 8px;
+  }
+  
+  .apptrack-candidate-info-modal,
+  .apptrack-candidate-header-modal {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+  
+  .apptrack-modal-avatar-img {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* Small Mobile (up to 480px) */
+@media (max-width: 480px) {
+  .apptrack-container {
+    padding: 8px;
+  }
+  
+  .apptrack-header-section {
+    padding: 8px;
+    margin-bottom: 16px;
+  }
+
+  .apptrack-search-container {
+    width: 63%;
+  }
+  
+  .apptrack-filter-container {
+    left: 65%;
+    top: -74px;
+  }
+  
+  .apptrack-profile-name {
+    font-size: 18px;
+  }
+  
+  .apptrack-profile-role {
+    font-size: 12px;
+  }
+  
+  .apptrack-info-cards {
+    gap: 8px;
+  }
+  
+  .apptrack-info-card {
+    padding: 12px 16px;
+    gap: 12px;
+  }
+  
+  .apptrack-info-icon {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .apptrack-info-value {
+    font-size: 13px;
+  }
+  
+  .apptrack-info-label {
+    font-size: 10px;
+  }
+  
+  .apptrack-search-input {
+    height: 40px;
+    font-size: 13px;
+  }
+  
+  .apptrack-filter-btn {
+    height: 40px;
+    font-size: 13px;
+    padding: 10px 14px;
+  }
+  
+  .apptrack-candidates-grid {
+    gap: 12px;
+  }
+  
+  .apptrack-candidate-card {
+    padding: 8px;
+    top: -75px;
+  }
+  
+  .apptrack-avatar-img {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .apptrack-candidate-name {
+    font-size: 14px;
+  }
+  
+  .apptrack-candidate-position {
+    font-size: 12px;
+  }
+  
+  .apptrack-contact-item {
+    font-size: 11px;
+  }
+  
+  .apptrack-status-badge {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+  
+  .apptrack-detail-modal {
+    border-radius: 0;
+    height: 100vh;
+    max-height: 100vh;
+  }
+  
+  .apptrack-modal-header {
+    padding: 12px 16px;
+  }
+  
+  .apptrack-modal-header h3 {
+    font-size: 16px;
+  }
+  
+  .apptrack-candidate-section {
+    padding: 12px;
+  }
+  
+  .apptrack-modal-actions {
+    padding: 12px 16px;
+  }
+  
+  .apptrack-btn {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  
+  .apptrack-requirement-input {
+    font-size: 13px;
+    padding: 10px 12px;
+  }
+  
+  .apptrack-requirement-remove {
+    min-width: 36px;
+    height: 36px;
+  }
+}
+
+/* Extra Small Mobile (up to 400px) */
+@media (max-width: 400px) {
+  .apptrack-container {
+    padding: 4px;
+  }
+  
+  .apptrack-header-section {
+    padding: 4px;
+    margin-bottom: 12px;
+  }
+
+  .apptrack-search-container {
+    width: 57%;
+  }
+  
+  .apptrack-filter-container {
+    left: 59%;
+    top: -69px;
+  }
+  
+  .apptrack-profile-name {
+    font-size: 16px;
+  }
+  
+  .apptrack-info-cards {
+    gap: 6px;
+  }
+  
+  .apptrack-info-card {
+    padding: 8px 12px;
+    gap: 8px;
+  }
+  
+  .apptrack-info-icon {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .apptrack-info-value {
+    font-size: 12px;
+  }
+  
+  .apptrack-candidates-grid {
+    gap: 8px;
+  }
+  
+  .apptrack-candidate-card {
+    padding: 6px;
+  }
+  
+  .apptrack-avatar-img {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .apptrack-search-input {
+    height: 36px;
+    font-size: 12px;
+    padding: 10px 12px 10px 36px;
+  }
+  
+  .apptrack-filter-btn {
+    height: 35px;
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+  
+  .apptrack-schedule-modal,
+  .apptrack-approval-modal {
+    margin: 4px;
+  }
+  
+  .apptrack-modal-header {
+    padding: 8px 12px;
+  }
+  
+  .apptrack-modal-body {
+    padding: 12px;
+  }
+  
+  .apptrack-candidate-section {
+    padding: 8px;
+  }
+  
+  .apptrack-modal-actions {
+    padding: 8px 12px;
+  }
+  
+  .apptrack-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}
+
+/* Fix for very specific responsive issues */
+@media (max-width: 350px) {
+  .apptrack-candidates-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .apptrack-candidate-card {
+    min-width: auto;
+  }
+  
+  .apptrack-detail-modal {
+    border-radius: 0;
+    width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    max-width: 100vw;
+  }
+  
+  .apptrack-schedule-modal,
+  .apptrack-approval-modal {
+    width: calc(100vw - 8px);
+    margin: 4px;
+    border-radius: 8px;
+  }
+}
+
+/* Search icon positioning fix for smaller screens */
+@media (max-width: 480px) {
+  .apptrack-search-icon {
+    left: 10px;
+    width: 14px;
+    height: 14px;
+  }
+  
+  .apptrack-search-input {
+    padding-left: 32px;
+  }
+}
+
+/* Improve touch targets for mobile */
+@media (max-width: 768px) {
+  .apptrack-menu-btn {
+    padding: 12px;
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .apptrack-modal-close {
+    padding: 12px;
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .apptrack-dropdown-item {
+    padding: 16px;
+    min-height: 44px;
+  }
+  
+  .apptrack-filter-option {
+    padding: 16px;
+    min-height: 44px;
+  }
+}
+
+/* Landscape mobile adjustments */
+@media (max-height: 500px) and (orientation: landscape) {
+  .apptrack-header-section {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .apptrack-info-cards {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 8px;
+  }
+  
+  .apptrack-info-card {
+    min-width: 140px;
+    flex-shrink: 0;
+  }
+  
+  .apptrack-detail-modal {
+    max-height: 95vh;
+  }
+}
+
+/* Print styles */
+@media print {
+  .apptrack-container {
+    padding: 0;
+    background: white;
+  }
+  
+  .apptrack-search-section,
+  .apptrack-menu-btn,
+  .apptrack-modal-overlay {
+    display: none !important;
+  }
+  
+  .apptrack-candidate-card {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #e2e8f0;
+  }
+}

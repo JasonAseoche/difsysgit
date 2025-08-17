@@ -17,10 +17,17 @@ const Header = () => {
   // Add functions to handle button clicks
   const handleLogin = () => {
     navigate('/login');
+    setMenuActive(false);
+  };
+
+  const handleMain = () => {
+    navigate('/');
+    setMenuActive(false);
   };
   
   const handleSignUp = () => {
     navigate('/signup');
+    setMenuActive(false);
   };
 
   // Check current path to determine which buttons to show
@@ -30,7 +37,7 @@ const Header = () => {
   // Function to detect which section is currently in view
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['why-difs', 'services', 'benefits', 'testimonials'];
+      const sections = ['home', 'services', 'benefits', 'testimonials'];
       const scrollPosition = window.scrollY + 100; // Offset for header height
       
       let currentSectionFound = '';
@@ -71,29 +78,42 @@ const Header = () => {
   };
 
   return (
-    <header style={getHeaderStyle()}>
-      <div className="container nav-container">
-        <div className="logo">
-          <img src={difsyslogo} alt="DIFS Logo"/>
+    <header className="landing-header" style={getHeaderStyle()}>
+      <div className="landing-container landing-nav-container">
+        <div className="landing-logo">
+          <img src={difsyslogo} alt="difsyslogo" onClick={handleMain}/>
         </div>
         
-        <button className="menu-toggle" onClick={toggleMenu}>
+        <button className="landing-menu-toggle" onClick={toggleMenu}>
           <i className="fas fa-bars"></i>
         </button>
         
-        <ul className={`nav-links ${menuActive ? 'active' : ''}`}>
-          <li><a href="#why-difs" onClick={() => setMenuActive(false)}>Why DIFS</a></li>
-          <li><a href="#services" onClick={() => setMenuActive(false)}>Who We Are</a></li>
-          <li><a href="#benefits" onClick={() => setMenuActive(false)}>Benefits</a></li>
+        <ul className={`landing-nav-links ${menuActive ? 'active' : ''}`}>
+          {/* Auth links moved to top of menu for mobile */}
+          <div className="landing-mobile-auth-container">
+            {!isLoginPage && (
+              <li className="landing-mobile-auth">
+                <a href="#" onClick={handleLogin} className="landing-login-link">Log In</a>
+              </li>
+            )}
+            {!isSignupPage && (
+              <li className="landing-mobile-auth">
+                <a href="#" onClick={handleSignUp} className="landing-signup-link">Sign Up</a>
+              </li>
+            )}
+          </div>
+          <li><a href="#home" onClick={() => setMenuActive(false)}>Home</a></li>
+          <li><a href="#services" onClick={() => setMenuActive(false)}>Our Expertise</a></li>
+          <li><a href="#benefits" onClick={() => setMenuActive(false)}>Why Difsys</a></li>
           <li><a href="#testimonials" onClick={() => setMenuActive(false)}>Contact Us</a></li>
         </ul>
         
-        <div className="auth-buttons">
+        <div className="landing-auth-buttons">
           {!isLoginPage && (
-            <button className="btn btn-outline" onClick={handleLogin}>LOG IN</button>
+            <button className="landing-btn landing-btn-outline" onClick={handleLogin}>LOG IN</button>
           )}
           {!isSignupPage && (
-            <button className="btn btn-primary" onClick={handleSignUp}>SIGN UP</button>
+            <button className="landing-btn landing-btn-primary" onClick={handleSignUp}>SIGN UP</button>
           )}
         </div>
       </div>

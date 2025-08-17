@@ -1,0 +1,2842 @@
+/* Enhanced Employee Details Container */
+.empdet-details-container {
+  padding: 24px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Header Card */
+.empdet-header-card {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.empdet-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+}
+
+.empdet-title-section {
+  flex: 1;
+}
+
+.empdet-main-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 4px 0;
+}
+
+.empdet-breadcrumb {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.empdet-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  color: #374151;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.empdet-back-btn:hover {
+  background-color: #e5e7eb;
+}
+
+.empdet-back-arrow {
+  font-size: 16px;
+}
+
+/* Tabs */
+.empdet-tabs-container {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.empdet-tab {
+  padding: 12px 24px;
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 14px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.empdet-tab:hover {
+  color: #374151;
+}
+
+.empdet-tab-active {
+  color: #3b82f6;
+  border-bottom-color: #3b82f6;
+}
+
+/* Content Header */
+.empdet-content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.empdet-section-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.empdet-edit-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.empdet-edit-btn:hover {
+  background-color: #2563eb;
+}
+
+/* Basic Information Card */
+.empdet-basic-info-card {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.empdet-card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 24px 0;
+}
+
+.empdet-basic-content {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+.empdet-left-section {
+  display: flex;
+  gap: 20px;
+  flex: 1;
+  align-items: flex-start;
+}
+
+.empdet-profile-image {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 3px solid #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.empdet-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.empdet-profile-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.empdet-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.empdet-id {
+  font-size: 16px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.empdet-gender,
+.empdet-email,
+.empdet-contact {
+  font-size: 16px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.empdet-divider {
+  width: 1px;
+  background-color: #e5e7eb;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+.empdet-right-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Reduced from 16px */
+}
+
+/* General info row styling (for EmPersonal.jsx compatibility) */
+.empdet-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Specific styling for right section info rows (EmpDetails.jsx) */
+.empdet-right-section .empdet-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px; /* Reduced spacing for edit mode */
+}
+
+.empdet-right-section .empdet-info-row:last-child {
+  margin-bottom: 0;
+}
+
+.empdet-info-label {
+  font-size: 16px;
+  color: #6b7280;
+}
+
+.empdet-right-section .empdet-info-label {
+  font-size: 16px;
+  color: #6b7280;
+  flex-shrink: 0;
+  min-width: 120px;
+  margin: 0; /* Explicitly no margin */
+}
+
+.empdet-info-value {
+  font-size: 16px;
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+/* Basic Info Edit Input Styles - Horizontal Layout (EmpDetails specific) */
+.empdet-basic-edit-input {
+  width: 200px;
+  padding: 8px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #1a1a1a;
+  background-color: white;
+  transition: border-color 0.2s;
+  font-family: inherit;
+  margin: 0; /* Explicitly no margin for basic info inputs */
+}
+
+.empdet-basic-edit-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.empdet-basic-edit-input:hover {
+  border-color: #d1d5db;
+}
+
+/* Select dropdown styling for basic info */
+select.empdet-basic-edit-input {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 8px center;
+  background-repeat: no-repeat;
+  background-size: 16px 12px;
+  padding-right: 32px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+select.empdet-basic-edit-input:focus {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%233b82f6' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+}
+
+/* Date input styling for basic info */
+input[type="date"].empdet-basic-edit-input {
+  width: 200px;
+}
+
+/* Two Card Row Layout */
+.empdet-two-card-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+/* Address Card - Keep for Personal Info tab */
+.empdet-address-card {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.empdet-address-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.empdet-address-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.empdet-address-label {
+  font-size: 16px;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.empdet-address-value {
+  font-size: 16px;
+  color: #1a1a1a;
+  margin: 0;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+/* Emergency Contact Card - Keep for Personal Info tab */
+.empdet-emergency-card {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.empdet-emergency-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.empdet-emergency-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.empdet-emergency-label {
+  font-size: 16px;
+  color: #6b7280;
+}
+
+.empdet-emergency-value {
+  font-size: 16px;
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+/* Full Width Card */
+.empdet-full-width-card {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+/* Skills Card with Pills Design */
+.empdet-skills-card {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.empdet-skills-pills-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.empdet-skill-pill {
+  padding: 8px 16px;
+  border-radius: 50px;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-block;
+  transition: all 0.2s ease;
+  cursor: default;
+}
+
+.empdet-skill-pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Remove old skill styles */
+.empdet-skills-content,
+.empdet-skill-item,
+.empdet-skill-info,
+.empdet-skill-name,
+.empdet-skill-level,
+.empdet-skill-bar,
+.empdet-skill-progress,
+.empdet-skill-expert,
+.empdet-skill-advanced,
+.empdet-skill-intermediate {
+  display: none;
+}
+
+/* Education Card */
+.empdet-education-card {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.empdet-education-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.empdet-education-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.empdet-timeline-marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.empdet-timeline-circle {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #3b82f6;
+  border: 2px solid white;
+  box-shadow: 0 0 0 2px #3b82f6;
+}
+
+.empdet-timeline-line {
+  width: 2px;
+  height: 60px;
+  background-color: #e5e7eb;
+  margin-top: 4px;
+}
+
+.empdet-education-details {
+  flex: 1;
+}
+
+.empdet-education-degree {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 6px 0;
+}
+
+.empdet-education-field,
+.empdet-education-gpa,
+.empdet-education-year {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0 0 4px 0;
+}
+
+/* Experience Card */
+.empdet-experience-card {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.empdet-experience-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.empdet-experience-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.empdet-experience-details {
+  flex: 1;
+}
+
+.empdet-experience-position {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 6px 0;
+}
+
+.empdet-experience-company {
+  font-size: 14px;
+  color: #3b82f6;
+  margin: 0 0 4px 0;
+  font-weight: 600;
+}
+
+.empdet-experience-duration {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 0 0 8px 0;
+  font-weight: 500;
+}
+
+.empdet-experience-description {
+  font-size: 14px;
+  color: #4b5563;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Family Card */
+.empdet-family-card {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.empdet-family-table {
+  width: 100%;
+}
+
+.empdet-table-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 16px;
+}
+
+.empdet-header-cell {
+  font-size: 16px;
+  font-weight: 700;
+  color: #374151;
+}
+
+.empdet-table-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.empdet-table-row:last-child {
+  border-bottom: none;
+}
+
+.empdet-table-cell {
+  font-size: 16px;
+  color: #1a1a1a;
+  font-weight: 500;
+}
+
+/* Documents Styles */
+.empdet-documents-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.empdet-edit-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.empdet-add-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background-color: #10b981;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.empdet-add-btn:hover {
+  background-color: #059669;
+}
+
+.empdet-delete-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.empdet-delete-btn:hover {
+  background-color: #dc2626;
+}
+
+.empdet-documents-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.empdet-document-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.empdet-document-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.empdet-document-preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.empdet-document-info {
+  margin-bottom: 16px;
+}
+
+.empdet-document-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+}
+
+.empdet-document-type {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0 0 4px 0;
+  font-weight: 500;
+}
+
+.empdet-document-date {
+  font-size: 12px;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.empdet-document-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.empdet-download-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.empdet-download-btn:hover {
+  background-color: #2563eb;
+}
+
+.empdet-document-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+/* Attendance History Styles */
+.empdet-attendance-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.empdet-attendance-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.empdet-attendance-stat-card {
+  background: white;
+  padding: 24px 20px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.2s ease;
+}
+
+.empdet-attendance-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.empdet-attendance-stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+
+.empdet-attendance-icon-blue {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.empdet-attendance-icon-green {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.empdet-attendance-icon-orange {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.empdet-attendance-icon-red {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.empdet-attendance-stat-content {
+  flex: 1;
+}
+
+.empdet-attendance-stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+  line-height: 1;
+}
+
+.empdet-attendance-stat-label {
+  color: #64748b;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.empdet-attendance-table-section {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+}
+
+.empdet-attendance-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.empdet-attendance-table-header th {
+  background-color: #f8fafc;
+  padding: 16px 20px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.empdet-attendance-table-row {
+  border-bottom: 1px solid #f1f5f9;
+  transition: background-color 0.15s ease;
+}
+
+.empdet-attendance-table-row:hover {
+  background-color: #f8fafc;
+}
+
+.empdet-attendance-table-row:last-child {
+  border-bottom: none;
+}
+
+.empdet-attendance-table-row td {
+  padding: 16px 20px;
+  font-size: 14px;
+  color: #374151;
+  vertical-align: middle;
+}
+
+.empdet-attendance-date-cell {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.empdet-attendance-time-cell {
+  color: #64748b;
+  font-weight: 400;
+}
+
+.empdet-attendance-total-cell {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.empdet-attendance-overtime-cell {
+  color: #f59e0b;
+  font-weight: 600;
+}
+
+.empdet-attendance-late-cell {
+  color: #64748b;
+  font-weight: 400;
+}
+
+.empdet-attendance-status-cell {
+  text-align: left;
+}
+
+.empdet-attendance-status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-block;
+}
+
+.empdet-status-present {
+  background-color: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.empdet-status-late {
+  background-color: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+.empdet-status-absent {
+  background-color: #fecaca;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+.empdet-status-weekend {
+  background-color: #e0e7ff;
+  color: #5b21b6;
+  border: 1px solid #c7d2fe;
+}
+
+/* Edit Mode Styles - General (for EmPersonal.jsx compatibility) */
+.empdet-edit-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 16px;
+  color: #1a1a1a;
+  background-color: white;
+  transition: border-color 0.2s;
+  margin-bottom: 8px;
+}
+
+.empdet-edit-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.empdet-edit-name {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.empdet-edit-id {
+  font-size: 16px;
+  color: #6b7280;
+  margin-bottom: 12px;
+}
+
+.empdet-edit-select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 16px;
+  color: #1a1a1a;
+  background-color: white;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  margin-bottom: 8px;
+}
+
+.empdet-edit-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.empdet-edit-small {
+  max-width: 300px;
+}
+
+.empdet-edit-textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 16px;
+  color: #1a1a1a;
+  background-color: white;
+  resize: vertical;
+  min-height: 80px;
+  transition: border-color 0.2s;
+  font-family: inherit;
+}
+
+.empdet-edit-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.empdet-edit-table {
+  max-width: 150px;
+  padding: 6px 8px;
+  font-size: 14px;
+}
+
+.empdet-save-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #10b981;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.empdet-save-btn:hover {
+  background-color: #059669;
+}
+
+.empdet-cancel-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #6b7280;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.empdet-cancel-btn:hover {
+  background-color: #4b5563;
+}
+
+/* Card Header for Education and Family */
+.empdet-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.empdet-add-education-btn,
+.empdet-add-family-btn {
+  padding: 6px 12px;
+  background-color: #003D7C;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.empdet-add-education-btn:hover,
+.empdet-add-family-btn:hover {
+  background-color: #059669;
+}
+
+/* Education Edit Form */
+.empdet-education-edit-form {
+  width: 100%;
+}
+
+.empdet-education-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.empdet-education-row .empdet-edit-input {
+  margin-bottom: 0;
+  flex: 1;
+}
+
+.empdet-date-row {
+  align-items: center;
+}
+
+.empdet-year-input {
+  max-width: 80px;
+  flex: none !important;
+}
+
+.empdet-date-separator {
+  font-size: 16px;
+  color: #6b7280;
+  font-weight: 500;
+  flex: none;
+}
+
+/* Remove Button */
+.empdet-remove-btn {
+  width: 30px;
+  height: 30px;
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+  flex: none;
+}
+
+.empdet-remove-btn:hover {
+  background-color: #dc2626;
+}
+
+.empdet-remove-family-btn {
+  width: 30px;
+  height: 30px;
+  font-size: 14px;
+}
+
+/* Family Table Adjustments */
+.empdet-family-table .empdet-table-header {
+  grid-template-columns: 1fr 1fr auto;
+}
+
+.empdet-family-table .empdet-table-row {
+  grid-template-columns: 1fr 1fr auto;
+}
+
+/* When not editing, keep original layout */
+.empdet-family-table:not(.editing) .empdet-table-header {
+  grid-template-columns: 1fr 1fr 0.5fr;
+}
+
+.empdet-family-table:not(.editing) .empdet-table-row {
+  grid-template-columns: 1fr 1fr 0.5fr;
+}
+
+/* Date Input Styling */
+input[type="date"].empdet-edit-input {
+  max-width: 150px;
+}
+
+input[type="number"].empdet-edit-input {
+  -moz-appearance: textfield;
+}
+
+input[type="number"].empdet-edit-input::-webkit-outer-spin-button,
+input[type="number"].empdet-edit-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Education Address Field */
+.empdet-education-address {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0 0 4px 0;
+  font-style: italic;
+}
+
+/* Family Name Container with Remove Button */
+.empdet-family-name-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.empdet-family-name-container .empdet-edit-input {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.empdet-family-name-container .empdet-remove-family-btn {
+  flex-shrink: 0;
+}
+
+/* Family Table Layout Adjustments */
+.empdet-family-table .empdet-table-header {
+  grid-template-columns: 1fr 1fr;
+}
+
+.empdet-family-table .empdet-table-row {
+  grid-template-columns: 1fr 1fr;
+}
+
+.empdet-family-name-cell {
+  position: relative;
+}
+
+.empdet-action-cell {
+  display: none;
+}
+
+/* Conditional Field Styling */
+.empdet-education-row .empdet-edit-select {
+  flex: 1;
+}
+
+/* Edit Mode Actions */
+.empdet-edit-mode-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.empdet-edit-save-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #10b981;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.empdet-edit-save-btn:hover {
+  background-color: #059669;
+}
+
+.empdet-edit-cancel-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #6b7280;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.empdet-edit-cancel-btn:hover {
+  background-color: #4b5563;
+}
+
+/* Experience Card Header */
+.empdet-experience-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.empdet-add-experience-btn {
+  padding: 6px 12px;
+  background-color: #10b981;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.empdet-add-experience-btn:hover {
+  background-color: #059669;
+}
+
+/* Experience Edit Form */
+.empdet-experience-edit-form {
+  width: 100%;
+}
+
+.empdet-experience-edit-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.empdet-experience-edit-row .empdet-experience-edit-input {
+  margin-bottom: 0;
+  flex: 1;
+}
+
+.empdet-experience-edit-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 16px;
+  color: #1a1a1a;
+  background-color: white;
+  transition: border-color 0.2s;
+  margin-bottom: 8px;
+}
+
+.empdet-experience-edit-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.empdet-experience-edit-textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 16px;
+  color: #1a1a1a;
+  background-color: white;
+  resize: vertical;
+  min-height: 80px;
+  transition: border-color 0.2s;
+  font-family: inherit;
+}
+
+.empdet-experience-edit-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.empdet-experience-remove-btn {
+  width: 30px;
+  height: 30px;
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+  flex: none;
+}
+
+.empdet-experience-remove-btn:hover {
+  background-color: #dc2626;
+}
+
+/* Skills Card Header */
+.empdet-skills-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.empdet-skill-add-container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.empdet-skill-add-input {
+  width: 150px;
+  padding: 8px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 16px;
+  color: #1a1a1a;
+  background-color: white;
+  transition: border-color 0.2s;
+  margin-bottom: 0;
+}
+
+.empdet-skill-add-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.empdet-skill-add-btn {
+  padding: 6px 12px;
+  background-color: #10b981;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.empdet-skill-add-btn:hover {
+  background-color: #059669;
+}
+
+/* Skills Full Width */
+.empdet-skills-full-width {
+  grid-column: 1 / -1;
+}
+
+/* Skill Pills Editable */
+.empdet-skill-pill-editable {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.empdet-skill-remove-btn {
+  background: rgba(255,255,255,0.3);
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  font-size: 12px;
+  transition: background-color 0.2s;
+}
+
+.empdet-skill-remove-btn:hover {
+  background: rgba(255,255,255,0.5);
+}
+
+/* Upload Modal Styles */
+.empdet-upload-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.empdet-upload-modal {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow: hidden;
+}
+
+.empdet-upload-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.empdet-upload-modal-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.empdet-upload-modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.empdet-upload-modal-close:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.empdet-upload-modal-content {
+  padding: 24px;
+}
+
+.empdet-upload-dropzone {
+  border: 2px dashed #d1d5db;
+  border-radius: 12px;
+  padding: 40px 20px;
+  text-align: center;
+  background-color: #f9fafb;
+  transition: all 0.2s;
+  cursor: pointer;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.empdet-upload-dropzone:hover,
+.empdet-upload-dropzone-active {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+}
+
+.empdet-upload-icon {
+  color: #6b7280;
+  margin-bottom: 16px;
+}
+
+.empdet-upload-dropzone-active .empdet-upload-icon {
+  color: #3b82f6;
+}
+
+.empdet-upload-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 8px 0;
+}
+
+.empdet-upload-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.empdet-upload-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.empdet-upload-info {
+  text-align: center;
+}
+
+.empdet-upload-note {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 4px 0;
+}
+
+/* Preview Modal Styles */
+.empdet-preview-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.empdet-preview-modal {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.empdet-preview-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  flex-shrink: 0;
+}
+
+.empdet-preview-modal-info {
+  flex: 1;
+}
+
+.empdet-preview-modal-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 4px 0;
+}
+
+.empdet-preview-modal-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.empdet-preview-modal-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.empdet-preview-download-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.empdet-preview-download-btn:hover {
+  background-color: #2563eb;
+}
+
+.empdet-preview-modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.empdet-preview-modal-close:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.empdet-preview-modal-content {
+  padding: 24px;
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.empdet-preview-image {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.empdet-preview-placeholder {
+  text-align: center;
+  color: #6b7280;
+}
+
+.empdet-preview-placeholder p {
+  margin: 16px 0 4px 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.empdet-preview-note {
+  font-size: 14px !important;
+  color: #9ca3af !important;
+  font-weight: 400 !important;
+}
+
+/* Preview Button */
+.empdet-preview-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background-color: #10b981;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-right: 8px;
+}
+
+.empdet-preview-btn:hover {
+  background-color: #059669;
+}
+
+/* Document Actions Layout Update */
+.empdet-document-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Document Card Preview Styles */
+.empdet-document-preview-container {
+  position: relative;
+  height: 180px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f8f9fa;
+  border: 1px solid #e5e7eb;
+}
+
+.empdet-document-preview {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+}
+
+.empdet-document-preview-overlay {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 6px;
+  padding: 6px;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.empdet-document-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Card Preview Content */
+.empdet-card-preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.empdet-card-preview-pdf-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background-color: white;
+  border-radius: 4px;
+}
+
+.empdet-card-preview-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+}
+
+/* Update existing document card styles */
+.empdet-document-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.empdet-document-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.empdet-document-card:hover .empdet-document-preview-overlay {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+/* Loading and Error States */
+.empdet-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.empdet-loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f4f6;
+  border-top: 4px solid #3b82f6;
+  border-radius: 50%;
+  animation: empdet-spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+.empdet-loading p {
+  color: #6b7280;
+  font-size: 16px;
+  margin: 0;
+}
+
+.empdet-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.empdet-error p {
+  color: #dc2626;
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+.empdet-error button {
+  background-color: #dc2626;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.empdet-error button:hover {
+  background-color: #b91c1c;
+}
+
+/* Empty states */
+.empdet-no-experience,
+.empdet-no-skills {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: #6b7280;
+  font-style: italic;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  border: 2px dashed #d1d5db;
+}
+
+.empdet-no-experience p,
+.empdet-no-skills p {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+}
+
+.empdet-no-experience .empdet-add-experience-btn {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.empdet-no-experience .empdet-add-experience-btn:hover {
+  background-color: #2563eb;
+}
+
+/* Avatar fallback styles */
+.empdet-avatar-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: #e2e8f0;
+  font-size: 48px;
+  font-weight: bold;
+  color: #64748b;
+  margin-bottom: 16px;
+}
+
+/* Ensure consistent styling for info values */
+.empdet-info-value {
+  color: #374151;
+  font-weight: 500;
+}
+
+.empdet-info-value:empty::after {
+  content: 'N/A';
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* Skills card full width when editing */
+.empdet-skills-full-width {
+  width: 100% !important;
+}
+
+/* Message Modal Overlay */
+.empdet-message-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: empdet-fade-in 0.3s ease-out;
+}
+
+/* Success Modal */
+.empdet-success-modal {
+  background: white;
+  border-radius: 16px;
+  padding: 40px 32px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  animation: empdet-scale-in 0.3s ease-out;
+}
+
+.empdet-success-header h3 {
+  color: #065f46;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 16px 0 8px 0;
+}
+
+.empdet-success-header p {
+  color: #6b7280;
+  font-size: 16px;
+  margin: 0;
+}
+
+.empdet-success-icon-large {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border-radius: 50%;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  animation: empdet-bounce-in 0.5s ease-out 0.2s both;
+}
+
+/* Error Modal */
+.empdet-error-modal {
+  background: white;
+  border-radius: 16px;
+  padding: 40px 32px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  animation: empdet-scale-in 0.3s ease-out;
+}
+
+.empdet-error-header h3 {
+  color: #dc2626;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 16px 0 8px 0;
+}
+
+.empdet-error-header p {
+  color: #6b7280;
+  font-size: 16px;
+  margin: 0 0 24px 0;
+  line-height: 1.5;
+}
+
+.empdet-error-icon-large {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  border-radius: 50%;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  animation: empdet-shake 0.5s ease-out 0.2s both;
+}
+
+.empdet-modal-close-btn {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.empdet-modal-close-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+}
+
+/* Loading Modal */
+.empdet-loading-modal {
+  background: white;
+  border-radius: 16px;
+  padding: 40px 32px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  animation: empdet-scale-in 0.3s ease-out;
+}
+
+.empdet-loading-header h3 {
+  color: #374151;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 16px 0 8px 0;
+}
+
+.empdet-loading-header p {
+  color: #6b7280;
+  font-size: 16px;
+  margin: 0;
+}
+
+.empdet-save-spinner-large {
+  width: 60px;
+  height: 60px;
+  border: 6px solid #f3f4f6;
+  border-top: 6px solid #3b82f6;
+  border-radius: 50%;
+  animation: empdet-spin 1s linear infinite;
+  margin: 0 auto 8px auto;
+}
+
+/* Animations */
+@keyframes empdet-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes empdet-bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes empdet-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(5px);
+  }
+}
+
+@keyframes empdet-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes empdet-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .empdet-two-card-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .empdet-basic-content {
+    flex-direction: column;
+    gap: 24px;
+  }
+  
+  .empdet-divider {
+    width: 100%;
+    height: 1px;
+  }
+
+  .empdet-attendance-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .empdet-details-container {
+    padding: 16px;
+  }
+  
+  .empdet-header-top {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+  
+  .empdet-tabs-container {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .empdet-tab {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+  
+  .empdet-content-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .empdet-documents-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
+  }
+
+  .empdet-attendance-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .empdet-attendance-stat-card {
+    padding: 20px 16px;
+  }
+
+  .empdet-attendance-stat-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .empdet-attendance-stat-number {
+    font-size: 1.75rem;
+  }
+
+  .empdet-attendance-table-section {
+    overflow-x: auto;
+  }
+
+  .empdet-attendance-table {
+    min-width: 700px;
+  }
+
+  .empdet-attendance-table-row td {
+    padding: 12px 16px;
+  }
+
+  /* Basic info edit responsive */
+  .empdet-right-section .empdet-info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .empdet-basic-edit-input {
+    width: 100%;
+    font-size: 16px;
+    padding: 10px 12px;
+  }
+  
+  select.empdet-basic-edit-input {
+    padding-right: 36px;
+    background-size: 18px 14px;
+  }
+
+  /* General edit mode responsive */
+  .empdet-edit-small {
+    max-width: 100%;
+  }
+  
+  .empdet-edit-table {
+    max-width: 100%;
+  }
+  
+  .empdet-edit-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .empdet-save-btn,
+  .empdet-cancel-btn {
+    justify-content: center;
+  }
+
+  .empdet-card-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .empdet-add-education-btn,
+  .empdet-add-family-btn {
+    align-self: center;
+    padding: 8px 16px;
+  }
+  
+  .empdet-education-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .empdet-date-row {
+    flex-direction: row;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .empdet-year-input {
+    max-width: 100px;
+  }
+  
+  .empdet-family-table .empdet-table-header {
+    grid-template-columns: 1fr 1fr 40px;
+  }
+  
+  .empdet-family-table .empdet-table-row {
+    grid-template-columns: 1fr 1fr 40px;
+  }
+
+  .empdet-family-name-container {
+    flex-direction: column;
+    gap: 4px;
+    align-items: stretch;
+  }
+  
+  .empdet-family-name-container .empdet-remove-family-btn {
+    align-self: flex-end;
+    width: 24px;
+    height: 24px;
+  }
+
+  .empdet-edit-mode-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .empdet-edit-save-btn,
+  .empdet-edit-cancel-btn {
+    justify-content: center;
+  }
+  
+  .empdet-experience-card-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .empdet-add-experience-btn {
+    align-self: center;
+    padding: 8px 16px;
+  }
+  
+  .empdet-experience-edit-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .empdet-skills-card-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .empdet-skill-add-container {
+    justify-content: center;
+  }
+  
+  .empdet-skill-add-input {
+    width: 200px;
+  }
+
+  /* Modal responsive */
+  .empdet-upload-modal,
+  .empdet-preview-modal {
+    margin: 10px;
+    max-width: calc(100% - 20px);
+  }
+  
+  .empdet-upload-modal-header,
+  .empdet-preview-modal-header {
+    padding: 16px 20px;
+  }
+  
+  .empdet-upload-modal-content,
+  .empdet-preview-modal-content {
+    padding: 20px;
+  }
+  
+  .empdet-upload-dropzone {
+    padding: 30px 15px;
+  }
+  
+  .empdet-preview-modal-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .empdet-preview-download-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .empdet-document-preview-container {
+    height: 100px;
+  }
+
+  .empdet-basic-content {
+    flex-direction: column;
+  }
+  
+  .empdet-divider {
+    display: none;
+  }
+  
+  .empdet-left-section,
+  .empdet-right-section {
+    width: 100%;
+  }
+  
+  .empdet-left-section {
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .empdet-details-container {
+    padding: 12px;
+  }
+
+  .empdet-header-card {
+    padding: 16px;
+  }
+
+  .empdet-basic-info-card,
+  .empdet-address-card,
+  .empdet-emergency-card,
+  .empdet-skills-card,
+  .empdet-education-card,
+  .empdet-experience-card,
+  .empdet-family-card {
+    padding: 16px;
+  }
+
+  .empdet-profile-image {
+    width: 120px;
+    height: 120px;
+  }
+
+  .empdet-documents-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .empdet-document-card {
+    padding: 16px;
+  }
+
+  .empdet-edit-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .empdet-add-btn,
+  .empdet-delete-btn {
+    justify-content: center;
+  }
+
+  .empdet-attendance-stat-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .empdet-attendance-stat-number {
+    font-size: 1.5rem;
+  }
+
+  /* Basic info edit inputs */
+  .empdet-right-section .empdet-info-row {
+    margin-bottom: 20px;
+  }
+  
+  .empdet-basic-edit-input {
+    padding: 12px;
+  }
+
+  .empdet-education-row .empdet-edit-input {
+    font-size: 14px;
+  }
+  
+  .empdet-year-input {
+    max-width: 80px;
+  }
+  
+  .empdet-remove-btn {
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+  }
+
+  .empdet-family-name-container {
+    gap: 6px;
+  }
+  
+  .empdet-education-row .empdet-edit-select {
+    font-size: 14px;
+  }
+
+  .empdet-experience-edit-row .empdet-experience-edit-input {
+    font-size: 14px;
+  }
+  
+  .empdet-experience-remove-btn {
+    width: 25px;
+    height: 25px;
+    font-size: 14px;
+  }
+  
+  .empdet-skill-add-input {
+    width: 150px;
+    font-size: 14px;
+  }
+
+  .empdet-upload-modal-overlay,
+  .empdet-preview-modal-overlay {
+    padding: 10px;
+  }
+  
+  .empdet-upload-modal-title,
+  .empdet-preview-modal-title {
+    font-size: 18px;
+  }
+  
+  .empdet-upload-dropzone {
+    padding: 20px 10px;
+  }
+  
+  .empdet-upload-title {
+    font-size: 16px;
+  }
+  
+  .empdet-preview-modal-content {
+    min-height: 300px;
+  }
+
+  .empdet-document-preview-container {
+    height: 80px;
+  }
+  
+  .empdet-document-preview-overlay {
+    bottom: 4px;
+    right: 4px;
+    padding: 4px;
+  }
+  
+  .empdet-document-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .empdet-success-modal,
+  .empdet-error-modal,
+  .empdet-loading-modal {
+    padding: 32px 24px;
+    margin: 20px;
+    width: calc(100% - 40px);
+  }
+  
+  .empdet-success-header h3,
+  .empdet-error-header h3,
+  .empdet-loading-header h3 {
+    font-size: 20px;
+  }
+  
+  .empdet-success-icon-large,
+  .empdet-error-icon-large {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+  }
+  
+  .empdet-save-spinner-large {
+    width: 50px;
+    height: 50px;
+    border-width: 5px;
+  }
+}
+
+/* Document Upload States - Unique Classes */
+.empdet-docs-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f4f6;
+  border-top: 4px solid #3b82f6;
+  border-radius: 50%;
+  animation: empdet-docs-spin 1s linear infinite;
+  margin: 0 auto 16px auto;
+}
+
+.empdet-docs-upload-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: empdet-docs-fade-in 0.3s ease-out;
+}
+
+.empdet-docs-upload-modal {
+  background: white;
+  border-radius: 16px;
+  padding: 40px 32px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  animation: empdet-docs-scale-in 0.3s ease-out;
+}
+
+.empdet-docs-upload-spinner {
+  width: 60px;
+  height: 60px;
+  border: 6px solid #f3f4f6;
+  border-top: 6px solid #3b82f6;
+  border-radius: 50%;
+  animation: empdet-docs-spin 1s linear infinite;
+  margin: 0 auto 16px auto;
+}
+
+.empdet-docs-upload-modal h3 {
+  color: #374151;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.empdet-docs-upload-modal p {
+  color: #6b7280;
+  font-size: 16px;
+  margin: 0;
+}
+
+.empdet-docs-message-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: empdet-docs-fade-in 0.3s ease-out;
+}
+
+.empdet-docs-success-modal {
+  background: white;
+  border-radius: 16px;
+  padding: 40px 32px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  animation: empdet-docs-scale-in 0.3s ease-out;
+}
+
+.empdet-docs-success-icon {
+  color: #10b981;
+  margin-bottom: 16px;
+  animation: empdet-docs-bounce-in 0.5s ease-out 0.2s both;
+}
+
+.empdet-docs-success-modal h3 {
+  color: #065f46;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.empdet-docs-success-modal p {
+  color: #6b7280;
+  font-size: 16px;
+  margin: 0;
+}
+
+.empdet-docs-error-modal {
+  background: white;
+  border-radius: 16px;
+  padding: 40px 32px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  animation: empdet-docs-scale-in 0.3s ease-out;
+}
+
+.empdet-docs-error-icon {
+  color: #ef4444;
+  margin-bottom: 16px;
+  animation: empdet-docs-shake 0.5s ease-out 0.2s both;
+}
+
+.empdet-docs-error-modal h3 {
+  color: #dc2626;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.empdet-docs-error-modal p {
+  color: #6b7280;
+  font-size: 16px;
+  margin: 0 0 24px 0;
+  line-height: 1.5;
+}
+
+.empdet-docs-error-close {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.empdet-docs-error-close:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+}
+
+/* Document Upload Animations */
+@keyframes empdet-docs-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes empdet-docs-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes empdet-docs-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes empdet-docs-bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes empdet-docs-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(5px);
+  }
+}
+
+/* Month Navigation Styles */
+.empdet-attendance-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.empdet-month-navigation {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.empdet-month-nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.empdet-month-nav-btn:hover:not(:disabled) {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.empdet-month-nav-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.empdet-current-month {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  color: #374151;
+  min-width: 150px;
+  justify-content: center;
+}
+
+/* Status Badge Colors */
+.empdet-status-present {
+  background-color: #10b981;
+  color: white;
+}
+
+.empdet-status-late {
+  background-color: #f59e0b;
+  color: white;
+}
+
+.empdet-status-absent {
+  background-color: #ef4444;
+  color: white;
+}
+
+.empdet-status-overtime {
+  background-color: #ef4444;
+  color: white;
+}
+
+.empdet-status-weekend {
+  background-color: #6b7280;
+  color: white;
+}
+
+.empdet-status-holiday {
+  background-color: #8b5cf6;
+  color: white;
+}
+
+.empdet-status-leave {
+  background-color: #06b6d4;
+  color: white;
+}
+
+/* No Data/Empty State Styles */
+.empdet-no-documents {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  border: 2px dashed #e2e8f0;
+  border-radius: 8px;
+  background-color: #f8fafc;
+}
+
+.empdet-no-documents-content {
+  text-align: center;
+  color: #6b7280;
+}
+
+.empdet-no-documents-content h3 {
+  margin: 16px 0 8px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.empdet-no-documents-content p {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  color: #6b7280;
+}

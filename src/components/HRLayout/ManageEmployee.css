@@ -1,617 +1,573 @@
-/* ManageEmployee.css */
+/* ManageEmployee.css - Fixed Responsive Version */
 .me-page {
-    padding: 0;
-    background-color: #f8fafc;
-    font-family: 'Segoe UI', Arial, sans-serif;
-    width: 100%;
-    height: 100vh; /* Full viewport height */
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden; /* Prevent whole page scrolling */
-  }
-  
-  /* Fixed Header Container - with animation */
-  .me-header-container {
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-    padding: 20px;
-    margin: 20px;
-    border: 1px solid #f0f0f0;
-    flex-shrink: 0; /* Prevent header from shrinking */
-    z-index: 10; /* Ensure header stays on top */
-    transition: all 0.3s ease-in-out;
-  }
-  
-  /* Header highlight animation */
-  .me-header-highlight {
-    box-shadow: 0 4px 15px rgba(0, 57, 121, 0.15);
-    transform: translateY(-3px);
-    border-color: rgba(59, 130, 246, 0.3);
-  }
-  
-  .me-header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  
-  .me-title {
-    font-size: 32px;
-    font-weight: 700;
-    color: #003979;
-    margin: 0;
-    letter-spacing: 0.2px;
-    position: relative;
-    display: inline-block;
-  }
-  
-  /* Title animation */
-  .me-title::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 3px;
-    bottom: -5px;
-    left: 0;
-    background-color: #003979;
-    visibility: hidden;
-    transition: all 0.3s ease-in-out;
-  }
-  
-  .me-title:hover::after {
-    visibility: visible;
-    width: 100%;
-  }
-  
-  /* Search and Add Button Container */
-  .me-actions {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-  }
-  
-  /* Search Box with animation */
-  .me-search-box {
-    position: relative;
-    width: 240px;
-    transition: all 0.3s ease-in-out;
-  }
-  
-  .me-search-focused {
-    transform: scale(1.02);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  }
-  
-  .me-search-box input {
-    width: 100%;
-    margin-top: 18px;
-    padding: 8px 35px 8px 15px;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    font-size: 14px;
-    outline: none;
-    height: 45px;
-    box-sizing: border-box;
-    color: #4b5563;
-    transition: all 0.2s ease-in-out;
-  }
-  
-  .me-search-box input:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-  }
-  
-  .me-search-box input::placeholder {
-    color: #9ca3af;
-  }
-  
-  .me-search-button {
-    position: absolute;
-    right: 10px;
-    top: 49%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: #9ca3af;
-    cursor: pointer;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s ease;
-  }
-  
-  .me-search-button:hover {
-    color: #3b82f6;
-    transform: translateY(-50%) scale(1.1);
-  }
-  
-  /* Add Button with animation */
-  .me-add-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 8px 18px;
-    background-color: #1e40af;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    height: 45px;
-    white-space: nowrap;
-    transition: all 0.2s ease-in-out;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .me-add-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      90deg, 
-      rgba(255, 255, 255, 0) 0%, 
-      rgba(255, 255, 255, 0.2) 50%, 
-      rgba(255, 255, 255, 0) 100%
-    );
-    transition: left 0.5s;
-  }
-  
-  .me-add-button:hover::before {
-    left: 100%;
-  }
-  
-  .me-add-button:hover {
-    background-color: #1e3a8a;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(30, 64, 175, 0.25);
-  }
-  
-  .me-button-active {
-    background-color: #1e3a8a;
-    transform: scale(0.98);
-    box-shadow: none;
-  }
-  
-  .me-add-button svg {
-    width: 16px;
-    height: 16px;
-    margin-right: 4px;
-    transition: transform 0.3s ease;
-  }
-  
-  .me-add-button:hover svg {
-    transform: rotate(90deg);
-  }
-  
-  /* Scrollable Content Area */
-  .me-content {
-    flex: 1;
-    z-index: 0;
-    overflow-y: auto; /* Enable scrolling for content only */
-    padding: 0 20px 20px 20px;
-  }
-  
-  /* Employee Grid Styling */
-  .me-employee-grid {
-    display: grid;
-    z-index: 1;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    padding-bottom: 20px; /* Add space at bottom of scrollable area */
-  }
-  
-  /* Card with animations */
-  .me-employee-card {
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
-    z-index: 1;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease-in-out;
-    position: relative;
-  }
-  
-  /* Card appearance animation */
-  .me-card-appear {
-    animation: cardAppear 0.5s ease-out forwards;
+  padding: 0;
+  background-color: #f8fafc;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  width: 100%;
+  height: 100vh; /* Full viewport height */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Prevent whole page scrolling */
+}
+
+/* Fixed Header Container - with animation */
+.me-header-container {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 20px;
+  margin: 20px;
+  border: 1px solid #f0f0f0;
+  flex-shrink: 0; /* Prevent header from shrinking */
+  z-index: 10; /* Ensure header stays on top */
+  transition: all 0.3s ease-in-out;
+}
+
+/* Header highlight animation */
+.me-header-highlight {
+  box-shadow: 0 4px 15px rgba(0, 57, 121, 0.15);
+  transform: translateY(-3px);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.me-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.me-title {
+  font-size: clamp(24px, 4vw, 32px); /* Responsive font size */
+  font-weight: 700;
+  color: #003979;
+  margin: 0;
+  letter-spacing: 0.2px;
+  position: relative;
+  display: inline-block;
+}
+
+/* Title animation */
+.me-title::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 3px;
+  bottom: -5px;
+  left: 0;
+  background-color: #003979;
+  visibility: hidden;
+  transition: all 0.3s ease-in-out;
+}
+
+.me-title:hover::after {
+  visibility: visible;
+  width: 100%;
+}
+
+/* Search and Add Button Container */
+.me-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  min-width: 240px; /* Minimum width to prevent shrinking */
+}
+
+/* Search Box with animation */
+.me-search-box {
+  position: relative;
+  width: 240px;
+  min-width: 200px; /* Prevent excessive shrinking */
+  transition: all 0.3s ease-in-out;
+}
+
+.me-search-focused {
+  transform: scale(1.02);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.me-search-box input {
+  width: 100%;
+  margin-top: 18px;
+  padding: 8px 35px 8px 15px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  height: 45px;
+  box-sizing: border-box;
+  color: #4b5563;
+  transition: all 0.2s ease-in-out;
+}
+
+.me-search-box input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.me-search-box input::placeholder {
+  color: #9ca3af;
+}
+
+.me-search-button {
+  position: absolute;
+  right: 10px;
+  top: 49%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.me-search-button:hover {
+  color: #3b82f6;
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Add Button with animation */
+.me-add-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 18px;
+  background-color: #1e40af;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  height: 45px;
+  white-space: nowrap;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  overflow: hidden;
+  min-width: 120px; /* Prevent button from becoming too small */
+}
+
+.me-add-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg, 
+    rgba(255, 255, 255, 0) 0%, 
+    rgba(255, 255, 255, 0.2) 50%, 
+    rgba(255, 255, 255, 0) 100%
+  );
+  transition: left 0.5s;
+}
+
+.me-add-button:hover::before {
+  left: 100%;
+}
+
+.me-add-button:hover {
+  background-color: #1e3a8a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.25);
+}
+
+.me-button-active {
+  background-color: #1e3a8a;
+  transform: scale(0.98);
+  box-shadow: none;
+}
+
+.me-add-button svg {
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+  transition: transform 0.3s ease;
+}
+
+.me-add-button:hover svg {
+  transform: rotate(90deg);
+}
+
+/* Scrollable Content Area */
+.me-content {
+  flex: 1;
+  z-index: 0;
+  overflow-y: auto; /* Enable scrolling for content only */
+  padding: 0 20px 20px 20px;
+}
+
+/* Employee Grid Styling - Responsive Grid */
+.me-employee-grid {
+  display: grid;
+  z-index: 0;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Responsive grid */
+  gap: 16px;
+  padding-bottom: 20px; /* Add space at bottom of scrollable area */
+}
+
+/* Card with animations */
+.me-employee-card {
+  background: white;
+  border-radius: 8px;
+  overflow: visible; /* Changed from hidden to visible for dropdown */
+  z-index: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  position: relative;
+  min-width: 300px; /* Minimum card width */
+}
+
+/* Card appearance animation */
+.me-card-appear {
+  animation: cardAppear 0.5s ease-out forwards;
+  opacity: 0;
+  transform: translateY(20px);
+  z-index: 0;
+}
+
+@keyframes cardAppear {
+  from {
     opacity: 0;
     transform: translateY(20px);
-    z-index: 1;
   }
-  
-  @keyframes cardAppear {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  .me-employee-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Card viewing animation */
-  .me-card-viewing {
-    transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.25);
-    border: 1px solid rgba(59, 130, 246, 0.3);
-    z-index: 5;
-  }
-  
-  .me-card-header {
-    padding: 16px;
-    display: flex;
-    gap: 14px;
-  }
-  
-  /* Avatar with animation */
-  .me-avatar {
-    width: 54px;
-    height: 54px;
-    border-radius: 50%;
-    background-color: #0D6275;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    font-weight: 600;
-    flex-shrink: 0;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .me-avatar::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 2px solid transparent;
-    top: -2px;
-    left: -2px;
-    transition: all 0.3s ease;
-  }
-  
-  .me-employee-card:hover .me-avatar::after {
-    border-color: rgba(255, 255, 255, 0.5);
-    transform: scale(1.1);
-  }
-  
-  .me-employee-info {
-    flex: 1;
-    min-width: 0; /* To ensure text truncation works */
-  }
-  
-  .me-employee-name {
-    font-size: 16px;
-    font-weight: 600;
-    color: #1e293b;
-    margin: 0 0 2px 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    transition: color 0.2s ease;
-  }
-  
-  .me-employee-card:hover .me-employee-name {
-    color: #1e40af;
-  }
-  
-  .me-employee-role {
-    font-size: 13px;
-    color: #64748b;
-    margin: 0 0 2px 0;
-  }
-  
-  .me-employee-email {
-    font-size: 13px;
-    color: #64748b;
-    margin: 0 0 8px 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  .me-schedule {
-    margin-top: 4px;
-  }
-  
-  .me-time {
-    font-size: 13px;
-    font-weight: 500;
-    color: #334155;
-    margin: 0 0 4px 0;
-  }
-  
-  .me-schedule-pills {
-    display: flex;
-    gap: 8px;
-    font-size: 12px;
-  }
-  
-  .me-day-pill {
-    background-color: #f1f5f9;
-    color: #334155;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-  }
-  
-  .me-employee-card:hover .me-day-pill {
-    background-color: #e2e8f0;
-  }
-  
-  .me-status-pill {
-    color: #64748b;
-    animation: pulse 2s infinite;
-  }
-  
-  @keyframes pulse {
-    0% {
-      opacity: 0.7;
-    }
-    50% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0.7;
-    }
-  }
-  
-  /* Button Actions with animations */
-  .me-card-actions {
-    display: flex;
-    border-top: 1px solid #e2e8f0;
-  }
-  
-  .me-action-button {
-    flex: 1;
-    padding: 10px;
-    background: transparent;
-    border: none;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .me-button-text {
-    position: relative;
-    z-index: 1;
-    transition: transform 0.2s ease;
-  }
-  
-  .me-button-icon {
-    position: absolute;
-    right: -20px;
-    opacity: 0;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-  }
-  
-  .me-action-button:hover .me-button-text {
-    transform: translateX(-10px);
-  }
-  
-  .me-action-button:hover .me-button-icon {
+  to {
     opacity: 1;
-    right: 10px;
+    transform: translateY(0);
   }
-  
-  .me-view-button {
-    color: #3b82f6;
-  }
-  
-  .me-view-button:hover {
-    background-color: #eff6ff;
-  }
-  
-  .me-shift-button {
-    color: #10b981;
-    border-left: 1px solid #e2e8f0;
-    border-right: 1px solid #e2e8f0;
-  }
-  
-  .me-shift-button:hover {
-    background-color: #ecfdf5;
-  }
-  
-  .me-manage-button {
-    color: #ef4444;
-  }
-  
-  .me-manage-button:hover {
-    background-color: #fef2f2;
-  }
-  
-  /* Status Indicators with animations */
-  .me-loading,
-  .me-error,
-  .me-no-results {
-    text-align: center;
-    padding: 30px;
-    color: #64748b;
-    grid-column: 1 / -1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    min-height: 200px;
-  }
-  
-  .me-loading {
-    animation: fadeIn 0.3s ease-in;
-  }
-  
-  .me-loading-spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid rgba(59, 130, 246, 0.2);
-    border-radius: 50%;
-    border-top-color: #3b82f6;
-    animation: spin 1s linear infinite;
-  }
-  
-  @keyframes spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-  
-  .me-error {
-    color: #ef4444;
-    animation: shake 0.5s ease-in-out;
-  }
-  
-  @keyframes shake {
-    0%, 100% {
-      transform: translateX(0);
-    }
-    10%, 30%, 50%, 70%, 90% {
-      transform: translateX(-5px);
-    }
-    20%, 40%, 60%, 80% {
-      transform: translateX(5px);
-    }
-  }
-  
-  .me-error-icon {
-    color: #ef4444;
-    animation: pulse 2s infinite;
-  }
-  
-  .me-no-results {
-    animation: fadeIn 0.5s ease-in;
-  }
-  
-  .me-no-results-icon {
-    color: #94a3b8;
-    animation: float 3s ease-in-out infinite;
-  }
-  
-  @keyframes float {
-    0% {
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
-    100% {
-      transform: translateY(0px);
-    }
-  }
-  
-  /* Hiding scrollbar for cleaner look but keeping functionality */
-  .me-content::-webkit-scrollbar {
-    width: 6px;
-  }
-  
-  .me-content::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  
-  .me-content::-webkit-scrollbar-thumb {
-    background-color: rgba(203, 213, 225, 0.5);
-    border-radius: 10px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .me-content::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(148, 163, 184, 0.7);
-  }
-  
-  /* Responsive Design - Mobile-specific adjustments */
-  @media screen and (max-width: 767px) {
-    .me-header-container {
-      padding: 15px;
-      margin: 10px;
-    }
-    
-    .me-header-content {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 15px;
-    }
-    
-    .me-title {
-      font-size: 24px;
-      margin-bottom: 10px;
-    }
-    
-    .me-actions {
-      width: 100%;
-      flex-direction: column;
-      align-items: stretch;
-    }
-    
-    .me-search-box {
-      width: 100%;
-    }
-    
-    .me-add-button {
-      width: 100%;
-    }
-    
-    .me-employee-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .me-action-button {
-      padding: 12px 10px; /* Larger touch targets on mobile */
-    }
-    
-    .me-content {
-      padding: 0 10px 10px 10px;
-    }
-    
-    /* Animation adjustments for mobile */
-    .me-card-appear {
-      animation-duration: 0.3s;
-    }
-  }
+}
 
- /* Critical fix: First, ensure the employee card doesn't cut off the dropdown */
-.me-employee-card {
-  overflow: visible !important;
-  z-index: auto !important; /* Don't create a stacking context */
+.me-employee-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Card viewing animation */
+.me-card-viewing {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.25);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  z-index: 5;
+}
+
+.me-card-header {
+  padding: 16px;
+  display: flex;
+  gap: 14px;
+}
+
+/* Avatar with animation */
+.me-avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background-color: #0D6275;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
   position: relative;
+  overflow: hidden;
+}
+
+.me-avatar::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  top: -2px;
+  left: -2px;
+  transition: all 0.3s ease;
+}
+
+.me-employee-card:hover .me-avatar::after {
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.1);
+}
+
+.me-employee-info {
+  flex: 1;
+  min-width: 0; /* To ensure text truncation works */
+}
+
+.me-employee-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 2px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.2s ease;
+}
+
+.me-employee-card:hover .me-employee-name {
+  color: #1e40af;
+}
+
+.me-employee-role {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0 0 2px 0;
+}
+
+.me-employee-email {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0 0 8px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.me-schedule {
+  margin-top: 4px;
+}
+
+.me-time {
+  font-size: 13px;
+  font-weight: 500;
+  color: #334155;
+  margin: 0 0 4px 0;
+}
+
+.me-schedule-pills {
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  flex-wrap: wrap; /* Allow pills to wrap on small screens */
+}
+
+.me-day-pill {
+  background-color: #f1f5f9;
+  color: #334155;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.me-employee-card:hover .me-day-pill {
+  background-color: #e2e8f0;
+}
+
+.me-status-pill {
+  background-color: #f1f5f9;
+  color: #334155;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.7;
+  }
+}
+
+/* Button Actions with animations */
+.me-card-actions {
+  display: flex;
+  border-top: 1px solid #e2e8f0;
+  position: relative;
+  z-index: 99;
+}
+
+.me-action-button {
+  flex: 1;
+  padding: 10px;
+  background: transparent;
+  border: none;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.me-button-text {
+  position: relative;
+  z-index: 1;
+  transition: transform 0.2s ease;
+}
+
+.me-button-icon {
+  position: absolute;
+  right: -20px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+.me-action-button:hover .me-button-text {
+  transform: translateX(-10px);
+}
+
+.me-action-button:hover .me-button-icon {
+  opacity: 1;
+  right: 10px;
+}
+
+.me-view-button {
+  color: #3b82f6;
+}
+
+.me-view-button:hover {
+  background-color: #eff6ff;
+}
+
+.me-shift-button {
+  color: #10b981;
+  border-left: 1px solid #e2e8f0;
+  border-right: 1px solid #e2e8f0;
+}
+
+.me-shift-button:hover {
+  background-color: #ecfdf5;
+}
+
+.me-manage-button2 {
+  color: #ef4444;
+}
+
+.me-manage-button2:hover {
+  background-color: #fef2f2;
+}
+
+/* Status Indicators with animations */
+.me-loading,
+.me-error,
+.me-no-results {
+  text-align: center;
+  padding: 30px;
+  color: #64748b;
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 200px;
+}
+
+.me-loading {
+  animation: fadeIn 0.3s ease-in;
+}
+
+.me-loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(59, 130, 246, 0.2);
+  border-radius: 50%;
+  border-top-color: #3b82f6;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.me-error {
+  color: #ef4444;
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(5px);
+  }
+}
+
+.me-error-icon {
+  color: #ef4444;
+  animation: pulse 2s infinite;
+}
+
+.me-no-results {
+  animation: fadeIn 0.5s ease-in;
+}
+
+.me-no-results-icon {
+  color: #94a3b8;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/* Hiding scrollbar for cleaner look but keeping functionality */
+.me-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.me-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.me-content::-webkit-scrollbar-thumb {
+  background-color: rgba(203, 213, 225, 0.5);
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.me-content::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(148, 163, 184, 0.7);
 }
 
 /* Dropdown Container Styling with correct z-index */
@@ -619,11 +575,11 @@
   position: relative;
   flex: 1;
   display: flex;
-  z-index: 100; /* Higher base z-index */
+  z-index: 100;
 }
 
 /* Keep the original manage button styling intact */
-.me-dropdown-container .me-manage-button {
+.me-dropdown-container .me-manage-button2 {
   flex: 1;
   padding: 10px;
   color: #ef4444;
@@ -642,7 +598,7 @@
 
 /* Active dropdown container gets much higher z-index */
 .me-dropdown-active {
-  z-index: 10000 !important; /* Very high z-index */
+  z-index: 10000 !important;
 }
 
 /* Fix for the dropdown icon rotation */
@@ -651,27 +607,20 @@
   transition: transform 0.3s ease;
 }
 
-/* Dropdown Menu - position fixed to break out of all stacking contexts */
+/* Dropdown Menu - Dynamic positioning */
 .me-dropdown-menu {
   display: block;
-  position: fixed;
+  position: absolute;
   width: 160px;
-  top: 65px;
-  left: 420px;
+  top: -100px;
+  right: 0;
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-  z-index: 99999; /* Extremely high z-index */
+  z-index: 99999; 
   animation: dropdownAppear 0.3s ease forwards;
   border: 1px solid #e5e7eb;
-}
-
-/* Card actions needs proper z-index */
-.me-card-actions {
-  display: flex;
-  border-top: 1px solid #e2e8f0;
-  position: relative;
-  z-index: 99; /* High enough to be clickable */
+  margin-top: 2px;
 }
 
 /* Dropdown Items styling */
@@ -689,7 +638,7 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  white-space: nowrap; /* Prevent text wrapping */
+  white-space: nowrap;
 }
 
 /* Styling for the "Edit" option */
@@ -717,13 +666,6 @@
   border-bottom: 1px solid #f3f4f6;
 }
 
-@media screen and (max-width: 767px) {
-
-  .me-dropdown-menu{
-    left: 213px;
-  }
-}
-
 /* Animation for dropdown appearance */
 @keyframes dropdownAppear {
   from {
@@ -733,5 +675,1937 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Form Overlay - FIXED z-index and positioning */
+.me-form-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 999999 !important;
+  backdrop-filter: blur(5px) !important;
+  animation: overlayAppear 0.3s ease-out !important;
+  overflow: hidden !important;
+  padding: 20px !important;
+  box-sizing: border-box !important;
+}
+
+@keyframes overlayAppear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Applicant Container - FIXED positioning */
+.me-applicant-container {
+  background: white !important;
+  border-radius: 12px !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+  width: 100% !important;
+  max-width: 900px !important;
+  max-height: calc(100vh - 40px) !important;
+  overflow: hidden !important;
+  animation: formSlideIn 0.4s ease-out !important;
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  z-index: 1000000 !important;
+}
+
+@keyframes formSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Form Header - FIXED */
+.me-form-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 24px 24px 0 24px !important;
+  border-bottom: 1px solid #e5e7eb !important;
+  margin-bottom: 24px !important;
+  background: white !important;
+  flex-shrink: 0 !important;
+}
+
+.me-form-header h2 {
+  font-size: clamp(18px, 3vw, 24px) !important;
+  font-weight: 700 !important;
+  color: #003979 !important;
+  margin: 0 !important;
+}
+
+.me-close-button {
+  background: none !important;
+  border: none !important;
+  color: #6b7280 !important;
+  cursor: pointer !important;
+  padding: 8px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.2s ease !important;
+  z-index: 1000001 !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
+}
+
+.me-close-button:hover {
+  background-color: #f3f4f6 !important;
+  color: #374151 !important;
+  transform: scale(1.1) !important;
+}
+
+/* Applicant Content - FIXED */
+.me-applicant-content {
+  padding: 0 24px 24px 24px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  overflow: hidden !important;
+  background: white !important;
+}
+
+/* Applicant List - FIXED scrolling */
+.me-applicant-list {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  margin-bottom: 20px !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  background-color: #f9fafb !important;
+  max-height: 500px !important;
+  min-height: 200px !important;
+}
+
+.me-applicant-item {
+  display: flex !important;
+  align-items: center !important;
+  padding: 16px !important;
+  background: white !important;
+  border-bottom: 1px solid #e5e7eb !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
+}
+
+.me-applicant-item:hover {
+  background-color: #f8fafc !important;
+  transform: translateX(4px) !important;
+}
+
+.me-applicant-item:last-child {
+  border-bottom: none !important;
+}
+
+.me-applicant-checkbox {
+  position: relative !important;
+  margin-right: 16px !important;
+  flex-shrink: 0 !important;
+}
+
+.me-applicant-checkbox input[type="checkbox"] {
+  position: absolute !important;
+  opacity: 0 !important;
+  cursor: pointer !important;
+  height: 0 !important;
+  width: 0 !important;
+}
+
+.me-checkbox-label {
+  position: relative !important;
+  display: inline-block !important;
+  width: 20px !important;
+  height: 20px !important;
+  background-color: white !important;
+  border: 2px solid #d1d5db !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.me-checkbox-label::after {
+  content: '' !important;
+  position: absolute !important;
+  display: none !important;
+  left: 6px !important;
+  top: 2px !important;
+  width: 6px !important;
+  height: 10px !important;
+  border: solid white !important;
+  border-width: 0 2px 2px 0 !important;
+  transform: rotate(45deg) !important;
+}
+
+.me-applicant-checkbox input[type="checkbox"]:checked + .me-checkbox-label {
+  background-color: #1e40af !important;
+  border-color: #1e40af !important;
+  transform: scale(1.1) !important;
+}
+
+.me-applicant-checkbox input[type="checkbox"]:checked + .me-checkbox-label::after {
+  display: block !important;
+}
+
+.me-applicant-checkbox input[type="checkbox"]:focus + .me-checkbox-label {
+  box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.2) !important;
+}
+
+.me-applicant-avatar {
+  margin-right: 16px !important;
+  flex-shrink: 0 !important;
+}
+
+.me-applicant-avatar .me-avatar {
+  width: 48px !important;
+  height: 48px !important;
+  font-size: 16px !important;
+}
+
+.me-applicant-details {
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+.me-applicant-name {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  color: #1e293b !important;
+  margin: 0 0 4px 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.me-applicant-position {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #3b82f6 !important;
+  margin: 0 0 4px 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.me-applicant-email {
+  font-size: 13px !important;
+  color: #64748b !important;
+  margin: 0 0 4px 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.me-applicant-address {
+  font-size: 13px !important;
+  color: #64748b !important;
+  margin: 0 0 8px 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.me-applicant-meta {
+  display: flex !important;
+  gap: 16px !important;
+  flex-wrap: wrap !important;
+}
+
+.me-applicant-status {
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: #059669 !important;
+  background-color: #ecfdf5 !important;
+  padding: 2px 8px !important;
+  border-radius: 4px !important;
+}
+
+.me-applicant-phone {
+  font-size: 12px !important;
+  color: #6b7280 !important;
+  font-weight: 500 !important;
+}
+
+/* Form Actions - FIXED */
+.me-form-actions {
+  display: flex !important;
+  gap: 12px !important;
+  justify-content: flex-end !important;
+  margin-top: 20px !important;
+  padding-top: 20px !important;
+  border-top: 1px solid #e5e7eb !important;
+  background: white !important;
+  flex-shrink: 0 !important;
+}
+
+.me-form-cancel {
+  padding: 12px 24px !important;
+  background-color: #f9fafb !important;
+  color: #374151 !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.me-form-cancel:hover {
+  background-color: #f3f4f6 !important;
+  border-color: #9ca3af !important;
+}
+
+.me-form-submit {
+  padding: 12px 24px !important;
+  background-color: #1e40af !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.me-form-submit:hover:not(:disabled) {
+  background-color: #1e3a8a !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.25) !important;
+}
+
+.me-form-submit:disabled {
+  background-color: #9ca3af !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Error styling */
+.me-form-error-general {
+  background-color: #fef2f2 !important;
+  border: 1px solid #fecaca !important;
+  color: #dc2626 !important;
+  padding: 12px 16px !important;
+  border-radius: 8px !important;
+  margin-bottom: 20px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+.me-applicant-list::-webkit-scrollbar {
+  display: none !important;
+}
+
+.me-applicant-list::-webkit-scrollbar-track {
+  display: none !important;
+}
+
+.me-applicant-list::-webkit-scrollbar-thumb {
+  display: none !important;
+}
+
+.me-applicant-list::-webkit-scrollbar-thumb:hover {
+  display: none !important;
+}
+
+/* Loading and no results states */
+.me-applicant-content .me-loading,
+.me-applicant-content .me-no-results {
+  text-align: center !important;
+  padding: 40px 20px !important;
+  color: #64748b !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 16px !important;
+  min-height: 200px !important;
+  background: white !important;
+}
+
+.me-loading-spinner {
+  width: 40px !important;
+  height: 40px !important;
+  border: 3px solid rgba(59, 130, 246, 0.2) !important;
+  border-radius: 50% !important;
+  border-top-color: #3b82f6 !important;
+  animation: spin 1s linear infinite !important;
+}
+
+/* Selected applicant styling */
+.me-applicant-item:has(input[type="checkbox"]:checked) {
+  background-color: #eff6ff !important;
+  border-left: 4px solid #1e40af !important;
+  transform: translateX(0) !important;
+}
+
+.me-applicant-item:has(input[type="checkbox"]:checked):hover {
+  background-color: #dbeafe !important;
+}
+
+/* Form Dropdowns Styling */
+.me-form-dropdowns {
+  display: flex !important;
+  gap: 16px !important;
+  margin-bottom: 20px !important;
+  padding: 20px !important;
+  background-color: #f8fafc !important;
+  border-radius: 8px !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+.me-dropdown-group {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.me-dropdown-label {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #374151 !important;
+  margin: 0 !important;
+}
+
+.me-dropdown-select {
+  padding: 10px 12px !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 6px !important;
+  font-size: 14px !important;
+  color: #374151 !important;
+  background-color: white !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  outline: none !important;
+}
+
+.me-dropdown-select:focus {
+  border-color: #1e40af !important;
+  box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.15) !important;
+}
+
+.me-dropdown-select:hover {
+  border-color: #9ca3af !important;
+}
+
+/* Responsive adjustments for dropdowns */
+@media screen and (max-width: 767px) {
+  .me-form-dropdowns {
+    flex-direction: column !important;
+    gap: 12px !important;
+    padding: 16px !important;
+  }
+}
+
+@media screen and (max-width: 575px) {
+  .me-form-dropdowns {
+    padding: 12px !important;
+  }
+  
+  .me-dropdown-select {
+    padding: 8px 10px !important;
+    font-size: 13px !important;
+  }
+}
+
+/* Success State Styling */
+.me-success-state {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 60px 40px !important;
+  text-align: center !important;
+  min-height: 300px !important;
+}
+
+.me-success-icon {
+  margin-bottom: 24px !important;
+  color: #10b981 !important;
+  animation: successPulse 1.5s ease-in-out !important;
+}
+
+.me-success-title {
+  font-size: 28px !important;
+  font-weight: 700 !important;
+  color: #10b981 !important;
+  margin: 0 0 16px 0 !important;
+}
+
+.me-success-message {
+  font-size: 16px !important;
+  color: #374151 !important;
+  margin: 0 0 24px 0 !important;
+  line-height: 1.5 !important;
+}
+
+.me-success-details {
+  background-color: #f0f9ff !important;
+  border: 1px solid #e0f2fe !important;
+  border-radius: 8px !important;
+  padding: 16px 24px !important;
+  margin-top: 8px !important;
+}
+
+.me-success-details p {
+  margin: 4px 0 !important;
+  font-size: 14px !important;
+  color: #374151 !important;
+}
+
+.me-success-details strong {
+  color: #1e40af !important;
+}
+
+@keyframes successPulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Responsive adjustments for success state */
+@media screen and (max-width: 575px) {
+  .me-success-state {
+    padding: 40px 20px !important;
+  }
+  
+  .me-success-title {
+    font-size: 24px !important;
+  }
+  
+  .me-success-message {
+    font-size: 14px !important;
+  }
+}
+
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+
+/* Large Laptops and Desktops (1200px+) */
+@media screen and (min-width: 1200px) {
+  .me-employee-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .me-header-container {
+    margin: 24px;
+    padding: 24px;
+  }
+  
+  .me-content {
+    padding: 0 24px 24px 24px;
+  }
+}
+
+/* Medium Laptops (992px - 1199px) */
+@media screen and (max-width: 1199px) and (min-width: 992px) {
+  .me-employee-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  
+  .me-header-container {
+    margin: 20px;
+    padding: 20px;
+  }
+  
+  .me-actions {
+    min-width: 220px;
+  }
+  
+  .me-search-box {
+    width: 220px;
+    min-width: 180px;
+  }
+}
+
+/* Small Laptops and Tablets (768px - 991px) */
+@media screen and (max-width: 991px) and (min-width: 768px) {
+  .me-header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  
+  .me-actions {
+    width: 100%;
+    justify-content: space-between;
+    min-width: auto;
+  }
+  
+  .me-search-box {
+    flex: 1;
+    width: auto;
+    min-width: 200px;
+    max-width: 300px;
+  }
+  
+  .me-employee-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  
+  .me-employee-card {
+    min-width: 280px;
+  }
+  
+  .me-dropdown-menu {
+    width: 140px;
+    left: -5px;
+  }
+  
+  .me-card-actions {
+    flex-wrap: wrap;
+  }
+  
+  .me-action-button {
+    font-size: 12px;
+    padding: 8px;
+  }
+}
+
+/* Large Mobile Phones (576px - 767px) */
+@media screen and (max-width: 767px) and (min-width: 576px) {
+  .me-page {
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  .me-header-container {
+    padding: 16px;
+    margin: 12px;
+    border-radius: 6px;
+  }
+  
+  .me-header-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+  
+  .me-title {
+    font-size: 22px;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  
+  .me-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+  }
+  
+  .me-search-box {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .me-search-box input {
+    margin-top: 0;
+    height: 42px;
+  }
+  
+  .me-add-button {
+    width: 100%;
+    height: 42px;
+    justify-content: center;
+  }
+  
+  .me-content {
+    padding: 0 12px 12px 12px;
+  }
+  
+  .me-employee-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .me-employee-card {
+    min-width: auto;
+    width: 100%;
+  }
+  
+  .me-card-header {
+    padding: 14px;
+  }
+  
+  .me-avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 16px;
+  }
+  
+  .me-employee-name {
+    font-size: 15px;
+  }
+  
+  .me-schedule-pills {
+    gap: 6px;
+  }
+  
+  .me-day-pill {
+    font-size: 11px;
+    padding: 2px 6px;
+  }
+  
+  .me-card-actions {
+    flex-direction: row;
+  }
+  
+  .me-action-button {
+    padding: 12px 8px;
+    font-size: 12px;
+  }
+  
+  .me-dropdown-menu {
+    width: 130px;
+    right: 0px;
+  }
+  
+  /* Modal adjustments for large mobile */
+  .me-form-overlay {
+    padding: 16px !important;
+  }
+  
+  .me-applicant-container {
+    max-height: calc(100vh - 32px) !important;
+  }
+  
+  .me-form-header {
+    padding: 20px 20px 0 20px !important;
+  }
+  
+  .me-applicant-content {
+    padding: 0 20px 20px 20px !important;
+  }
+  
+  .me-applicant-item {
+    padding: 14px !important;
+  }
+  
+  .me-form-actions {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  
+  .me-form-cancel,
+  .me-form-submit {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+}
+
+/* Small Mobile Phones (320px - 575px) */
+@media screen and (max-width: 575px) {
+  .me-page {
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  .me-header-container {
+    padding: 12px;
+    margin: 8px;
+    border-radius: 4px;
+  }
+  
+  .me-header-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  
+  .me-title {
+    font-size: 20px;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  
+  .me-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+  
+  .me-search-box {
+    width: 100%;
+  }
+  
+  .me-search-box input {
+    margin-top: 0;
+    height: 40px;
+    font-size: 14px;
+    padding: 8px 30px 8px 12px;
+  }
+  
+  .me-add-button {
+    width: 100%;
+    height: 40px;
+    font-size: 13px;
+    padding: 8px 16px;
+  }
+  
+  .me-content {
+    padding: 0 8px 8px 8px;
+  }
+  
+  .me-employee-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .me-employee-card {
+    min-width: auto;
+    width: 100%;
+    border-radius: 6px;
+  }
+  
+  .me-card-header {
+    padding: 12px;
+    gap: 10px;
+  }
+  
+  .me-avatar {
+    width: 44px;
+    height: 44px;
+    font-size: 15px;
+  }
+  
+  .me-employee-name {
+    font-size: 14px;
+  }
+  
+  .me-employee-role,
+  .me-employee-email {
+    font-size: 12px;
+  }
+  
+  .me-time {
+    font-size: 12px;
+  }
+  
+  .me-schedule-pills {
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  
+  .me-day-pill {
+    font-size: 10px;
+    padding: 2px 5px;
+  }
+  
+  .me-card-actions {
+    flex-direction: column;
+  }
+  
+  .me-action-button {
+    padding: 12px 8px;
+    font-size: 12px;
+    border-right: none !important;
+    border-left: none !important;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  .me-action-button:last-child {
+    border-bottom: none;
+  }
+  
+  .me-shift-button {
+    border-left: none !important;
+    border-right: none !important;
+  }
+  
+  .me-dropdown-menu {
+    width: 120px;
+    top: -70px;
+    right: 0;
+  }
+  
+  .me-dropdown-item {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+  
+  /* Modal adjustments for small mobile */
+  .me-form-overlay {
+    padding: 10px !important;
+  }
+  
+  .me-applicant-container {
+    max-height: calc(100vh - 20px) !important;
+    border-radius: 8px !important;
+  }
+  
+  .me-form-header {
+    padding: 16px 16px 0 16px !important;
+  }
+  
+  .me-form-header h2 {
+    font-size: 18px !important;
+  }
+  
+  .me-close-button {
+    min-width: 36px !important;
+    min-height: 36px !important;
+    padding: 6px !important;
+  }
+  
+  .me-applicant-content {
+    padding: 0 16px 16px 16px !important;
+  }
+  
+  .me-applicant-list {
+    max-height: 400px !important;
+  }
+  
+  .me-applicant-item {
+    padding: 12px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    position: relative !important;
+  }
+  
+  .me-applicant-checkbox {
+    position: absolute !important;
+    top: 12px !important;
+    right: 12px !important;
+    margin: 0 !important;
+  }
+  
+  .me-applicant-avatar {
+    margin: 0 0 8px 0 !important;
+  }
+  
+  .me-applicant-details {
+    width: 100% !important;
+    padding-right: 40px !important;
+  }
+  
+  .me-applicant-name,
+  .me-applicant-position,
+  .me-applicant-email,
+  .me-applicant-address {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: initial !important;
+  }
+  
+  .me-form-actions {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  
+  .me-form-cancel,
+  .me-form-submit {
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 12px 20px !important;
+  }
+}
+
+/* Extra Small Phones (below 320px) */
+@media screen and (max-width: 319px) {
+  .me-header-container {
+    margin: 4px;
+    padding: 8px;
+  }
+  
+  .me-title {
+    font-size: 18px;
+  }
+  
+  .me-search-box input,
+  .me-add-button {
+    height: 36px;
+    font-size: 12px;
+  }
+  
+  .me-content {
+    padding: 0 4px 4px 4px;
+  }
+  
+  .me-employee-card {
+    border-radius: 4px;
+  }
+  
+  .me-card-header {
+    padding: 10px;
+  }
+  
+  .me-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+  }
+  
+  .me-dropdown-menu {
+    width: 110px;
+  }
+}
+
+/* Landscape Orientation Adjustments */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .me-header-container {
+    padding: 12px;
+    margin: 8px;
+  }
+  
+  .me-title {
+    font-size: 20px;
+  }
+  
+  .me-content {
+    padding: 0 8px 8px 8px;
+  }
+  
+  .me-employee-grid {
+    gap: 8px;
+  }
+  
+  .me-card-header {
+    padding: 10px;
+  }
+  
+  .me-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+  }
+  
+  .me-applicant-container {
+    max-height: calc(100vh - 16px) !important;
+  }
+  
+  .me-form-header {
+    padding: 12px 16px 0 16px !important;
+  }
+  
+  .me-applicant-content {
+    padding: 0 16px 12px 16px !important;
+  }
+  
+  .me-applicant-list {
+    max-height: 250px !important;
+  }
+}
+
+/* Profile View Modal Styles - ADD THESE TO YOUR EXISTING ManageEmployee.css */
+
+/* Profile Overlay */
+.me-profile-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 1000000 !important;
+  backdrop-filter: blur(8px) !important;
+  animation: profileOverlayAppear 0.3s ease-out !important;
+  overflow: hidden !important;
+  padding: 20px !important;
+  box-sizing: border-box !important;
+}
+
+@keyframes profileOverlayAppear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Profile Modal */
+.me-profile-modal {
+  background: white !important;
+  border-radius: 16px !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25) !important;
+  width: 100% !important;
+  max-width: 900px !important;
+  max-height: calc(100vh - 40px) !important;
+  overflow: hidden !important;
+  animation: profileModalSlideIn 0.4s ease-out !important;
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  z-index: 1000001 !important;
+}
+
+@keyframes profileModalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Close Button */
+.me-profile-close {
+  position: absolute !important;
+  top: 20px !important;
+  right: 20px !important;
+  background: white !important;
+  border: none !important;
+  color: white !important;
+  cursor: pointer !important;
+  padding: 12px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.2s ease !important;
+  z-index: 1000002 !important;
+  width: 38px !important;
+  height: 38px !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+
+.me-profile-view {
+  position: absolute !important;
+  top: 20px !important;
+  right: 75px !important;
+  background: #003979 !important;
+  border: none !important;
+  color: white !important;
+  cursor: pointer !important;
+  padding: 12px !important;
+  border-radius: 8px;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.2s ease !important;
+  z-index: 1000002 !important;
+  width: 120px !important;
+  height: 38px !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.me-profile-close:hover {
+  background: white !important;
+  transform: scale(1.1) !important;
+}
+
+.me-profile-close svg {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+/* Cover Photo Section */
+.me-profile-cover {
+  height: 200px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  background: #D9D9D9 !important;
+  flex-shrink: 0 !important;
+}
+
+.me-profile-cover-image {
+  width: 100% !important;
+  height: 100% !important;
+  background: #D9D9D9 !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+
+/* Profile Picture Container remains the same */
+.me-profile-picture-container {
+  width: 180px !important;
+  height: 180px !important;
+  border-radius: 50% !important;
+  border: 4px solid #ffffff !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  background: white !important;
+  position: relative !important;
+  top: -80px;
+}
+
+.me-profile-picture {
+  position: relative !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+}
+
+.me-profile-picture .me-avatar {
+  width: 100% !important;
+  height: 100% !important;
+  font-size: 32px !important;
+  font-weight: 700 !important;
+  border-radius: 50% !important;
+}
+
+
+/* Profile Info Section */
+.me-profile-info-section {
+  padding: 30px 40px 20px 40px !important;
+  background: white !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+  z-index: 100 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 20px !important;
+}
+
+.me-profile-picture-in-info {
+  flex-shrink: 0 !important;
+  height: 100px;
+}
+
+.me-profile-text-info {
+  flex: 1 !important;
+}
+
+.me-profile-name {
+  font-size: 32px !important;
+  font-weight: 700 !important;
+  color: #003979 !important;
+  margin: 0 0 8px 0 !important;
+  line-height: 1.2 !important;
+}
+
+.me-profile-position {
+  font-size: 18px !important;
+  font-weight: 500 !important;
+  color: #64748b !important;
+  margin: 0 !important;
+}
+
+/* Tabs Section */
+.me-profile-tabs {
+  display: flex !important;
+  border-bottom: 2px solid #f1f5f9 !important;
+  background: white !important;
+  margin-left: -40px !important;
+  padding: 0 40px !important;
+  flex-shrink: 0 !important;
+  overflow-x: auto !important;
+}
+
+.me-profile-tab {
+  background: none !important;
+  border: none !important;
+  padding: 16px 24px !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  color: #64748b !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  position: relative !important;
+  white-space: nowrap !important;
+  border-bottom: 3px solid transparent !important;
+}
+
+.me-profile-tab:hover {
+  color: #003979 !important;
+  background-color: rgba(0, 57, 121, 0.05) !important;
+}
+
+.me-profile-tab-active {
+  color: #003979 !important;
+  border-bottom-color: #003979 !important;
+  background-color: rgba(0, 57, 121, 0.05) !important;
+}
+
+/* Content Section */
+.me-profile-content {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  background: white !important;
+  padding: 30px 40px 40px 40px !important;
+}
+
+.me-profile-content-section {
+  animation: fadeInContent 0.3s ease-in !important;
+}
+
+@keyframes fadeInContent {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.me-profile-section-title {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: #1e293b !important;
+  margin: 0 0 20px 0 !important;
+  padding-bottom: 10px !important;
+  border-bottom: 2px solid #f1f5f9 !important;
+}
+
+/* Profile Info Grid */
+.me-profile-info-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+  gap: 16px !important;
+}
+
+.me-profile-info-item {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 4px !important;
+  padding: 0px 0 !important;
+  line-height: 25px;
+  font-size: 20px !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  border-left: none !important;
+  transition: none !important;
+}
+
+.me-profile-info-item:hover {
+  background: transparent !important;
+  border-left-color: transparent !important;
+  transform: none !important;
+}
+
+.me-profile-info-item label {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #072a66 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  margin: 0 !important;
+}
+
+.me-profile-info-item span {
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  color: #1e293b !important;
+  word-break: break-word !important;
+}
+
+/* Loading States */
+.me-profile-loading,
+.me-profile-error,
+.me-profile-no-data {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 60px 20px !important;
+  text-align: center !important;
+  color: #64748b !important;
+  min-height: 200px !important;
+}
+
+.me-profile-loading .me-loading-spinner {
+  width: 40px !important;
+  height: 40px !important;
+  border: 3px solid rgba(0, 57, 121, 0.2) !important;
+  border-radius: 50% !important;
+  border-top-color: #003979 !important;
+  animation: spin 1s linear infinite !important;
+  margin-bottom: 16px !important;
+}
+
+.me-profile-error {
+  color: #ef4444 !important;
+}
+
+/* Scrollbar for profile content */
+.me-profile-content::-webkit-scrollbar {
+  width: 6px !important;
+}
+
+.me-profile-content::-webkit-scrollbar-track {
+  background: #f1f5f9 !important;
+  border-radius: 3px !important;
+}
+
+.me-profile-content::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1 !important;
+  border-radius: 3px !important;
+  transition: background-color 0.3s ease !important;
+}
+
+.me-profile-content::-webkit-scrollbar-thumb:hover {
+  background-color: #94a3b8 !important;
+}
+
+/* Scrollbar for tabs */
+.me-profile-tabs::-webkit-scrollbar {
+  height: 4px !important;
+}
+
+.me-profile-tabs::-webkit-scrollbar-track {
+  background: #f1f5f9 !important;
+}
+
+.me-profile-tabs::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1 !important;
+  border-radius: 2px !important;
+}
+
+.me-profile-tabs::-webkit-scrollbar-thumb:hover {
+  background-color: #94a3b8 !important;
+}
+
+/* ===== RESPONSIVE DESIGN FOR PROFILE MODAL ===== */
+
+/* Large Laptops and Desktops (1200px+) */
+/* Large Desktops (1200px+) - Keep horizontal layout */
+@media screen and (min-width: 1200px) {
+  .me-profile-modal {
+    max-width: 1000px !important;
+  }
+  
+  .me-profile-info-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  .me-profile-info-section {
+    display: flex !important;
+    align-items: center !important;
+    gap: 24px !important;
+  }
+  
+  .me-profile-text-info {
+    flex: 1 !important;
+  }
+}
+
+/* Medium Laptops (992px - 1199px) - Keep horizontal layout */
+@media screen and (max-width: 1199px) and (min-width: 992px) {
+  .me-profile-modal {
+    max-width: 900px !important;
+  }
+  
+  .me-profile-info-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  .me-profile-info-section {
+    display: flex !important;
+    align-items: center !important;
+    gap: 20px !important;
+  }
+  
+  .me-profile-text-info {
+    flex: 1 !important;
+  }
+}
+
+/* Small Laptops and Tablets (768px - 991px) - Keep horizontal layout */
+@media screen and (max-width: 991px) and (min-width: 768px) {
+  .me-profile-modal {
+    max-width: 800px !important;
+  }
+  
+  .me-profile-cover {
+    height: 160px !important;
+  }
+  
+  .me-profile-picture-container {
+    bottom: -35px !important;
+    left: 30px !important;
+  }
+  
+  .me-profile-picture {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+  
+  .me-profile-picture .me-avatar {
+    font-size: 28px !important;
+  }
+  
+  .me-profile-info-section {
+    padding: 55px 30px 20px 30px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 50px !important;
+  }
+  
+  .me-profile-text-info {
+    flex: 1 !important;
+  }
+  
+  .me-profile-name {
+    font-size: 28px !important;
+  }
+  
+  .me-profile-position {
+    font-size: 16px !important;
+  }
+  
+  .me-profile-tabs {
+    padding: 0 30px !important;
+  }
+  
+  .me-profile-content {
+    padding: 25px 30px 30px 30px !important;
+  }
+  
+  .me-profile-info-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+}
+
+/* Large Mobile Phones (576px - 767px) - Switch to vertical layout */
+@media screen and (max-width: 767px) and (min-width: 576px) {
+  .me-profile-overlay {
+    padding: 16px !important;
+  }
+  
+  .me-profile-modal {
+    max-width: none !important;
+    width: 100% !important;
+    max-height: calc(100vh - 32px) !important;
+    border-radius: 12px !important;
+  }
+  
+  .me-profile-close {
+    top: 16px !important;
+    right: 16px !important;
+    width: 40px !important;
+    height: 40px !important;
+  }
+  
+  .me-profile-cover {
+    height: 140px !important;
+  }
+  
+  .me-profile-picture-container {
+    bottom: -30px !important;
+    left: 150px !important;
+  }
+  
+  .me-profile-picture {
+    width: 100% !important;
+    height: 100% !important;
+    border-width: 4px !important;
+    object-fit: cover;
+  }
+  
+  .me-profile-picture .me-avatar {
+    font-size: 24px !important;
+  }
+  
+  .me-profile-info-section {
+    padding: 50px 20px 16px 20px !important;
+    display: block !important; /* Stack vertically */
+  }
+  
+  .me-profile-picture-in-info {
+    text-align: center !important;
+    margin-bottom: 16px !important;
+  }
+  
+  .me-profile-text-info {
+    text-align: center !important;
+  }
+  
+  .me-profile-name {
+    font-size: 24px !important;
+  }
+  
+  .me-profile-position {
+    font-size: 15px !important;
+  }
+  
+  .me-profile-tabs {
+    padding: 0 20px !important;
+    gap: 8px !important;
+  }
+  
+  .me-profile-tab {
+    padding: 14px 16px !important;
+    font-size: 14px !important;
+  }
+  
+  .me-profile-content {
+    padding: 20px 20px 24px 20px !important;
+  }
+  
+  .me-profile-info-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  
+  .me-profile-info-item {
+    padding: 10px 0 !important;
+    gap: 3px !important;
+    line-height: 1px;
+  }
+  
+  .me-profile-info-item label {
+    font-size: 12px !important;
+  }
+  
+  .me-profile-info-item span {
+    font-size: 14px !important;
+  }
+}
+
+/* Small Mobile Phones (320px - 575px) - Vertical layout */
+@media screen and (max-width: 575px) {
+  .me-profile-overlay {
+    padding: 12px !important;
+  }
+  
+  .me-profile-modal {
+    max-height: calc(100vh - 24px) !important;
+    border-radius: 8px !important;
+  }
+  
+  .me-profile-close {
+    top: 12px !important;
+    right: 12px !important;
+    width: 36px !important;
+    height: 36px !important;
+    padding: 8px !important;
+  }
+  
+  .me-profile-close svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+  
+  .me-profile-cover {
+    height: 100px !important;
+  }
+  
+  .me-profile-picture-container {
+    bottom: -25px !important;
+    left: 17% !important;
+    transform: translateX(-50%) !important;
+    width: 120px !important;
+    height: 120px !important;
+  }
+
+  .me-profile-picture-in-info {
+    height: 30px;
+    text-align: center !important;
+    margin-bottom: 12px !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+  
+  .me-profile-picture {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+  }
+  
+  .me-profile-picture .me-avatar {
+    font-size: 20px !important;
+  }
+  
+  .me-profile-info-section {
+    padding: 40px 16px 12px 16px !important;
+    display: block !important; /* Stack vertically */
+    align-items: center;
+    text-align: center !important;
+  }
+  
+  .me-profile-text-info {
+    text-align: center !important;
+  }
+  
+  .me-profile-name {
+    font-size: 20px !important;
+    line-height: 1.3 !important;
+  }
+  
+  .me-profile-position {
+    font-size: 14px !important;
+    margin: 0 0 16px 0 !important;
+  }
+  
+  .me-profile-tabs {
+    padding: 0 16px !important;
+    gap: 4px !important;
+  }
+  
+  .me-profile-tab {
+    padding: 12px 12px !important;
+    font-size: 13px !important;
+    min-width: fit-content !important;
+  }
+  
+  .me-profile-content {
+    padding: 16px 16px 20px 16px !important;
+  }
+  
+  .me-profile-section-title {
+    font-size: 18px !important;
+    margin: 0 0 16px 0 !important;
+  }
+  
+  .me-profile-info-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  
+  .me-profile-info-item {
+    padding: 8px 0 !important;
+    gap: 2px !important;
+    line-height: 1px;
+  }
+  
+  .me-profile-info-item label {
+    font-size: 11px !important;
+  }
+  
+  .me-profile-info-item span {
+    font-size: 13px !important;
+  }
+}
+
+/* Extra Small Phones (below 320px) - Vertical layout */
+@media screen and (max-width: 319px) {
+  .me-profile-overlay {
+    padding: 8px !important;
+  }
+  
+  .me-profile-cover {
+    height: 120px !important;
+  }
+
+  .me-profile-picture-container {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 100px !important;
+    height: 100px !important;
+  }
+  
+  .me-profile-picture {
+    width: 100%!important;
+    height: 100% !important;
+  }
+  
+  .me-profile-picture .me-avatar {
+    font-size: 18px !important;
+  }
+  
+  .me-profile-info-section {
+    display: block !important; /* Stack vertically */
+    text-align: center !important;
+  }
+  
+  .me-profile-picture-in-info {
+    text-align: center !important;
+    margin-bottom: 12px !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+  
+  .me-profile-text-info {
+    text-align: center !important;
+  }
+  
+  .me-profile-name {
+    font-size: 18px !important;
+  }
+}
+
+/* Landscape Orientation Adjustments */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .me-profile-modal {
+    max-height: calc(100vh - 20px) !important;
+  }
+  
+  .me-profile-cover {
+    height: 80px !important;
+  }
+  
+  .me-profile-picture-container {
+    bottom: -20px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+  
+  .me-profile-picture img{
+    width: 50px !important;
+    height: 50px !important;
+  }
+  
+  .me-profile-picture .me-avatar {
+    font-size: 18px !important;
+  }
+  
+  .me-profile-info-section {
+    padding: 35px 16px 10px 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 16px !important;
+    flex-direction: column !important;
+    text-align: center !important;
+  }
+  
+  .me-profile-text-info {
+    flex: 1 !important;
+    text-align: center !important;
+  }
+  
+  .me-profile-picture-in-info {
+    text-align: center !important;
+    margin-bottom: 8px !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+  
+  .me-profile-name {
+    font-size: 18px !important;
+  }
+  
+  .me-profile-position {
+    font-size: 13px !important;
+    margin: 0 0 12px 0 !important;
+  }
+  
+  .me-profile-tabs {
+    padding: 0 16px !important;
+  }
+  
+  .me-profile-tab {
+    padding: 10px 12px !important;
+    font-size: 12px !important;
+  }
+  
+  .me-profile-content {
+    padding: 12px 16px 16px 16px !important;
+  }
+  
+  .me-profile-info-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+  
+  .me-profile-info-item {
+    padding: 6px 0 !important;
+    gap: 2px !important;
+  }
+  
+  .me-profile-info-item label {
+    font-size: 10px !important;
+  }
+  
+  .me-profile-info-item span {
+    font-size: 12px !important;
+  }
+  
+  .me-profile-section-title {
+    font-size: 16px !important;
+    margin: 0 0 12px 0 !important;
+    padding-bottom: 6px !important;
+  }
+}
+
+/* Very Short Landscape (below 400px height) */
+@media screen and (max-height: 400px) and (orientation: landscape) {
+  .me-profile-cover {
+    height: 100px !important;
+  }
+  
+  .me-profile-picture-container {
+    bottom: -25px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+  
+  .me-profile-picture .me-avatar img{
+    width: 50px !important;
+    height: 50px !important;
+  }
+  
+  .me-profile-picture .me-avatar {
+    font-size: 16px !important;
+  }
+  
+  .me-profile-info-section {
+    padding: 30px 12px 8px 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    flex-direction: column !important;
+    text-align: center !important;
+  }
+  
+  .me-profile-text-info {
+    flex: 1 !important;
+    text-align: center !important;
+  }
+  
+  .me-profile-picture-in-info {
+    text-align: center !important;
+    margin-bottom: 8px !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+  
+  .me-profile-name {
+    font-size: 16px !important;
+  }
+  
+  .me-profile-position {
+    font-size: 12px !important;
+    margin: 0 0 8px 0 !important;
+  }
+  
+  .me-profile-tabs {
+    padding: 0 12px !important;
+  }
+  
+  .me-profile-tab {
+    padding: 8px 10px !important;
+    font-size: 11px !important;
+  }
+  
+  .me-profile-content {
+    padding: 10px 12px 12px 12px !important;
   }
 }
