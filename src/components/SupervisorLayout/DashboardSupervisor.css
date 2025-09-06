@@ -1,384 +1,470 @@
 /* Dashboard Container */
 .supervisor-dashboard-container {
-    padding: 2rem;
-    background-color: #f8fafc;
-    min-height: 100vh;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  padding: 1rem 2rem;
+  background-color: #ffff;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.supervisor-dashboard-content {
+  margin-top: 1rem;
+}
+
+/* Main Layout */
+.supervisor-main-layout {
+  display: grid;
+  grid-template-columns: 3.3fr 1fr;
+  gap: 1.5rem;
+}
+
+.supervisor-left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.supervisor-right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Overview Today Card */
+.supervisor-overview-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  padding: 1.5rem;
+}
+
+.supervisor-overview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.supervisor-overview-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+.supervisor-date-today {
+  font-size: 0.875rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.supervisor-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.supervisor-overview-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.supervisor-overview-icon {
+  width: 48px;
+  height: 48px;
+  background-color: #495b69;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.supervisor-overview-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.supervisor-overview-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.25rem;
+}
+
+.supervisor-overview-label {
+  font-size: 0.875rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* Statistics Card */
+.supervisor-statistics-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.supervisor-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.supervisor-card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+.supervisor-statistics-content {
+  padding: 1.5rem;
+}
+
+.supervisor-chart-container {
+  display: flex;
+  height: 490px;
+  margin-bottom: 1rem;
+}
+
+.supervisor-y-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 40px;
+  padding-right: 10px;
+  padding-top: 10px;
+  padding-bottom: 30px;
+}
+
+.supervisor-y-axis span {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.supervisor-chart-area {
+  flex: 1;
+  position: relative;
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  border-radius: 8px;
+  padding: 10px 20px 30px 10px;
+}
+
+.supervisor-chart-grid {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 20px;
+  bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.supervisor-grid-line {
+  height: 1px;
+  background: #e2e8f0;
+  opacity: 0.5;
+}
+
+.supervisor-bars-wrapper {
+  position: absolute;
+  bottom: 30px;
+  left: 10px;
+  right: 20px;
+  top: 10px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  gap: 1rem;
+  height: calc(100% - 40px); /* Define explicit height for percentage calculations */
+}
+
+.supervisor-month-group {
+  display: flex;
+  align-items: end;
+  gap: 4px;
+  flex: 1;
+  justify-content: center;
+  height: 100%; /* Take full height of parent */
+}
+
+.supervisor-bar {
+  width: 16px;
+  min-height: 8px;
+  border-radius: 7px 7px 0 0;
+  transition: all 0.3s ease;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* Remove any max-height constraints that might be limiting the bars */
+}
+
+.supervisor-bar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.supervisor-bar-present {
+  background: linear-gradient(180deg, #aad9df 0%, #7bc7d1 100%);
+}
+
+.supervisor-bar-absent {
+  background: linear-gradient(180deg, #FFB4B4 0%, #ff9999 100%);
+}
+
+.supervisor-bar-leave {
+  background: linear-gradient(180deg, #5EABD6 0%, #4a96c4 100%);
+}
+
+.supervisor-chart-labels {
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+  right: 20px;
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 0;
+}
+
+.supervisor-chart-labels span {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 500;
+  text-align: center;
+  flex: 1;
+}
+
+.supervisor-legend {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.supervisor-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.supervisor-legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.supervisor-legend-present {
+  background: linear-gradient(135deg, #aad9df 0%, #7bc7d1 100%);
+}
+
+.supervisor-legend-absent {
+  background: linear-gradient(135deg, #FFB4B4 0%, #ff9999 100%);
+}
+
+.supervisor-legend-leave {
+  background: linear-gradient(135deg, #5EABD6 0%, #4a96c4 100%);
+}
+
+/* Activities Card */
+.supervisor-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.supervisor-view-all-btn {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.supervisor-view-all-btn:hover {
+  color: #2563eb;
+}
+
+.supervisor-activities-list {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  max-height: 378px;
+  overflow-y: auto;
+}
+
+.supervisor-activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.supervisor-activity-item:last-child {
+  border-bottom: none;
+}
+
+.supervisor-activity-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.supervisor-activity-content {
+  flex: 1;
+}
+
+.supervisor-activity-user {
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 0.25rem;
+}
+
+.supervisor-activity-action {
+  color: #64748b;
+  margin-bottom: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.supervisor-activity-time {
+  color: #94a3b8;
+  font-size: 0.75rem;
+}
+
+/* Calendar Card */
+.supervisor-calendar-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.supervisor-calendar {
+  padding: 1rem;
+}
+
+.supervisor-calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+}
+
+.supervisor-weekday {
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  padding: 0.5rem ;
+}
+
+.supervisor-calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.supervisor-calendar-day {
+  aspect-ratio: 1.5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.supervisor-calendar-day:hover {
+  background-color: #f1f5f9;
+}
+
+.supervisor-current-day {
+  background-color: #495b69;
+  color: white;
+  font-weight: 600;
+}
+
+.supervisor-current-day:hover {
+  background-color: #495b69;
+}
+
+.supervisor-empty-day {
+  cursor: default;
+}
+
+.supervisor-empty-day:hover {
+  background-color: transparent;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .supervisor-main-layout {
+    grid-template-columns: 1fr;
   }
   
-  /* Header Section */
-  .supervisor-dashboard-header {
-    margin-bottom: 2rem;
+  .supervisor-overview-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .supervisor-dashboard-container {
+    padding: 1rem;
   }
   
-  .supervisor-dashboard-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #1e293b;
-    margin: 0 0 0.5rem 0;
+  .supervisor-overview-grid {
+    grid-template-columns: 1fr;
   }
   
-  .supervisor-dashboard-subtitle {
-    font-size: 1.125rem;
-    color: #64748b;
-    margin: 0;
+  .supervisor-bar-container {
+    gap: 1rem;
   }
   
-  /* Stats Grid */
-  .supervisor-stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-  }
-  
-  .supervisor-stat-card {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e2e8f0;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  .supervisor-stat-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
-  
-  .supervisor-stat-header {
-    display: flex;
-    justify-content: space-between;
+  .supervisor-legend {
+    flex-direction: column;
+    gap: 0.5rem;
     align-items: center;
-    margin-bottom: 1rem;
   }
-  
-  .supervisor-stat-title {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: #64748b;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin: 0;
-  }
-  
-  .supervisor-stat-trend {
-    font-size: 0.875rem;
-    font-weight: 600;
-    padding: 0.25rem 0.5rem;
-    border-radius: 6px;
-  }
-  
-  .supervisor-stat-trend.up {
-    color: #059669;
-    background-color: #d1fae5;
-  }
-  
-  .supervisor-stat-trend.down {
-    color: #dc2626;
-    background-color: #fee2e2;
-  }
-  
-  .supervisor-stat-value {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #1e293b;
-  }
-  
-  /* Main Content Grid */
-  .supervisor-content-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 1.5rem;
-  }
-  
-  /* Card Base Styles */
-  .supervisor-card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e2e8f0;
-    overflow: hidden;
+}
+
+@media (max-width: 480px) {
+  .supervisor-overview-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
   }
   
   .supervisor-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.5rem 1.5rem 1rem 1.5rem;
-    border-bottom: 1px solid #f1f5f9;
-  }
-  
-  .supervisor-card-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #1e293b;
-    margin: 0;
-  }
-  
-  .supervisor-view-all-btn {
-    background: none;
-    border: none;
-    color: #3b82f6;
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: color 0.2s ease;
-  }
-  
-  .supervisor-view-all-btn:hover {
-    color: #2563eb;
-  }
-  
-  /* Activities Card */
-  .supervisor-activities-list {
-    padding: 0 1.5rem 1.5rem 1.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
   }
   
   .supervisor-activity-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 1rem 0;
-    border-bottom: 1px solid #f1f5f9;
-  }
-  
-  .supervisor-activity-item:last-child {
-    border-bottom: none;
-  }
-  
-  .supervisor-activity-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 0.875rem;
-    font-weight: 600;
-    flex-shrink: 0;
-  }
-  
-  .supervisor-activity-content {
-    flex: 1;
-  }
-  
-  .supervisor-activity-user {
-    font-weight: 600;
-    color: #1e293b;
-    margin-bottom: 0.25rem;
-  }
-  
-  .supervisor-activity-action {
-    color: #64748b;
-    margin-bottom: 0.25rem;
-    font-size: 0.875rem;
-  }
-  
-  .supervisor-activity-time {
-    color: #94a3b8;
-    font-size: 0.75rem;
-  }
-  
-  /* Deadlines Card */
-  .supervisor-deadlines-list {
-    padding: 0 1.5rem 1.5rem 1.5rem;
-  }
-  
-  .supervisor-deadline-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 0;
-    border-bottom: 1px solid #f1f5f9;
-  }
-  
-  .supervisor-deadline-item:last-child {
-    border-bottom: none;
-  }
-  
-  .supervisor-deadline-info {
-    flex: 1;
-  }
-  
-  .supervisor-deadline-project {
-    font-weight: 600;
-    color: #1e293b;
-    margin-bottom: 0.25rem;
-  }
-  
-  .supervisor-deadline-time {
-    color: #64748b;
-    font-size: 0.875rem;
-  }
-  
-  .supervisor-priority-badge {
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: capitalize;
-  }
-  
-  .supervisor-priority-badge.high {
-    background-color: #fee2e2;
-    color: #dc2626;
-  }
-  
-  .supervisor-priority-badge.medium {
-    background-color: #fef3c7;
-    color: #d97706;
-  }
-  
-  .supervisor-priority-badge.low {
-    background-color: #d1fae5;
-    color: #059669;
-  }
-  
-  /* Quick Actions Card */
-  .supervisor-actions-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-    padding: 0 1.5rem 1.5rem 1.5rem;
-  }
-  
-  .supervisor-action-btn {
-    display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 1.5rem 1rem;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-decoration: none;
-    color: inherit;
+    align-items: flex-start;
   }
-  
-  .supervisor-action-btn:hover {
-    background: #3b82f6;
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-  }
-  
-  .supervisor-action-icon {
-    font-size: 1.5rem;
-  }
-  
-  .supervisor-action-text {
-    font-size: 0.875rem;
-    font-weight: 500;
-  }
-  
-  /* Performance Card */
-  .supervisor-period-select {
-    padding: 0.5rem 1rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    background: white;
-    font-size: 0.875rem;
-    color: #64748b;
-    cursor: pointer;
-  }
-  
-  .supervisor-performance-content {
-    padding: 1.5rem;
-  }
-  
-  .supervisor-performance-metric {
-    display: grid;
-    grid-template-columns: 1fr 2fr auto;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .supervisor-performance-metric:last-child {
-    margin-bottom: 0;
-  }
-  
-  .supervisor-metric-label {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: #64748b;
-  }
-  
-  .supervisor-progress-bar {
-    height: 8px;
-    background-color: #f1f5f9;
-    border-radius: 4px;
-    overflow: hidden;
-  }
-  
-  .supervisor-progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-    border-radius: 4px;
-    transition: width 0.3s ease;
-  }
-  
-  .supervisor-metric-value {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #1e293b;
-    min-width: 40px;
-    text-align: right;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .supervisor-dashboard-container {
-      padding: 1rem;
-    }
-    
-    .supervisor-dashboard-title {
-      font-size: 2rem;
-    }
-    
-    .supervisor-stats-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .supervisor-content-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .supervisor-actions-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .supervisor-performance-metric {
-      grid-template-columns: 1fr;
-      gap: 0.5rem;
-      text-align: left;
-    }
-    
-    .supervisor-metric-value {
-      text-align: left;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .supervisor-card-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.5rem;
-    }
-    
-    .supervisor-deadline-item {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.5rem;
-    }
-    
-    .supervisor-activity-item {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  }
+}

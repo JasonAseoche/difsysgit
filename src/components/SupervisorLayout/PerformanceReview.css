@@ -1,0 +1,1445 @@
+/* PerformanceReview.css - Unique selectors to avoid conflicts */
+
+/* Container and Layout */
+.performance-review-page {
+    padding: 0;
+    background-color: #f8fafc;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    width: 100%;
+    height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  
+  /* Header Container */
+  .performance-review-header-container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    margin: 20px;
+    border: 1px solid #f0f0f0;
+    flex-shrink: 0;
+    z-index: 10;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .performance-review-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    overflow: hidden;
+  }
+  
+  .performance-review-title {
+    font-size: clamp(24px, 4vw, 32px);
+    font-weight: 700;
+    color: #003979;
+    margin: 0;
+    letter-spacing: 0.2px;
+    position: relative;
+    display: inline-block;
+  }
+  
+  /* Actions Container */
+  .performance-review-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    min-width: 240px;
+  }
+  
+  .performance-review-actions-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+  
+  /* Date Picker Box */
+  .performance-review-date-picker-box {
+    position: relative;
+    width: 240px;
+    min-width: 200px;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .performance-review-date-picker-box input {
+    width: 100%;
+    margin-top: 18px;
+    padding: 8px 35px 8px 15px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    height: 45px;
+    box-sizing: border-box;
+    color: #4b5563;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .performance-review-date-picker-box input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  }
+  
+  .performance-review-date-picker-button {
+    position: absolute;
+    right: 10px;
+    top: 49%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+  }
+  
+  .performance-review-date-picker-button:hover {
+    color: #3b82f6;
+    transform: translateY(-50%) scale(1.1);
+  }
+  
+  /* PDF Export Button */
+  .performance-review-pdf-btn {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+  }
+  
+  .performance-review-pdf-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(16, 185, 129, 0.4);
+  }
+  
+  .performance-review-pdf-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+  
+  .performance-review-loading-spinner-small {
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s linear infinite;
+  }
+  
+  /* Content Area */
+  .performance-review-content {
+    flex: 1;
+    z-index: 0;
+    overflow-y: auto;
+    padding: 0 20px 20px 20px;
+  }
+  
+  /* Team Info Card */
+  .performance-review-team-info-card {
+    background: linear-gradient(135deg, #003D7C 0%, #002a5c 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0, 61, 124, 0.2);
+  }
+  
+  .performance-review-team-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+  }
+  
+  .performance-review-team-subtitle {
+    font-size: 14px;
+    margin: 0;
+    opacity: 0.9;
+  }
+  
+  /* Statistics Grid */
+  .performance-review-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .performance-review-stat-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border: 1px solid #f0f0f0;
+    transition: all 0.3s ease-in-out;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+  
+  .performance-review-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .performance-review-stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 16px;
+    flex-shrink: 0;
+  }
+  
+  .performance-review-stat-icon.performance-review-excellent {
+    background: linear-gradient(135deg, #10b981, #059669);
+  }
+  
+  .performance-review-stat-icon.performance-review-good {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+  }
+  
+  .performance-review-stat-icon.performance-review-average {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+  }
+  
+  .performance-review-stat-icon.performance-review-poor {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+  }
+  
+  .performance-review-stat-icon svg {
+    color: white;
+  }
+  
+  .performance-review-stat-content {
+    flex: 1;
+  }
+  
+  .performance-review-stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin: 0;
+    line-height: 1;
+  }
+  
+  .performance-review-stat-label {
+    color: #718096;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-top: 5px;
+  }
+  
+  /* Table Container */
+  .performance-review-table-container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    border: 1px solid #f0f0f0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .performance-review-table-header1 {
+    padding: 20px 24px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  
+  .performance-review-table-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+  }
+  
+  .performance-review-table-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  /* Filter Button */
+  .performance-review-filter-btn {
+    background: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+  }
+  
+  .performance-review-filter-btn:hover {
+    background: #e2e8f0;
+    color: #475569;
+  }
+  
+  .performance-review-filter-btn.performance-review-filter-active {
+    background: linear-gradient(135deg, #003D7C 0%, #002a5c 100%);
+    color: white;
+    border-color: transparent;
+  }
+  
+  /* Filter Dropdown */
+  .performance-review-filter-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    min-width: 150px;
+    margin-top: 4px;
+    overflow: hidden;
+  }
+  
+  .performance-review-filter-option {
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-size: 14px;
+    border-bottom: 1px solid #f3f4f6;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .performance-review-filter-option:last-child {
+    border-bottom: none;
+  }
+  
+  .performance-review-filter-option:hover {
+    background-color: #f8fafc;
+  }
+  
+  .performance-review-filter-option.performance-review-filter-selected {
+    background-color: #e0f2fe;
+    color: #003D7C;
+    font-weight: 500;
+  }
+  
+  /* Table Wrapper */
+  .performance-review-table-wrapper {
+    overflow-x: auto;
+    width: 100%;
+  }
+  
+  .performance-review-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    box-sizing: border-box;
+  }
+  
+  .performance-review-table-header-row {
+    background: #f9fafb;
+  }
+  
+  .performance-review-table-th {
+    padding: 12px 24px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 500;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid #e5e7eb;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  /* Table Column Widths */
+  .performance-review-table-th:nth-child(1) { width: 18%; } /* Employee Name */
+  .performance-review-table-th:nth-child(2) { width: 12%; } /* Date */
+  .performance-review-table-th:nth-child(3) { width: 11%; } /* Present Days */
+  .performance-review-table-th:nth-child(4) { width: 11%; } /* Absent Days */
+  .performance-review-table-th:nth-child(5) { width: 11%; } /* Leave Days */
+  .performance-review-table-th:nth-child(6) { width: 12%; } /* Total Hours */
+  .performance-review-table-th:nth-child(7) { width: 12%; } /* Overtime */
+  .performance-review-table-th:nth-child(8) { width: 13%; } /* Late/Undertime */
+  
+  
+  .performance-review-table-row {
+    border-bottom: 1px solid #f3f4f6;
+    transition: background-color 0.2s ease;
+  }
+  
+  .performance-review-table-row:hover {
+    background: #f8fafc;
+  }
+  
+  .performance-review-table-td {
+    padding: 16px 24px;
+    font-size: 14px;
+    vertical-align: middle;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .performance-review-employee-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .performance-review-employee-avatar {
+    width: 55px;
+    height: 55px;
+    background: linear-gradient(135deg, #003D7C 0%, #002a5c 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+  
+  .performance-review-employee-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: #1f2937;
+  }
+  
+  .performance-review-position-cell {
+    font-size: 15px;
+    color: #6b7280;
+    font-weight: 500;
+  }
+  
+  .performance-review-percentage-cell {
+    text-align: center;
+  }
+  
+  .performance-review-percentage-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    min-width: 45px;
+  }
+  
+  .performance-review-percentage-badge.performance-review-present {
+    background-color: #dcfce7;
+    color: #166534;
+  }
+  
+  .performance-review-percentage-badge.performance-review-late {
+    background-color: #fef3c7;
+    color: #92400e;
+  }
+  
+  .performance-review-percentage-badge.performance-review-absent {
+    background-color: #fecaca;
+    color: #991b1b;
+  }
+  
+  .performance-review-total-cell {
+    font-size: 15px;
+    color: #2563eb;
+    font-weight: 500;
+  }
+  
+  /* Performance Rating Badge */
+  .performance-review-rating-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid;
+    transition: all 0.2s ease;
+    min-width: 90px;
+    justify-content: center;
+  }
+  
+  .performance-review-rating-badge.performance-review-excellent {
+    background-color: #dcfce7;
+    color: #166534;
+    border-color: #bbf7d0;
+  }
+  
+  .performance-review-rating-badge.performance-review-good {
+    background-color: #dbeafe;
+    color: #1e40af;
+    border-color: #bfdbfe;
+  }
+  
+  .performance-review-rating-badge.performance-review-average {
+    background-color: #fef3c7;
+    color: #92400e;
+    border-color: #fde68a;
+  }
+  
+  .performance-review-rating-badge.performance-review-poor {
+    background-color: #fecaca;
+    color: #991b1b;
+    border-color: #fca5a5;
+  }
+  
+  .performance-review-rating-icon {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+  
+  .performance-review-rating-text {
+    white-space: nowrap;
+    font-weight: 600;
+  }
+  
+  /* Details Button */
+  .performance-review-details-btn {
+    background: linear-gradient(135deg, #003D7C 0%, #002a5c 100%);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .performance-review-details-btn:hover {
+    background: linear-gradient(135deg, #002a5c 0%, #001d42 100%);
+    transform: translateY(-1px);
+  }
+  
+  /* Pagination */
+  .performance-review-pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-top: 1px solid #e2e8f0;
+    background: #ffffff;
+  }
+  
+  .performance-review-pagination-info {
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 500;
+  }
+  
+  .performance-review-pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .performance-review-pagination-btn {
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    font-weight: 500;
+    color: #4a5568;
+    font-size: 14px;
+  }
+  
+  .performance-review-pagination-btn:hover:not(:disabled) {
+    background: #f8fafc;
+    border-color: #cbd5e0;
+    transform: translateY(-1px);
+  }
+  
+  .performance-review-pagination-btn.performance-review-active {
+    background: linear-gradient(135deg, #003D7C 0%, #002a5c 100%);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 2px 4px rgba(0, 61, 124, 0.3);
+  }
+  
+  .performance-review-pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #f8fafc;
+  }
+  
+  /* Date Picker Overlay */
+  .performance-review-date-picker-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  .performance-review-date-picker-modal {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    animation: slideInScale 0.3s ease-out;
+    min-width: 320px;
+    max-width: 90vw;
+  }
+  
+  .performance-review-date-picker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f1f5f9;
+  }
+  
+  .performance-review-date-picker-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #003D7C;
+    margin: 0;
+  }
+  
+  .performance-review-date-picker-close {
+    background: none;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .performance-review-date-picker-close:hover {
+    background: #f1f5f9;
+    color: #003D7C;
+  }
+  
+  .performance-review-date-picker-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .performance-review-date-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .performance-review-date-input-label {
+    font-weight: 600;
+    color: #2d3748;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .performance-review-date-picker-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    outline: none;
+    box-sizing: border-box;
+  }
+  
+  .performance-review-date-picker-input:focus {
+    border-color: #003D7C;
+    box-shadow: 0 0 0 3px rgba(0, 61, 124, 0.1);
+  }
+  
+  .performance-review-date-picker-info {
+    margin: 0;
+  }
+  
+  .performance-review-weekend-warning {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #f59e0b;
+    background: #fef3c7;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+  
+  .performance-review-date-picker-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+  
+  .performance-review-date-picker-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .performance-review-date-picker-btn.performance-review-primary {
+    background: #003D7C;
+    color: white;
+  }
+  
+  .performance-review-date-picker-btn.performance-review-primary:hover {
+    background: #002a5c;
+    transform: translateY(-1px);
+  }
+  
+  .performance-review-date-picker-btn.performance-review-secondary {
+    background: #f1f5f9;
+    color: #64748b;
+  }
+  
+  .performance-review-date-picker-btn.performance-review-secondary:hover {
+    background: #e2e8f0;
+  }
+  
+  /* Employee Details Modal */
+  .performance-review-details-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  .performance-review-details-modal {
+    background: white;
+    border-radius: 16px;
+    padding: 0;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    animation: slideInScale 0.3s ease-out;
+    min-width: 600px;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow: hidden;
+  }
+  
+  .performance-review-details-header {
+    background: linear-gradient(135deg, #003D7C 0%, #002a5c 100%);
+    color: white;
+    padding: 24px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .performance-review-details-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .performance-review-details-close {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .performance-review-details-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  .performance-review-details-content {
+    padding: 30px;
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+  
+  .performance-review-details-employee {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #f1f5f9;
+  }
+  
+  .performance-review-details-info {
+    flex: 1;
+  }
+  
+  .performance-review-details-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 8px 0;
+  }
+  
+  .performance-review-details-role {
+    color: #6b7280;
+    font-size: 1rem;
+    margin: 0 0 4px 0;
+  }
+  
+  .performance-review-details-email {
+    color: #9ca3af;
+    font-size: 0.875rem;
+    margin: 0;
+  }
+  
+  /* Performance Overview */
+  .performance-review-performance-overview {
+    margin-bottom: 30px;
+  }
+  
+  .performance-review-section-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 16px 0;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 8px;
+  }
+  
+  .performance-review-overall-rating {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    border-radius: 12px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    border: 2px solid;
+  }
+  
+  .performance-review-overall-rating.performance-review-excellent {
+    background-color: #dcfce7;
+    color: #166534;
+    border-color: #bbf7d0;
+  }
+  
+  .performance-review-overall-rating.performance-review-good {
+    background-color: #dbeafe;
+    color: #1e40af;
+    border-color: #bfdbfe;
+  }
+  
+  .performance-review-overall-rating.performance-review-average {
+    background-color: #fef3c7;
+    color: #92400e;
+    border-color: #fde68a;
+  }
+  
+  .performance-review-overall-rating.performance-review-poor {
+    background-color: #fecaca;
+    color: #991b1b;
+    border-color: #fca5a5;
+  }
+  
+  /* Details Grid */
+  .performance-review-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    margin-bottom: 30px;
+  }
+  
+  .performance-review-details-section {
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+  }
+  
+  .performance-review-details-field {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  .performance-review-details-field:last-child {
+    border-bottom: none;
+  }
+  
+  .performance-review-details-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+    min-width: 120px;
+  }
+  
+  .performance-review-details-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1f2937;
+    text-align: right;
+    flex: 1;
+  }
+  
+  /* Performance Insights */
+  .performance-review-insights {
+    margin-bottom: 20px;
+  }
+  
+  .performance-review-insights-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .performance-review-insight {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .performance-review-insight.performance-review-positive {
+    background-color: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+  }
+  
+  .performance-review-insight.performance-review-warning {
+    background-color: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fde68a;
+  }
+  
+  .performance-review-insight.performance-review-negative {
+    background-color: #fecaca;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+  }
+  
+  .performance-review-details-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding: 24px 30px;
+    border-top: 1px solid #e2e8f0;
+    background: #f8fafc;
+  }
+  
+  .performance-review-details-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+  }
+  
+  .performance-review-details-btn.performance-review-close {
+    background: #e2e8f0;
+    color: #64748b;
+  }
+  
+  .performance-review-details-btn.performance-review-close:hover {
+    background: #cbd5e1;
+    color: #475569;
+  }
+  
+  /* No Data Message */
+  .performance-review-no-data {
+    text-align: center;
+    padding: 60px 20px;
+    color: #64748b;
+  }
+  
+  .performance-review-no-data svg {
+    color: #cbd5e1;
+    margin-bottom: 16px;
+  }
+  
+  .performance-review-no-data h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 8px;
+  }
+  
+  .performance-review-no-data p {
+    font-size: 0.95rem;
+    color: #64748b;
+    margin: 0;
+  }
+  
+  /* Loading States */
+  .performance-review-loading {
+    text-align: center;
+    padding: 30px;
+    color: #64748b;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    min-height: 200px;
+  }
+  
+  .performance-review-loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(59, 130, 246, 0.2);
+    border-radius: 50%;
+    border-top-color: #3b82f6;
+    animation: spin 1s linear infinite;
+  }
+  
+  /* Animations */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideInScale {
+    from { 
+      opacity: 0;
+      transform: scale(0.9) translateY(-20px);
+    }
+    to { 
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+  
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  
+  /* Responsive Design */
+  
+  /* Large Desktop (1600px and above) */
+  @media (min-width: 1600px) {
+    .performance-review-table-th:nth-child(1) { width: 20%; }
+    .performance-review-table-th:nth-child(2) { width: 12%; }
+    .performance-review-table-th:nth-child(3) { width: 10%; }
+    .performance-review-table-th:nth-child(4) { width: 10%; }
+    .performance-review-table-th:nth-child(5) { width: 10%; }
+    .performance-review-table-th:nth-child(6) { width: 12%; }
+    .performance-review-table-th:nth-child(7) { width: 12%; }
+    .performance-review-table-th:nth-child(8) { width: 14%; }
+  }
+  
+  /* Laptop (1500px and below) */
+  @media (max-width: 1600px) {
+    .performance-review-header-container {
+      padding: 18px;
+      margin: 18px;
+    }
+  
+    .performance-review-content {
+      overflow-y: auto;
+    }
+  
+    .performance-review-stats-grid {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
+  
+    .performance-review-stat-card {
+      padding: 18px;
+    }
+  
+    .performance-review-table-th,
+    .performance-review-table-td {
+      padding: 14px 20px;
+    }
+  }
+  
+  /* Tablet (768px and below) */
+  @media (max-width: 768px) {
+    .performance-review-header-container {
+      padding: 15px;
+      margin: 15px;
+    }
+  
+    .performance-review-content {
+      padding: 0 15px 15px 15px;
+    }
+  
+    .performance-review-title {
+      font-size: 20px;
+    }
+  
+    .performance-review-header-content {
+      flex-direction: column;
+      gap: 15px;
+      align-items: flex-start;
+    }
+  
+    .performance-review-actions {
+      width: 100%;
+      justify-content: center;
+    }
+  
+    .performance-review-actions-group {
+      width: 100%;
+      justify-content: center;
+    }
+  
+    .performance-review-date-picker-box {
+      flex: 1;
+      width: auto;
+      min-width: 200px;
+      max-width: none;
+    }
+  
+    .performance-review-team-info-card {
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+  
+    .performance-review-team-title {
+      font-size: 16px;
+    }
+  
+    .performance-review-team-subtitle {
+      font-size: 13px;
+    }
+  
+    .performance-review-stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+  
+    .performance-review-stat-card {
+      padding: 12px;
+      flex-direction: row;
+      align-items: center;
+    }
+  
+    .performance-review-stat-icon {
+      width: 36px;
+      height: 36px;
+      margin-right: 12px;
+    }
+  
+    .performance-review-stat-number {
+      font-size: 1.8rem;
+    }
+  
+    .performance-review-stat-label {
+      font-size: 0.8rem;
+    }
+  
+    .performance-review-table-container {
+      min-height: 500px;
+    }
+  
+    .performance-review-table-header1 {
+      padding: 15px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+  
+    .performance-review-table-title {
+      font-size: 16px;
+    }
+  
+    .performance-review-table-actions {
+      width: 100%;
+      justify-content: flex-end;
+    }
+  
+    .performance-review-table-wrapper {
+      overflow-x: auto;
+      min-height: 400px;
+    }
+  
+    .performance-review-table {
+      table-layout: auto;
+      min-width: 1000px;
+    }
+  
+    .performance-review-table-th,
+    .performance-review-table-td {
+      padding: 16px 12px;
+      font-size: 13px;
+      min-height: 60px;
+    }
+  
+    .performance-review-employee-avatar {
+      width: 36px;
+      height: 36px;
+      font-size: 12px;
+    }
+  
+    .performance-review-pagination {
+      flex-direction: column;
+      gap: 16px;
+      padding: 16px 20px;
+    }
+    
+    .performance-review-pagination-info {
+      text-align: center;
+      font-size: 13px;
+    }
+    
+    .performance-review-pagination-controls {
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+  
+    .performance-review-pagination-btn {
+      min-width: 35px;
+      height: 35px;
+      padding: 6px 10px;
+    }
+  
+    .performance-review-details-modal {
+      min-width: 90vw;
+      max-height: 85vh;
+    }
+  
+    .performance-review-details-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+  
+  /* Small Mobile (500px and below) */
+  @media (max-width: 500px) {
+    .performance-review-header-container {
+      padding: 12px;
+      margin: 10px;
+    }
+  
+    .performance-review-content {
+      padding: 0 10px 10px 10px;
+    }
+  
+    .performance-review-title {
+      font-size: 18px;
+    }
+  
+    .performance-review-team-info-card {
+      padding: 12px;
+    }
+  
+    .performance-review-team-title {
+      font-size: 14px;
+    }
+  
+    .performance-review-team-subtitle {
+      font-size: 11px;
+    }
+  
+    .performance-review-stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+  
+    .performance-review-stat-card {
+      padding: 10px;
+    }
+  
+    .performance-review-stat-icon {
+      width: 32px;
+      height: 32px;
+      margin-right: 10px;
+    }
+  
+    .performance-review-stat-number {
+      font-size: 1.5rem;
+    }
+  
+    .performance-review-stat-label {
+      font-size: 0.7rem;
+    }
+  
+    .performance-review-table-container {
+      min-height: 450px;
+    }
+  
+    .performance-review-table-header1 {
+      padding: 12px;
+    }
+  
+    .performance-review-table-title {
+      font-size: 14px;
+    }
+  
+    .performance-review-table-wrapper {
+      min-height: 350px;
+    }
+  
+    .performance-review-table {
+      font-size: 12px;
+      min-width: 1200px;
+    }
+  
+    .performance-review-table-th,
+    .performance-review-table-td {
+      padding: 18px 8px;
+      min-height: 65px;
+    }
+  
+    .performance-review-employee-avatar {
+      width: 36px;
+      height: 36px;
+      font-size: 12px;
+    }
+  
+    .performance-review-pagination-btn {
+      min-width: 30px;
+      height: 30px;
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+  
+    .performance-review-details-modal {
+      min-width: 95vw;
+      max-height: 90vh;
+    }
+  
+    .performance-review-details-header {
+      padding: 16px 20px;
+    }
+  
+    .performance-review-details-content {
+      padding: 20px;
+    }
+  
+    .performance-review-details-actions {
+      padding: 16px 20px;
+    }
+  
+    .performance-review-pdf-btn {
+      padding: 8px 16px;
+      font-size: 12px;
+    }
+  
+    .performance-review-filter-btn {
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+  }
+  
+  /* Scrollbar Styling */
+  .performance-review-content::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .performance-review-content::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .performance-review-content::-webkit-scrollbar-thumb {
+    background-color: rgba(203, 213, 225, 0.5);
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .performance-review-content::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(148, 163, 184, 0.7);
+  }
+  
+  .performance-review-details-content::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .performance-review-details-content::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .performance-review-details-content::-webkit-scrollbar-thumb {
+    background-color: rgba(203, 213, 225, 0.5);
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .performance-review-details-content::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(148, 163, 184, 0.7);
+  }

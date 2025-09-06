@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { getCurrentUser, getUserId } from '../../utils/auth';
+import DashboardHeader from '../../components/DashboardHeader/DashboardHeader';
 import '../../components/EmployeeLayout/DashboardEmployee.css';
 
 const DashboardEmployee = () => {
@@ -10,6 +11,8 @@ const DashboardEmployee = () => {
   const [todayHours, setTodayHours] = useState(0);
   const [timeInStart, setTimeInStart] = useState(null);
   const [isOnBreak, setIsOnBreak] = useState(false);
+  const [shiftType, setShiftType] = useState('day');
+  const [currentShiftType, setCurrentShiftType] = useState('day');
   const [breakStartTime, setBreakStartTime] = useState(null);
   const [employeeInfo, setEmployeeInfo] = useState({
     firstName: 'Loading...',
@@ -33,63 +36,135 @@ const DashboardEmployee = () => {
   // API base URL
   const API_BASE_URL = 'http://localhost/difsysapi/attendance_api.php';
 
-  // Get current time in UTC+8 timezone
-  const getCurrentTimeUTC8 = () => {
-    const now = new Date();
-    const utc8Time = new Date(now.getTime() + (8 * 60 * 60 * 1000) + (now.getTimezoneOffset() * 60 * 1000));
-    return utc8Time;
-  };
-
-  // Check if current day is weekday (Monday-Friday)
-  const isWeekday = (date = null) => {
-    const checkDate = date || getCurrentTimeUTC8();
-    const dayOfWeek = checkDate.getDay();
-    return dayOfWeek >= 1 && dayOfWeek <= 5;
+  // MODIFIED: Get current time in UTC+8 timezone with database test mode support
+  const getCurrentTimeUTC8 = async () => {
+    try {
+      // Check database for test mode settings
+      const response = await axios.get(`${API_BASE_URL}?action=get_test_settings`);
+      
+      if (response.data.success && response.data.data && response.data.data.test_mode === 1) {
+        const { test_time, test_date } = response.data.data;
+        
+        if (test_time && test_date) {
+          const [hours, minutes, seconds] = test_time.split(':');
+          const testDateTime = new Date(test_date);
+          testDateTime.setHours(parseInt(hours), parseInt(minutes), parseInt(seconds) || 0);
+          
+          
+          return testDateTime;
+        }
+      }
+      
+      // Fallback to real time if test mode is off or data is missing
+      const now = new Date();
+      const utc8Time = new Date(now.getTime() + (8 * 60 * 60 * 1000) + (now.getTimezoneOffset() * 60 * 1000));
+      return utc8Time;
+    } catch (error) {
+      console.warn('Failed to fetch test settings, using real time:', error);
+      // Fallback to real time on error
+      const now = new Date();
+      const utc8Time = new Date(now.getTime() + (8 * 60 * 60 * 1000) + (now.getTimezoneOffset() * 60 * 1000));
+      return utc8Time;
+    }
   };
 
   // Check if current time is within work hours (8:00 AM - 5:00 PM)
-  const isWorkHours = () => {
-    const now = getCurrentTimeUTC8();
+  const isWorkHours = async (shiftType = 'day') => {
+    const now = await getCurrentTimeUTC8();
     const hour = now.getHours();
-    return hour >= 8 && hour < 17;
+    
+    if (shiftType === 'day') {
+      return hour >= 6 && hour < 17; // 6:00 AM - 5:00 PM (attendance allowed)
+    } else {
+      return hour >= 22 || hour < 6; // 10:00 PM - 6:00 AM (next day)
+    }
   };
 
   // Check if current time is break time (12:00 PM - 1:00 PM)
-  const isBreakTime = () => {
-    const now = getCurrentTimeUTC8();
+  const isBreakTime = async () => {
+    if (shiftType === 'night') {
+      return false; // No lunch break for night shift
+    }
+    
+    const now = await getCurrentTimeUTC8();
     const hour = now.getHours();
     const minute = now.getMinutes();
     return hour === 12 || (hour === 13 && minute === 0);
   };
 
   // Check if current time is overtime (after 5:00 PM)
-  const isOvertimeHours = () => {
-    const now = getCurrentTimeUTC8();
+  const isOvertimeHours = async (shiftType = 'day') => {
+    const now = await getCurrentTimeUTC8();
     const hour = now.getHours();
-    return hour >= 17;
-  };
+    
+    if (shiftType === 'day') {
+      return hour >= 17; // After 5:00 PM for day shift
+    } else {
+      // FIXED: Night shift overtime is after 6:00 AM until 8:00 AM
+      return hour >= 6 && hour < 8; // 6:00 AM to 8:00 AM is overtime for night shift
+    }
+  }
 
   // Fixed late calculation (same as API)
-  const calculateLateMinutes = (timeIn) => {
+  const calculateLateMinutes = (timeIn, shiftType = null) => {
     const timeInObj = new Date(`2000-01-01 ${timeIn}`);
-    const workStartTime = new Date('2000-01-01 08:00:00'); // 8:00 AM work start
-    const graceTime = new Date('2000-01-01 08:10:00'); // 8:10 AM grace period
-    
-    // If time in is at or before 8:10 AM, not late
-    if (timeInObj <= graceTime) {
-      return 0;
+  
+    // Detect shift type if not provided
+    if (!shiftType) {
+      const hour = timeInObj.getHours();
+      shiftType = (hour >= 6 && hour < 18) ? 'day' : 'night';
     }
-    
-    // Calculate minutes late from 8:00 AM (not from 8:10 AM)
-    const diffMs = timeInObj.getTime() - workStartTime.getTime();
-    const lateMinutes = Math.floor(diffMs / (1000 * 60));
-    
-    return lateMinutes;
+  
+    if (shiftType === 'day') {
+      const workStartTime = new Date('2000-01-01 08:00:00');
+      const graceTime = new Date('2000-01-01 08:10:00');
+  
+      if (timeInObj <= graceTime) {
+        return 0;
+      }
+  
+      const diffMs = timeInObj - workStartTime;
+      return Math.floor(diffMs / (1000 * 60));
+    } else {
+      // Night shift
+      const currentHour = timeInObj.getHours();
+  
+      if (currentHour >= 22) {
+        // Same day (10:00 PM – 11:59 PM)
+        const workStartTime = new Date('2000-01-01 22:00:00');
+        const graceTime = new Date('2000-01-01 22:10:00');
+  
+        if (timeInObj <= graceTime) {
+          return 0;
+        }
+  
+        const diffMs = timeInObj - workStartTime;
+        return Math.floor(diffMs / (1000 * 60));
+      } else if (currentHour >= 18 && currentHour < 22) {
+        // Early arrival (6:00 PM – 9:59 PM) → not late
+        return 0;
+      } else {
+        // Next day (00:00 AM – 06:00 AM)
+        const workStartTime = new Date('2000-01-01 22:00:00');
+        const graceTime = new Date('2000-01-01 22:10:00');
+  
+        // Shift timeIn to next day
+        const nextDayTimeIn = new Date('2000-01-02 ' + timeIn);
+  
+        if (nextDayTimeIn <= new Date(graceTime.getTime() + 24 * 60 * 60 * 1000)) {
+          return 0;
+        }
+  
+        const diffMs = nextDayTimeIn - workStartTime;
+        return Math.floor(diffMs / (1000 * 60));
+      }
+    }
   };
+  
 
-  // ENHANCED break time management with better logging and state handling
+  // MODIFIED: ENHANCED break time management with better logging and state handling
   const manageBreakTime = async () => {
-    const now = getCurrentTimeUTC8();
+    const now = await getCurrentTimeUTC8(); // CHANGED: Made async
     const currentHour = now.getHours();
     const currentMinute = now.getMinutes();
     
@@ -98,18 +173,24 @@ const DashboardEmployee = () => {
       return;
     }
     
+    // FIXED: Prevent duplicate API calls within the same minute
+    if (lastBreakCheck) {
+      const timeDiff = Math.abs(now.getTime() - lastBreakCheck.getTime());
+      if (timeDiff < 45000) { // Increased to 45 seconds to prevent loops
+        return;
+      }
+    }
+    
     try {
-      console.log(`🔍 Checking break status at ${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`);
       
-      // Construct the URL properly
+      
       const url = `${API_BASE_URL}?action=get_break_status&emp_id=${employeeInfo.emp_id}`;
-      console.log('📞 API URL:', url);
       
-      // Get break status from server
+      
       const response = await axios.get(url);
       
-      console.log('📡 Full API Response:', response);
-      console.log('📊 Response Data:', response.data);
+      
+      
       
       if (response.data && response.data.success) {
         const { is_on_break, is_auto_break, break_start_time, break_end_time, debug } = response.data;
@@ -123,39 +204,49 @@ const DashboardEmployee = () => {
           debug
         });
         
+        // FIXED: Check for state changes to prevent unnecessary alerts
+        const stateChanged = (is_on_break !== isOnBreak) || (is_auto_break !== isAutoBreak);
+        
         // PRIORITY 1: Handle lunch break START (12:00 PM)
-        if (currentHour === 12 && !isOnBreak && is_on_break && is_auto_break) {
-          console.log('🍽️ STARTING LUNCH BREAK at 12:00 PM');
+        if (currentHour === 12 && !isOnBreak && is_on_break && is_auto_break && stateChanged) {
+          
           setIsOnBreak(true);
           setIsAutoBreak(true);
           
-          const breakStart = new Date(`${getCurrentTimeUTC8().toDateString()} 12:00:00`);
+          const breakStart = new Date(`${now.toDateString()} 12:00:00`);
           setBreakStartTime(breakStart);
           
+          // FIXED: Only show alert once when state actually changes
           showCustomAlert('info', 'Lunch Break Started', 'Timer paused for lunch break (12:00 PM - 1:00 PM)');
         }
         
-        // PRIORITY 2: Handle lunch break END (1:00 PM)
-        if (currentHour === 13 && currentMinute === 0 && isOnBreak && break_end_time) {
-          console.log('🍽️ ENDING LUNCH BREAK at 1:00 PM');
+        // PRIORITY 2: Handle lunch break END (1:00 PM or after)
+        if (currentHour >= 13 && isOnBreak && (break_end_time || !is_on_break) && stateChanged) {
+          
           setIsOnBreak(false);
           setIsAutoBreak(false);
           setBreakStartTime(null);
           
+          // FIXED: Only show alert when state actually changes
           showCustomAlert('success', 'Lunch Break Ended', 'Timer resumed. Welcome back from lunch!');
         }
-        
-        // PRIORITY 3: Sync state if out of sync
-        if (is_on_break !== isOnBreak) {
-          console.log(`🔄 Syncing break state: ${isOnBreak} → ${is_on_break}`);
+                
+        // PRIORITY 3: Sync state if out of sync but avoid duplicate alerts
+        if (is_on_break !== isOnBreak && !stateChanged) {
+          
           setIsOnBreak(is_on_break);
           setIsAutoBreak(is_auto_break);
           
           if (is_on_break && break_start_time) {
-            const breakStart = new Date(`${getCurrentTimeUTC8().toDateString()} ${break_start_time}`);
+            const breakStart = new Date(`${now.toDateString()} ${break_start_time}`);
             setBreakStartTime(breakStart);
           } else {
             setBreakStartTime(null);
+          }
+          
+          // FIXED: Only show resume alert when break ends, not during sync
+          if (!is_on_break && isOnBreak && currentHour >= 13) {
+            showCustomAlert('success', 'Lunch Break Ended', 'Timer resumed. Welcome back from lunch!');
           }
         }
         
@@ -180,19 +271,21 @@ const DashboardEmployee = () => {
       }
     }
   };
+
+
   // Enhanced page title effect
   useEffect(() => {
     document.title = "DIFSYS | DASHBOARD EMPLOYEE";
   }, []);
 
-  // CRITICAL: Break monitoring with proper timing
+  // MODIFIED: CRITICAL: Break monitoring with proper timing
   useEffect(() => {
     if (isTimeIn && employeeInfo.emp_id) {
-      console.log('⏰ Setting up break monitoring for employee', employeeInfo.emp_id);
+      
       
       // Check break status every 15 seconds during lunch time, every 60 seconds otherwise
-      const getCheckInterval = () => {
-        const now = getCurrentTimeUTC8();
+      const getCheckInterval = async () => {
+        const now = await getCurrentTimeUTC8(); // CHANGED: Made async
         const hour = now.getHours();
         
         // More frequent checks during lunch time and transition periods
@@ -203,20 +296,24 @@ const DashboardEmployee = () => {
       };
       
       // Initial check
-      manageBreakTime();
+      const initialCheck = async () => {
+        await manageBreakTime(); // CHANGED: Made async
+      };
+      initialCheck();
       
       // Set up interval with dynamic timing
-      const checkBreakStatus = () => {
-        manageBreakTime();
+      const checkBreakStatus = async () => {
+        await manageBreakTime(); // CHANGED: Made async
         
         // Clear existing interval and set new one with updated timing
         if (breakCheckIntervalRef.current) {
           clearInterval(breakCheckIntervalRef.current);
         }
         
-        breakCheckIntervalRef.current = setInterval(() => {
-          manageBreakTime();
-        }, getCheckInterval());
+        const interval = await getCheckInterval();
+        breakCheckIntervalRef.current = setInterval(async () => {
+          await manageBreakTime(); // CHANGED: Made async
+        }, interval);
       };
       
       checkBreakStatus();
@@ -235,13 +332,13 @@ const DashboardEmployee = () => {
 
   // Enhanced page visibility handling
   useEffect(() => {
-    const handleVisibilityChange = () => {
+    const handleVisibilityChange = async () => {
       if (document.visibilityState === 'visible') {
         // Page became visible, immediately check break state
-        const now = getCurrentTimeUTC8();
+        const now = await getCurrentTimeUTC8(); // CHANGED: Made async
         if (now.getHours() >= 8 && isTimeIn) {
-          console.log('👁️ Page visible - checking break status');
-          manageBreakTime();
+          
+          await manageBreakTime(); // CHANGED: Made async
         }
       }
     };
@@ -283,18 +380,42 @@ const DashboardEmployee = () => {
     return (seconds / 3600).toFixed(2);
   };
 
-  // ENHANCED timer status checking
   const checkTimerStatus = async () => {
     if (!employeeInfo.emp_id || workArrangement === 'Work From Home') return;
+
+    if (isTimeIn && currentShiftType === 'night') {
+      const currentHour = (await getCurrentTimeUTC8()).getHours(); // CHANGED: Made async
+      if ((currentHour >= 22) || (currentHour >= 0 && currentHour < 8)) {
+        // Timer is running during valid night shift hours - don't recalculate
+        
+        return;
+      }
+    }
   
     try {
+      
+      
+      
+      
       const response = await axios.get(`${API_BASE_URL}?action=check_timer_status&emp_id=${employeeInfo.emp_id}`);
+      
+      
       if (response.data.success) {
         const { shouldStartTimer, isBreakTime: apiBreakTime, record } = response.data;
         
+        console.log('Timer Status Data:', {
+          shouldStartTimer,
+          apiBreakTime,
+          record,
+          currentIsTimeIn: isTimeIn
+        });
+        
+        const recordShiftType = record?.shift_type || await detectCurrentShiftType(); // CHANGED: Made async
+        setCurrentShiftType(recordShiftType);
+        
         // PRIORITY 1: Check if timer should STOP (employee timed out)
         if (isTimeIn && record && record.time_out) {
-          console.log('🛑 STOPPING TIMER - Time out detected:', record.time_out);
+          
           setIsTimeIn(false);
           setCurrentTime(0);
           setTimeInStart(null);
@@ -316,7 +437,7 @@ const DashboardEmployee = () => {
         
         // PRIORITY 2: Check if timer should STOP (shouldStartTimer is false but timer is running)
         if (isTimeIn && !shouldStartTimer) {
-          console.log('🛑 STOPPING TIMER - shouldStartTimer is false');
+          
           setIsTimeIn(false);
           setCurrentTime(0);
           setTimeInStart(null);
@@ -333,56 +454,105 @@ const DashboardEmployee = () => {
         
         // PRIORITY 3: Check if timer should START
         if (shouldStartTimer && !isTimeIn && record && record.time_in && !record.time_out) {
-          console.log('▶️ STARTING TIMER - Time in detected:', record.time_in);
           
-          const currentTimeUTC8 = getCurrentTimeUTC8();
           
-          // ONLY start timer if current time is 8:00 AM or later
-          if (currentTimeUTC8.getHours() < 8) {
-            console.log('⏸️ NOT STARTING TIMER - Before 8:00 AM');
+          
+          
+          const currentTimeUTC8 = await getCurrentTimeUTC8(); // CHANGED: Made async
+          const currentHour = currentTimeUTC8.getHours();
+          
+          
+          
+          
+          
+          // REWRITTEN: Comprehensive shift validation logic
+          let canStartTimer = false;
+          let validationMessage = '';
+          
+          if (recordShiftType === 'day') {
+            // Day shift: 8:00 AM onwards (continues during overtime after 5 PM)
+            canStartTimer = currentHour >= 8;
+            validationMessage = `Day shift check: Current hour ${currentHour} >= 8 = ${canStartTimer}`;
+          } else if (recordShiftType === 'night') {
+            // Night shift: Only during actual work hours (10:00 PM - 6:00 AM)
+            // NOT during early arrival period (6:00 PM - 9:59 PM)
+            const isWorkHours = currentHour >= 22 || currentHour < 8;
+            
+            if (record.time_in) {
+              const timeInHour = parseInt(record.time_in.split(':')[0]);
+              const isEarlyArrival = timeInHour >= 18 && timeInHour < 22;
+              const isCurrentlyEarly = currentHour >= 18 && currentHour < 22;
+              
+              if (isEarlyArrival && isCurrentlyEarly) {
+                // Employee timed in early and current time is still in early period
+                canStartTimer = false;
+                validationMessage = `Night shift early arrival: Time in at ${timeInHour}:xx, current hour ${currentHour} - timer waits until 10 PM`;
+              } else if (isEarlyArrival && !isCurrentlyEarly) {
+                // Employee timed in early but now it's work time
+                canStartTimer = isWorkHours;
+                validationMessage = `Night shift post-early arrival: Now ${currentHour}:xx, work hours = ${isWorkHours}`;
+              } else {
+                // Normal night shift time in
+                canStartTimer = isWorkHours;
+                validationMessage = `Night shift normal: Current hour ${currentHour}, work hours (22+ OR <6) = ${isWorkHours}`;
+              }
+            } else {
+              canStartTimer = isWorkHours;
+              validationMessage = `Night shift no time_in data: Current hour ${currentHour}, work hours = ${isWorkHours}`;
+            }
+          }
+          
+          
+          
+          if (!canStartTimer) {
+            
             return;
           }
           
-          // Always use 8:00 AM as the effective start time for timer calculation
-          const workStartTime = new Date(`${record.date} 08:00:00`);
-          const actualTimeIn = new Date(`${record.date} ${record.time_in}`);
           
-          // Use the later of actual time in or 8:00 AM for timer calculation
-          const effectiveStartTime = actualTimeIn > workStartTime ? actualTimeIn : workStartTime;
           
-          let diffSeconds = Math.floor((currentTimeUTC8 - effectiveStartTime) / 1000);
+          // Calculate elapsed seconds using enhanced shift-aware logic
+          const { elapsedSeconds, effectiveStartTime } = calculateElapsedTimeEnhanced( // CHANGED: Back to synchronous
+            record.time_in, 
+            record.date, 
+            currentTimeUTC8, 
+            recordShiftType,
+            record.last_time_in,
+            record.accumulated_hours || 0
+          );
   
-          // FRONTEND DISPLAY ONLY: Subtract lunch break time for timer display
-          // This does NOT affect database calculations or payroll
-          const currentHour = currentTimeUTC8.getHours();
-          const currentMinute = currentTimeUTC8.getMinutes();
-  
-          if (currentHour > 13 || (currentHour === 13 && currentMinute > 0)) {
-            // Past 1:00 PM - subtract full 1-hour lunch break from display
-            diffSeconds = Math.max(0, diffSeconds - 3600); // 3600 seconds = 1 hour
-          } else if (currentHour === 12 || (currentHour === 13 && currentMinute === 0)) {
-            // Currently in lunch break - subtract elapsed lunch time from display
-            const lunchStartTime = new Date(`${record.date} 12:00:00`);
-            const elapsedLunchSeconds = Math.floor((currentTimeUTC8 - lunchStartTime) / 1000);
-            diffSeconds = Math.max(0, diffSeconds - elapsedLunchSeconds);
-          }
+          
+          
+          
   
           setIsTimeIn(true);
-          setCurrentTime(Math.max(0, diffSeconds));
+          setCurrentTime(elapsedSeconds);
           setTimeInStart(effectiveStartTime);
           setAutoRefreshEnabled(false);
           setBreakTimeAccumulated(0);
           
-          // Calculate late minutes with fixed logic
-          const lateMins = calculateLateMinutes(record.time_in);
+          // Calculate late minutes with shift-aware logic
+          const lateMins = record.late_minutes || calculateLateMinutes(record.time_in, record.shift_type);
           setLateMinutes(lateMins);
           
-          if (isOvertimeHours() || diffSeconds > 28800) {
+          const isOvertimeNow = await isOvertimeHours(recordShiftType); // CHANGED: Made async
+          if (isOvertimeNow || elapsedSeconds > 28800) {
             setIsOvertime(true);
           }
           
-          // Check if currently in break time
-          setTimeout(() => manageBreakTime(), 1000);
+          // Check if currently in break time (only for day shift)
+          if (recordShiftType === 'day') {
+            setTimeout(async () => await manageBreakTime(), 1000); // CHANGED: Made async
+          }
+          
+          
+        } else {
+          
+          
+          
+          
+          
+          
         }
       }
     } catch (error) {
@@ -390,6 +560,356 @@ const DashboardEmployee = () => {
     }
   };
 
+
+  const calculateElapsedTimeEnhanced = (timeIn, date, currentTimeUTC8, shiftType = 'day', lastTimeIn = null, accumulatedMinutes = 0) => {
+    console.log('CALCULATE ELAPSED TIME ENHANCED - START');
+    console.log('Input parameters:', {
+      timeIn,
+      recordDate: date,
+      currentTime: currentTimeUTC8.toLocaleString(),
+      shiftType,
+      lastTimeIn,
+      accumulatedMinutes
+    });
+  
+    const effectiveTimeIn = lastTimeIn || timeIn;
+    console.log('Effective time in:', effectiveTimeIn);
+    
+    let effectiveStartTime;
+    let currentSessionSeconds = 0;
+    const accumulatedSeconds = accumulatedMinutes * 60;
+    
+    // Create consistent session key for localStorage
+    const sessionKey = `session_${date}_${effectiveTimeIn.replace(/:/g, '')}_${shiftType}`;
+    console.log('Session key:', sessionKey);
+    
+    // Helper function to get stored session data
+    const getStoredSessionData = () => {
+      try {
+        const storedData = localStorage.getItem(sessionKey);
+        if (storedData) {
+          const parsedData = JSON.parse(storedData);
+          console.log('Retrieved stored session data:', parsedData);
+          return parsedData;
+        }
+      } catch (e) {
+        console.log('Error parsing stored session data:', e);
+      }
+      return null;
+    };
+    
+    // Helper function to store session data
+    const storeSessionData = (seconds) => {
+      const sessionData = {
+        accumulated: seconds,
+        lastUpdate: new Date().toISOString(),
+        effectiveTimeIn: effectiveTimeIn,
+        date: date,
+        shiftType: shiftType
+      };
+      localStorage.setItem(sessionKey, JSON.stringify(sessionData));
+      console.log('Stored session data:', sessionData);
+    };
+    
+    // Check if this is a re-entry (lastTimeIn exists and is different from original timeIn)
+    const isReEntry = lastTimeIn && lastTimeIn !== timeIn;
+    
+    if (isReEntry) {
+      console.log('RE-ENTRY DETECTED - Starting timer from actual re-entry time');
+      
+      if (shiftType === 'day') {
+        const lastTimeInHour = parseInt(lastTimeIn.split(':')[0]);
+        const lastTimeInMinute = parseInt(lastTimeIn.split(':')[1]);
+        const currentHour = currentTimeUTC8.getHours();
+        const currentMinute = currentTimeUTC8.getMinutes();
+        
+        if (currentHour < 8) {
+          // Current time is before work starts - no session time yet
+          currentSessionSeconds = 0;
+          effectiveStartTime = new Date(`${date} 08:00:00`);
+          console.log('DAY SHIFT RE-ENTRY: Before 8 AM - waiting for work hours');
+        } else {
+          // Get stored session data first
+          const storedData = getStoredSessionData();
+          let storedSeconds = storedData ? storedData.accumulated : 0;
+          
+          // Calculate fresh elapsed time
+          effectiveStartTime = new Date(`${date} ${lastTimeIn}`);
+          
+          if (lastTimeInHour < 8) {
+            // Start counting from 8:00 AM, not from the early re-entry time
+            effectiveStartTime = new Date(`${date} 08:00:00`);
+            currentSessionSeconds = Math.floor((currentTimeUTC8 - effectiveStartTime) / 1000);
+          } else {
+            // Normal re-entry during work hours
+            currentSessionSeconds = Math.floor((currentTimeUTC8 - effectiveStartTime) / 1000);
+          }
+          
+          currentSessionSeconds = Math.max(0, currentSessionSeconds);
+          
+          // Apply lunch break deduction only if this session spans lunch time
+          if (lastTimeInHour < 12 && currentHour >= 13) {
+            if (currentHour > 13) {
+              currentSessionSeconds = Math.max(0, currentSessionSeconds - 3600);
+            } else if (currentHour === 13 && currentMinute > 0) {
+              currentSessionSeconds = Math.max(0, currentSessionSeconds - 3600);
+            }
+          }
+          
+          // Use maximum between stored and fresh calculation
+          currentSessionSeconds = Math.max(storedSeconds, currentSessionSeconds);
+          
+          console.log('DAY SHIFT RE-ENTRY: Stored:', storedSeconds, 'Fresh:', currentSessionSeconds, 'Using:', currentSessionSeconds);
+          
+          // Store updated session data
+          storeSessionData(currentSessionSeconds);
+        }
+        
+      } else {
+        // Night shift re-entry
+        const lastTimeInHour = parseInt(lastTimeIn.split(':')[0]);
+        const currentHour = currentTimeUTC8.getHours();
+        const currentMinutes = currentTimeUTC8.getMinutes();
+        
+        console.log('NIGHT SHIFT RE-ENTRY:');
+        console.log('- Last time in hour:', lastTimeInHour);
+        console.log('- Current hour:', currentHour);
+        
+        // Get stored session data
+        const storedData = getStoredSessionData();
+        let storedSeconds = storedData ? storedData.accumulated : 0;
+        
+        if (lastTimeInHour >= 18 && lastTimeInHour < 22) {
+          // Re-entry during early arrival (6PM-9:59PM)
+          if (currentHour >= 18 && currentHour < 22) {
+            // Still in early arrival period
+            currentSessionSeconds = Math.max(storedSeconds, 0);
+            effectiveStartTime = new Date(`${date} 22:00:00`);
+            console.log('- Still in early arrival, using stored:', currentSessionSeconds);
+          } else if (currentHour >= 22) {
+            // Now in work hours - calculate from 10 PM
+            effectiveStartTime = new Date(`${date} 22:00:00`);
+            const currentTimeForCalc = new Date(`${date} ${currentHour.toString().padStart(2, '0')}:${currentMinutes.toString().padStart(2, '0')}:00`);
+            const freshSeconds = Math.floor((currentTimeForCalc - effectiveStartTime) / 1000);
+            currentSessionSeconds = Math.max(storedSeconds, freshSeconds);
+            console.log('- Counting from 10 PM same day:', currentSessionSeconds);
+          } else if (currentHour >= 0 && currentHour < 8) {
+            // Next day - count from 10 PM to current time
+            effectiveStartTime = new Date(`${date} 22:00:00`);
+            const hoursFromTenPM = (24 - 22) + currentHour;
+            const minutesFromTenPM = hoursFromTenPM * 60 + currentMinutes;
+            const freshSeconds = minutesFromTenPM * 60;
+            currentSessionSeconds = Math.max(storedSeconds, freshSeconds);
+            console.log('- Next day calculation, using:', currentSessionSeconds);
+          }
+          
+        } else if (lastTimeInHour >= 22) {
+          // Re-entry during work hours (10 PM onwards)
+          effectiveStartTime = new Date(`${date} ${lastTimeIn}`);
+          
+          if (currentHour >= 22) {
+            // Same day work hours
+            const timeInDate = new Date(`${date} ${lastTimeIn}`);
+            const freshSeconds = Math.floor((currentTimeUTC8 - timeInDate) / 1000);
+            currentSessionSeconds = Math.max(storedSeconds, freshSeconds);
+            effectiveStartTime = timeInDate;
+            console.log('- Night shift re-entry, using:', currentSessionSeconds);
+          } else if (currentHour >= 0 && currentHour < 8) {
+            // Crossed to next day
+            const lastHour = parseInt(lastTimeIn.split(':')[0]);
+            const lastMinute = parseInt(lastTimeIn.split(':')[1]);
+            const minutesToMidnight = (23 - lastHour) * 60 + (60 - lastMinute);
+            const minutesAfterMidnight = currentHour * 60 + currentMinutes;
+            const freshSeconds = (minutesToMidnight + minutesAfterMidnight) * 60;
+            currentSessionSeconds = Math.max(storedSeconds, freshSeconds);
+            console.log('- Crossed midnight, using:', currentSessionSeconds);
+          }
+          
+        } else if (lastTimeInHour >= 0 && lastTimeInHour < 8) {
+          // Re-entry during next day work hours (12 AM - 8 AM)
+          effectiveStartTime = new Date(`${date} ${lastTimeIn}`);
+          effectiveStartTime.setDate(effectiveStartTime.getDate() + 1);
+          
+          const currentTimeForCalc = new Date(`${date} ${currentHour.toString().padStart(2, '0')}:${currentMinutes.toString().padStart(2, '0')}:00`);
+          currentTimeForCalc.setDate(currentTimeForCalc.getDate() + 1);
+          
+          const freshSeconds = Math.floor((currentTimeForCalc - effectiveStartTime) / 1000);
+          currentSessionSeconds = Math.max(storedSeconds, freshSeconds);
+          console.log('- Next day work hours re-entry, using:', currentSessionSeconds);
+        }
+        
+        // Store updated session data
+        storeSessionData(currentSessionSeconds);
+        
+        currentSessionSeconds = Math.max(0, currentSessionSeconds);
+        if (currentSessionSeconds > 28800) {
+          currentSessionSeconds = 28800; // Cap at 8 hours per session
+        }
+      }
+      
+    } else {
+      // FIRST TIME-IN LOGIC
+      console.log('FIRST TIME-IN DETECTED - Starting fresh timer');
+      
+      if (shiftType === 'day') {
+        const timeInHour = parseInt(effectiveTimeIn.split(':')[0]);
+        const timeInMinute = parseInt(effectiveTimeIn.split(':')[1]);
+        const currentHour = currentTimeUTC8.getHours();
+        const currentMinute = currentTimeUTC8.getMinutes();
+        
+        console.log('DAY SHIFT FIRST TIME-IN:');
+        console.log('- Time in hour:', timeInHour);
+        console.log('- Current hour:', currentHour);
+        
+        // Get stored session data
+        const storedData = getStoredSessionData();
+        let storedSeconds = storedData ? storedData.accumulated : 0;
+        
+        if (currentHour < 8) {
+          // Current time is before work starts
+          currentSessionSeconds = Math.max(storedSeconds, 0);
+          effectiveStartTime = new Date(`${date} 08:00:00`);
+          console.log('- Before work hours, using stored:', currentSessionSeconds);
+        } else {
+          // Work hours - calculate elapsed time from actual time-in or 8:00 AM
+          if (timeInHour < 8) {
+            // Early time-in, start counting from 8:00 AM
+            effectiveStartTime = new Date(`${date} 08:00:00`);
+            const freshSeconds = Math.floor((currentTimeUTC8 - effectiveStartTime) / 1000);
+            currentSessionSeconds = Math.max(storedSeconds, freshSeconds);
+            
+            // Apply lunch break deduction if applicable
+            if (currentHour >= 13) {
+              if (currentHour > 13) {
+                currentSessionSeconds = Math.max(0, currentSessionSeconds - 3600);
+              } else if (currentHour === 13 && currentMinute > 0) {
+                currentSessionSeconds = Math.max(0, currentSessionSeconds - 3600);
+              }
+            }
+          } else {
+            // Normal time-in during work hours
+            effectiveStartTime = new Date(`${date} ${effectiveTimeIn}`);
+            const freshSeconds = Math.floor((currentTimeUTC8 - effectiveStartTime) / 1000);
+            currentSessionSeconds = Math.max(storedSeconds, freshSeconds);
+            
+            // Apply lunch break deduction if applicable
+            if (timeInHour < 12 && currentHour >= 13) {
+              if (currentHour > 13) {
+                currentSessionSeconds = Math.max(0, currentSessionSeconds - 3600);
+              } else if (currentHour === 13 && currentMinute > 0) {
+                currentSessionSeconds = Math.max(0, currentSessionSeconds - 3600);
+              }
+            }
+          }
+          
+          console.log('- Day shift calculation, stored:', storedSeconds, 'fresh calculation, using:', currentSessionSeconds);
+        }
+        
+        // Store session data
+        storeSessionData(currentSessionSeconds);
+        
+      } else {
+        // NIGHT SHIFT FIRST TIME-IN
+        const timeInHour = parseInt(effectiveTimeIn.split(':')[0]);
+        const currentHour = currentTimeUTC8.getHours();
+        const currentMinute = currentTimeUTC8.getMinutes();
+        
+        console.log('NIGHT SHIFT FIRST TIME-IN:');
+        console.log('- Time in hour:', timeInHour);
+        console.log('- Current hour:', currentHour);
+        
+        // Get stored session data
+        const storedData = getStoredSessionData();
+        let storedSeconds = storedData ? storedData.accumulated : 0;
+        
+        if (timeInHour >= 18 && timeInHour < 22) {
+          // Early arrival (6PM-9:59PM)
+          if (currentHour >= 18 && currentHour < 22) {
+            // Still in early arrival period
+            currentSessionSeconds = Math.max(storedSeconds, 0);
+            effectiveStartTime = new Date(`${date} 22:00:00`);
+            console.log('- Early arrival, using stored:', currentSessionSeconds);
+          } else if (currentHour >= 22) {
+            // Now in work hours - calculate from 10 PM or current time
+            effectiveStartTime = new Date(`${date} 22:00:00`);
+            const freshSeconds = Math.floor((currentTimeUTC8 - effectiveStartTime) / 1000);
+            currentSessionSeconds = Math.max(storedSeconds, freshSeconds);
+            console.log('- Work hours started, using:', currentSessionSeconds);
+          } else if (currentHour >= 0 && currentHour < 8) {
+            // Next day - calculate total time from 10 PM
+            effectiveStartTime = new Date(`${date} 22:00:00`);
+            const hoursFromTenPM = (24 - 22) + currentHour;
+            const minutesFromTenPM = hoursFromTenPM * 60 + currentMinute;
+            const freshSeconds = minutesFromTenPM * 60;
+            currentSessionSeconds = Math.max(storedSeconds, freshSeconds);
+            console.log('- Next day work hours, using:', currentSessionSeconds);
+          }
+          
+        } else if (timeInHour >= 22) {
+          // Time in during work hours (10 PM onwards)
+          const timeInDate = new Date(`${date} ${effectiveTimeIn}`);
+          const freshSeconds = Math.floor((currentTimeUTC8 - timeInDate) / 1000);
+          currentSessionSeconds = Math.max(storedSeconds, freshSeconds);
+          effectiveStartTime = timeInDate;
+          console.log('- Work hours time-in, using:', currentSessionSeconds);
+          
+        } else if (timeInHour >= 0 && timeInHour < 8) {
+          // Time in during next day work hours - FIXED: Both dates must be same day
+          const timeInDate = new Date(`${date} ${effectiveTimeIn}`);
+          timeInDate.setDate(timeInDate.getDate() + 1); // Next day for time-in
+          
+          // Also move currentTimeUTC8 to next day for calculation
+          const currentTimeNextDay = new Date(currentTimeUTC8);
+          currentTimeNextDay.setDate(currentTimeNextDay.getDate() + 1);
+          
+          currentSessionSeconds = Math.floor((currentTimeNextDay - timeInDate) / 1000);
+          currentSessionSeconds = Math.max(0, currentSessionSeconds);
+          effectiveStartTime = timeInDate;
+          console.log('- Next day work hours time-in, elapsed seconds:', currentSessionSeconds);
+        }
+        
+        // Store session data
+        storeSessionData(currentSessionSeconds);
+      }
+    }
+    
+    // Final validation
+    currentSessionSeconds = Math.max(0, currentSessionSeconds);
+    if (currentSessionSeconds > 43200) { // 12 hours max
+      currentSessionSeconds = 43200;
+    }
+    
+    // Total elapsed time = accumulated from previous sessions + current session
+    const totalElapsedSeconds = accumulatedSeconds + currentSessionSeconds;
+    
+    console.log('FINAL CALCULATION RESULTS:');
+    console.log('Is re-entry:', isReEntry);
+    console.log('Effective start time:', effectiveStartTime ? effectiveStartTime.toLocaleString() : 'N/A');
+    console.log('Accumulated from previous sessions (seconds):', accumulatedSeconds);
+    console.log('Current session seconds:', currentSessionSeconds);
+    console.log('Total elapsed seconds:', totalElapsedSeconds);
+    console.log('Total elapsed hours:', (totalElapsedSeconds / 3600).toFixed(2));
+    
+    return {
+      elapsedSeconds: totalElapsedSeconds,
+      effectiveStartTime: effectiveStartTime || currentTimeUTC8,
+      currentSessionSeconds,
+      accumulatedSeconds
+    };
+  };
+
+  const cleanupSession = (timeInStart, shiftType) => {
+    if (timeInStart) {
+      const dateStr = timeInStart.toISOString().split('T')[0];
+      const timeStr = timeInStart.toISOString().split('T')[1].substring(0,8).replace(/:/g, '');
+      const sessionKey = `session_${dateStr}_${timeStr}_${shiftType}`;
+      
+      console.log('Cleaning up session:', sessionKey);
+      localStorage.removeItem(sessionKey);
+    }
+  };
+
+  
   // Fetch employee info and today's status on component mount
   useEffect(() => {
     if (employeeInfo.emp_id) {
@@ -406,38 +926,69 @@ const DashboardEmployee = () => {
       clearInterval(statusCheckIntervalRef.current);
       statusCheckIntervalRef.current = null;
     }
-
+  
     return () => {
       if (statusCheckIntervalRef.current) {
         clearInterval(statusCheckIntervalRef.current);
       }
     };
-  }, [employeeInfo.emp_id, workArrangement, autoRefreshEnabled, isTimeIn]);
+  }, [employeeInfo.emp_id, workArrangement, autoRefreshEnabled]);
 
-  // ENHANCED timer effect with proper break handling
+  // MODIFIED: ENHANCED timer effect with proper break handling
   useEffect(() => {
     if (isTimeIn && !isOnBreak) {
-      console.log('▶️ Starting timer - not on break');
-      timerIntervalRef.current = setInterval(() => {
+      
+      
+      timerIntervalRef.current = setInterval(async () => {
         setCurrentTime(prevTime => {
-          const newTime = prevTime + 1;
+          const updateTimer = async () => {
+            const currentTimeUTC8 = await getCurrentTimeUTC8();
+            const currentHour = currentTimeUTC8.getHours();
+            
+            // Check for early arrival periods for BOTH shifts
+            if (currentShiftType === 'day') {
+              // Day shift early arrival check
+              if (currentHour < 8) {
+                
+                return prevTime; // Don't increment during early arrival period
+              }
+            } else if (currentShiftType === 'night') {
+              // Night shift early arrival check - ONLY pause during 6PM-9:59PM
+              if (currentHour >= 18 && currentHour < 22) {
+                
+                return prevTime; // Don't increment during early arrival period
+              }
+              // FIXED: Continue running during 6AM-8AM for overtime
+              // Timer should only stop after 8:00 AM (changed from 8:00 AM to let API handle it)
+              if (currentHour >= 8) {
+                
+                // Let the API handle stopping the timer via checkTimerStatus
+              }
+            }
+            
+            // Normal timer increment
+            const newTime = prevTime + 1;
+            
+            // Check overtime conditions
+            const isOvertimeNow = await isOvertimeHours(currentShiftType);
+            if (isOvertimeNow) {
+              setIsOvertime(true);
+            }
+            
+            if (newTime > 28800) { // More than 8 hours
+              setIsOvertime(true);
+            }
+            
+            return newTime;
+          };
           
-          // Check if overtime based on current time (after 5:00 PM)
-          if (isOvertimeHours()) {
-            setIsOvertime(true);
-          }
-          
-          // Also check if worked more than 8 hours (28800 seconds)
-          if (newTime > 28800) {
-            setIsOvertime(true);
-          }
-          
-          return newTime;
+          updateTimer().catch(console.error);
+          return prevTime + 1; // Immediate increment, async check happens in background
         });
       }, 1000);
     } else {
       if (timerIntervalRef.current) {
-        console.log('⏸️ Pausing timer - on break or not timed in');
+        
         clearInterval(timerIntervalRef.current);
         timerIntervalRef.current = null;
       }
@@ -448,7 +999,7 @@ const DashboardEmployee = () => {
         clearInterval(timerIntervalRef.current);
       }
     };
-  }, [isTimeIn, isOnBreak]);
+  }, [isTimeIn, isOnBreak, currentShiftType, timeInStart]);
 
   const fetchEmployeeInfo = async () => {
     try {
@@ -468,64 +1019,126 @@ const DashboardEmployee = () => {
 
   const fetchTodayStatus = async () => {
     try {
+      console.log('FETCHING TODAY STATUS - START');
+      console.log('Employee ID:', employeeInfo.emp_id);
+      
       const response = await axios.get(`${API_BASE_URL}?action=get_today_status&emp_id=${employeeInfo.emp_id}`);  
+      console.log('Today Status API Response:', response.data);
+      
       if (response.data.success && response.data.record) {
         const record = response.data.record;
+        console.log('Today Status Record:', record);
+        
         if (record.time_in && !record.time_out) {
+          console.log('FOUND ACTIVE TIME IN RECORD');
           
-          const currentTimeUTC8 = getCurrentTimeUTC8();
+          const currentTimeUTC8 = await getCurrentTimeUTC8();
+          const currentHour = currentTimeUTC8.getHours();
           
-          // ONLY start timer if current time is 8:00 AM or later
-          if (currentTimeUTC8.getHours() < 8) {
-            console.log('⏸️ NOT STARTING TIMER - Before 8:00 AM');
-            setAutoRefreshEnabled(true);
-            return;
+          const recordShiftType = record.shift_type || await detectCurrentShiftType();
+          setCurrentShiftType(recordShiftType);
+          
+          console.log('SHIFT AND TIME INFO:');
+          console.log('Current Hour:', currentHour);
+          console.log('Current Time:', currentTimeUTC8.toLocaleTimeString());
+          console.log('Record Shift Type:', recordShiftType);
+          console.log('Accumulated Hours (from DB):', record.accumulated_hours);
+  
+          // FIXED: Calculate elapsed seconds FIRST before any validation
+          const { elapsedSeconds, effectiveStartTime } = calculateElapsedTimeEnhanced(
+            record.time_in, 
+            record.date, 
+            currentTimeUTC8, 
+            recordShiftType,
+            record.last_time_in,
+            record.accumulated_hours || 0
+          );
+  
+          console.log('CALCULATED ELAPSED SECONDS:', elapsedSeconds);
+          console.log('EFFECTIVE START TIME:', effectiveStartTime);
+  
+          // Enhanced shift validation for timer start
+          let shouldStartTimer = false;
+          let validationReason = '';
+  
+          if (recordShiftType === 'day') {
+            shouldStartTimer = currentHour >= 8;
+            validationReason = `Day shift: ${currentHour} >= 8 = ${shouldStartTimer}`;
+          } else if (recordShiftType === 'night') {
+            // Night shift work hours are 10 PM to 8 AM (includes overtime until 8 AM)
+            const isWorkHours = currentHour >= 22 || currentHour < 8;
+            
+            if (record.time_in) {
+              const timeInHour = parseInt(record.time_in.split(':')[0]);
+              const isEarlyArrival = timeInHour >= 18 && timeInHour < 22;
+              const isCurrentlyEarly = currentHour >= 18 && currentHour < 22;
+              
+              if (isEarlyArrival && isCurrentlyEarly) {
+                shouldStartTimer = false;
+                validationReason = `Night shift early arrival: Time in ${timeInHour}:xx, current ${currentHour}:xx - waiting for 10 PM`;
+              } else {
+                shouldStartTimer = isWorkHours;
+                validationReason = `Night shift: Current hour ${currentHour}, work hours (22+ OR <8) = ${shouldStartTimer}`;
+              }
+            } else {
+              shouldStartTimer = isWorkHours;
+              validationReason = `Night shift no time_in: Current hour ${currentHour}, work hours (22+ OR <8) = ${shouldStartTimer}`;
+            }
           }
+  
+          console.log('TIMER VALIDATION RESULT:', validationReason);
+  
+          // FIXED: Now we can safely check elapsedSeconds since it's already calculated
+          if (!shouldStartTimer) {
+            // Special case: if employee is actually timed in and has valid elapsed time, allow small timers
+            if (record && record.time_in && !record.time_out && elapsedSeconds >= 0) {
+              console.log('ALLOWING TIMER - Employee is timed in with', elapsedSeconds, 'seconds');
+              shouldStartTimer = true;
+              validationReason = `Overriding validation - employee has valid time record with ${elapsedSeconds}s elapsed`;
+            } else {
+              console.log('NOT STARTING TIMER -', validationReason);
+              setIsTimeIn(false);
+              setAutoRefreshEnabled(true);
+              return;
+            }
+          }
+  
+          console.log('TIMER VALIDATION PASSED - Starting timer');
           
           setIsTimeIn(true);
-          
-          // Always use 8:00 AM as the effective start time for timer calculation
-          const workStartTime = new Date(`${record.date} 08:00:00`);
-          const actualTimeIn = new Date(`${record.date} ${record.time_in}`);
-          
-          // Use the later of actual time in or 8:00 AM for timer calculation
-          const effectiveStartTime = actualTimeIn > workStartTime ? actualTimeIn : workStartTime;
-  
-          let diffSeconds = Math.floor((currentTimeUTC8 - effectiveStartTime) / 1000);
-  
-          // FRONTEND DISPLAY ONLY: Subtract lunch break time for timer display
-          // This does NOT affect database calculations or payroll
-          const currentHour = currentTimeUTC8.getHours();
-          const currentMinute = currentTimeUTC8.getMinutes();
-  
-          if (currentHour > 13 || (currentHour === 13 && currentMinute > 0)) {
-            // Past 1:00 PM - subtract full 1-hour lunch break from display
-            diffSeconds = Math.max(0, diffSeconds - 3600); // 3600 seconds = 1 hour
-          } else if (currentHour === 12 || (currentHour === 13 && currentMinute === 0)) {
-            // Currently in lunch break (12:00 PM - 1:00 PM) - subtract elapsed lunch time from display
-            const lunchStartTime = new Date(`${record.date} 12:00:00`);
-            const elapsedLunchSeconds = Math.floor((currentTimeUTC8 - lunchStartTime) / 1000);
-            diffSeconds = Math.max(0, diffSeconds - elapsedLunchSeconds);
-          }
-  
-          setCurrentTime(Math.max(0, diffSeconds));
           setTimeInStart(effectiveStartTime);
+  
+          console.log('SETTING TIMER STATE:');
+          console.log('Elapsed seconds to set:', elapsedSeconds);
+          console.log('Effective start time:', effectiveStartTime);
+  
+          // FIXED: Don't subtract late minutes from timer - lateness is tracked separately
+          const lateMinutes = record.late_minutes || 0;
+          setCurrentTime(elapsedSeconds); // Use full elapsed seconds, don't subtract lateness
+          setLateMinutes(lateMinutes);
           
-          // Set late minutes with fixed logic
-          const lateMins = calculateLateMinutes(record.time_in);
-          setLateMinutes(lateMins);
+          console.log('Late minutes (for status only):', lateMinutes);
           
-          if (isOvertimeHours() || diffSeconds > 28800) {
+          const isOvertimeNow = await isOvertimeHours(recordShiftType);
+          if (isOvertimeNow || elapsedSeconds > 28800) {
             setIsOvertime(true);
           }
   
-          // Check current break state after a short delay
-          setTimeout(() => manageBreakTime(), 2000);
+          // Check current break state after a short delay (only for day shift)
+          if (recordShiftType === 'day') {
+            setTimeout(async () => await manageBreakTime(), 2000);
+          }
           
           setAutoRefreshEnabled(false);
+          
+          console.log('TIMER STARTED SUCCESSFULLY FROM fetchTodayStatus');
         } else {
+          console.log('NO ACTIVE TIME IN RECORD - Setting auto refresh');
           setAutoRefreshEnabled(true);
         }
+      } else {
+        console.log('NO RECORD FOUND - Setting auto refresh');
+        setAutoRefreshEnabled(true);
       }
     } catch (error) {
       console.error('Error fetching today status:', error);
@@ -533,54 +1146,171 @@ const DashboardEmployee = () => {
   };
 
   const handleTimeToggle = async () => {
-    if (!isWeekday()) {
-      showCustomAlert('error', 'Weekend Day', 'No work for Saturday and Sunday, See you on Monday!');
-      return;
-    }
-
+  
     if (!isTimeIn) {
       try {
+        
+        
         const response = await axios.post(`${API_BASE_URL}?action=time_in`, {
           emp_id: employeeInfo.emp_id
         });
         
-        if (response.data.success) {
-          const now = getCurrentTimeUTC8();
-          const workStartTime = new Date();
-          workStartTime.setHours(8, 0, 0, 0);
-          const effectiveStartTime = now < workStartTime ? workStartTime : now;
+        
+        
+        // Check if response contains PHP warnings/errors in the response text
+        const responseText = typeof response.data === 'string' ? response.data : '';
+        let jsonData = response.data;
+        
+        // If response contains HTML (PHP warnings), extract the JSON part
+        if (responseText.includes('<br />') && responseText.includes('{')) {
+          const jsonStart = responseText.lastIndexOf('{');
+          const jsonPart = responseText.substring(jsonStart);
+          try {
+            jsonData = JSON.parse(jsonPart);
+          } catch (e) {
+            console.error('Failed to parse JSON from response:', e);
+            jsonData = { success: false, error: 'Invalid response format' };
+          }
+        }
+        
+        if (jsonData.success) {
+          const now = await getCurrentTimeUTC8(); // CHANGED: Made async
           
-          setIsTimeIn(true);
-          setTimeInStart(effectiveStartTime);
-          setCurrentTime(0);
-          setIsOnBreak(false);
-          setIsAutoBreak(false);
-          setIsOvertime(false);
-          setBreakTimeAccumulated(0);
-          setAutoRefreshEnabled(false);
           
-          if (response.data.late_minutes) {
-            setLateMinutes(response.data.late_minutes);
+          // Detect shift type based on actual time in from response
+          const timeInStr = jsonData.time_in;
+          const currentShift = detectShiftType(timeInStr);
+          setCurrentShiftType(currentShift);
+          
+          
+          
+          // Calculate elapsed time for WFH (similar to biometric method)
+          let elapsedSeconds = 0;
+          let effectiveStartTime = now;
+          
+          if (jsonData.is_re_entry) {
+            // For re-entry, calculate elapsed time from the original time_in or last_time_in
+            const timeInToUse = jsonData.last_time_in || jsonData.original_time_in || timeInStr;
+            const accumulatedMinutes = jsonData.accumulated_hours || 0;
+          
+            
+            
+            
+            
+            
+            // Update todayHours with accumulated hours from previous sessions
+            setTodayHours(0); // Convert minutes to seconds
+            
+            // Use the same calculateElapsedTime function as biometric
+            const today = now.toISOString().split('T')[0]; // Get date in YYYY-MM-DD format
+            const { elapsedSeconds: calculatedSeconds, effectiveStartTime: calcStartTime } = calculateElapsedTimeEnhanced ( // CHANGED: Back to synchronous
+              jsonData.original_time_in || timeInStr, // Use original time_in for calculation
+              today, // Today's date
+              now,
+              currentShift,
+              timeInToUse, // Use last_time_in for current session start
+              accumulatedMinutes
+            );
+            
+            elapsedSeconds = calculatedSeconds;
+            effectiveStartTime = calcStartTime;
+            
+            
+            
+          } else {
+            // First time in - start from 0 but set proper start time
+            elapsedSeconds = 0;
+            effectiveStartTime = now;
+            
           }
           
-          // Check if should be on break immediately
-          setTimeout(() => manageBreakTime(), 1000);
+          // Check if should start timer now (only for day shift early time-in)
+          const currentHour = now.getHours();
+          const shouldStartTimerNow = currentShift === 'day' 
+            ? currentHour >= 8  // Day shift: only start timer at 8:00 AM or later
+            : (currentHour >= 22 || currentHour < 6); // Night shift: existing logic (work hours only, not early arrival)
+
+          if (shouldStartTimerNow) {
+            setIsTimeIn(true);
+            setTimeInStart(effectiveStartTime);
+            setCurrentTime(elapsedSeconds);
+            setAutoRefreshEnabled(false);
+          } else {
+            // Day shift early time-in: don't start timer yet
+            setIsTimeIn(false);
+            setTimeInStart(null);
+            setCurrentTime(0);
+            setAutoRefreshEnabled(true);
+          }
+
+          setIsOnBreak(false);
+          setIsAutoBreak(false);
+          setIsOvertime(elapsedSeconds > 28800);
+          setBreakTimeAccumulated(0);;
           
-          showCustomAlert('success', 'Time In Successful', response.data.message);
+          // Set late minutes from response
+          const lateMinutes = jsonData.late_minutes || 0;
+          setLateMinutes(lateMinutes);
+          
+          
+          
+          // Check if should be on break immediately (only for day shift)
+          if (currentShift === 'day') {
+            setTimeout(async () => await manageBreakTime(), 1000); // CHANGED: Made async
+          }
+          
+          // Show success message
+          let alertMessage = jsonData.message;
+          if (jsonData.is_re_entry) {
+            alertMessage = `Re-time in successful (Session ${jsonData.session_type})`;
+          } else if (currentShift === 'day' && currentHour < 8) {
+            alertMessage = `Early time-in recorded. Timer will start at 8:00 AM.`;
+          }
+          
+          
+          showCustomAlert('success', 'Time In Successful', alertMessage);
+          
+        } else {
+          console.error('❌ WFH Time In Failed:', jsonData);
+          showCustomAlert('error', 'Time In Failed', jsonData.error || 'Unknown error');
         }
       } catch (error) {
+        console.error('❌ WFH Time In Error:', error);
         const errorMessage = error.response?.data?.error || 'Error recording time in';
         showCustomAlert('error', 'Time In Failed', errorMessage);
       }
     } else {
       try {
+        
+        
         const response = await axios.post(`${API_BASE_URL}?action=time_out`, {
           emp_id: employeeInfo.emp_id
         });
         
-        if (response.data.success) {
+        
+        
+        // Check if response contains PHP warnings/errors in the response text
+        const responseText = typeof response.data === 'string' ? response.data : '';
+        let jsonData = response.data;
+        
+        // If response contains HTML (PHP warnings), extract the JSON part
+        if (responseText.includes('<br />') && responseText.includes('{')) {
+          const jsonStart = responseText.lastIndexOf('{');
+          const jsonPart = responseText.substring(jsonStart);
+          try {
+            jsonData = JSON.parse(jsonPart);
+          } catch (e) {
+            console.error('Failed to parse JSON from response:', e);
+            jsonData = { success: false, error: 'Invalid response format' };
+          }
+        }
+        
+        if (jsonData.success) {
+          
+          
           setIsTimeIn(false);
-          setTodayHours(prevHours => prevHours + currentTime);
+          const totalHoursFromBackend = parseFloat(jsonData.total_hours || '0');
+          setTodayHours(totalHoursFromBackend * 3600);
           setCurrentTime(0);
           setTimeInStart(null);
           setIsOnBreak(false);
@@ -591,17 +1321,34 @@ const DashboardEmployee = () => {
           setBreakTimeAccumulated(0);
           setAutoRefreshEnabled(true);
           
-          const summary = `
-            Time Out: ${response.data.display_time}
-            Total Hours: ${response.data.total_hours}h
-            ${response.data.overtime_hours > 0 ? `Overtime: ${response.data.overtime_hours}h` : ''}
-          `;
-          showCustomAlert('success', 'Time Out Successful', response.data.message + '\n\n' + summary);
+          const summary =  `Time Out: ${jsonData.display_time || 'Recorded'}\nTotal Hours: ${jsonData.total_hours || '0.00'}h${jsonData.overtime_hours > 0 ? `\nOvertime: ${jsonData.overtime_hours}h` : ''}`;
+          
+          
+          showCustomAlert('success', 'Time Out Successful', jsonData.message + '\n\n' + summary);
+          
+        } else {
+          console.error('❌ WFH Time Out Failed:', jsonData);
+          showCustomAlert('error', 'Time Out Failed', jsonData.error || 'Unknown error');
         }
       } catch (error) {
+        console.error('❌ WFH Time Out Error:', error);
         const errorMessage = error.response?.data?.error || 'Error recording time out';
         showCustomAlert('error', 'Time Out Failed', errorMessage);
       }
+    }
+  };
+
+  const detectShiftType = (timeIn) => {
+    const timeInObj = new Date(`2000-01-01 ${timeIn}`);
+    const hour = timeInObj.getHours();
+    
+    // Detect shift based on time in
+    if (hour >= 6 && hour < 18) {
+      // Time in between 6:00 AM and 6:00 PM = Day Shift
+      return 'day';
+    } else {
+      // Time in between 6:00 PM and 6:00 AM = Night Shift
+      return 'night';
     }
   };
 
@@ -727,6 +1474,37 @@ const DashboardEmployee = () => {
     }
   };
 
+  const detectCurrentShiftType = async () => {
+    const now = await getCurrentTimeUTC8(); // CHANGED: Made async
+    const hour = now.getHours();
+    
+    
+    
+    
+    // FIXED: Night shift is 10 PM to 6 AM next day
+    if (hour >= 18) {  // 6:00 PM onwards = night shift
+      
+      return 'night';
+    } else {
+      
+      return 'day';
+    }
+  };
+  
+  useEffect(() => {
+    const updateShiftType = async () => {
+      const currentShift = await detectCurrentShiftType(); // CHANGED: Made async
+      setCurrentShiftType(currentShift);
+    };
+    
+    updateShiftType();
+    
+    // Update every hour to catch shift changes
+    const interval = setInterval(updateShiftType, 3600000); // Every hour
+    
+    return () => clearInterval(interval);
+  }, []);
+
   const handleBreakToggle = () => {
     if (isAutoBreak) {
       showCustomAlert('info', 'Automatic Break', 'You are currently on automatic lunch break (12:00 PM - 1:00 PM).\nBreak will end automatically at 1:00 PM.');
@@ -743,8 +1521,8 @@ const DashboardEmployee = () => {
     return true;
   };
 
-  const getCurrentDate = () => {
-    const utc8Time = getCurrentTimeUTC8();
+  const getCurrentDate = async () => {
+    const utc8Time = await getCurrentTimeUTC8(); // CHANGED: Made async
     return utc8Time.toLocaleDateString('en-US', {
       weekday: 'long',
       year: 'numeric',
@@ -754,8 +1532,8 @@ const DashboardEmployee = () => {
     });
   };
 
-  const getGreeting = () => {
-    const utc8Time = getCurrentTimeUTC8();
+  const getGreeting = async () => {
+    const utc8Time = await getCurrentTimeUTC8(); // CHANGED: Made async
     const hour = utc8Time.getHours();
     if (hour < 12) return 'Good Morning';
     if (hour < 18) return 'Good Afternoon';
@@ -763,7 +1541,6 @@ const DashboardEmployee = () => {
   };
 
   const getStatusText = () => {
-    if (!isWeekday()) return 'Weekend';
     if (isOnBreak && isAutoBreak) return 'Lunch Break';
     if (isOnBreak) return 'On Break';
     if (isOvertime && isTimeIn) return 'Overtime';
@@ -772,7 +1549,6 @@ const DashboardEmployee = () => {
   };
 
   const getStatusClass = () => {
-    if (!isWeekday()) return 'emp-dash-weekend-status';
     if (isOnBreak) return 'emp-dash-break-status';
     if (isOvertime && isTimeIn) return 'emp-dash-overtime-status';
     if (lateMinutes > 0 && isTimeIn) return 'emp-dash-late-status';
@@ -788,13 +1564,83 @@ const DashboardEmployee = () => {
   };
 
   
-  // Get work progress percentage (8 hours = 100%)
-    const getWorkProgress = () => {
-      // Use currentTime directly since it already excludes lunch break time
-      const workSeconds = todayHours + (isTimeIn ? currentTime : 0);
-      const eightHours = 8 * 3600; // 8 hours in seconds
-      return Math.min((workSeconds / eightHours) * 100, 100);
-    };
+  // MODIFIED: UPDATED getWorkProgress function to work with simplified timer
+  const getWorkProgress = async () => {
+  const currentTimeUTC8 = await getCurrentTimeUTC8(); // CHANGED: Made async
+  const currentHour = currentTimeUTC8.getHours();
+  const currentMinute = currentTimeUTC8.getMinutes();
+  
+  // Start with base work seconds
+  let workSeconds = todayHours + (isTimeIn ? currentTime : 0);
+  
+  // Handle early arrival for BOTH shifts
+  if (currentShiftType === 'day') {
+    if (isTimeIn && currentHour < 8) {
+      // During early arrival period - don't count current session
+      workSeconds = todayHours;
+      
+    }
+  }
+  
+  // FIXED: Proper lunch break deduction for progress calculation (DAY SHIFT ONLY)
+  if (currentShiftType === 'day' && isTimeIn) {
+    if (currentHour > 13 || (currentHour === 13 && currentMinute > 0)) {
+      // Past 1:00 PM - subtract full lunch break (60 minutes = 3600 seconds)
+      workSeconds = Math.max(0, workSeconds - 3600);
+    } else if (currentHour === 12 || (currentHour === 13 && currentMinute === 0)) {
+      // Currently in lunch break - subtract elapsed lunch time
+      const lunchStartTime = new Date();
+      lunchStartTime.setHours(12, 0, 0, 0);
+      
+      // Calculate how much lunch break time has elapsed
+      const elapsedLunchSeconds = Math.floor((currentTimeUTC8 - lunchStartTime) / 1000);
+      const lunchDeduction = Math.min(Math.max(0, elapsedLunchSeconds), 3600); // Cap at 1 hour
+      
+      workSeconds = Math.max(0, workSeconds - lunchDeduction);
+    }
+  }
+  
+  const eightHours = 8 * 3600; // 8 hours in seconds
+  return Math.min((workSeconds / eightHours) * 100, 100);
+};
+  // Replace the existing getTodayDisplayHours function with this fixed version
+  const getTodayDisplayHours = async () => {
+    const currentTimeUTC8 = await getCurrentTimeUTC8(); // CHANGED: Made async
+    const currentHour = currentTimeUTC8.getHours();
+    const currentMinute = currentTimeUTC8.getMinutes();
+    
+    // Start with base work seconds
+    let workSeconds = todayHours + (isTimeIn && !isOnBreak ? currentTime : 0);
+    
+    // Handle early arrival for BOTH shifts
+    if (currentShiftType === 'day') {
+      if (isTimeIn && currentHour < 8) {
+        // During early arrival period - don't count current session
+        workSeconds = todayHours;
+        
+      }
+    }
+    
+    // FIXED: Proper lunch break deduction for display hours (DAY SHIFT ONLY)
+    if (currentShiftType === 'day' && isTimeIn) {
+      if (currentHour > 13 || (currentHour === 13 && currentMinute > 0)) {
+        // Past 1:00 PM - subtract full lunch break (60 minutes = 3600 seconds)
+        workSeconds = Math.max(0, workSeconds - 3600);
+      } else if (currentHour === 12 || (currentHour === 13 && currentMinute === 0)) {
+        // Currently in lunch break - subtract elapsed lunch time
+        const lunchStartTime = new Date();
+        lunchStartTime.setHours(12, 0, 0, 0);
+        
+        // Calculate how much lunch break time has elapsed
+        const elapsedLunchSeconds = Math.floor((currentTimeUTC8 - lunchStartTime) / 1000);
+        const lunchDeduction = Math.min(Math.max(0, elapsedLunchSeconds), 3600); // Cap at 1 hour
+        
+        workSeconds = Math.max(0, workSeconds - lunchDeduction);
+      }
+    }
+    
+    return formatHours(workSeconds);
+  };
 
   // Cleanup intervals on unmount
   useEffect(() => {
@@ -813,52 +1659,19 @@ const DashboardEmployee = () => {
 
   return (
     <div className="emp-dash-container">
-      <div className="emp-dash-header">
-        <div className="emp-dash-header-content">
-          <div className="emp-dash-user-info">
-            <div className="emp-dash-user-avatar">
-              {employeeInfo.profile_image ? (
-                <img 
-                  src={employeeInfo.profile_image.startsWith('http') ? employeeInfo.profile_image : `http://localhost/difsysapi/${employeeInfo.profile_image}`} 
-                  alt={employeeInfo.firstName}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: '50%',
-                    objectFit: 'cover'
-                  }}
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                    e.target.nextSibling.style.display = 'block';
-                  }}
-                />
-              ) : null}
-              <span style={{ display: employeeInfo.profile_image ? 'none' : 'block' }}>
-                {employeeInfo.firstName?.[0]}{employeeInfo.lastName?.[0]}
-              </span>
-            </div>
-            <div className="emp-dash-user-details">
-              <h1 className="emp-dash-greeting">
-                {getGreeting()}, {employeeInfo.firstName}
-              </h1>
-              <p className="emp-dash-date">{getCurrentDate()}</p>
-            </div>
-          </div>
-          <div className="emp-dash-status-badge">
-            <span className={`emp-dash-status-dot ${getStatusClass()}`}></span>
-            {getStatusText()}
-          </div>
-        </div>
-      </div>
-
       <div className="emp-dash-content">
         {/* Time Tracking Section */}
+        <DashboardHeader />
         <div className="emp-dash-time-section">
           <div className="emp-dash-time-card emp-dash-main-card">
             <div className="emp-dash-card-header">
               <h3>Time Tracker</h3>
               <div className="emp-dash-timer-display">
                 <span className="emp-dash-time-text">{formatTime(currentTime)}</span>
+                <div className="emp-dash-status-badge">
+                  <span className={`emp-dash-status-dot ${getStatusClass()}`}></span>
+                  {getStatusText()}
+                </div>
                 <div className="emp-dash-status-indicators">
                   {isOnBreak && isAutoBreak && <span className="emp-dash-lunch-indicator">LUNCH BREAK</span>}
                   {isOnBreak && !isAutoBreak && <span className="emp-dash-break-indicator">BREAK</span>}
@@ -872,10 +1685,9 @@ const DashboardEmployee = () => {
               <div className="emp-dash-button-group">
                 {workArrangement === 'Work From Home' && (
                   <button 
-                    className={`emp-dash-time-button ${isTimeIn ? 'emp-dash-time-out' : 'emp-dash-time-in'}`}
-                    onClick={handleTimeToggle}
-                    disabled={!isWeekday()}
-                  >
+                  className={`emp-dash-time-button ${isTimeIn ? 'emp-dash-time-out' : 'emp-dash-time-in'}`}
+                  onClick={handleTimeToggle}
+                >
                     {isTimeIn ? 'Time Out' : 'Time In'}
                   </button>
                 )}
@@ -928,18 +1740,66 @@ const DashboardEmployee = () => {
             </div>
             <div className="emp-dash-hours-content">
               <div className="emp-dash-hours-display">
-                <span className="emp-dash-hours-number">{formatHours(todayHours + (isTimeIn && !isOnBreak ? currentTime : 0))}</span>
+                <span className="emp-dash-hours-number">{(() => {
+                  const [displayHours, setDisplayHours] = useState('0.00');
+                  
+                  useEffect(() => {
+                    const updateDisplayHours = async () => {
+                      const hours = await getTodayDisplayHours();
+                      setDisplayHours(hours);
+                    };
+                    
+                    updateDisplayHours();
+                    const interval = setInterval(updateDisplayHours, 10000); // Update every 10 seconds
+                    
+                    return () => clearInterval(interval);
+                  }, [todayHours, currentTime, isTimeIn, isOnBreak, currentShiftType]);
+                  
+                  return displayHours;
+                })()}</span>
                 <span className="emp-dash-hours-unit">hrs</span>
               </div>
               <div className="emp-dash-progress-section">
                 <div className="emp-dash-progress-bar">
                   <div 
                     className="emp-dash-progress-fill" 
-                    style={{ width: `${getWorkProgress()}%` }}
+                    style={{ width: `${(() => {
+                      const [progress, setProgress] = useState(0);
+                      
+                      useEffect(() => {
+                        const updateProgress = async () => {
+                          const prog = await getWorkProgress();
+                          setProgress(prog);
+                        };
+                        
+                        updateProgress();
+                        const interval = setInterval(updateProgress, 10000); // Update every 10 seconds
+                        
+                        return () => clearInterval(interval);
+                      }, [todayHours, currentTime, isTimeIn, currentShiftType]);
+                      
+                      return Math.round(progress);
+                    })()}%` }}
                   ></div>
                 </div>
                 <span className="emp-dash-progress-text">
-                  {Math.round(getWorkProgress())}% of 8-hour work day
+                  {(() => {
+                    const [progressText, setProgressText] = useState(0);
+                    
+                    useEffect(() => {
+                      const updateProgressText = async () => {
+                        const prog = await getWorkProgress();
+                        setProgressText(Math.round(prog));
+                      };
+                      
+                      updateProgressText();
+                      const interval = setInterval(updateProgressText, 10000); // Update every 10 seconds
+                      
+                      return () => clearInterval(interval);
+                    }, [todayHours, currentTime, isTimeIn, currentShiftType]);
+                    
+                    return progressText;
+                  })()} % of 8-hour work day
                 </span>
               </div>
             </div>
@@ -973,8 +1833,8 @@ const DashboardEmployee = () => {
             <div className="emp-dash-stat-content">
               <h4>Work Status</h4>
               <p className="emp-dash-stat-value">
-                {!isWeekday() ? 'Weekend' : isTimeIn ? 'Active' : 'Idle'}
-              </p>
+                  {isTimeIn ? 'Active' : 'Idle'}
+                </p>
             </div>
           </div>
 
@@ -988,7 +1848,23 @@ const DashboardEmployee = () => {
             </div>
             <div className="emp-dash-stat-content">
               <h4>Daily Progress</h4>
-              <p className="emp-dash-stat-value">{Math.round(getWorkProgress())}%</p>
+              <p className="emp-dash-stat-value">{(() => {
+                const [progressStat, setProgressStat] = useState(0);
+                
+                useEffect(() => {
+                  const updateProgressStat = async () => {
+                    const prog = await getWorkProgress();
+                    setProgressStat(Math.round(prog));
+                  };
+                  
+                  updateProgressStat();
+                  const interval = setInterval(updateProgressStat, 10000);
+                  
+                  return () => clearInterval(interval);
+                }, [todayHours, currentTime, isTimeIn, currentShiftType]);
+                
+                return progressStat;
+              })()}%</p>
             </div>
           </div>
 
@@ -1015,31 +1891,48 @@ const DashboardEmployee = () => {
               <h3>Today's Schedule</h3>
             </div>
             <div className="emp-dash-activity-list">
-              <div className="emp-dash-activity-item">
-                <div className="emp-dash-activity-icon emp-dash-work-start-icon">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <polyline points="12,6 12,12 16,14"/>
-                  </svg>
-                </div>
-                <div className="emp-dash-activity-content">
-                  <p className="emp-dash-activity-title">Work Hours</p>
-                  <p className="emp-dash-activity-time">8:00 AM - 5:00 PM (8 hours)</p>
-                </div>
-              </div>
+            <div className="emp-dash-activity-item">
+            <div className="emp-dash-activity-icon emp-dash-work-start-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12,6 12,12 16,14"/>
+              </svg>
+            </div>
+            <div className="emp-dash-activity-content">
+              <p className="emp-dash-activity-title">Work Hours</p>
+              <p className="emp-dash-activity-time">{shiftType === 'day' ? '8:00 AM - 5:00 PM (8 hours)' : '10:00 PM - 6:00 AM (8 hours)'}
+              </p>
+            </div>
+          </div>
               
-              <div className="emp-dash-activity-item">
-                <div className="emp-dash-activity-icon emp-dash-lunch-icon">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="3"/>
-                    <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"/>
-                  </svg>
-                </div>
-                <div className="emp-dash-activity-content">
-                  <p className="emp-dash-activity-title">Lunch Break</p>
-                  <p className="emp-dash-activity-time">12:00 PM - 1:00 PM (Automatic)</p>
-                </div>
+          {shiftType === 'day' && (
+            <div className="emp-dash-activity-item">
+              <div className="emp-dash-activity-icon emp-dash-lunch-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"/>
+                </svg>
               </div>
+              <div className="emp-dash-activity-content">
+                <p className="emp-dash-activity-title">Lunch Break</p>
+                <p className="emp-dash-activity-time">12:00 PM - 1:00 PM (Automatic)</p>
+              </div>
+            </div>
+          )}
+
+          {shiftType === 'night' && (
+            <div className="emp-dash-activity-item">
+              <div className="emp-dash-activity-icon emp-dash-lunch-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+              </div>
+              <div className="emp-dash-activity-content">
+                <p className="emp-dash-activity-title">Night Shift</p>
+                <p className="emp-dash-activity-time">No Lunch Break</p>
+              </div>
+            </div>
+          )}
 
               <div className="emp-dash-activity-item">
                 <div className="emp-dash-activity-icon emp-dash-overtime-icon">
@@ -1049,7 +1942,9 @@ const DashboardEmployee = () => {
                 </div>
                 <div className="emp-dash-activity-content">
                   <p className="emp-dash-activity-title">Overtime</p>
-                  <p className="emp-dash-activity-time">After 5:00 PM</p>
+                  <p className="emp-dash-activity-time">
+                    {shiftType === 'day' ? 'After 5:00 PM' : 'After 6:00 AM'}
+                  </p>
                 </div>
               </div>
 
@@ -1061,7 +1956,7 @@ const DashboardEmployee = () => {
                 </div>
                 <div className="emp-dash-activity-content">
                   <p className="emp-dash-activity-title">Rest Days</p>
-                  <p className="emp-dash-activity-time">Saturday & Sunday</p>
+                  <p className="emp-dash-activity-time">Individual rest day assigned</p>
                 </div>
               </div>
             </div>

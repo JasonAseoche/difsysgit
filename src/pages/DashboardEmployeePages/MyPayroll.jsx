@@ -455,44 +455,6 @@ const handleViewPayslip = async (id) => {
                 <h4>{employeeInfo.firstName} {employeeInfo.lastName}</h4>
                 <p>{employeeInfo.position}</p>
               </div>
-              
-              <div className="myPayrollBenefitsModalFileSelector">
-                <label>Select Document:</label>
-                <select 
-                  value={currentFileType} 
-                  onChange={(e) => {
-                    e.stopPropagation();
-                    setSelectedBenefitsFile(e.target.value);
-                  }}
-                  onClick={(e) => e.stopPropagation()}
-                  className="myPayrollBenefitsFileSelector"
-                >
-                  {benefitTypes.map(type => (
-                    <option key={type} value={type}>{type}</option>
-                  ))}
-                </select>
-              </div>
-              
-              <div className="myPayrollBenefitsFileSummary">
-                <h5>Available Files:</h5>
-                <ul>
-                  {benefitTypes.map(type => (
-                    <li 
-                      key={type} 
-                      className={`${benefitsFiles[type] ? 'available' : 'unavailable'} ${type === currentFileType ? 'current' : ''}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedBenefitsFile(type);
-                      }}
-                    >
-                      <span className="file-status-indicator">
-                        {benefitsFiles[type] ? '✓' : '✗'}
-                      </span>
-                      <span className="file-type-name">{type}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
             </div>
             
             <div className="myPayrollBenefitsModalRight">

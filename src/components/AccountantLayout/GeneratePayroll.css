@@ -784,6 +784,7 @@
   font-size: 14px;
 }
 
+
 .generate-payroll-payroll-table th {
   background-color: #f9fafb;
   font-weight: 600;
@@ -1448,4 +1449,209 @@
 .gp-checkbox-cell {
   text-align: center;
   vertical-align: middle;
+}
+
+@media (max-width: 768px) {
+  .generate-payroll-all-employees-modal {
+    max-width: 100vw !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    padding: 8px;
+    margin: 0 !important;
+    border-radius: 0 !important;
+  }
+  
+  .generate-payroll-modal-header {
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+    border-bottom: 2px solid #e5e7eb;
+    padding: 16px;
+  }
+  
+  .generate-payroll-attendance-section {
+    padding: 0 !important;
+    overflow: hidden;
+  }
+  
+  /* Table container improvements */
+  .generate-payroll-payroll-table-container {
+    overflow-x: auto;
+    overflow-y: visible;
+    max-height: calc(100vh - 200px);
+    border: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Table adjustments */
+  .generate-payroll-payroll-table {
+    min-width: 2800px; /* Reduce from 3000px */
+    font-size: 10px; /* Smaller font */
+    overflow-y: hidden;
+  }
+  
+  .generate-payroll-payroll-table th,
+  .generate-payroll-payroll-table td {
+    padding: 6px 4px; /* Reduce padding */
+    font-size: 10px;
+    min-width: 80px; /* Reduce from 130px */
+    max-width: 80px;
+    white-space: nowrap;
+  }
+  
+  /* Sticky columns adjustments for mobile */
+  .generate-payroll-payroll-table th:first-child,
+  .generate-payroll-payroll-table td:first-child {
+    width: 80px;
+    min-width: 80px;
+    max-width: 80px;
+    left: 0;
+    z-index: 9 !important;
+  }
+  
+  .generate-payroll-payroll-table th:nth-child(2),
+  .generate-payroll-payroll-table td:nth-child(2) {
+    width: 180px; /* Reduce from 250px */
+    min-width: 180px;
+    max-width: 180px;
+    left: 79px; /* Adjust position */
+    padding-left: 8px;
+    z-index: 9 !important;
+  }
+  .gp-basic-pay {
+    z-index: 3 !important;
+    background-color: white !important;
+    position: relative;
+  }
+  
+  /* For Basic Pay headers specifically */
+  .generate-payroll-payroll-table thead .gp-basic-pay {
+    z-index: 4 !important;
+    background-color: #f9fafb !important;
+  }
+  
+  /* Avatar and name adjustments */
+  .generate-payroll-payroll-table .gp-small-avatar {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+  }
+  
+  .generate-payroll-payroll-table .generate-payroll-name {
+    font-size: 11px;
+  }
+  
+  /* Input field adjustments */
+  .generate-payroll-editable-input {
+    padding: 2px 4px;
+    font-size: 10px;
+    min-width: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .generate-payroll-all-employees-modal {
+    max-width: 100vw !important;
+    width: 100vw !important;
+    height: 70vh !important;
+    padding: 5px;
+    margin: 0 !important;
+    border-radius: 8px !important;
+  }
+  
+  .generate-payroll-modal-header {
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+    border-bottom: 2px solid #e5e7eb;
+    padding: 16px;
+  }
+  
+  .generate-payroll-attendance-section {
+    padding: 0 !important;
+    overflow: hidden;
+  }
+  
+  
+  /* Table container improvements */
+  .generate-payroll-payroll-table-container {
+    overflow-x: auto;
+    overflow-y: visible;
+    max-height: calc(100vh - 200px);
+    border: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Table adjustments */
+  .generate-payroll-payroll-table {
+    min-width: 2800px; /* Reduce from 3000px */
+    font-size: 10px; /* Smaller font */
+  }
+  
+  .generate-payroll-payroll-table th,
+  .generate-payroll-payroll-table td {
+    padding: 6px 4px; /* Reduce padding */
+    font-size: 10px;
+    min-width: 80px; /* Reduce from 130px */
+    max-width: 80px;
+    white-space: nowrap;
+  }
+  
+  /* Sticky columns adjustments for mobile */
+  .generate-payroll-payroll-table th:first-child,
+  .generate-payroll-payroll-table td:first-child {
+    width: 80px;
+    min-width: 80px;
+    max-width: 80px;
+    left: 0;
+    z-index: 9 !important;
+  }
+  
+  .generate-payroll-payroll-table th:nth-child(2),
+  .generate-payroll-payroll-table td:nth-child(2) {
+    width: 155px; /* Reduce from 250px */
+    min-width: 155px;
+    max-width: 155px;
+    left: 79px; /* Adjust position */
+    padding-left: 8px;
+    z-index: 9 !important;
+  }
+
+  .gp-basic-pay {
+    z-index: 3 !important;
+    background-color: white !important;
+    position: relative;
+  }
+  
+  /* For Basic Pay headers specifically */
+  .generate-payroll-payroll-table thead .gp-basic-pay {
+    z-index: 4 !important;
+    background-color: #f9fafb !important;
+  }
+  
+  /* Avatar and name adjustments */
+  .generate-payroll-payroll-table .gp-small-avatar {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+  }
+  
+  .generate-payroll-payroll-table .generate-payroll-name {
+    font-size: 11px;
+  }
+  
+  /* Input field adjustments */
+  .generate-payroll-editable-input {
+    padding: 2px 4px;
+    font-size: 10px;
+    min-width: 60px;
+  }
+}
+
+@media (min-width: 769px) {
+  .generate-payroll-payroll-table-container::after {
+    display: none;
+  }
 }

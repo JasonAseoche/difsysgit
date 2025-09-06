@@ -1,4 +1,4 @@
-import { Users, Clock, UserX, UserCheck, ChevronLeft, ChevronRight, Calendar, X, FileDown } from 'lucide-react';
+import { Users, Clock, UserX, UserCheck, ChevronLeft, ChevronRight, Calendar, X, FileDown, Loader } from 'lucide-react';
 import React, { useState, useEffect, useRef } from 'react';
 import '../../components/HRLayout/PerformanceEvaluation.css';
 import jsPDF from 'jspdf';
@@ -465,7 +465,7 @@ const PerformanceEvaluation = () => {
     return (
       <div className="performance-evaluation-page">
         <div className="performance-evaluation-loading">
-          <div className="performance-evaluation-loading-spinner"></div>
+          <Loader className="performance-evaluation-loading-spinner" />
           <p>Loading performance data...</p>
         </div>
       </div>

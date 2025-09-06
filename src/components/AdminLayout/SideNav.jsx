@@ -2,126 +2,37 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./SideNav.css";
+import difsyslogo from '../../assets/difsyslogo.png';
 
 function SideNav({ userRole = "admin" }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [activeItem, setActiveItem] = useState(location.pathname);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [userData, setUserData] = useState({
-    firstName: "",
-    lastName: "",
-    role: userRole,
-    profileImage: null
-  });
-  const dropdownRef = useRef(null);
+  const [isMinimized, setIsMinimized] = useState(false);
 
   // Get user data from localStorage and fetch from database if needed
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        // Get user data from localStorage
-        const storedUser = localStorage.getItem('user');
-        
-        if (storedUser) {
-          const parsedUser = JSON.parse(storedUser);
-          
-          // If we already have the name and role, use it directly
-          if (parsedUser.firstName && parsedUser.lastName && parsedUser.role) {
-            const userDataToSet = {
-              firstName: parsedUser.firstName,
-              lastName: parsedUser.lastName,
-              role: parsedUser.role,
-              profileImage: null
-            };
-            
-            setUserData(userDataToSet);
-            
-            // Also fetch profile image if user ID exists
-            if (parsedUser.id) {
-              try {
-                // Fix: Use fetch() properly and parse JSON response
-                const profileResponse = await fetch(`http://localhost/difsysapi/profile_management.php?id=${parsedUser.id}&type=user`);
-                const profileData = await profileResponse.json(); // Parse JSON
-                
-                if (profileData.success && profileData.data && profileData.data.profile_image) {
-                  setUserData(prev => ({
-                    ...prev,
-                    profileImage: profileData.data.profile_image
-                  }));
-                }
-              } catch (error) {
-                console.log('Could not fetch profile image:', error);
-              }
-            }
-          } 
-          // Otherwise fetch from the database using email
-          else if (parsedUser.email) {
-            const response = await axios.post(
-              'http://localhost/difsysapi/get_user_data.php',
-              { email: parsedUser.email },
-              {
-                headers: {
-                  'Content-Type': 'application/json'
-                }
-              }
-            );
-            
-            if (response.data.success) {
-              const user = response.data.user;
-              
-              // Update userData state
-              const userDataToSet = {
-                firstName: user.firstName,
-                lastName: user.lastName,
-                role: user.role,
-                profileImage: null
-              };
-              
-              setUserData(userDataToSet);
-              
-              // Update the localStorage with complete user data
-              const updatedUser = {
-                ...parsedUser,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                role: user.role
-              };
-              
-              localStorage.setItem('user', JSON.stringify(updatedUser));
-              
-              // Update userRole if it's being used elsewhere
-              localStorage.setItem('userRole', user.role);
-              
-              // Also fetch profile image if user ID exists
-              if (user.id) {
-                try {
-                  // Fix: Use fetch() properly and parse JSON response
-                  const profileResponse = await fetch(`http://localhost/difsysapi/profile_management.php?id=${user.id}&type=user`);
-                  const profileData = await profileResponse.json(); // Parse JSON
-                  
-                  if (profileData.success && profileData.data && profileData.data.profile_image) {
-                    setUserData(prev => ({
-                      ...prev,
-                      profileImage: profileData.data.profile_image
-                    }));
-                  }
-                } catch (error) {
-                  console.log('Could not fetch profile image:', error);
-                }
-              }
-            }
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
+  
+
+  const toggleSidenav = () => {
+    // Only allow minimization on screens larger than 768px
+    if (window.innerWidth <= 768) {
+      return; // Do nothing on mobile
+    }
     
-    fetchUserData();
-  }, []);
+    setIsMinimized(!isMinimized);
+    
+    // Find all dashboard content elements and toggle the class
+    const dashboardContents = document.querySelectorAll('.dashboard-contents1');
+    dashboardContents.forEach(element => {
+      if (!isMinimized) {
+        element.classList.add('sidenav-minimized');
+      } else {
+        element.classList.remove('sidenav-minimized');
+      }
+    });
+  };
 
   const handleItemClick = (path) => {
     setActiveItem(path);
@@ -199,18 +110,7 @@ function SideNav({ userRole = "admin" }) {
   };
 
   // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  
 
   // Close mobile menu when screen size changes to desktop
   useEffect(() => {
@@ -224,24 +124,10 @@ function SideNav({ userRole = "admin" }) {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Get user initials for avatar
-  const getUserInitials = () => {
-    if (userData.firstName && userData.lastName) {
-      return `${userData.firstName.charAt(0)}${userData.lastName.charAt(0)}`;
-    }
-    return "U"; // Default if no name is available
-  };
-
-  // Format role text for display (capitalize first letter)
-  const formatRoleText = (role) => {
-    if (!role) return "";
-    return role.charAt(0).toUpperCase() + role.slice(1);
-  };
-
   // Navigation items based on user role - using your existing code
   const getNavItems = () => {
     // Using userData.role instead of userRole prop to ensure consistency
-    switch (userData.role.toLowerCase()) {
+    switch (userRole.toLowerCase()) {
       case "applicant":
         return [
           { 
@@ -283,6 +169,15 @@ function SideNav({ userRole = "admin" }) {
               </svg>
             ), 
             text: "Set Up Your Profile" 
+          },
+          { 
+            path: "/profile", 
+            icon: (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z" fill="currentColor"/>
+              </svg>
+                  ), 
+            text: "Profile" 
           }
         ];
       
@@ -291,23 +186,32 @@ function SideNav({ userRole = "admin" }) {
           { 
             path: "/dashboard-hr", 
             icon: (
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <rect x="3" y="3" width="6" height="6" rx="1" fill="currentColor"/>
-                <rect x="11" y="3" width="6" height="6" rx="1" fill="currentColor"/>
-                <rect x="3" y="11" width="6" height="6" rx="1" fill="currentColor"/>
-                <rect x="11" y="11" width="6" height="6" rx="1" fill="currentColor"/>
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-dashboard-icon lucide-layout-dashboard"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
             ), 
             text: "Dashboard" 
           },
           { 
             path: "/manage-employee", 
             icon: (
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M16 8C17.1 8 18 7.1 18 6C18 4.9 17.1 4 16 4C14.9 4 14 4.9 14 6C14 7.1 14.9 8 16 8ZM8 8C9.1 8 10 7.1 10 6C10 4.9 9.1 4 8 4C6.9 4 6 4.9 6 6C6 7.1 6.9 8 8 8ZM8 10C5.67 10 1 11.17 1 13.5V16H15V13.5C15 11.17 10.33 10 8 10ZM16 10C15.71 10 15.38 10.02 15.03 10.05C16.19 10.89 17 12.02 17 13.5V16H19V13.5C19 11.17 17.33 10 16 10Z" fill="currentColor"/>
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users-round-icon lucide-users-round"><path d="M18 21a8 8 0 0 0-16 0"/><circle cx="10" cy="8" r="5"/><path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3"/></svg>
             ), 
             text: "Manage Employee" 
+          },
+          { 
+            path: "/manage-department", 
+              icon: (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-building-icon lucide-building"><rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg>
+
+              ), 
+              text: "Manage Department"
+          },
+          { 
+            path: "/manage-events", 
+              icon: (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-building-icon lucide-building"><rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg>
+
+              ), 
+              text: "Manage Events"
           },
           { 
             path: "/attendance-tracking", 
@@ -330,36 +234,28 @@ function SideNav({ userRole = "admin" }) {
           { 
             path: "/leave-management", 
             icon: (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M7 2V4H5C3.9 4 3 4.9 3 6V20C3 21.1 3.9 22 5 22H19C20.1 22 21 21.1 21 20V6C21 4.9 20.1 4 19 4H17V2H15V4H9V2H7ZM19 20H5V9H19V20ZM16.59 13.58L11 19.17L8.41 16.58L7 18L11 22L18 15L16.59 13.58Z" fill="currentColor"/>
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-fold-icon lucide-calendar-fold"><path d="M8 2v4"/><path d="M16 2v4"/><path d="M21 17V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11Z"/><path d="M3 10h18"/><path d="M15 22v-4a2 2 0 0 1 2-2h4"/></svg>
             ), 
             text: "Leave Management" 
           },
           { 
             path: "/applicants-tracking", 
             icon: (
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M12 6C12 8.21 10.21 10 8 10C5.79 10 4 8.21 4 6C4 3.79 5.79 2 8 2C10.21 2 12 3.79 12 6ZM14 6C14 2.69 11.31 0 8 0C4.69 0 2 2.69 2 6C2 9.31 4.69 12 8 12C11.31 12 14 9.31 14 6ZM2 17V18H14V17C14 14.34 8.67 13 8 13C7.33 13 2 14.34 2 17ZM0 17C0 13.67 5.33 11 8 11C10.67 11 16 13.67 16 17V20H0V17Z" fill="currentColor"/>
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round-search-icon lucide-user-round-search"><circle cx="10" cy="8" r="5"/><path d="M2 21a8 8 0 0 1 10.434-7.62"/><circle cx="18" cy="18" r="3"/><path d="m22 22-1.9-1.9"/></svg>
             ), 
             text: "Applicants Tracking" 
           },
           { 
             path: "/manage-hiring", 
             icon: (
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M12 6C12 8.21 10.21 10 8 10C5.79 10 4 8.21 4 6C4 3.79 5.79 2 8 2C10.21 2 12 3.79 12 6ZM14 6C14 2.69 11.31 0 8 0C4.69 0 2 2.69 2 6C2 9.31 4.69 12 8 12C11.31 12 14 9.31 14 6ZM2 17V18H14V17C14 14.34 8.67 13 8 13C7.33 13 2 14.34 2 17ZM0 17C0 13.67 5.33 11 8 11C10.67 11 16 13.67 16 17V20H0V17Z" fill="currentColor"/>
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-cog-icon lucide-file-cog"><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="m2.305 15.53.923-.382"/><path d="m3.228 12.852-.924-.383"/><path d="M4.677 21.5a2 2 0 0 0 1.313.5H18a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v2.5"/><path d="m4.852 11.228-.383-.923"/><path d="m4.852 16.772-.383.924"/><path d="m7.148 11.228.383-.923"/><path d="m7.53 17.696-.382-.924"/><path d="m8.772 12.852.923-.383"/><path d="m8.772 15.148.923.383"/><circle cx="6" cy="14" r="3"/></svg>
             ), 
             text: "Manage Hiring" 
           },
           { 
             path: "/manage-examination", 
             icon: (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M9 2C8.45 2 8 2.45 8 3V4H6C4.9 4 4 4.9 4 6V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V6C20 4.9 19.1 4 18 4H16V3C16 2.45 15.55 2 15 2H9ZM10 4H14V5H10V4ZM12 17L8.5 13.5L9.91 12.09L12 14.17L16.09 10.09L17.5 11.5L12 17Z" fill="currentColor"/>
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-check-icon lucide-book-open-check"><path d="M12 21V7"/><path d="m16 12 2 2 4-4"/><path d="M22 6V4a1 1 0 0 0-1-1h-5a4 4 0 0 0-4 4 4 4 0 0 0-4-4H3a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h6a3 3 0 0 1 3 3 3 3 0 0 1 3-3h6a1 1 0 0 0 1-1v-1.3"/></svg>
             ), 
             text: "Manage Examination" 
           },
@@ -389,12 +285,7 @@ function SideNav({ userRole = "admin" }) {
           { 
             path: "/dashboard-accountant", 
             icon: (
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <rect x="3" y="3" width="6" height="6" rx="1" fill="currentColor"/>
-                <rect x="11" y="3" width="6" height="6" rx="1" fill="currentColor"/>
-                <rect x="3" y="11" width="6" height="6" rx="1" fill="currentColor"/>
-                <rect x="11" y="11" width="6" height="6" rx="1" fill="currentColor"/>
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-dashboard-icon lucide-layout-dashboard"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
             ), 
             text: "Dashboard" 
           },
@@ -421,21 +312,14 @@ function SideNav({ userRole = "admin" }) {
           { 
             path: "/generate-payroll", 
             icon: (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M6 2C4.9 2 4 2.9 4 4v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6H6z" fill="currentColor"/>
-                <path d="M13 3.5L18.5 9H13V3.5z" fill="currentColor"/>
-                <path d="M9 14h2.5c1.1 0 2-.9 2-2s-.9-2-2-2H9v-1H8v1H7v1h1v4H7v1h1v1h1v-1h1.5c1.66 0 3-1.34 3-3s-1.34-3-3-3H9v4z" fill="#fff"/>
-                <path d="M9 10h2.5a2 2 0 010 4H9v-4z" fill="currentColor"/>
-              </svg>
-
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-philippine-peso-icon lucide-philippine-peso"><path d="M20 11H4"/><path d="M20 7H4"/><path d="M7 21V4a1 1 0 0 1 1-1h4a1 1 0 0 1 0 12H7"/></svg>
             ), 
             text: "Generate Payroll" 
           },
           { 
             path: "/manage-payroll", 
             icon: (
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" fill="currentColor"></path></svg>
-              
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings-icon lucide-settings"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>
 
             ), 
             text: "Manage Payroll" 
@@ -443,9 +327,7 @@ function SideNav({ userRole = "admin" }) {
           { 
             path: "/benefits", 
             icon: (
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M10 0L2 3V9.09C2 14.14 5.41 18.85 10 20C14.59 18.85 18 14.14 18 9.09V3L10 0ZM10 11H16C15.47 14.11 13.31 16.78 10 17.93V11H4V4.95L10 2.68V11Z" fill="currentColor"/>
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-handshake-icon lucide-handshake"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg>
             ), 
             text: "Benefits" 
           },
@@ -465,12 +347,7 @@ function SideNav({ userRole = "admin" }) {
           { 
             path: "/dashboard-employee", 
             icon: (
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <rect x="3" y="3" width="6" height="6" rx="1" fill="currentColor"/>
-                <rect x="11" y="3" width="6" height="6" rx="1" fill="currentColor"/>
-                <rect x="3" y="11" width="6" height="6" rx="1" fill="currentColor"/>
-                <rect x="11" y="11" width="6" height="6" rx="1" fill="currentColor"/>
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-dashboard-icon lucide-layout-dashboard"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
             ), 
             text: "Dashboard" 
           },
@@ -492,13 +369,13 @@ function SideNav({ userRole = "admin" }) {
                 <path d="M3 7h18v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
               </svg>
             ), 
-            text: "Manage myDocuments" 
+            text: "Manage Documents" 
           },
           { 
             path: "/my-payroll", 
             icon: (
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                stroke-width="2.9" stroke-linecap="round" stroke-linejoin="round">
               <rect x="2" y="6" width="20" height="12" rx="2" ry="2"/>
               <circle cx="12" cy="12" r="2"/>
               <path d="M6 12h.01M18 12h.01"/>
@@ -542,12 +419,7 @@ function SideNav({ userRole = "admin" }) {
     { 
       path: "/dashboard-supervisor", 
       icon: (
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <rect x="3" y="3" width="6" height="6" rx="1" fill="currentColor"/>
-          <rect x="11" y="3" width="6" height="6" rx="1" fill="currentColor"/>
-          <rect x="3" y="11" width="6" height="6" rx="1" fill="currentColor"/>
-          <rect x="11" y="11" width="6" height="6" rx="1" fill="currentColor"/>
-        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-dashboard-icon lucide-layout-dashboard"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
       ), 
       text: "Dashboard" 
     },
@@ -614,12 +486,7 @@ function SideNav({ userRole = "admin" }) {
           { 
             path: "/dashboard-admin", 
             icon: (
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <rect x="3" y="3" width="6" height="6" rx="1" fill="currentColor"/>
-                <rect x="11" y="3" width="6" height="6" rx="1" fill="currentColor"/>
-                <rect x="3" y="11" width="6" height="6" rx="1" fill="currentColor"/>
-                <rect x="11" y="11" width="6" height="6" rx="1" fill="currentColor"/>
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-dashboard-icon lucide-layout-dashboard"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
             ), 
             text: "Dashboard" 
           },
@@ -652,13 +519,13 @@ function SideNav({ userRole = "admin" }) {
             text: "About" 
           },
           { 
-            path: "/contact", 
+            path: "/test-attendance", 
             icon: (
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M2 3C2 2.45 2.45 2 3 2H17C17.55 2 18 2.45 18 3V14C18 14.55 17.55 15 17 15H6L2 19V3Z" fill="currentColor"/>
               </svg>
             ), 
-            text: "Contact" 
+            text: "Test Attendance" 
           },
           { 
             path: "/profile", 
@@ -691,98 +558,37 @@ function SideNav({ userRole = "admin" }) {
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && <div className="mobile-menu-overlay1" onClick={() => setMobileMenuOpen(false)}></div>}
 
+      
+
       {/* Desktop Sidenav / Mobile Menu */}
-      <div className={`sidenav1 ${mobileMenuOpen ? 'mobile-open1' : ''}`}>
-        {/* User Profile Section - Visible on both Desktop and Mobile */}
-        <div className="user-profile1">
-          <div className="user-avatar1">
-          {userData.profileImage ? (
-            <img 
-              src={userData.profileImage.startsWith('http') ? userData.profileImage : `http://localhost/difsysapi/${userData.profileImage}`} 
-              alt="Profile" 
-              style={{
-                width: '100%',
-                height: '100%',
-                borderRadius: '50%',
-                objectFit: 'cover'
-              }}
-              onError={(e) => {
-                e.target.style.display = 'none';
-                e.target.nextSibling.style.display = 'block';
-              }}
-            />
-          ) : null}
-          <span style={{ display: userData.profileImage ? 'none' : 'block' }}>
-            {getUserInitials()}
-          </span>
-          </div>
-          <div className="user-info1" ref={dropdownRef}>
-            <div className="user-details1">
-              <span className="user-name1">{userData.firstName} {userData.lastName}</span>
-              <span className="user-role1">{formatRoleText(userData.role)}</span>
-            </div>
-            <div className="dropdown-icon1" onClick={toggleDropdown}>
-              <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
-                <path d="M1 1L6 6L11 1" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
-            
-            {/* User Dropdown Menu */}
-            {dropdownOpen && (
-              <div className="user-dropdown-menu1">
-                <Link to="/profile" className="dropdown-item1">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M8 8C10.21 8 12 6.21 12 4C12 1.79 10.21 0 8 0C5.79 0 4 1.79 4 4C4 6.21 5.79 8 8 8Z" fill="currentColor"/>
-                    <path d="M8 10C5.33 10 0 11.34 0 14V16H16V14C16 11.34 10.67 10 8 10Z" fill="currentColor"/>
-                  </svg>
-                  View Profile
-                </Link>
-                <Link to="/change-password" className="dropdown-item1">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M13 5H11V3.5C11 1.57 9.43 0 7.5 0C5.57 0 4 1.57 4 3.5V5H2C1.45 5 1 5.45 1 6V14C1 14.55 1.45 15 2 15H13C13.55 15 14 14.55 14 14V6C14 5.45 13.55 5 13 5ZM5.5 3.5C5.5 2.4 6.4 1.5 7.5 1.5C8.6 1.5 9.5 2.4 9.5 3.5V5H5.5V3.5Z" fill="currentColor"/>
-                  </svg>
-                  Change Password
-                </Link>
-                <button 
-                  onClick={handleLogout} 
-                  className="dropdown-item1"
-                  style={{
-                    background: 'transparent',
-                    border: 'none',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: '10px 15px',
-                    width: '100%',
-                    textAlign: 'left'
-                  }}
-                >
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M6 12H4V4H6V2H0V14H6V12Z" fill="currentColor"/>
-                    <path d="M7 5L9 5V2H16V14H9V11H7V15H18V1H7V5Z" fill="currentColor"/>
-                    <path d="M10 8L7 6V7H1V9H7V10L10 8Z" fill="currentColor"/>
-                  </svg>
-                  Logout
-                </button>
+      <div className={`sidenav1 ${mobileMenuOpen ? 'mobile-open1' : ''} ${isMinimized ? 'minimized' : ''}`} onClick={window.innerWidth > 768 ? toggleSidenav : undefined}>
+        {/* Navigation Items - Based on Role */}
+          {/* Logo container */}
+          <div className="logo-container1">
+            <img src={difsyslogo} alt="DIFSYS Logo" />
+            {!isMinimized && (
+              <div className="logo-text1">
+                <span className="logo-title1">Digitally Intelligent Facility</span>
+                <span className="logo-subtitle1">System Inc.</span>
               </div>
             )}
           </div>
-        </div>
-
-        {/* Navigation Items - Based on Role */}
         <div className="nav-items1">
           {navItems.map((item, index) => (
             <Link 
-              key={index}
-              to={item.path} 
-              className={`nav-item1 secondary1 ${activeItem === item.path ? 'active1' : ''}`}
-              onClick={() => handleItemClick(item.path)}
-            >
-              <div className="nav-icon1">
-                {item.icon}
-              </div>
-              <span>{item.text}</span>
-            </Link>
+            key={index}
+            to={item.path} 
+            className={`nav-item1 secondary1 ${activeItem === item.path ? 'active1' : ''}`}
+            onClick={(e) => {
+              e.stopPropagation(); // Prevent sidenav toggle when clicking nav items
+              handleItemClick(item.path);
+            }}
+          >
+            <div className="nav-icon1">
+              {item.icon}
+            </div>
+            {!isMinimized && <span>{item.text}</span>}
+          </Link>
           ))}
         </div>
       </div>

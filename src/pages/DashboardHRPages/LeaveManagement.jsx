@@ -43,6 +43,20 @@ const LeaveManagement = () => {
   const [showPrompt, setShowPrompt] = useState(false);
   const [promptData, setPromptData] = useState({ title: '', message: '', onConfirm: null });
   const [promptValue, setPromptValue] = useState('');
+  const [activeTab, setActiveTab] = useState('requests');
+  
+  // Leave Credits Management
+  const [leaveCredits, setLeaveCredits] = useState([]);
+  const [showCreditsModal, setShowCreditsModal] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [creditsForm, setCreditsForm] = useState({
+    vacation_credits: 15,
+    sick_credits: 10
+  });
+
+  // Pagination for leave credits table
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
 
   useEffect(() => {
     // Trigger entrance animation
@@ -50,8 +64,9 @@ const LeaveManagement = () => {
       setIsLoaded(true);
     }, 100);
     
-    // Load leave requests
+    // Load leave requests and credits
     loadLeaveRequests();
+    loadLeaveCredits();
     
     return () => clearTimeout(timer);
   }, []);
@@ -84,7 +99,6 @@ const LeaveManagement = () => {
       if (response.data.success) {
         // Process requests to include profile images
         const processedRequests = await Promise.all(response.data.data.map(async (request) => {
-          // Fetch employee profile image from useraccounts table
           try {
             const profileResponse = await api.get('/attendance_api.php', {
               params: {
@@ -119,11 +133,29 @@ const LeaveManagement = () => {
     }
   };
 
+  const loadLeaveCredits = async () => {
+    try {
+      const response = await api.get('/leave_management.php', {
+        params: {
+          action: 'leave_credits'
+        }
+      });
+      
+      if (response.data.success) {
+        setLeaveCredits(response.data.data);
+      } else {
+        console.error('Failed to load leave credits:', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error loading leave credits:', error);
+    }
+  };
+
   const renderEmployeeAvatar = (request) => {
     const initials = request.name ? request.name.split(' ').map(n => n[0]).join('') : 'N/A';
     
     return (
-      <div className="leave-avatar">
+      <div className="hr-leave-employee-avatar">
         {request.profile_image ? (
           <img 
             src={request.profile_image.startsWith('http') ? request.profile_image : `http://localhost/difsysapi/${request.profile_image}`} 
@@ -147,7 +179,7 @@ const LeaveManagement = () => {
           justifyContent: 'center',
           width: '100%',
           height: '100%',
-          fontSize: '14px',
+          fontSize: '16px',
           fontWeight: 'bold'
         }}>
           {initials}
@@ -180,13 +212,13 @@ const LeaveManagement = () => {
     }
   };
 
-  const handleStatusUpdate = async (status, comments = '') => {
+  const handleHRStatusUpdate = async (status, comments = '') => {
     if (!selectedRequest) return;
     
     try {
       setLoading(true);
       
-      const response = await api.put('/leave_management.php?action=update_status', {
+      const response = await api.put('/leave_management.php?action=update_hr_status', {
         leave_id: selectedRequest.id,
         status: status,
         comments: comments,
@@ -204,7 +236,6 @@ const LeaveManagement = () => {
     } catch (error) {
       console.error('Error updating leave request:', error);
       
-      // Better error handling
       let errorMessage = 'An error occurred while updating the leave request';
       if (error.response && error.response.data && error.response.data.message) {
         errorMessage = error.response.data.message;
@@ -222,7 +253,7 @@ const LeaveManagement = () => {
     try {
       setLoading(true);
       
-      const response = await api.put('/leave_management.php?action=update_status', {
+      const response = await api.put('/leave_management.php?action=update_hr_status', {
         leave_id: request.leave_id,
         status: 'Approved',
         comments: 'Approved by HR'
@@ -258,12 +289,11 @@ const LeaveManagement = () => {
     );
   };
 
-
   const declineRequest = async (request, reason) => {
     try {
       setLoading(true);
       
-      const response = await api.put('/leave_management.php?action=update_status', {
+      const response = await api.put('/leave_management.php?action=update_hr_status', {
         leave_id: request.leave_id,
         status: 'Rejected',
         comments: reason
@@ -290,6 +320,7 @@ const LeaveManagement = () => {
       setLoading(false);
     }
   };
+  
   const handleDecline = async (request) => {
     showCustomPrompt(
       'Decline Request',
@@ -303,7 +334,7 @@ const LeaveManagement = () => {
       'Confirm Approval',
       'Are you sure you want to approve this leave request?',
       () => {
-        handleStatusUpdate('Approved', 'Approved by HR');
+        handleHRStatusUpdate('Approved', 'Approved by HR');
       }
     );
   };
@@ -313,14 +344,77 @@ const LeaveManagement = () => {
       'Decline Request',
       'Please provide a reason for declining this leave request:',
       (reason) => {
-        handleStatusUpdate('Rejected', reason);
+        handleHRStatusUpdate('Rejected', reason);
+      }
+    );
+  };
+
+  // Leave Credits Management Functions
+  const handleEditCredits = (employee) => {
+    setSelectedEmployee(employee);
+    setCreditsForm({
+      vacation_credits: employee.vacation_credits,
+      sick_credits: employee.sick_credits
+    });
+    setShowCreditsModal(true);
+  };
+
+  const handleUpdateCredits = async () => {
+    try {
+      setLoading(true);
+      
+      const response = await api.put('/leave_management.php?action=update_leave_credits', {
+        emp_id: selectedEmployee.emp_id,
+        vacation_credits: creditsForm.vacation_credits,
+        sick_credits: creditsForm.sick_credits
+      });
+
+      if (response.data.success) {
+        showCustomAlert('success', 'Success', 'Leave credits updated successfully');
+        setShowCreditsModal(false);
+        await loadLeaveCredits();
+      } else {
+        showCustomAlert('error', 'Error', 'Failed to update leave credits: ' + response.data.message);
+      }
+    } catch (error) {
+      console.error('Error updating leave credits:', error);
+      showCustomAlert('error', 'Error', 'An error occurred while updating leave credits');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResetCredits = async (employee) => {
+    showCustomConfirm(
+      'Reset Leave Credits',
+      `Are you sure you want to reset ${employee.name}'s used leave credits to 0?`,
+      async () => {
+        try {
+          setLoading(true);
+          
+          const response = await api.put('/leave_management.php?action=reset_leave_credits', {
+            emp_id: employee.emp_id
+          });
+
+          if (response.data.success) {
+            showCustomAlert('success', 'Success', 'Leave credits reset successfully');
+            await loadLeaveCredits();
+          } else {
+            showCustomAlert('error', 'Error', 'Failed to reset leave credits: ' + response.data.message);
+          }
+        } catch (error) {
+          console.error('Error resetting leave credits:', error);
+          showCustomAlert('error', 'Error', 'An error occurred while resetting leave credits');
+        } finally {
+          setLoading(false);
+        }
       }
     );
   };
 
   useEffect(() => {
-      document.title = "DIFSYS | LEAVE MANAGEMENT";
-    }, []);
+    document.title = "DIFSYS | LEAVE MANAGEMENT";
+  }, []);
 
   const filteredRequests = leaveRequests.filter(request =>
     request.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -328,119 +422,252 @@ const LeaveManagement = () => {
     request.leaveType.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  if (loading && leaveRequests.length === 0) {
+  const filteredCredits = leaveCredits.filter(credit =>
+    credit.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (credit.position && credit.position.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
+
+  // Pagination calculations for leave credits
+  const totalPages = Math.ceil(filteredCredits.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentCreditsData = filteredCredits.slice(startIndex, endIndex);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const renderPaginationButtons = () => {
+    const buttons = [];
+    
+    for (let i = 1; i <= Math.min(totalPages, 5); i++) {
+      buttons.push(
+        <button
+          key={i}
+          onClick={() => handlePageChange(i)}
+          className={`hr-leave-pagination-btn ${currentPage === i ? 'hr-leave-pagination-active' : ''}`}
+        >
+          {i.toString().padStart(2, '0')}
+        </button>
+      );
+    }
+    
+    if (totalPages > 5) {
+      buttons.push(
+        <span key="dots" className="hr-leave-pagination-dots">...</span>
+      );
+      buttons.push(
+        <button
+          key={totalPages}
+          onClick={() => handlePageChange(totalPages)}
+          className={`hr-leave-pagination-btn ${currentPage === totalPages ? 'hr-leave-pagination-active' : ''}`}
+        >
+          {totalPages.toString().padStart(2, '0')}
+        </button>
+      );
+    }
+    
+    return buttons;
+  };
+
+  if (loading && leaveRequests.length === 0 && leaveCredits.length === 0) {
     return (
-      <main className="leave-management">
-        <div className="leave-loading">
-          <p>Loading leave requests...</p>
+      <main className="hr-leave-container">
+        <div className="hr-leave-loading-state">
+          <p>Loading...</p>
         </div>
       </main>
     );
   }
 
   return (
-    <main className={`leave-management ${isLoaded ? 'leave-loaded' : ''}`}>
+    <main className={`hr-leave-container ${isLoaded ? 'hr-leave-active' : ''}`}>
       {/* Loading overlay */}
       {loading && (
-          <div className="leave-loading-overlay">
-            <div className="leave-loading-content">
-              <div className="leave-loading-spinner"></div>
-              <p>Processing...</p>
+        <div className="hr-leave-overlay">
+          <div className="hr-leave-spinner-wrapper">
+            <div className="hr-leave-spinner"></div>
+            <p>Processing...</p>
+          </div>
+        </div>
+      )}
+
+      {/* Custom Alert Dialog */}
+      {showAlert && (
+        <div className="hr-leave-alert-overlay">
+          <div className={`hr-leave-alert-box hr-leave-alert-${alertData.type}`}>
+            <div className="hr-leave-alert-icon">
+              {alertData.type === 'success' ? '✓' : '✕'}
+            </div>
+            <h3>{alertData.title}</h3>
+            <p>{alertData.message}</p>
+            <button 
+              className="hr-leave-alert-button"
+              onClick={() => setShowAlert(false)}
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Custom Confirm Dialog */}
+      {showConfirm && (
+        <div className="hr-leave-confirm-overlay">
+          <div className="hr-leave-confirm-box">
+            <h3>{confirmData.title}</h3>
+            <p>{confirmData.message}</p>
+            <div className="hr-leave-confirm-buttons">
+              <button 
+                className="hr-leave-action-btn hr-leave-btn-cancel"
+                onClick={() => setShowConfirm(false)}
+              >
+                Cancel
+              </button>
+              <button 
+                className="hr-leave-action-btn hr-leave-btn-confirm"
+                onClick={() => {
+                  setShowConfirm(false);
+                  if (confirmData.onConfirm) confirmData.onConfirm();
+                }}
+              >
+                Confirm
+              </button>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* Custom Alert Dialog */}
-{showAlert && (
-  <div className="leave-alert-overlay">
-    <div className={`leave-alert-dialog leave-alert-${alertData.type}`}>
-      <div className="leave-alert-icon">
-        {alertData.type === 'success' ? '✓' : '✕'}
-      </div>
-      <h3>{alertData.title}</h3>
-      <p>{alertData.message}</p>
-      <button 
-        className="leave-alert-btn"
-        onClick={() => setShowAlert(false)}
-      >
-        OK
-      </button>
-    </div>
-  </div>
-)}
+      {/* Custom Prompt Dialog */}
+      {showPrompt && (
+        <div className="hr-leave-prompt-overlay">
+          <div className="hr-leave-prompt-box">
+            <h3>{promptData.title}</h3>
+            <p>{promptData.message}</p>
+            <textarea
+              className="hr-leave-text-area"
+              value={promptValue}
+              onChange={(e) => setPromptValue(e.target.value)}
+              placeholder="Enter your reason here..."
+            />
+            <div className="hr-leave-prompt-buttons">
+              <button 
+                className="hr-leave-action-btn hr-leave-btn-cancel"
+                onClick={() => setShowPrompt(false)}
+              >
+                Cancel
+              </button>
+              <button 
+                className="hr-leave-action-btn hr-leave-btn-confirm"
+                onClick={() => {
+                  if (promptValue.trim()) {
+                    setShowPrompt(false);
+                    if (promptData.onConfirm) promptData.onConfirm(promptValue);
+                  } else {
+                    showCustomAlert('error', 'Required', 'Please provide a reason for declining');
+                  }
+                }}
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
-{/* Custom Confirm Dialog */}
-{showConfirm && (
-  <div className="leave-confirm-overlay">
-    <div className="leave-confirm-dialog">
-      <h3>{confirmData.title}</h3>
-      <p>{confirmData.message}</p>
-      <div className="leave-confirm-actions">
-        <button 
-          className="leave-confirm-btn leave-confirm-btn-cancel"
-          onClick={() => setShowConfirm(false)}
-        >
-          Cancel
-        </button>
-        <button 
-          className="leave-confirm-btn leave-confirm-btn-confirm"
-          onClick={() => {
-            setShowConfirm(false);
-            if (confirmData.onConfirm) confirmData.onConfirm();
-          }}
-        >
-          Confirm
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+      {/* Leave Credits Modal */}
+      {showCreditsModal && selectedEmployee && (
+        <div className="hr-leave-modal-backdrop">
+          <div className="hr-leave-modal-window">
+            <div className="hr-leave-modal-header">
+              <h3>Edit Leave Credits - {selectedEmployee.name}</h3>
+              <button 
+                className="hr-leave-modal-close"
+                onClick={() => {
+                  setShowCreditsModal(false);
+                  setSelectedEmployee(null);
+                }}
+              >
+                ×
+              </button>
+            </div>
+            
+            <div className="hr-leave-modal-body">
+              <div className="hr-leave-credits-form">
+                <div className="hr-leave-detail-group">
+                  <label>Vacation Leave Credits</label>
+                  <input
+                    type="number"
+                    value={selectedEmployee.remaining_vacation}
+                    onChange={(e) => setCreditsForm({
+                      ...creditsForm,
+                      vacation_credits: parseInt(e.target.value) || 0
+                    })}
+                    min="0"
+                    max="50"
+                    style={{
+                      padding: '8px 12px',
+                      border: '1px solid #ddd',
+                      borderRadius: '4px',
+                      fontSize: '14px'
+                    }}
+                  />
+                </div>
+                
+                <div className="hr-leave-detail-group">
+                  <label>Sick Leave Credits</label>
+                  <input
+                    type="number"
+                    value={selectedEmployee.remaining_sick}
+                    onChange={(e) => setCreditsForm({
+                      ...creditsForm,
+                      sick_credits: parseInt(e.target.value) || 0
+                    })}
+                    min="0"
+                    max="30"
+                    style={{
+                      padding: '8px 12px',
+                      border: '1px solid #ddd',
+                      borderRadius: '4px',
+                      fontSize: '14px'
+                    }}
+                  />
+                </div>
 
-{/* Custom Prompt Dialog */}
-{showPrompt && (
-  <div className="leave-prompt-overlay">
-    <div className="leave-prompt-dialog">
-      <h3>{promptData.title}</h3>
-      <p>{promptData.message}</p>
-      <textarea
-        className="leave-prompt-input"
-        value={promptValue}
-        onChange={(e) => setPromptValue(e.target.value)}
-        placeholder="Enter your reason here..."
-      />
-      <div className="leave-prompt-actions">
-        <button 
-          className="leave-confirm-btn leave-confirm-btn-cancel"
-          onClick={() => setShowPrompt(false)}
-        >
-          Cancel
-        </button>
-        <button 
-          className="leave-confirm-btn leave-confirm-btn-confirm"
-          onClick={() => {
-            if (promptValue.trim()) {
-              setShowPrompt(false);
-              if (promptData.onConfirm) promptData.onConfirm(promptValue);
-            } else {
-              showCustomAlert('error', 'Required', 'Please provide a reason for declining');
-            }
-          }}
-        >
-          Submit
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+                <div className="hr-leave-detail-group">
+                  <label>Current Usage</label>
+                  <p>Vacation Used: {selectedEmployee.used_vacation} | Sick Used: {selectedEmployee.used_sick}</p>
+                </div>
+              </div>
+
+              <div className="hr-leave-modal-footer">
+                <button 
+                  className="hr-leave-action-button hr-leave-btn-cancel"
+                  onClick={() => setShowCreditsModal(false)}
+                >
+                  Cancel
+                </button>
+                <button 
+                  className="hr-leave-action-button hr-leave-btn-approve"
+                  onClick={handleUpdateCredits}
+                  disabled={loading}
+                >
+                  {loading ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* View Details Modal */}
       {showViewDetails && selectedRequest && (
-        <div className="leave-modal-overlay">
-          <div className="leave-modal">
-            <div className="leave-modal-header">
+        <div className="hr-leave-modal-backdrop">
+          <div className="hr-leave-modal-window">
+            <div className="hr-leave-modal-header">
               <h3>Leave Request Details</h3>
               <button 
-                className="leave-close-btn"
+                className="hr-leave-modal-close"
                 onClick={() => {
                   setShowViewDetails(false);
                   setSelectedRequest(null);
@@ -450,9 +677,9 @@ const LeaveManagement = () => {
               </button>
             </div>
             
-            <div className="leave-modal-content">
-              <div className="leave-employee-info-detailed">
-              <div className="leave-avatar-large">
+            <div className="hr-leave-modal-body">
+              <div className="hr-leave-employee-detailed">
+                <div className="hr-leave-avatar-large">
                   {selectedRequest.profile_image ? (
                     <img 
                       src={selectedRequest.profile_image.startsWith('http') ? selectedRequest.profile_image : `http://localhost/difsysapi/${selectedRequest.profile_image}`} 
@@ -466,30 +693,23 @@ const LeaveManagement = () => {
                       }}
                     />
                   ) : (
-                    <span>{selectedRequest.name.split(' ').map(n => n[0]).join('')}</span>
+                    <span>{selectedRequest.name ? selectedRequest.name.split(' ').map(n => n[0]).join('') : 'N/A'}</span>
                   )}
                 </div>
-                <div className="leave-employee-details-large">
+                <div className="hr-leave-employee-detailed-info">
                   <h3>{selectedRequest.employeeName || selectedRequest.name}</h3>
                   <p>{selectedRequest.employeePosition || selectedRequest.role}</p>
                   <p>{selectedRequest.employeeEmail || selectedRequest.email}</p>
                 </div>
               </div>
 
-              <div className="leave-details-grid">
-                <div className="leave-detail-item">
+              <div className="hr-leave-modal-details">
+                <div className="hr-leave-detail-group">
                   <label>Leave Type</label>
                   <span>{selectedRequest.leaveType || selectedRequest.subject}</span>
                 </div>
-                
-                <div className="leave-detail-item">
-                  <label>Priority</label>
-                  <span className={`leave-priority-badge leave-priority-${selectedRequest.priority?.toLowerCase()}`}>
-                    {selectedRequest.priority}
-                  </span>
-                </div>
 
-                <div className="leave-detail-item">
+                <div className="hr-leave-detail-group">
                   <label>Start Date</label>
                   <span>{new Date(selectedRequest.startDate).toLocaleDateString('en-US', { 
                     year: 'numeric', 
@@ -498,7 +718,7 @@ const LeaveManagement = () => {
                   })}</span>
                 </div>
 
-                <div className="leave-detail-item">
+                <div className="hr-leave-detail-group">
                   <label>End Date</label>
                   <span>{new Date(selectedRequest.endDate).toLocaleDateString('en-US', { 
                     year: 'numeric', 
@@ -507,40 +727,63 @@ const LeaveManagement = () => {
                   })}</span>
                 </div>
 
-                <div className="leave-detail-item">
+                <div className="hr-leave-detail-group">
                   <label>Days Requested</label>
                   <span>{selectedRequest.daysRequested} business days</span>
                 </div>
 
-                <div className="leave-detail-item">
-                  <label>Status</label>
-                  <span className={`leave-status-badge leave-status-${selectedRequest.status?.toLowerCase()}`}>
+                <div className="hr-leave-detail-group">
+                  <label>HR Status</label>
+                  <span className={`hr-leave-status-indicator hr-leave-status-${selectedRequest.hr_status?.toLowerCase()}`}>
+                    {selectedRequest.hr_status}
+                  </span>
+                </div>
+
+                <div className="hr-leave-detail-group">
+                  <label>Supervisor Status</label>
+                  <span className={`hr-leave-status-indicator hr-leave-status-${selectedRequest.supervisor_status?.toLowerCase()}`}>
+                    {selectedRequest.supervisor_status}
+                  </span>
+                </div>
+
+                <div className="hr-leave-detail-group">
+                  <label>Overall Status</label>
+                  <span className={`hr-leave-status-indicator hr-leave-status-${selectedRequest.status?.toLowerCase().replace(/\s+/g, '-')}`}>
                     {selectedRequest.status}
                   </span>
                 </div>
 
-                <div className="leave-detail-item leave-detail-full">
+                <div className="hr-leave-detail-group hr-leave-detail-full-width">
                   <label>Reason for Leave</label>
-                  <div className="leave-reason-box">
+                  <div className="hr-leave-reason-display">
                     {selectedRequest.reason || selectedRequest.description}
                   </div>
                 </div>
 
-                {selectedRequest.comments && (
-                  <div className="leave-detail-item leave-detail-full">
+                {selectedRequest.hr_comments && (
+                  <div className="hr-leave-detail-group hr-leave-detail-full-width">
                     <label>HR Comments</label>
-                    <div className="leave-comments-box">
-                      {selectedRequest.comments}
+                    <div className="hr-leave-comments-display">
+                      {selectedRequest.hr_comments}
+                    </div>
+                  </div>
+                )}
+
+                {selectedRequest.supervisor_comments && (
+                  <div className="hr-leave-detail-group hr-leave-detail-full-width">
+                    <label>Supervisor Comments</label>
+                    <div className="hr-leave-comments-display">
+                      {selectedRequest.supervisor_comments}
                     </div>
                   </div>
                 )}
 
                 {selectedRequest.attachments && selectedRequest.attachments.length > 0 && (
-                  <div className="leave-detail-item leave-detail-full">
+                  <div className="hr-leave-detail-group hr-leave-detail-full-width">
                     <label>Attachments</label>
-                    <div className="leave-attachments">
+                    <div className="hr-leave-attachments-list">
                       {selectedRequest.attachments.map((attachment, index) => (
-                        <div key={index} className="leave-attachment-item">
+                        <div key={index} className="hr-leave-attachment-item">
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" strokeWidth="2"/>
                             <polyline points="14,2 14,8 20,8" stroke="currentColor" strokeWidth="2"/>
@@ -553,18 +796,18 @@ const LeaveManagement = () => {
                 )}
               </div>
 
-              <div className="leave-modal-actions">
-                {selectedRequest.status === 'Pending' ? (
+              <div className="hr-leave-modal-footer">
+                {selectedRequest.hr_status === 'Pending' ? (
                   <>
                     <button 
-                      className="leave-btn leave-btn-approve"
+                      className="hr-leave-action-button hr-leave-btn-approve"
                       onClick={handleDetailedApprove}
                       disabled={loading}
                     >
                       {loading ? 'Processing...' : 'Approve'}
                     </button>
                     <button 
-                      className="leave-btn leave-btn-decline"
+                      className="hr-leave-action-button hr-leave-btn-decline"
                       onClick={handleDetailedDecline}
                       disabled={loading}
                     >
@@ -572,8 +815,11 @@ const LeaveManagement = () => {
                     </button>
                   </>
                 ) : (
-                  <div className="leave-status-info">
-                    <p>This leave request has been {selectedRequest.status.toLowerCase()}</p>
+                  <div className="hr-leave-processed-status">
+                    <p>This leave request has been {selectedRequest.hr_status.toLowerCase()} by HR</p>
+                    {selectedRequest.hr_status === 'Approved' && selectedRequest.supervisor_status === 'Pending' && (
+                      <p>Waiting for supervisor approval</p>
+                    )}
                   </div>
                 )}
               </div>
@@ -582,96 +828,206 @@ const LeaveManagement = () => {
         </div>
       )}
 
-      <header className="leave-header">
-        <h1 className="leave-title">LEAVE MANAGEMENT</h1>
-        <div className="leave-search-container">
-          <input
-            type="text"
-            className="leave-search-input"
-            placeholder="Search by name, email, or leave type..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+      {/* Header Card */}
+      <div className="hr-leave-header-card">
+        <div className="hr-leave-header-top">
+          <div className="hr-leave-title-section">
+            <h1 className="hr-leave-page-title">LEAVE MANAGEMENT</h1>
+            <p className="hr-leave-breadcrumb">HR / Leave Management</p>
+          </div>
+          <div className="hr-leave-search-wrapper">
+            <input
+              type="text"
+              className="hr-leave-search-field"
+              placeholder={activeTab === 'requests' ? "Search by name, email, or leave type..." : "Search by name or position..."}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
         </div>
-      </header>
+        
+        {/* Tabs */}
+        <div className="hr-leave-tabs">
+          <button 
+            className={`hr-leave-tab ${activeTab === 'requests' ? 'active' : ''}`}
+            onClick={() => setActiveTab('requests')}
+          >
+            Leave Requests
+          </button>
+          <button 
+            className={`hr-leave-tab ${activeTab === 'credits' ? 'active' : ''}`}
+            onClick={() => setActiveTab('credits')}
+          >
+            Leave Credits
+          </button>
+        </div>
+      </div>
       
-      <section className="leave-cards-container">
-        <div className="leave-cards-grid">
-          {filteredRequests.length === 0 ? (
-            <div className="leave-no-requests">
-              <p>{leaveRequests.length === 0 ? 'No leave requests found' : 'No results match your search'}</p>
-            </div>
-          ) : (
-            filteredRequests.map((request, index) => (
-              <article 
-                key={request.id || index} 
-                className="leave-card"
-                style={{
-                  animationDelay: `${index * 0.05}s`
-                }}
-              >
-                <div className="leave-card-header">
-                  <div className="leave-employee-info">
-                       {renderEmployeeAvatar(request)}
-                    <div className="leave-employee-details">
-                      <h3 className="leave-employee-name">{request.name}</h3>
-                      <p className="leave-employee-role">{request.role}</p>
-                      <p className="leave-employee-email">{request.email}</p>
+      <section className="hr-leave-content-area">
+        {activeTab === 'requests' ? (
+          <div className="hr-leave-cards-grid">
+            {filteredRequests.length === 0 ? (
+              <div className="hr-leave-empty-state">
+                <p>{leaveRequests.length === 0 ? 'No leave requests found' : 'No results match your search'}</p>
+              </div>
+            ) : (
+              filteredRequests.map((request, index) => (
+                <article 
+                  key={request.id || index} 
+                  className="hr-leave-request-card"
+                  style={{
+                    animationDelay: `${index * 0.05}s`
+                  }}
+                >
+                  <div className="hr-leave-card-header">
+                    <div className="hr-leave-employee-section">
+                      {renderEmployeeAvatar(request)}
+                      <div className="hr-leave-employee-info">
+                        <h3 className="hr-leave-employee-name">{request.name}</h3>
+                        <p className="hr-leave-employee-position">{request.role}</p>
+                        <p className="hr-leave-employee-email">{request.email}</p>
+                      </div>
+                    </div>
+                    <div className="hr-leave-status-corner">
+                      <span className={`hr-leave-status-indicator hr-leave-status-${request.status?.toLowerCase().replace(/\s+/g, '-').replace('hr-approved---pending-supervisor', 'hr-approved-pending')}`}>
+                        {request.status === 'HR Approved - Pending Supervisor' ? 'HR Approved' : request.status}
+                      </span>
                     </div>
                   </div>
-                  <div className="leave-status-corner">
-                    <span className={`leave-status-badge leave-status-${request.status?.toLowerCase()}`}>
-                      {request.status}
-                    </span>
+                  
+                  <div className="hr-leave-details-section">
+                    <div className="hr-leave-info-row">
+                      <span className="hr-leave-info-label">Leave Type:</span>
+                      <span className="hr-leave-info-value">{request.leaveType}</span>
+                    </div>
+                    <div className="hr-leave-info-row">
+                      <span className="hr-leave-info-label">Leave Period:</span>
+                      <span className="hr-leave-info-value">{request.leaveDate}</span>
+                    </div>
+                    <div className="hr-leave-info-row">
+                      <span className="hr-leave-info-label">Days:</span>
+                      <span className="hr-leave-info-value">{request.daysRequested} business days</span>
+                    </div>
+                    <div className="hr-leave-info-row">
+                      <span className="hr-leave-info-label">HR Status:</span>
+                      <span className={`hr-leave-status-indicator hr-leave-status-${request.hr_status?.toLowerCase()}`}>
+                        {request.hr_status}
+                      </span>
+                    </div>
+                    <div className="hr-leave-info-row">
+                      <span className="hr-leave-info-label">Supervisor Status:</span>
+                      <span className={`hr-leave-status-indicator hr-leave-status-${request.supervisor_status?.toLowerCase()}`}>
+                        {request.supervisor_status}
+                      </span>
+                    </div>
                   </div>
-                </div>
-                
-                <div className="leave-info">
-                  <div className="leave-info-row">
-                    <span className="leave-label">Leave Type:</span>
-                    <span className="leave-value">{request.leaveType}</span>
+                  
+                  <div className="hr-leave-card-actions">
+                    <button 
+                      className="hr-leave-action-button hr-leave-btn-view"
+                      onClick={() => handleViewDetail(request)}
+                    >
+                      View Detail
+                    </button>
+                    {request.hr_status === 'Pending' && (
+                      <>
+                        <button 
+                          className="hr-leave-action-button hr-leave-btn-approve"
+                          onClick={() => handleApprove(request)}
+                          disabled={loading}
+                        >
+                          Approve
+                        </button>
+                        <button 
+                          className="hr-leave-action-button hr-leave-btn-decline"
+                          onClick={() => handleDecline(request)}
+                          disabled={loading}
+                        >
+                          Decline
+                        </button>
+                      </>
+                    )}
                   </div>
-                  <div className="leave-info-row">
-                    <span className="leave-label">Leave Period:</span>
-                    <span className="leave-value">{request.leaveDate}</span>
-                  </div>
-                  <div className="leave-info-row">
-                    <span className="leave-label">Days:</span>
-                    <span className="leave-value">{request.daysRequested} business days</span>
-                  </div>
-                </div>
-                
-                <div className="leave-card-actions">
-                  <button 
-                    className="leave-btn leave-btn-view"
-                    onClick={() => handleViewDetail(request)}
-                  >
-                    View Detail
-                  </button>
-                  {request.status === 'Pending' && (
-                    <>
-                      <button 
-                        className="leave-btn leave-btn-approve"
-                        onClick={() => handleApprove(request)}
-                        disabled={loading}
-                      >
-                        Approve
-                      </button>
-                      <button 
-                        className="leave-btn leave-btn-decline"
-                        onClick={() => handleDecline(request)}
-                        disabled={loading}
-                      >
-                        Decline
-                      </button>
-                      
-                    </>
+                </article>
+              ))
+            )}
+          </div>
+        ) : (
+          /* Leave Credits Table */
+          <div className="hr-leave-table-container">
+            <div className="hr-leave-table-wrapper">
+              <table className="hr-leave-table">
+                <thead>
+                  <tr className="hr-leave-table-header">
+                    <th>EMPLOYEE ID</th>
+                    <th>EMPLOYEE NAME</th>
+                    <th>VACATION LEAVE CREDITS</th>
+                    <th>SICK LEAVE CREDITS</th>
+                    <th>ACTION</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentCreditsData.length === 0 ? (
+                    <tr>
+                      <td colSpan="5" className="hr-leave-empty-cell">
+                        {leaveCredits.length === 0 ? 'No leave credits found' : 'No results match your search'}
+                      </td>
+                    </tr>
+                  ) : (
+                    currentCreditsData.map((credit, index) => (
+                      <tr key={credit.id || index} className="hr-leave-table-row">
+                        <td className="hr-leave-emp-id-cell">EN{credit.emp_id}</td>
+                        <td className="hr-leave-name-cell">
+                          <div className="hr-leave-employee-info-table">
+                            <div className="hr-leave-employee-avatar-small">
+                              <span>
+                                {credit.name ? credit.name.split(' ').map(n => n[0]).join('') : 'N/A'}
+                              </span>
+                            </div>
+                            <div className="hr-leave-employee-details">
+                              <span className="hr-leave-employee-name-table">{credit.name}</span>
+                              <span className="hr-leave-employee-position-table">{credit.position || 'Not Assigned'}</span>
+                            </div>
+                          </div>
+                        </td>
+                         <td className="hr-leave-credits-cell">
+                          <div className="hr-leave-credits-info">
+                            <span className="hr-leave-credits-total">{credit.remaining_vacation}</span>
+                          </div>
+                        </td>
+                        <td className="hr-leave-credits-cell">
+                          <div className="hr-leave-credits-info">
+                            <span className="hr-leave-credits-total">{credit.remaining_sick}</span>
+                          </div>
+                        </td>
+                        <td className="hr-leave-actions-cell">
+                          <button 
+                            className="hr-leave-manage-btn"
+                            onClick={() => handleEditCredits(credit)}
+                          >
+                            Manage
+                          </button>
+                        </td>
+                      </tr>
+                    ))
                   )}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Pagination for Credits Table */}
+            {filteredCredits.length > 0 && (
+              <div className="hr-leave-pagination-area">
+                <div className="hr-leave-pagination-info">
+                  Showing {startIndex + 1} to {Math.min(endIndex, filteredCredits.length)} of {filteredCredits.length} entries
                 </div>
-              </article>
-            ))
-          )}
-        </div>
+                <div className="hr-leave-pagination-buttons">
+                  {renderPaginationButtons()}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </section>
     </main>
   );

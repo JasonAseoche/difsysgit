@@ -1,35 +1,33 @@
-/* DashboardEmployee.css - Updated with Business Rules */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-    background-color: #f8fafc;
-    color: #334155;
-    line-height: 1.6;
-    height: 100vh;
-}
 
 .emp-dash-container {
-    height: 100vh;
     display: flex;
     flex-direction: column;
-    padding: 1rem 1rem 0 1rem;
+    padding: 1rem 2rem;
     background-color: #f8fafc;
+    max-height: 100vh;
+}
+
+.emp-dash-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 1rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .emp-dash-content::-webkit-scrollbar {
-    display: none; /* WebKit */
+    display: none;
 }
 
-/* Header Section */
+/* =============================================================================
+   HEADER SECTION
+   ============================================================================= */
 .emp-dash-header {
     flex-shrink: 0;
-    margin: 5px 15px 0 15px;
+    margin: 0.25rem 1rem 0 1rem;
 }
 
 .emp-dash-header-content {
@@ -74,6 +72,9 @@ body {
     font-size: 0.9rem;
 }
 
+/* =============================================================================
+   STATUS BADGES & INDICATORS
+   ============================================================================= */
 .emp-dash-status-badge {
     display: flex;
     align-items: center;
@@ -84,6 +85,11 @@ body {
     font-size: 0.9rem;
     font-weight: 500;
     color: #475569;
+}
+
+.emp-dash-status-badge.weekend {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: white;
 }
 
 .emp-dash-status-dot {
@@ -121,20 +127,59 @@ body {
     background-color: #8b5cf6;
 }
 
-/* Main Content */
-.emp-dash-content {
+/* Status Indicators */
+.emp-dash-status-indicators {
     display: flex;
-    flex-direction: column;
-    gap: 25px;
-    margin: 15px;
-    padding: 0px;
-    flex: 1;
-    overflow-y: auto;
-    max-height: calc(100vh - 120px);
-    padding-bottom: 2rem;
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
 }
 
-/* Status Message */
+.emp-dash-break-indicator,
+.emp-dash-lunch-indicator,
+.emp-dash-overtime-indicator,
+.emp-dash-late-indicator {
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.emp-dash-timer-display .emp-dash-break-indicator,
+.emp-dash-timer-display .emp-dash-lunch-indicator,
+.emp-dash-timer-display .emp-dash-overtime-indicator,
+.emp-dash-timer-display .emp-dash-late-indicator {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+}
+
+.emp-dash-break-indicator {
+    background: #f59e0b;
+    animation: emp-dash-pulse-break 1.5s infinite;
+}
+
+.emp-dash-lunch-indicator {
+    background: #10b981;
+    animation: emp-dash-pulse-lunch 1.5s infinite;
+}
+
+.emp-dash-overtime-indicator {
+    background: #ef4444;
+    animation: emp-dash-pulse-overtime 1.5s infinite;
+}
+
+.emp-dash-late-indicator {
+    background: #f97316;
+    animation: emp-dash-pulse-late 1.5s infinite;
+}
+
+/* =============================================================================
+   STATUS MESSAGE SECTION
+   ============================================================================= */
 .emp-dash-status-message {
     flex-shrink: 0;
 }
@@ -154,7 +199,9 @@ body {
     margin: 0;
 }
 
-/* Time Section */
+/* =============================================================================
+   TIME TRACKING SECTION
+   ============================================================================= */
 .emp-dash-time-section {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -162,6 +209,7 @@ body {
     flex-shrink: 0;
 }
 
+/* Main Time Card */
 .emp-dash-main-card {
     background: white;
     border-radius: 12px;
@@ -200,61 +248,12 @@ body {
     gap: 0.25rem;
 }
 
-.emp-dash-status-indicators {
-    display: flex;
-    flex-direction: row;
-    gap: 0.5rem;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-}
-
 .emp-dash-time-text {
     font-size: 3.2rem;
     font-weight: 700;
     color: #003979;
     font-family: 'Monaco', 'Consolas', monospace;
     letter-spacing: -0.02em;
-}
-
-.emp-dash-break-indicator {
-    background: #f59e0b;
-    color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    animation: emp-dash-pulse-break 1.5s infinite;
-}
-
-.emp-dash-lunch-indicator {
-    background: #10b981;
-    color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    animation: emp-dash-pulse-lunch 1.5s infinite;
-}
-
-.emp-dash-overtime-indicator {
-    background: #ef4444;
-    color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    animation: emp-dash-pulse-overtime 1.5s infinite;
-}
-
-.emp-dash-late-indicator {
-    background: #f97316;
-    color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    animation: emp-dash-pulse-late 1.5s infinite;
 }
 
 .emp-dash-time-controls {
@@ -277,6 +276,9 @@ body {
     gap: 1rem;
 }
 
+/* =============================================================================
+   BUTTONS
+   ============================================================================= */
 .emp-dash-time-button {
     background: #3b82f6;
     color: white;
@@ -297,12 +299,6 @@ body {
 
 .emp-dash-time-button:active {
     transform: translateY(0);
-}
-
-.emp-dash-time-button:disabled {
-    background: #9ca3af;
-    cursor: not-allowed;
-    opacity: 0.5;
 }
 
 .emp-dash-time-button.emp-dash-time-out {
@@ -339,12 +335,24 @@ body {
     background: #059669;
 }
 
+/* Disabled Button States */
+.emp-dash-time-button:disabled,
+.emp-dash-break-button:disabled,
 .emp-dash-break-button.emp-dash-disabled {
-    background: #9ca3af;
+    background: #cbd5e1;
+    color: #64748b;
     cursor: not-allowed;
     opacity: 0.5;
+    transform: none;
 }
 
+.emp-dash-time-button:disabled:hover,
+.emp-dash-break-button:disabled:hover {
+    background: #cbd5e1;
+    transform: none;
+}
+
+/* Info Text */
 .emp-dash-info-text {
     text-align: center;
     color: #64748b;
@@ -356,7 +364,9 @@ body {
     font-weight: 500;
 }
 
-/* Hours Card */
+/* =============================================================================
+   HOURS CARD
+   ============================================================================= */
 .emp-dash-hours-card {
     background: white;
     border-radius: 12px;
@@ -437,13 +447,15 @@ body {
     margin-top: 0.25rem;
 }
 
-/* Stats Grid */
+/* =============================================================================
+   STATISTICS GRID
+   ============================================================================= */
 .emp-dash-stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
     flex-shrink: 0;
-    margin-bottom: 0;
+    margin-bottom: 10px;
 }
 
 .emp-dash-stat-card {
@@ -507,10 +519,12 @@ body {
     color: #1e293b;
 }
 
-/* Activity Section */
+/* =============================================================================
+   ACTIVITY SECTION
+   ============================================================================= */
 .emp-dash-activity-section {
     flex-shrink: 0;
-    margin-top: -10px;
+    margin-top: -0.625rem;
 }
 
 .emp-dash-activity-card {
@@ -519,9 +533,9 @@ body {
     padding: 1.5rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     border: 1px solid #e2e8f0;
-    height: 390px;
-    overflow-y: auto;
-    scrollbar-width: none; /* Firefox */
+    height: 450px;
+    display: flex;
+    flex-direction: column;
 }
 
 .emp-dash-activity-list {
@@ -530,8 +544,23 @@ body {
     gap: 0.75rem;
     overflow-y: auto;
     flex: 1;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    margin-top: 1rem;
+}
+
+.emp-dash-activity-list::-webkit-scrollbar {
+    display: none;
+}
+
+.emp-dash-activity-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.875rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    transition: all 0.2s ease;
 }
 
 .emp-dash-activity-item {
@@ -600,10 +629,12 @@ body {
 .emp-dash-activity-time {
     color: #64748b;
     font-size: 0.9rem;
-    padding-bottom: 10px;
+    padding-bottom: 0.625rem;
 }
 
-/* Animations */
+/* =============================================================================
+   ANIMATIONS
+   ============================================================================= */
 @keyframes emp-dash-pulse-dot {
     0%, 100% {
         opacity: 1;
@@ -663,12 +694,21 @@ body {
     }
 }
 
-/* Responsive Design */
+/* =============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================= */
 
 /* Tablet - 768px and below */
 @media (max-width: 768px) {
     .emp-dash-container {
         padding: 0.75rem;
+        padding-bottom: 150px;
+        min-height: 100vh;
+    }
+    
+    .emp-dash-content {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     }
     
     .emp-dash-header-content {
@@ -718,13 +758,15 @@ body {
 @media (max-width: 480px) {
     .emp-dash-container {
         padding: 0.5rem;
+        padding-bottom: 70px;
+        min-height: 100vh;
         height: 100vh;
         overflow: hidden;
     }
     
     .emp-dash-content {
-        max-height: calc(100vh - 140px);
-        padding-bottom: 3rem;
+        height: calc(100vh - 1rem);
+        padding-bottom: 2rem;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
     }
@@ -811,35 +853,4 @@ body {
     .emp-dash-status-text {
         font-size: 0.9rem;
     }
-}
-
-/* Weekend status styling */
-.emp-dash-status-badge.weekend {
-    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-    color: white;
-}
-
-.emp-dash-timer-display .emp-dash-lunch-indicator,
-.emp-dash-timer-display .emp-dash-break-indicator,
-.emp-dash-timer-display .emp-dash-overtime-indicator,
-.emp-dash-timer-display .emp-dash-late-indicator {
-    font-size: 0.75rem;
-    padding: 0.2rem 0.6rem;
-    margin-top: 0; /* Remove the margin-top */
-    white-space: nowrap;
-}
-
-/* Disabled state for weekend */
-.emp-dash-time-button:disabled,
-.emp-dash-break-button:disabled {
-    background: #cbd5e1;
-    color: #64748b;
-    cursor: not-allowed;
-    transform: none;
-}
-
-.emp-dash-time-button:disabled:hover,
-.emp-dash-break-button:disabled:hover {
-    background: #cbd5e1;
-    transform: none;
 }

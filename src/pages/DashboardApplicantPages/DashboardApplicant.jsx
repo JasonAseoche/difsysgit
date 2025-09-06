@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getCurrentUser, getUserId } from '../../utils/auth'; // Import auth utilities like Employee dashboard
 import difsyslogo from '../../assets/difsyslogo.png'
+import DashboardHeader from '../../components/DashboardHeader/DashboardHeader';
 import '../../components/ApplicantLayout/DashboardApplicant.css';
 
 const DashboardApplicant = () => {
@@ -175,49 +176,7 @@ const DashboardApplicant = () => {
   return (
     <div className="app-dash-container">
       {/* Header Section */}
-      <div className="app-dash-header">
-        <div className="app-dash-header-content">
-          <div className="app-dash-user-info">
-            <div className="app-dash-user-avatar">
-                {userInfo.profileImage ? (
-                  <img 
-                    src={userInfo.profileImage.startsWith('http') ? userInfo.profileImage : `http://localhost/difsysapi/${userInfo.profileImage}`}
-                    alt="Profile"
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      borderRadius: '50%',
-                      objectFit: 'cover'
-                    }}
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                      e.target.nextSibling.style.display = 'flex';
-                    }}
-                  />
-                ) : null}
-                <span style={{ 
-                  display: userInfo.profileImage ? 'none' : 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center', 
-                  width: '100%', 
-                  height: '100%' 
-                }}>
-                  {getInitials(userInfo.firstName, userInfo.lastName)}
-                </span>
-              </div>
-            <div>
-              <div className="app-dash-greeting">
-                Good Afternoon, {userInfo.firstName}
-              </div>
-              <div className="app-dash-date">{currentDate}</div>
-            </div>
-          </div>
-          <div className="app-dash-status-badge">
-            <div className={`app-dash-status-dot ${getStatusClass()}`}></div>
-            <span>{getStatusText()}</span>
-          </div>
-        </div>
-      </div>
+      <DashboardHeader/>
 
       {/* Main Content */}
       <div className="app-dash-content">

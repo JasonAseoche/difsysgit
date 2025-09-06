@@ -1,13 +1,11 @@
 /* src/components/SideNav.css */
 .sidenav1 {
-  height: 98vh;
+  height: 100vh;
   width: 300px;
-  border-radius: 15px;
   background-color: #ffffff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   position: fixed;
-  top: 8px;
-  left: 10px;
+  padding-left: 10px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -18,6 +16,19 @@
 /* Mobile Header - Hidden by default */
 .mobile-header1 {
   display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 998;
+  overflow: hidden;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .mobile-header-content1 {
@@ -26,107 +37,73 @@
   justify-content: flex-end; /* Changed to flex-end to position menu toggle on the right */
   padding: 16px 20px;
   max-width: 100%;
+  overflow: hidden;
+  touch-action: manipulation;
 }
 
-/* User Profile Section */
-.user-profile1 {
+.logo-container1 {
   padding: 20px 16px;
-  border-bottom: 1px solid #f0f0f0;
   display: flex;
   align-items: center;
   gap: 12px;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 16px;
 }
 
-.user-avatar1 {
-  width: 40px;
+.logo-container1 {
+  transition: justify-content 0.3s ease, padding 0.3s ease;
+}
+
+
+.logo-container1 img {
   height: 40px;
-  border-radius: 50%;
-  background-color: #6b7280;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: 600;
-  font-size: 14px;
+  width: 40px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
-.user-details1 {
+.logo-text1 {
   display: flex;
   flex-direction: column;
-  flex: 1;
-}
-
-.user-name1 {
-  font-weight: 600;
-  color: #333;
-  font-size: 14px;
+  align-items: flex-start;
+  opacity: 1;
+  transform: translateX(0);
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  width: auto;
+  min-width: 0;
+  flex-shrink: 0;
+  transition: opacity 0.3s ease 0.1s, transform 0.3s ease 0.1s, width 0.3s ease;
+}
+
+.logo-title1 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #191afe;
+  line-height: 1.2;
   margin-bottom: 2px;
 }
 
-.user-role1 {
-  font-size: 12px;
-  color: #666;
-  font-weight: normal;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.logo-subtitle1 {
+  font-size: 11px;
+  font-weight: 500;
+  color: #6b7280;
+  line-height: 1;
+  letter-spacing: 0.5px;
 }
 
-.user-info1 {
-  display: flex;
-  align-items: flex-start;
-  flex: 1;
-  margin-left: 12px;
-  position: relative;
+/* Hide text when minimized */
+.sidenav1.minimized .logo-container1 {
+  justify-content: center;
+  padding: 20px 8px;
 }
 
-
-.dropdown-icon1 {
-  display: flex;
-  margin-right: 15px;
-  align-items: center;
-  cursor: pointer;
-}
-
-/* User Dropdown Menu */
-.user-dropdown-menu1 {
-  position: absolute;
-  top: 30px;
-  right: 0;
-  width: 180px;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 100;
-}
-
-.dropdown-item1 {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 16px;
-  color: #4b5563;
-  text-decoration: none;
-  font-size: 13px;
-  transition: all 0.2s ease;
-}
-
-.dropdown-item1:hover {
-  background-color: #f3f4f6;
-  color: #0b3d91;
-}
-
-.dropdown-item1:first-child {
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-}
-
-.dropdown-item1:last-child {
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
+.sidenav1.minimized .logo-text1 {
+  opacity: 0;
+  transform: translateX(-20px);
+  width: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, transform 0.2s ease, width 0.2s ease, visibility 0.2s ease;
 }
 
 /* Navigation Items */
@@ -147,6 +124,15 @@
   font-weight: 500;
   font-size: 14px;
   position: relative;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.nav-item1 span {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 0.3s ease 0.1s, transform 0.3s ease 0.1s;
+  flex-shrink: 0;
 }
 
 
@@ -158,8 +144,8 @@
 }
 
 .nav-item1.secondary1.active1 {
-  background-color: #0b3d91;
-  color: white;
+  background-color: #e9f5fe;
+  color: #0c7fda;
   transform: translateX(7px);
 }
 
@@ -174,8 +160,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 23px;
+  height: 23px;
+}
+
+.nav-icon1 svg {
+  width: 23px;
+  height: 23px;
 }
 
 /* Logo container at bottom */
@@ -201,6 +192,11 @@
   padding: 8px;
   color: #1f2937;
   transition: color 0.2s ease;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
 }
 
 .menu-toggle1:hover {
@@ -217,6 +213,15 @@
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
   display: none;
+}
+
+@supports (-webkit-appearance: none) {
+  .mobile-header1 {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
 }
 
 
@@ -243,6 +248,8 @@
     background-color: #ffffff;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     z-index: 998;
+    overscroll-behavior: contain;
+    overflow: hidden;
   }
 
   /* Show menu toggle button */
@@ -265,6 +272,13 @@
     z-index: 1001;
     transform: translateX(0);
     transition: right 0.3s ease;
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+
+  .sidenav1::-webkit-scrollbar {
+    display: none;
   }
 
   /* Show overlay when mobile menu is open */
@@ -289,10 +303,7 @@
     font-size: 16px;
   }
 
-  /* Make user profile visible in mobile menu */
-  .user-profile1 {
-    padding: 24px 20px;
-  }
+
 
   /* Adjust main content for mobile header */
   .main-content {
@@ -324,5 +335,166 @@
   
   .mobile-header-content1 {
     padding: 14px 16px;
+  }
+}
+
+
+/* Minimized sidenav styles */
+.sidenav1.minimized {
+  width: 100px;
+  background-color: white;
+  cursor: pointer;
+}
+
+/* Fix for smooth transitions in minimized sidebar */
+.sidenav1.minimized .nav-item1 {
+  justify-content: center;
+  padding: 12px; /* Set consistent padding */
+  margin: 8px auto; /* Center all items */
+  width: 48px; /* Set fixed width for ALL items */
+  height: 48px; /* Set fixed height for ALL items */
+  display: flex;
+  align-items: center;
+  border-radius: 12px;
+  transition: background-color 0.2s ease, color 0.2s ease; /* Only transition colors */
+}
+
+.sidenav1.minimized .nav-item1 span {
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+
+/* Default state - transparent background with white icons */
+.sidenav1.minimized .nav-item1.secondary1 {
+  background-color: transparent;
+}
+
+.sidenav1.minimized .nav-item1.secondary1 .nav-icon1 {
+  color: white;
+}
+
+/* Active/selected state - just change colors, size stays the same */
+.sidenav1.minimized .nav-item1.secondary1.active1 {
+  background-color: white;
+  /* Remove width/height/padding since they're now set on parent */
+}
+
+.sidenav1.minimized .nav-item1.secondary1.active1 .nav-icon1 {
+  color: black;
+}
+
+/* Hover states - only change colors */
+.sidenav1.minimized .nav-item1.secondary1:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Subtle hover effect */
+}
+
+.sidenav1.minimized .nav-item1.secondary1:hover .nav-icon1 {
+  color: white;
+}
+
+.sidenav1.minimized .nav-item1.secondary1.active1:hover {
+  background-color: white;
+}
+
+.sidenav1.minimized .nav-item1.secondary1.active1:hover .nav-icon1 {
+  color: black;
+}
+
+
+
+/* Default state - transparent background with white icons */
+.sidenav1.minimized .nav-item1.secondary1 {
+  background-color: transparent;
+  border-radius: 8px;
+}
+
+.sidenav1.minimized .nav-item1.secondary1 .nav-icon1 {
+  color: #5d7285;
+}
+
+/* For even larger icons */
+.sidenav1.minimized .nav-icon1 {
+  width: 23px;  /* Even bigger */
+  height: 23px;
+}
+
+.sidenav1.minimized .nav-icon1 svg {
+  width: 23px;
+  height: 23px;
+}
+
+/* Active/selected state - white background with black icon, no transform */
+.sidenav1.minimized .nav-item1.secondary1.active1 {
+  background-color: #e9f5fe;
+  transform: none;
+  width: 48px;  /* Fixed width */
+  height: 48px; /* Fixed height */
+  padding: 12px; /* Equal padding on all sides */
+  margin: 8px auto; /* Center the item */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px; /* Slightly more rounded */
+}
+
+.sidenav1.minimized .nav-item1.secondary1.active1 .nav-icon1 {
+  color: #0c7fda;
+}
+
+/* Hover state for non-active items - keep white icons */
+.sidenav1.minimized .nav-item1.secondary1:hover {
+  background-color: #0b3d91;
+  transform: none;
+}
+
+.sidenav1.minimized .nav-item1.secondary1:hover .nav-icon1 {
+  color: white;
+}
+
+/* Hover state for active items - maintain white background */
+.sidenav1.minimized .nav-item1.secondary1.active1:hover {
+  background-color: #0b3d91;
+  transform: none;
+  width: 48px;
+  height: 48px;
+  padding: 12px;
+}
+
+
+.sidenav1.minimized .nav-item1.secondary1.active1:hover .nav-icon1 {
+  color: white;
+}
+
+/* Smooth transition for sidenav width change */
+.sidenav1 {
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+/* Prevent minimization on mobile */
+@media (max-width: 768px) {
+  .sidenav1.minimized {
+    width: 80%;
+    max-width: 320px;
+    background-color: #ffffff;
+    cursor: default;
+  }
+  
+  .sidenav1.minimized .nav-item1.secondary1 {
+    background-color: transparent;
+  }
+  
+  .sidenav1.minimized .nav-item1.secondary1 .nav-icon1 {
+    color: #6b7280a6;
+  }
+  
+  /* Reset active states on mobile */
+  .sidenav1.minimized .nav-item1.secondary1.active1 {
+    background-color: #0b3d91;
+  }
+  
+  .sidenav1.minimized .nav-item1.secondary1.active1 .nav-icon1 {
+    color: white;
   }
 }

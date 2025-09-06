@@ -41,9 +41,28 @@ const GeneratePayroll = () => {
             document.title = "DIFSYS | GENERATE PAYROLL";
           }, []);
   
-  const itemsPerPage = 6;
-  const modalItemsPerPage = 8;
   const API_BASE_URL = 'http://localhost/difsysapi/generate_payroll.php';
+
+  const itemsPerPage = 6;
+  const modalItemsPerPage = 6; // Declare this first
+  const [dynamicItemsPerPage, setDynamicItemsPerPage] = useState(8); // Use hardcoded value instead
+
+
+// Add this useEffect to handle screen size changes
+useEffect(() => {
+  const handleResize = () => {
+    if (window.innerWidth <= 480) {
+      setDynamicItemsPerPage(4);
+    } else {
+      setDynamicItemsPerPage(8); // Use hardcoded value instead of modalItemsPerPage
+    }
+  };
+
+  handleResize(); // Set initial value
+  window.addEventListener('resize', handleResize);
+  
+  return () => window.removeEventListener('resize', handleResize);
+}, []);
 
   // API Functions
   const fetchCurrentPayrollPeriod = async () => {
@@ -2804,14 +2823,13 @@ const createCombinedPayslipSheet = async (worksheet, employee, comp) => {
 
   // Render all employees modal
   // Render all employees modal
-const renderAllEmployeesModal = () => {
-  // Calculate modal pagination using component state
-  const modalData = showGeneratePreviewModal ? selectedEmployeesPayroll : 
-                   showReleasePreviewModal ? selectedEmployeesPayroll : allEmployeesPayroll;
-  const modalTotalPages = Math.ceil(modalData.length / modalItemsPerPage);
-  const modalStartIndex = (modalCurrentPage - 1) * modalItemsPerPage;
-  const modalEndIndex = modalStartIndex + modalItemsPerPage;
-  const modalPaginatedData = modalData.slice(modalStartIndex, modalEndIndex);
+  const renderAllEmployeesModal = () => {
+    const modalData = showGeneratePreviewModal ? selectedEmployeesPayroll : 
+                     showReleasePreviewModal ? selectedEmployeesPayroll : allEmployeesPayroll;
+    const modalTotalPages = Math.ceil(modalData.length / dynamicItemsPerPage); // Use dynamic value
+    const modalStartIndex = (modalCurrentPage - 1) * dynamicItemsPerPage; // Use dynamic value
+    const modalEndIndex = modalStartIndex + dynamicItemsPerPage; // Use dynamic value
+    const modalPaginatedData = modalData.slice(modalStartIndex, modalEndIndex);
 
   return (
     <div className="generate-payroll-modal-overlay" onClick={handleCloseAllEmployeesModal}>

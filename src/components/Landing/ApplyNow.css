@@ -1,123 +1,242 @@
-/* ApplyNow Component Styles */
+/* ApplyNow Component Styles - Card within Card Design */
 .applynow-container {
-  background-color: #f8fafc;
-  max-width: 3000px;
-  min-height: 90vh;
-  border-radius: 5PX;
-  margin: 40px 100px 0 100px;
-  padding: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  min-height: 80vh;
 }
 
 .applynow-header {
-  text-align: left;
+  text-align: center;
   margin-bottom: 3rem;
-  max-width: 1400px;
-  margin: 4rem auto 3rem auto;
-  display: flex;
-  border-bottom: 1px solid #003D7C;
-  flex-direction: row;
-  
+  padding-bottom: 1.5rem;
 }
 
 .applynow-title {
-  font-family: 'Courier New', monospace;
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: #003D7C;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #111827;
   margin: 0;
+  letter-spacing: -0.025em;
 }
 
+.applynow-subtitle {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-size: 1.1rem;
+  color: #6b7280;
+  margin-top: 0.5rem;
+  font-weight: 400;
+}
 
 .applynow-loading {
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 4rem 2rem;
-  color: #64748b;
-  font-size: 1.2rem;
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+.applynow-loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e5e7eb;
+  border-top: 2px solid #6b7280;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 0.75rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .applynow-no-positions {
   text-align: center;
-  padding: 4rem 2rem;
-  color: #64748b;
-  font-size: 1.1rem;
+  padding: 3rem 2rem;
+  color: #6b7280;
+  font-size: 1rem;
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  max-width: 600px;
+  border-radius: 16px;
+  max-width: 500px;
   margin: 0 auto;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .applynow-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 1.5rem;
-  max-width: 1400px;
   margin: 0 auto;
 }
 
+/* WHITE OUTER CARD */
 .applynow-card {
-  background: #fcfcfc;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: white;
+  border-radius: 18px;
+  border: 1px solid #5e5f6159;
+  padding: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .applynow-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-4px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-.applynow-card-image {
-  width: 100%;
-  height: 200px;
-  overflow: hidden;
+/* COLORED INNER CARD */
+.applynow-inner-card {
+  background: linear-gradient(135deg, #fef3e2 0%, #fed7aa 100%);
+  border-radius: 12px;
+  padding: 1.25rem;
+  min-height: 260px;
+  position: relative;
+  flex: 1;
 }
 
-.applynow-card-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.applynow-inner-card:nth-child(6n+1) {
+  background: linear-gradient(135deg, #fef3e2 0%, #fed7aa 100%);
 }
 
-.applynow-card-body {
-  padding: 1.5rem;
+.applynow-card:nth-child(6n+2) .applynow-inner-card {
+  background: linear-gradient(135deg, #ecfdf5 0%, #a7f3d0 100%);
+}
+
+.applynow-card:nth-child(6n+3) .applynow-inner-card {
+  background: linear-gradient(135deg, #f0f9ff 0%, #bae6fd 100%);
+}
+
+.applynow-card:nth-child(6n+4) .applynow-inner-card {
+  background: linear-gradient(135deg, #fdf4ff 0%, #e9d5ff 100%);
+}
+
+.applynow-card:nth-child(6n+5) .applynow-inner-card {
+  background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+}
+
+.applynow-card:nth-child(6n) .applynow-inner-card {
+  background: linear-gradient(135deg, #f9fafb 0%, #d1d5db 100%);
+}
+
+.applynow-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.applynow-card-date {
+  background: white;
+  padding: 0.2rem 0.6rem;
+  border-radius: 15px;
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.applynow-card-bookmark {
+  width: 20px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.applynow-card-bookmark:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.applynow-card-company {
+  font-size: 0.875rem;
+  color: #374151;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .applynow-card-title {
-  font-family: 'Courier New', monospace;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #003D7C;
-  margin: 0 0 0.75rem 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 1.5rem 0;
+  line-height: 1.3;
 }
 
-.applynow-card-text {
-  font-family: "Courier New", Courier, monospace;
-  color: #64748b;
-  margin: 0 0 1.5rem 0;
-  line-height: 1.6;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.applynow-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.applynow-card-tag {
+  background: transparent;
+  border: 1px solid black;
+  color: #374151;
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.applynow-card-inner-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.applynow-card-location-section {
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+.applynow-card-footer-location {
+  font-size: 0.975rem;
+  font-weight: 700;
+  color: #6b7280;
+  margin-top: 0.525rem;
+}
+
+/* DETAILS BUTTON ON WHITE CARD */
+.applynow-card-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 0.25rem;
 }
 
 .applynow-btn {
-  background-color: #3b82f6;
+  background-color: #111827;
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
-  border-radius: 6px;
-  font-weight: 500;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .applynow-btn:hover {
-  background-color: #2563eb;
+  background-color: #1f2937;
+  transform: translateY(-1px);
 }
 
 /* Modal Styles */
@@ -127,334 +246,291 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  animation: applynow-fade-in 0.3s ease;
+  animation: fade-in 0.2s ease;
+  padding: 1rem;
 }
 
 .applynow-modal-card {
   background: white;
-  border-radius: 10px;
-  max-width: 1000px;
-  width: 90%;
-  max-height: 85vh;
+  border-radius: 20px;
+  max-width: 900px;
+  width: 100%;
+  max-height: 90vh;
   overflow-y: auto;
   position: relative;
-  animation: applynow-zoom-in 0.3s ease;
+  animation: slide-up 0.3s ease;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.applynow-modal-card::-webkit-scrollbar {
+  display: none;
 }
 
 .applynow-modal-close {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: none;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: #f3f4f6;
   border: none;
-  font-size: 2rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  font-size: 1.25rem;
   cursor: pointer;
-  color: #64748b;
+  color: #6b7280;
   z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
 }
 
 .applynow-modal-close:hover {
-  color: #1e293b;
+  background: #e5e7eb;
+  color: #374151;
 }
 
 .applynow-modal-header {
-  padding: 2rem 2rem 1rem 2rem;
-  border-bottom: 1px solid #e2e8f0;
+  background: linear-gradient(135deg, #f0f9ff 0%, #bae6fd 100%);
+  padding: 2.5rem 2rem 2rem 2rem;
+  border-radius: 20px 20px 0 0;
+  position: relative;
+}
+
+.applynow-modal-header-content {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.applynow-modal-title {
-  font-size: 1.875rem;
-  font-weight: bold;
-  color: #1e293b;
-  margin: 0;
-  flex: 1;
-  min-width: 0;
-}
-
-.applynow-signup-btn {
-  background-color: #072a66;
-  color: white;
-  border: none;
-  margin-right: 20px;
-  margin-top: -15px;
-  padding: 0.55rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 0.95rem;
-  white-space: nowrap;
-  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
-}
-
-.applynow-signup-btn:hover {
-  background-color: #325288;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(16, 109, 185, 0.3);
-}
-
-.applynow-modal-content {
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
+  align-items: flex-start;
   gap: 2rem;
 }
 
-.applynow-modal-top {
-  display: grid;
-  grid-template-columns: 40% 60%;
-  gap: 1rem;
+.applynow-modal-title-section {
+  flex: 1;
 }
 
-.applynow-modal-image {
-  width: 100%;
-  height: 250px;
-  overflow: hidden;
-  border-radius: 12px;
+.applynow-modal-company {
+  font-size: 0.875rem;
+  color: #374151;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.applynow-modal-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.applynow-modal-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+  line-height: 1.2;
 }
 
-.applynow-modal-about {
-  background: #f8fafc;
-  border: 2px solid #e2e8f0;
-  border-radius: 5px;
-  padding: 16px 10px;
+.applynow-modal-meta {
   display: flex;
-  flex-direction: column;
-  width: 100%; /* Changed from 35rem to 100% */
-  max-width: 35rem; /* Added max-width to maintain design on larger screens */
-  box-sizing: border-box; /* Ensures padding is included in width calculation */
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
 }
 
-.applynow-modal-bottom {
-  display: grid;
-  grid-template-columns: 50% 50%;
-  gap: 1.2rem;
+.applynow-modal-tag {
+  background: rgba(255, 255, 255, 0.6);
+  color: #374151;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+}
+
+.applynow-signup-btn {
+  background-color: #111827;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.applynow-signup-btn:hover {
+  background-color: #1f2937;
+  transform: translateY(-2px);
+}
+
+.applynow-modal-content {
+  padding: 2.5rem 2rem;
 }
 
 .applynow-modal-section {
-  margin-bottom: 0;
+  margin-bottom: 2.5rem;
 }
 
 .applynow-section-title {
-  font-family: "Courier New", Courier, monospace;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   font-size: 1.25rem;
-  font-weight: 600;
-  color:#003D7C;
-  margin: 0;
-  padding-bottom: 0.5rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 1.25rem 0;
 }
 
 .applynow-about-text {
-  font-family: "Courier New", Courier, monospace;
-  padding-right: 20px;
-  text-align: justify;
-  color: #475569;
-  line-height: 1.6;
-  font-size: 15px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  color: #374151;
+  line-height: 1.7;
+  font-size: 1rem;
   margin: 0;
 }
 
 .applynow-requirements-list,
 .applynow-duties-list {
   list-style: none;
-  padding: 5px;
+  padding: 0;
   margin: 0;
+  display: grid;
+  gap: 1rem;
 }
 
 .applynow-requirements-list li,
 .applynow-duties-list li {
-  font-family: "Courier New", Courier, monospace;
-  padding: 0.5rem 0;
-  color: #475569;
-  line-height: 1.3;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  color: #374151;
+  line-height: 1.6;
   position: relative;
   padding-left: 1.5rem;
-  font-size: 15px;
+  font-size: 1rem;
 }
 
 .applynow-requirements-list li:before,
 .applynow-duties-list li:before {
   content: "•";
   color: #3b82f6;
-  font-weight: bold;
+  font-size: 1.25rem;
   position: absolute;
   left: 0;
+  top: 0;
+}
+
+.applynow-modal-sections {
+  display: grid;
+  gap: 2.5rem;
 }
 
 /* Animations */
-@keyframes applynow-fade-in {
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
   from {
     opacity: 0;
+    transform: translateY(20px) scale(0.95);
   }
   to {
     opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
-
-@keyframes applynow-zoom-in {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-
 
 /* Responsive Design */
-@media (max-width: 1024px) {
-  .applynow-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  .applynow-modal-card {
-    max-width: 900px;
-  }
-
-  .applynow-modal-about {
-    max-width: none; /* Remove max-width constraint on tablets */
-    width: 100%;
-  }
-  
-  .applynow-modal-top {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-  
-  .applynow-modal-bottom {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-  
-  .applynow-modal-image {
-    height: 200px;
-  }
-  
-  .applynow-modal-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-  
-  .applynow-signup-btn {
-    margin-top: -60px;
-    align-self: flex-end;
-  }
-  
-  .applynow-modal-close {
-    margin-top: 12px;
-  }
-}
-
 @media (max-width: 768px) {
   .applynow-container {
-    padding: 1rem;
+    padding: 1.5rem 1rem;
   }
   
   .applynow-title {
-    font-size: 2rem;
+    font-size: 1.875rem;
   }
   
   .applynow-grid {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  .applynow-modal-about {
-    padding: 12px 8px; /* Slightly reduce padding on mobile */
+    gap: 1.25rem;
   }
   
   .applynow-modal-card {
-    width: 95%;
-    margin: 1rem;
+    margin: 0.5rem;
+    max-height: 95vh;
+    border-radius: 16px;
   }
   
-  .applynow-modal-header,
-  .applynow-modal-content {
-    padding: 1.5rem;
+  .applynow-modal-header {
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
+    border-radius: 16px 16px 0 0;
+  }
+  
+  .applynow-modal-header-content {
+    flex-direction: column;
+    gap: 1.5rem;
   }
   
   .applynow-modal-title {
     font-size: 1.5rem;
   }
   
-  .applynow-modal-top {
-    grid-template-columns: 1fr;
-  }
-  
-  .applynow-modal-bottom {
-    grid-template-columns: 1fr;
-  }
-  
-  .applynow-modal-image {
-    height: 180px;
-  }
-  
-  .applynow-modal-header {
-    text-align: center;
+  .applynow-modal-content {
+    padding: 2rem 1.5rem;
   }
   
   .applynow-signup-btn {
-    align-self: flex-end;
     width: 100%;
-    max-width: 190px;
-    margin-top: -50px;
+    padding: 0.875rem 1.5rem;
   }
-
+  
   .applynow-modal-close {
-    margin-top: 5px;
+    top: 1rem;
+    right: 1rem;
   }
 }
 
 @media (max-width: 480px) {
   .applynow-container {
-    padding: 0.5rem;
-  }
-
-  .applynow-modal-about {
-    padding: 10px 6px; /* Further reduce padding on small screens */
+    padding: 1rem 0.75rem;
   }
   
   .applynow-title {
-    font-size: 1.75rem;
+    font-size: 1.625rem;
+  }
+  
+  .applynow-card {
+    padding: 0.875rem;
+  }
+  
+  .applynow-inner-card {
+    padding: 1rem;
+  }
+  
+  .applynow-card-title {
+    font-size: 1.25rem;
   }
   
   .applynow-modal-header {
-    display: block;
-    padding: 1rem;
+    padding: 1.5rem 1rem 1.25rem 1rem;
   }
   
   .applynow-modal-content {
-    padding: 1rem;
+    padding: 1.5rem 1rem;
   }
   
   .applynow-modal-title {
     font-size: 1.25rem;
-    margin-bottom: 7px;
   }
   
-  .applynow-signup-btn {
-    padding: 0.5rem 0.7rem;
-    font-size: 0.875rem;
-    margin-left: 20px;
+  .applynow-modal-close {
+    top: 0.875rem;
+    right: 0.875rem;
+    width: 32px;
+    height: 32px;
   }
 }

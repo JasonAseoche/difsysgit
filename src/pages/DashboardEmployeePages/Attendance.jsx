@@ -5,6 +5,7 @@ import '../../components/EmployeeLayout/Attendance.css';
 
 const Attendance = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [shiftType, setShiftType] = useState('day');
   const [attendanceData, setAttendanceData] = useState([]);
   const [employeeInfo, setEmployeeInfo] = useState({
     firstName: 'Loading...',
@@ -33,21 +34,51 @@ const Attendance = () => {
   };
 
   // Fixed late calculation function (same as API)
-  const calculateLateMinutes = (timeIn) => {
+  const calculateLateMinutes = (timeIn, detectedShift = null) => {
     const timeInObj = new Date(`2000-01-01 ${timeIn}`);
-    const workStartTime = new Date('2000-01-01 08:00:00'); // 8:00 AM work start
-    const graceTime = new Date('2000-01-01 08:10:00'); // 8:10 AM grace period
     
-    // If time in is at or before 8:10 AM, not late
-    if (timeInObj <= graceTime) {
-      return 0;
+    // Detect shift if not provided
+    if (detectedShift === null) {
+      const hour = timeInObj.getHours();
+      detectedShift = (hour >= 6 && hour < 18) ? 'day' : 'night';
     }
     
-    // Calculate minutes late from 8:00 AM (not from 8:10 AM)
-    const diffMs = timeInObj.getTime() - workStartTime.getTime();
-    const lateMinutes = Math.floor(diffMs / (1000 * 60));
-    
-    return lateMinutes;
+    if (detectedShift === 'day') {
+      const workStartTime = new Date('2000-01-01 08:00:00');
+      const graceTime = new Date('2000-01-01 08:10:00');
+      
+      if (timeInObj <= graceTime) {
+        return 0;
+      }
+      
+      const diffMs = timeInObj.getTime() - workStartTime.getTime();
+      return Math.floor(diffMs / (1000 * 60));
+    } else {
+      // Night shift logic
+      const currentHour = timeInObj.getHours();
+      
+      if (currentHour >= 22) {
+        // Same day (10:00 PM - 11:59 PM)
+        const workStartTime = new Date('2000-01-01 22:00:00');
+        const graceTime = new Date('2000-01-01 22:10:00');
+        
+        if (timeInObj <= graceTime) {
+          return 0;
+        }
+        
+        const diffMs = timeInObj.getTime() - workStartTime.getTime();
+        return Math.floor(diffMs / (1000 * 60));
+      } else {
+        // Next day (12:00 AM - 6:00 AM)
+        const workStartTime = new Date('2000-01-01 22:00:00');
+        const nextDayTimeIn = new Date('2000-01-02 ' + timeIn);
+        
+        const diffMs = nextDayTimeIn.getTime() - workStartTime.getTime();
+        const totalMinutes = Math.floor(diffMs / (1000 * 60));
+        
+        return Math.max(0, totalMinutes - 10); // 10 minutes grace period
+      }
+    }
   };
 
   // Calculate undertime minutes if employee times out before 5:00 PM
@@ -183,6 +214,32 @@ const Attendance = () => {
     }
   };
 
+  // Add this function to detect shift based on current time
+const detectCurrentShiftType = () => {
+  const now = getCurrentTimeUTC8();
+  const hour = now.getHours();
+  
+  if (hour >= 6 && hour < 18) {
+    return 'day';
+  } else {
+    return 'night';
+  }
+};
+
+// Update shift type based on current time
+useEffect(() => {
+  const currentShift = detectCurrentShiftType();
+  setShiftType(currentShift);
+  
+  // Update every hour to catch shift changes
+  const interval = setInterval(() => {
+    const newShift = detectCurrentShiftType();
+    setShiftType(newShift);
+  }, 3600000); // Every hour
+  
+  return () => clearInterval(interval);
+}, []);
+
   // Simple format for Late/Undertime display - just show minutes or 0m
   const formatLateUndertimeSimple = (totalMinutes) => {
     if (!totalMinutes || totalMinutes === 0) {
@@ -203,26 +260,30 @@ const Attendance = () => {
     }
   
     if (record.time_in && !record.time_out) {
+      // FIXED: Check for late status immediately when time_in exists, even without time_out
+      if (record.late_undertime > 0 || record.late_minutes > 0) {
+        return 'Late';
+      }
       return 'Present';
     }
   
     // Check for holiday status first
     if (record.is_holiday === 1) {
-      if (record.overtime > 0) {
-        return 'Present';
-      } else {
-        return 'Present';
+      // Even on holidays, show Late if employee was late
+      if (record.late_undertime > 0 || record.late_minutes > 0) {
+        return 'Late';
       }
+      return 'Present';
+    }
+  
+    // MOVED UP: Check for late status BEFORE overtime check
+    if (record.late_undertime > 0 || record.late_minutes > 0) {
+      return 'Late';
     }
   
     // Check if it has overtime
     if (record.overtime > 0) {
       return 'Present';
-    }
-  
-    // Check for late status
-    if (record.late_minutes > 0) {
-      return 'Late';
     }
   
     // Check specific status from database
@@ -463,7 +524,9 @@ const Attendance = () => {
               <path d="M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M7,12.5L10.5,16L17,9.5L15.5,8L10.5,13L8.5,11L7,12.5Z"/>
             </svg>
           </div>
-          <div className="attendanceTimeValue">8:00 AM</div>
+          <div className="attendanceTimeValue">
+            {shiftType === 'day' ? '8:00 AM' : '10:00 PM'}
+          </div>
           <div className="attendanceTimeLabel">Standard Start Time</div>
         </div>
 
@@ -473,7 +536,9 @@ const Attendance = () => {
               <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M16.5,12A4.5,4.5 0 0,1 12,16.5A4.5,4.5 0 0,1 7.5,12A4.5,4.5 0 0,1 12,7.5A4.5,4.5 0 0,1 16.5,12Z"/>
             </svg>
           </div>
-          <div className="attendanceTimeValue">5:00 PM</div>
+          <div className="attendanceTimeValue">
+            {shiftType === 'day' ? '5:00 PM' : '6:00 AM'}
+          </div>
           <div className="attendanceTimeLabel">Standard End Time</div>
         </div>
 
@@ -483,7 +548,7 @@ const Attendance = () => {
               <path d="M6,2V8H6V8L10,12L6,16V16H6V22H18V16H18V16L14,12L18,8V8H18V2H6M16,16.5V20H8V16.5L12,12.5L16,16.5M12,11.5L8,7.5V4H16V7.5L12,11.5Z"/>
             </svg>
           </div>
-          <div className="attendanceTimeValue">8:10 AM</div>
+          <div className="attendanceTimeValue">{shiftType === 'day' ? '8:10 AM' : '10:10 PM'}</div>
           <div className="attendanceTimeLabel">Grace Period Cutoff</div>
         </div>
       </div>

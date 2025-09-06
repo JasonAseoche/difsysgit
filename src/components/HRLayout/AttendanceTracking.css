@@ -6,24 +6,23 @@
   background-color: #f8fafc;
   font-family: 'Segoe UI', Arial, sans-serif;
   width: 100%;
-  height: 100vh;
+  max-height: 100vh;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 /* Header Container */
 .attendance-tracking-header-container {
   background-color: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   padding: 20px;
   margin: 20px;
   border: 1px solid #f0f0f0;
   flex-shrink: 0;
   z-index: 10;
-  transition: all 0.3s ease-in-out;
 }
 
 .attendance-tracking-header-content {
@@ -106,7 +105,7 @@
 .attendance-tracking-content {
   flex: 1;
   z-index: 0;
-  overflow-y: hidden;
+  overflow-y: auto;
   padding: 0 20px 20px 20px;
 }
 
@@ -479,6 +478,13 @@
   transform: translateY(-1px);
 }
 
+.attendance-tracking-pagination-btn.attendance-tracking-active:hover:not(:disabled) {
+  background: linear-gradient(135deg, #003D7C 0%, #002a5c 100%);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 2px 4px rgba(0, 61, 124, 0.3);
+}
+
 .attendance-tracking-pagination-btn.attendance-tracking-active {
   background: linear-gradient(135deg, #003D7C 0%, #002a5c 100%);
   color: white;
@@ -656,6 +662,7 @@
 
 /* Loading States */
 .attendance-tracking-loading {
+  margin-left: -100px;
   text-align: center;
   padding: 30px;
   color: #64748b;
@@ -668,11 +675,10 @@
 }
 
 .attendance-tracking-loading-spinner {
+  margin-top: 400px;
   width: 40px;
   height: 40px;
-  border: 3px solid rgba(59, 130, 246, 0.2);
-  border-radius: 50%;
-  border-top-color: #3b82f6;
+  color: #3b82f6;
   animation: spin 1s linear infinite;
 }
 
@@ -719,7 +725,7 @@
   }
 
   .attendance-tracking-content {
-    overflow-y: auto;
+    overflow-y: hidden;
   }
 
   .attendance-tracking-stats-grid {
@@ -739,13 +745,22 @@
 
 /* Tablet (768px and below) */
 @media (max-width: 768px) {
+
+  .attendance-tracking-page {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* iOS smooth scrolling */
+    height: auto;
+    min-height: 100vh;
+  }
+
   .attendance-tracking-header-container {
     padding: 15px;
     margin: 15px;
   }
 
   .attendance-tracking-content {
-    padding: 0 15px 15px 15px;
+    overflow-y: visible;
+    padding: 0 15px 30px 15px;
   }
 
   .attendance-tracking-title {
@@ -807,7 +822,7 @@
   }
 
   .attendance-tracking-table-container {
-    min-height: 500px;
+    height: auto;
   }
 
   .attendance-tracking-table-header1 {
@@ -819,8 +834,8 @@
   }
 
   .attendance-tracking-table-wrapper {
+    height: auto;
     overflow-x: auto;
-    min-height: 400px;
   }
 
   .attendance-tracking-table {
@@ -888,13 +903,20 @@
 
 /* Small Mobile (500px and below) - Matches PerformanceEvaluation pattern */
 @media (max-width: 500px) {
+
+  
+  .attendance-tracking-page {
+    padding-bottom: 50px ;
+  }
+
+
   .attendance-tracking-header-container {
     padding: 12px;
     margin: 10px;
   }
 
   .attendance-tracking-content {
-    padding: 0 10px 10px 10px;
+    padding: 0 10px 30px 10px;
   }
 
   .attendance-tracking-title {
@@ -939,7 +961,7 @@
   }
 
   .attendance-tracking-table-container {
-    min-height: 450px;
+    height: auto;
   }
 
   .attendance-tracking-table-header1 {
@@ -951,7 +973,7 @@
   }
 
   .attendance-tracking-table-wrapper {
-    min-height: 350px;
+    height: auto;
   }
 
   .attendance-tracking-table {
@@ -1021,5 +1043,527 @@
 
 .attendance-tracking-content::-webkit-scrollbar-thumb:hover {
   background-color: rgba(148, 163, 184, 0.7);
+}
+
+
+/* Height-based media queries for smaller laptops - ONLY fixing layout, NOT content sizes */
+@media (max-height: 720px) and (min-width: 769px) {
+  .attendance-tracking-page {
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .attendance-tracking-header-container {
+    flex-shrink: 0; /* Keep header fixed size */
+    /* Keep original padding and margins - don't reduce */
+    padding: 20px;
+    margin: 20px;
+  }
+
+  .attendance-tracking-content {
+    flex: 1;
+    overflow-y: auto;
+    /* Keep original padding - don't reduce */
+    padding: 0 20px 20px 20px;
+    min-height: 0;
+  }
+
+  /* NO changes to content sizes - keep everything original */
+  .attendance-tracking-stats-grid {
+    /* Keep original gap and margins */
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .attendance-tracking-stat-card {
+    /* Keep original padding */
+    padding: 20px;
+  }
+
+  .attendance-tracking-stat-number {
+    /* Keep original font size */
+    font-size: 2.5rem;
+  }
+
+  .attendance-tracking-table-th,
+  .attendance-tracking-table-td {
+    /* Keep original padding */
+    padding: 12px 24px;
+  }
+}
+
+@media (max-height: 600px) and (min-width: 769px) {
+  .attendance-tracking-page {
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .attendance-tracking-header-container {
+    flex-shrink: 0;
+    /* Keep original sizes */
+    padding: 20px;
+    margin: 20px;
+  }
+
+  .attendance-tracking-content {
+    flex: 1;
+    overflow-y: auto;
+    /* Keep original padding */
+    padding: 0 20px 20px 20px;
+    min-height: 0;
+  }
+
+  /* Keep ALL original content sizes */
+  .attendance-tracking-stats-grid {
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .attendance-tracking-stat-card {
+    padding: 20px;
+  }
+
+  .attendance-tracking-stat-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .attendance-tracking-stat-number {
+    font-size: 2.5rem;
+  }
+
+  .attendance-tracking-table-th,
+  .attendance-tracking-table-td {
+    padding: 12px 24px;
+    font-size: 14px; /* Keep original */
+  }
+
+  .attendance-tracking-employee-avatar {
+    width: 55px; /* Keep original */
+    height: 55px; /* Keep original */
+  }
+}
+
+@media (max-height: 500px) and (min-width: 769px) {
+  .attendance-tracking-page {
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .attendance-tracking-header-container {
+    flex-shrink: 0;
+    /* Keep original sizes */
+    padding: 20px;
+    margin: 20px;
+  }
+
+  .attendance-tracking-content {
+    flex: 1;
+    overflow-y: auto;
+    /* Keep original padding */
+    padding: 0 20px 20px 20px;
+    min-height: 0;
+  }
+
+  /* Keep ALL original content sizes even at very small heights */
+  .attendance-tracking-stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px; /* Keep original */
+    margin-bottom: 20px; /* Keep original */
+  }
+
+  .attendance-tracking-stat-card {
+    padding: 20px; /* Keep original */
+  }
+
+  .attendance-tracking-stat-icon {
+    width: 48px; /* Keep original */
+    height: 48px; /* Keep original */
+    margin-right: 16px; /* Keep original */
+  }
+
+  .attendance-tracking-stat-number {
+    font-size: 2.5rem; /* Keep original */
+  }
+
+  .attendance-tracking-stat-label {
+    font-size: 0.9rem; /* Keep original */
+  }
+
+  .attendance-tracking-table-th,
+  .attendance-tracking-table-td {
+    padding: 16px 24px; /* Keep original */
+    font-size: 14px; /* Keep original */
+  }
+
+  .attendance-tracking-employee-avatar {
+    width: 55px; /* Keep original */
+    height: 55px; /* Keep original */
+  }
+
+  .attendance-tracking-employee-name {
+    font-size: 15px; /* Keep original */
+  }
+
+  .attendance-tracking-pagination {
+    padding: 20px 24px; /* Keep original */
+  }
+
+  .attendance-tracking-status-badge {
+    min-width: 100px; /* Keep original */
+    padding: 6px 12px; /* Keep original */
+    font-size: 11px; /* Keep original */
+  }
+}
+
+/* General fix for all laptops - ONLY handles scrolling behavior */
+@media (min-width: 769px) {
+  .attendance-tracking-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-y: auto;
+  }
+
+  .attendance-tracking-header-container {
+    flex-shrink: 0;
+  }
+
+  .attendance-tracking-content {
+    flex: 1;
+    min-height: 0;
+    overflow-y: visible; /* Let page scroll naturally */
+  }
+
+}
+
+/* Modified: Large Desktop - Keep original column widths */
+@media (min-width: 1600px) {
+  .attendance-tracking-table-th:nth-child(1) { width: 25%; }
+  .attendance-tracking-table-th:nth-child(2) { width: 12%; }
+  .attendance-tracking-table-th:nth-child(3) { width: 11%; }
+  .attendance-tracking-table-th:nth-child(4) { width: 11%; }
+  .attendance-tracking-table-th:nth-child(5) { width: 11%; }
+  .attendance-tracking-table-th:nth-child(6) { width: 12%; }
+  .attendance-tracking-table-th:nth-child(7) { width: 18%; }
+}
+
+/* Keep the min-height rule simple and non-intrusive */
+@media (min-height: 800px) {
+  .attendance-tracking-page {
+    min-height: 100vh;
+    overflow-y: auto;
+  }
+}
+
+/* Laptop width-based rules - Keep original content sizes */
+@media (max-width: 1600px) and (min-width: 769px) {
+  /* Only apply these if NOT on small height screens */
+  .attendance-tracking-header-container {
+    padding: 18px; /* Slight reduction only for wide laptops */
+    margin: 18px;
+  }
+
+  .attendance-tracking-content {
+    overflow-y: auto;
+  }
+
+  .attendance-tracking-stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px; /* Slight reduction only for wide laptops */
+  }
+
+  .attendance-tracking-stat-card {
+    padding: 18px; /* Slight reduction only for wide laptops */
+  }
+
+  .attendance-tracking-table-th,
+  .attendance-tracking-table-td {
+    padding: 14px 20px; /* Slight reduction only for wide laptops */
+  }
+}
+
+/* Your existing tablet and mobile media queries remain exactly the same */
+@media (max-width: 768px) {
+  .attendance-tracking-page {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .attendance-tracking-header-container {
+    padding: 15px;
+    margin: 15px;
+  }
+
+  .attendance-tracking-content {
+    overflow-y: visible;
+    padding: 0 15px 30px 15px;
+  }
+
+  .attendance-tracking-title {
+    font-size: 20px;
+  }
+
+  .attendance-tracking-header-content {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .attendance-tracking-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .attendance-tracking-date-picker-box {
+    flex: 1;
+    width: auto;
+    min-width: 200px;
+    max-width: none;
+  }
+
+  .attendance-tracking-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 0 0 20px 0;
+    width: 100%;
+  }
+
+  .attendance-tracking-stat-card {
+    padding: 12px;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .attendance-tracking-stat-icon {
+    width: 36px;
+    height: 36px;
+    margin-right: 12px;
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .attendance-tracking-stat-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .attendance-tracking-stat-number {
+    font-size: 1.8rem;
+  }
+
+  .attendance-tracking-stat-label {
+    font-size: 0.8rem;
+  }
+
+  .attendance-tracking-table-container {
+    height: auto;
+  }
+
+  .attendance-tracking-table-header1 {
+    padding: 15px;
+  }
+
+  .attendance-tracking-table-title {
+    font-size: 16px;
+  }
+
+  .attendance-tracking-table-wrapper {
+    height: auto;
+    overflow-x: auto;
+  }
+
+  .attendance-tracking-table {
+    table-layout: auto;
+    min-width: 800px;
+  }
+
+  .attendance-tracking-table-th,
+  .attendance-tracking-table-td {
+    padding: 16px 12px;
+    font-size: 13px;
+    min-height: 60px;
+  }
+
+  .attendance-tracking-table-row {
+    min-height: 70px;
+  }
+
+  .attendance-tracking-employee-info {
+    padding: 8px 0;
+  }
+
+  .attendance-tracking-employee-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 12px;
+    margin-right: 16px;
+  }
+
+  .attendance-tracking-pagination {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px 20px;
+  }
+  
+  .attendance-tracking-pagination-info {
+    text-align: center;
+    font-size: 13px;
+  }
+  
+  .attendance-tracking-pagination-controls {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .attendance-tracking-pagination-btn {
+    min-width: 35px;
+    height: 35px;
+    padding: 6px 10px;
+  }
+
+  .attendance-tracking-date-picker-modal {
+    padding: 20px;
+    margin: 10px;
+    min-width: 280px;
+  }
+
+  .attendance-tracking-status-badge {
+    min-width: 80px;
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 500px) {
+  .attendance-tracking-page {
+    padding-bottom: 50px;
+  }
+
+  .attendance-tracking-header-container {
+    padding: 12px;
+    margin: 10px;
+  }
+
+  .attendance-tracking-content {
+    padding: 0 10px 30px 10px;
+  }
+
+  .attendance-tracking-title {
+    font-size: 18px;
+  }
+
+  .attendance-tracking-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin: 0 0 15px 0;
+    width: 100%;
+  }
+
+  .attendance-tracking-stat-card {
+    padding: 10px;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .attendance-tracking-stat-icon {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .attendance-tracking-stat-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .attendance-tracking-stat-number {
+    font-size: 1.5rem;
+  }
+
+  .attendance-tracking-stat-label {
+    font-size: 0.7rem;
+    margin-top: 2px;
+  }
+
+  .attendance-tracking-table-container {
+    height: auto;
+  }
+
+  .attendance-tracking-table-header1 {
+    padding: 12px;
+  }
+
+  .attendance-tracking-table-title {
+    font-size: 14px;
+  }
+
+  .attendance-tracking-table-wrapper {
+    height: auto;
+  }
+
+  .attendance-tracking-table {
+    font-size: 12px;
+    min-width: 700px;
+  }
+
+  .attendance-tracking-table-th,
+  .attendance-tracking-table-td {
+    padding: 18px 8px;
+    min-height: 65px;
+  }
+
+  .attendance-tracking-table-row {
+    min-height: 75px;
+  }
+
+  .attendance-tracking-employee-info {
+    padding: 10px 0;
+  }
+
+  .attendance-tracking-employee-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 12px;
+    margin-right: 16px;
+  }
+
+  .attendance-tracking-pagination-btn {
+    min-width: 30px;
+    height: 30px;
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+
+  .attendance-tracking-date-picker-modal {
+    padding: 15px;
+    margin: 15px;
+    min-width: 250px;
+  }
+
+  .attendance-tracking-date-picker-title {
+    font-size: 16px;
+  }
+
+  .attendance-tracking-status-badge {
+    min-width: 70px;
+    padding: 8px 10px;
+    font-size: 11px;
+  }
 }
 

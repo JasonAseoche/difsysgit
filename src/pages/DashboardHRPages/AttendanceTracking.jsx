@@ -1,4 +1,4 @@
-import { Users, Clock, UserX, UserCheck, ChevronLeft, ChevronRight, Calendar, Filter, X, AlertTriangle } from 'lucide-react';
+import { Users, Clock, UserX, UserCheck, ChevronLeft, ChevronRight, Calendar, Filter, X, AlertTriangle, Loader } from 'lucide-react';
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import '../../components/HRLayout/AttendanceTracking.css';
@@ -147,7 +147,8 @@ const AttendanceTracking = () => {
             totalHours: formatTotalHours(record.total_workhours),
             overtime: formatOvertime(record.overtime),
             status: determineDisplayStatus(record),
-            profileImage: record.profile_image // Add profile image to the record
+            profileImage: record.profile_image,
+            shiftType: record.shift_type || 'day' // Add shift type
           }));
         
         // Only update if there are actual changes to prevent unnecessary re-renders
@@ -186,8 +187,11 @@ const AttendanceTracking = () => {
       return 'Absent';
     }
   
-    // Calculate late minutes using the same logic as API
-    const lateMinutes = calculateLateMinutes(record.time_in);
+    // Get shift type from record or default to day
+    const shiftType = record.shift_type || 'day';
+  
+    // Calculate late minutes using the shift type
+    const lateMinutes = calculateLateMinutes(record.time_in, shiftType);
     
     // If time_in but no time_out, check current status
     if (record.time_in && !record.time_out) {
@@ -198,21 +202,21 @@ const AttendanceTracking = () => {
       }
     }
   
-          // If both time_in and time_out exist, determine final status
-      if (record.time_in && record.time_out) {
-        const overtimeHours = Math.floor((record.overtime || 0) / 60);
-        
-        // Always check late status first, regardless of API status
-        if (overtimeHours > 0 && lateMinutes > 0) {
-          return `Late (${lateMinutes}m)`;
-        } else if (lateMinutes > 0) {
-          return `Late (${lateMinutes}m)`;
-        } else if (overtimeHours > 0) {
-          return 'Overtime';
-        } else {
-          return 'Present';
-        }
+    // If both time_in and time_out exist, determine final status
+    if (record.time_in && record.time_out) {
+      const overtimeHours = Math.floor((record.overtime || 0) / 60);
+      
+      // Always check late status first, regardless of API status
+      if (overtimeHours > 0 && lateMinutes > 0) {
+        return `Late (${lateMinutes}m)`;
+      } else if (lateMinutes > 0) {
+        return `Late (${lateMinutes}m)`;
+      } else if (overtimeHours > 0) {
+        return 'Overtime';
+      } else {
+        return 'Present';
       }
+    }
   
     return 'Present';
   };
@@ -414,7 +418,7 @@ const AttendanceTracking = () => {
     return (
       <div className="attendance-tracking-page">
         <div className="attendance-tracking-loading">
-          <div className="attendance-tracking-loading-spinner"></div>
+          <Loader className="attendance-tracking-loading-spinner"/>
           <p>Loading attendance records...</p>
         </div>
       </div>
@@ -520,7 +524,12 @@ const AttendanceTracking = () => {
                     <td className="attendance-tracking-table-td">
                       <div className="attendance-tracking-employee-info">
                         {renderEmployeeAvatar(employee)}
-                        <span className="attendance-tracking-employee-name">{employee.name}</span>
+                        <div className="attendance-tracking-employee-details">
+                          <span className="attendance-tracking-employee-name">{employee.name}</span>
+                          {employee.shiftType && employee.shiftType === 'night' && (
+                            <span className="attendance-tracking-shift-badge">Night Shift</span>
+                          )}
+                        </div>
                       </div>
                     </td>
                     <td className="attendance-tracking-table-td attendance-tracking-date-cell">{formatTableDate(selectedDate)}</td>

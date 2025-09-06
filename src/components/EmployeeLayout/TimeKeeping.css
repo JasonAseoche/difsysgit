@@ -38,7 +38,6 @@
     color: white;
     font-weight: 700;
     font-size: 20px;
-    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
   }
   
   .timekeepingAvatarText {
@@ -150,7 +149,6 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
   }
   
   .timekeepingFileLeaveBtn:hover {
@@ -249,7 +247,7 @@
   /* Form Modal */
   .timekeepingFormModal {
     background: white;
-    border-radius: 16px;
+    border-radius: 8px;
     max-width: 600px;
     width: 100%;
     max-height: 90vh;
@@ -756,6 +754,7 @@
     
     .timekeepingFormRow {
       grid-template-columns: 1fr;
+      gap: 1px;
     }
     
     .timekeepingFormModal {
@@ -765,6 +764,7 @@
     
     .timekeepingForm {
       padding: 24px;
+      gap: 0;
     }
     
     .timekeepingTableSection {

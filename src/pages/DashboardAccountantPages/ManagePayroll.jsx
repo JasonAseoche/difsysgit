@@ -23,6 +23,7 @@ const ManagePayroll = () => {
   const [availableHolidays, setAvailableHolidays] = useState([]);
   const [selectedPeriodDetails, setSelectedPeriodDetails] = useState(null);
   const [editingItem, setEditingItem] = useState(null);
+  const [holidaySearchTerm, setHolidaySearchTerm] = useState('');
   
 
   // Form data
@@ -129,6 +130,22 @@ const ManagePayroll = () => {
     'Special Holiday + ROT + ND Rate'
 ];
 
+const autoSelectHolidaysInRange = (dateFrom, dateTo) => {
+  if (!dateFrom || !dateTo || availableHolidays.length === 0) {
+    return [];
+  }
+
+  const startDate = new Date(dateFrom);
+  const endDate = new Date(dateTo);
+  
+  const holidaysInRange = availableHolidays.filter(holiday => {
+    const holidayDate = new Date(holiday.date);
+    return holidayDate >= startDate && holidayDate <= endDate;
+  });
+
+  return holidaysInRange.map(holiday => holiday.id);
+};
+
   // Effects
   useEffect(() => {
     if (currentView !== 'dashboard') {
@@ -139,6 +156,26 @@ const ManagePayroll = () => {
   useEffect(() => {
             document.title = "DIFSYS | MANAGE PAYROLL";
           }, []);
+  
+          useEffect(() => {
+            const handleClickOutside = (event) => {
+              // Check if the click is outside the holiday dropdown
+              if (!event.target.closest('.mp-holiday-dropdown')) {
+                setShowHolidaySelector(false);
+                setHolidaySearchTerm('');
+              }
+            };
+          
+            // Only add the event listener when the dropdown is open
+            if (showHolidaySelector) {
+              document.addEventListener('mousedown', handleClickOutside);
+            }
+          
+            // Cleanup the event listener
+            return () => {
+              document.removeEventListener('mousedown', handleClickOutside);
+            };
+          }, [showHolidaySelector]);
 
   useEffect(() => {
     if (showHolidaySelector || showAddForm || showEditForm) {
@@ -149,6 +186,104 @@ const ManagePayroll = () => {
   useEffect(() => {
     setSelectAll(selectedItems.length === getCurrentData().length && getCurrentData().length > 0);
   }, [selectedItems, currentView]);
+
+  useEffect(() => {
+    // Auto-select holidays when available holidays are loaded and we have date range
+    if (currentView === 'payroll-period' && formData.dateFrom && formData.dateTo && availableHolidays.length > 0) {
+      const autoSelectedHolidays = autoSelectHolidaysInRange(formData.dateFrom, formData.dateTo);
+      
+      // Only update if the selection would actually change
+      if (JSON.stringify(autoSelectedHolidays.sort()) !== JSON.stringify(formData.selectedHolidays.sort())) {
+        setFormData(prev => ({
+          ...prev,
+          selectedHolidays: autoSelectedHolidays
+        }));
+      }
+    }
+  }, [availableHolidays, currentView, formData.dateFrom, formData.dateTo]);
+
+  const filteredHolidays = availableHolidays.filter(holiday =>
+    holiday.name.toLowerCase().includes(holidaySearchTerm.toLowerCase()) ||
+    holiday.type.toLowerCase().includes(holidaySearchTerm.toLowerCase())
+  );
+
+  const fetchPhilippineHolidays = async (year = new Date().getFullYear()) => {
+    try {
+      setLoading(true);
+      console.log('Fetching holidays for year:', year); // Debug log
+      
+      // Correct API URL format
+      const response = await fetch(`https://date.nager.at/api/v3/PublicHolidays/${year}/PH`);
+      
+      if (!response.ok) {
+        throw new Error(`API responded with status: ${response.status}`);
+      }
+      
+      const holidays = await response.json();
+      console.log('Fetched holidays:', holidays); // Debug log
+      
+      if (!Array.isArray(holidays) || holidays.length === 0) {
+        console.warn('No holidays data received');
+        return;
+      }
+      
+      let successCount = 0;
+      let errorCount = 0;
+      
+      for (const holiday of holidays) {
+        try {
+          await axios.post(`${API_BASE}?action=holiday`, {
+            holidayName: holiday.name,
+            holidayType: holiday.global ? 'Regular' : 'Special',
+            dateFrom: holiday.date
+          });
+          successCount++;
+          console.log(`Created holiday: ${holiday.name}`); // Debug log
+        } catch (error) {
+          console.error(`Failed to create holiday: ${holiday.name}`, error);
+          errorCount++;
+        }
+      }
+      
+      console.log(`Import complete: ${successCount} success, ${errorCount} errors`); // Debug log
+      alert(`Successfully imported ${successCount} holidays for ${year}. ${errorCount > 0 ? `${errorCount} failed.` : ''}`);
+      
+      // Refresh the data after import
+      await loadData();
+      
+    } catch (error) {
+      console.error('Error fetching holidays:', error);
+      alert(`Failed to fetch holidays: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (currentView !== 'dashboard') {
+      loadData();
+      
+      // Auto-import holidays when first visiting setup-holiday
+      if (currentView === 'setup-holiday') {
+        // Check if holidays already exist to avoid duplicates
+        checkAndImportHolidays();
+      }
+    }
+  }, [currentView]);
+  
+  const checkAndImportHolidays = async () => {
+    try {
+      const response = await axios.get(`${API_BASE}?action=holidays`);
+      const existingHolidays = response.data.data;
+      
+      // Only import if no holidays exist
+      if (existingHolidays.length === 0) {
+        await fetchPhilippineHolidays();
+      }
+    } catch (error) {
+      console.error('Error checking existing holidays:', error);
+    }
+  };
 
   // API Functions
   const loadData = async () => {
@@ -277,8 +412,7 @@ const ManagePayroll = () => {
           data = {
             holidayName: formData.holidayName,
             holidayType: formData.holidayType,
-            dateFrom: formData.dateFrom,
-            dateTo: formData.dateTo
+            dateFrom: formData.dateFrom 
           };
           break;
           case 'pay-components':
@@ -375,6 +509,7 @@ const ManagePayroll = () => {
     setFormData({
       dateFrom: '',
       dateTo: '',
+      date: '', // Add this line
       selectedHolidays: [],
       holidayName: '',
       holidayType: 'Regular',
@@ -630,8 +765,8 @@ const ManagePayroll = () => {
           : ['PRP ID', 'Date From', 'Date To', 'No. of Regular Holiday', 'No. of Special Holiday'];
       case 'setup-holiday':
         return isManaging
-          ? ['', 'Holiday ID', 'Holiday Name', 'Holiday Type', 'Date From and To', 'Action']
-          : ['Holiday ID', 'Holiday Name', 'Holiday Type', 'Date From and To'];
+          ? ['', 'Holiday ID', 'Holiday Name', 'Holiday Type', 'Date', 'Action']
+          : ['Holiday ID', 'Holiday Name', 'Holiday Type', 'Date'];
       case 'pay-components':
         return isManaging
           ? ['', 'PPC ID', 'Pay Components', 'Rate Type', 'Formula', 'Date Added', 'Status', 'Action']
@@ -709,7 +844,7 @@ const ManagePayroll = () => {
                 {item.type}
               </span>
             </td>
-            <td className="mp-date-range-cell">{formatDate(item.dateFrom)} - {formatDate(item.dateTo)}</td>
+            <td className="mp-date-range-cell">{formatDate(item.dateFrom)}</td>
             {isManaging && (
               <td className="mp-action-cell">
                 <button onClick={() => handleEdit(item.id)} className="mp-table-action-btn mp-edit-btn">
@@ -872,12 +1007,68 @@ const ManagePayroll = () => {
                 </svg>
               </button>
             </div>
-            <div className="mp-form-content" style={{ position: 'relative', zIndex: 1 }}>
-              {/* Date Fields for Payroll Period and Holiday */}
-              {(currentView === 'payroll-period' || currentView === 'setup-holiday') && (
-                <div className="mp-form-row">
+            <div className="mp-form-content" style={{ position: 'relative', zIndex: 1001 }}>
+              {/* Date Fields for Payroll Period */}
+                {currentView === 'payroll-period' && (
+                  <div className="mp-form-row">
+                    <div className="mp-form-group">
+                      <label className="mp-form-label">Date From:</label>
+                      <input
+                          type="date"
+                          value={formData.dateFrom}
+                          onChange={(e) => {
+                            const selectedDate = new Date(e.target.value);
+                            const dateTo = new Date(selectedDate);
+                            
+                            // Check if the month has 31 days
+                            const year = selectedDate.getFullYear();
+                            const month = selectedDate.getMonth();
+                            const daysInMonth = new Date(year, month + 1, 0).getDate();
+                            
+                            // Add 15 days if month has 31 days, otherwise add 14
+                            const daysToAdd = daysInMonth === 31 ? 15 : 14;
+                            dateTo.setDate(selectedDate.getDate() + daysToAdd);
+                            
+                            const dateToString = dateTo.toISOString().split('T')[0];
+                            
+                            // Auto-select holidays in the date range
+                            const autoSelectedHolidays = autoSelectHolidaysInRange(e.target.value, dateToString);
+                            
+                            setFormData(prev => ({ 
+                              ...prev, 
+                              dateFrom: e.target.value,
+                              dateTo: dateToString,
+                              selectedHolidays: autoSelectedHolidays
+                            }));
+                          }}
+                          className="mp-form-input"
+                        />
+                    </div>
+                    <div className="mp-form-group">
+                      <label className="mp-form-label">Date To:</label>
+                      <input
+                          type="date"
+                          value={formData.dateTo}
+                          onChange={(e) => {
+                            // Auto-select holidays in the updated date range
+                            const autoSelectedHolidays = autoSelectHolidaysInRange(formData.dateFrom, e.target.value);
+                            
+                            setFormData(prev => ({ 
+                              ...prev, 
+                              dateTo: e.target.value,
+                              selectedHolidays: autoSelectedHolidays
+                            }));
+                          }}
+                          className="mp-form-input"
+                        />
+                    </div>
+                  </div>
+                )}
+
+                {/* Date Field for Holiday */}
+                {currentView === 'setup-holiday' && (
                   <div className="mp-form-group">
-                    <label className="mp-form-label">Date From:</label>
+                    <label className="mp-form-label">Date:</label>
                     <input
                       type="date"
                       value={formData.dateFrom}
@@ -885,45 +1076,83 @@ const ManagePayroll = () => {
                       className="mp-form-input"
                     />
                   </div>
-                  <div className="mp-form-group">
-                    <label className="mp-form-label">Date To:</label>
-                    <input
-                      type="date"
-                      value={formData.dateTo}
-                      onChange={(e) => setFormData(prev => ({ ...prev, dateTo: e.target.value }))}
-                      className="mp-form-input"
-                    />
-                  </div>
-                </div>
-              )}
+                )}
 
               {/* Holiday Selection for Payroll Period */}
               {currentView === 'payroll-period' && (
                 <div className="mp-form-group">
-                  <label className="mp-form-label">Select Holiday:</label>
-                  <button
-                    onClick={() => setShowHolidaySelector(true)}
-                    className="mp-form-input mp-holiday-selector-btn"
+                <label className="mp-form-label">Select Holiday:</label>
+                <div className="mp-holiday-dropdown">
+                  <div 
+                    className="mp-holiday-dropdown-trigger"
+                    onClick={() => setShowHolidaySelector(!showHolidaySelector)}
                   >
-                    Click to select holidays
-                  </button>
-                  {formData.selectedHolidays.length > 0 && (
-                    <div className="mp-selected-holidays">
-                      {availableHolidays
-                        .filter(holiday => formData.selectedHolidays.includes(holiday.id))
-                        .map(holiday => (
-                          <div key={holiday.id} className="mp-selected-holiday-item">
-                            <span className="mp-selected-holiday-name">{holiday.name}</span>
-                            <span className="mp-selected-holiday-date">{formatDate(holiday.date)}</span>
-                            <span className={`mp-selected-holiday-type mp-type-${holiday.type.toLowerCase()}`}>
+                    <input
+                      type="text"
+                      value={showHolidaySelector ? holidaySearchTerm : 'Click to select holidays'}
+                      onChange={(e) => setHolidaySearchTerm(e.target.value)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowHolidaySelector(true);
+                      }}
+                      className="mp-form-input mp-holiday-search"
+                      placeholder={showHolidaySelector ? "Search holidays..." : "Click to select holidays"}
+                      readOnly={!showHolidaySelector}
+                    />
+                    <svg 
+                      width="16" 
+                      height="16" 
+                      viewBox="0 0 24 24" 
+                      fill="currentColor"
+                      className={`mp-dropdown-arrow ${showHolidaySelector ? 'open' : ''}`}
+                    >
+                      <path d="M7 10l5 5 5-5z"/>
+                    </svg>
+                  </div>
+                  
+                  {showHolidaySelector && (
+                    <div className="mp-holiday-dropdown-menu">
+                      {filteredHolidays.map((holiday) => (
+                        <label key={holiday.id} className="mp-holiday-dropdown-option">
+                          <input
+                            type="checkbox"
+                            checked={formData.selectedHolidays.includes(holiday.id)}
+                            onChange={() => handleHolidayToggle(holiday.id)}
+                            className="mp-holiday-checkbox"
+                          />
+                          <div className="mp-holiday-option-content">
+                            <span className="mp-holiday-option-name">{holiday.name}</span>
+                            <span className="mp-holiday-option-date">{formatDate(holiday.date)}</span>
+                            <span className={`mp-holiday-option-type mp-type-${holiday.type.toLowerCase()}`}>
                               {holiday.type}
                             </span>
                           </div>
-                        ))
-                      }
+                        </label>
+                      ))}
+                      {filteredHolidays.length === 0 && (
+                        <div className="mp-holiday-no-results">No holidays found</div>
+                      )}
                     </div>
                   )}
                 </div>
+                
+                {formData.selectedHolidays.length > 0 && (
+                  <div className="mp-selected-holidays">
+                    {availableHolidays
+                      .filter(holiday => formData.selectedHolidays.includes(holiday.id))
+                      .map(holiday => (
+                        <div key={holiday.id} className="mp-selected-holiday-item">
+                          <span className="mp-selected-holiday-name">{holiday.name}</span>
+                          <span className="mp-selected-holiday-date">{formatDate(holiday.date)}</span>
+                          <span className={`mp-selected-holiday-type mp-type-${holiday.type.toLowerCase()}`}>
+                            {holiday.type}
+                          </span>
+                        </div>
+                      ))
+                    }
+                  </div>
+                )}
+              </div>
               )}
 
               {/* Holiday Name and Type */}
@@ -1223,51 +1452,6 @@ const ManagePayroll = () => {
                 </button>
                 <button onClick={saveData} className="mp-form-btn mp-save-btn" disabled={loading}>
                   {loading ? 'Saving...' : (editingItem ? 'Update' : 'Save')}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Holiday Selector Modal */}
-      {showHolidaySelector && (
-        <div className="mp-form-overlay">
-          <div className="mp-form-modal">
-            <div className="mp-form-header">
-              <h3 className="mp-form-title">Select Holidays</h3>
-              <button onClick={() => setShowHolidaySelector(false)} className="mp-form-close">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                </svg>
-              </button>
-            </div>
-            <div className="mp-form-content">
-              <div className="mp-holiday-list">
-                {availableHolidays.map((holiday) => (
-                  <label key={holiday.id} className="mp-holiday-option">
-                    <input
-                      type="checkbox"
-                      checked={formData.selectedHolidays.includes(holiday.id)}
-                      onChange={() => handleHolidayToggle(holiday.id)}
-                      className="mp-holiday-checkbox"
-                    />
-                    <div className="mp-holiday-details">
-                      <span className="mp-holiday-name">{holiday.name}</span>
-                      <span className="mp-holiday-date">{formatDate(holiday.date)}</span>
-                    </div>
-                    <span className={`mp-holiday-type mp-type-${holiday.type.toLowerCase()}`}>
-                      {holiday.type}
-                    </span>
-                  </label>
-                ))}
-              </div>
-              <div className="mp-form-actions">
-                <button onClick={() => setShowHolidaySelector(false)} className="mp-form-btn mp-cancel-btn">
-                  Cancel
-                </button>
-                <button onClick={() => setShowHolidaySelector(false)} className="mp-form-btn mp-save-btn">
-                  Done
                 </button>
               </div>
             </div>

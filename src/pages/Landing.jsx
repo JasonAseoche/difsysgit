@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Users, TrendingUp, Settings, Shield, Zap, Database } from 'lucide-react';
 import { useAnimateOnScroll } from '../components/Landing/AnimateOnScroll';
-import stockimage from '../assets/difstock.jpg';
-import difsysteamwork from '../assets/difsysteamwork.jpg';
-import difsysplanning from '../assets/difsysplanning.jpg';
+import difsystesting from '../assets/difsystesting.jpg';
+import slide1 from '../assets/slide1.jpg';
+import slide2 from '../assets/slide2.jpg';
+import slide3 from '../assets/slide3.jpg';
+import slide4 from '../assets/slide4.jpg';
+import slide5 from '../assets/slide5.jpg';
+import difsysbg from '../assets/difsysbg.jpg';
 import difsysteam from '../assets/difsysteam.png';
 import difsyslogo from '../assets/difsyslogo.png';
 import Header from '../components/Landing/Header';
@@ -219,34 +223,108 @@ const Landing = () => {
     );
   };
 
-  // Benefits Section
   const LandingBenefits = () => {
-    const benefitsImages = [stockimage, difsysteamwork, difsysplanning];
+    const benefitsImages = [difsystesting, slide1, slide2, slide3, slide4, slide5 ];
     const [currentBenefits, setCurrentBenefits] = useState(0);
-
+    const [isTransitioning, setIsTransitioning] = useState(false);
+  
     useEffect(() => {
       const interval = setInterval(() => {
-        setCurrentBenefits((prev) => (prev + 1) % benefitsImages.length);
-      }, 5000);
-
+        setIsTransitioning(true);
+        setTimeout(() => {
+          setCurrentBenefits((prev) => (prev + 1) % benefitsImages.length);
+          setIsTransitioning(false);
+        }, 250);
+      }, 4000);
+  
       return () => clearInterval(interval);
     }, [benefitsImages.length]);
-
+  
+    const handleImageClick = (index) => {
+      if (index !== currentBenefits && !isTransitioning) {
+        setIsTransitioning(true);
+        setTimeout(() => {
+          setCurrentBenefits(index);
+          setIsTransitioning(false);
+        }, 250);
+      }
+    };
+  
+    const getImageStyle = (index) => {
+      const position = (index - currentBenefits + benefitsImages.length) % benefitsImages.length;
+      
+      if (position === 0) {
+        // Center image
+        return {
+          transform: 'translateX(0) scale(1)',
+          zIndex: 3,
+          opacity: 1,
+          filter: 'brightness(1)'
+        };
+      } else if (position === 1) {
+        // Right image
+        return {
+          transform: 'translateX(60%) scale(0.8)',
+          zIndex: 1,
+          opacity: 0.7,
+          filter: 'brightness(0.7)'
+        };
+      } else if (position === benefitsImages.length - 1) {
+        // Left image (previous image)
+        return {
+          transform: 'translateX(-60%) scale(0.8)',
+          zIndex: 2,
+          opacity: 0.7,
+          filter: 'brightness(0.7)'
+        };
+      } else {
+        // Hidden images (not adjacent to center)
+        return {
+          transform: 'translateX(0) scale(0.8)',
+          zIndex: 0,
+          opacity: 0,
+          filter: 'brightness(0.7)',
+          pointerEvents: 'none'
+        };
+      }
+    };
+  
     return (
       <section id="benefits" className="landing-benefits">
         <div className="landing-container">
           <div className="landing-benefits-content">
-            <div className="landing-benefits-image">
-              <img
-                src={benefitsImages[currentBenefits]}
-                alt="DIFS Benefits"
-                className="landing-benefits-slider-image"
-              />
+            <div className="landing-benefits-gallery">
+              <div className="landing-gallery-container">
+                {benefitsImages.map((image, index) => (
+                  <div
+                    key={index}
+                    className={`landing-gallery-image ${index === currentBenefits ? 'active' : ''}`}
+                    style={getImageStyle(index)}
+                    onClick={() => handleImageClick(index)}
+                  >
+                    <img
+                      src={image}
+                      alt="DIFS Benefits"
+                      className={isTransitioning ? 'transitioning' : ''}
+                    />
+                  </div>
+                ))}
+              </div>
+              
+              <div className="landing-gallery-indicators">
+                {benefitsImages.map((_, index) => (
+                  <button
+                    key={index}
+                    className={`landing-gallery-indicator ${index === currentBenefits ? 'active' : ''}`}
+                    onClick={() => handleImageClick(index)}
+                  />
+                ))}
+              </div>
             </div>
-
+  
             <div className="landing-benefits-text">
-              <h2>Why Choose DIFS?</h2>
-
+              <h2>Why Choose DIFSYS?</h2>
+  
               <div className="landing-benefit-item">
                 <div className="landing-benefit-icon">
                   <i className="fas fa-check-circle"></i>
@@ -256,7 +334,7 @@ const Landing = () => {
                   <p>With years of experience in facility management, we understand your unique challenges.</p>
                 </div>
               </div>
-
+  
               <div className="landing-benefit-item">
                 <div className="landing-benefit-icon">
                   <i className="fas fa-check-circle"></i>
@@ -266,7 +344,7 @@ const Landing = () => {
                   <p>Our digital systems leverage cutting-edge AI and data analytics for optimal results.</p>
                 </div>
               </div>
-
+  
               <div className="landing-benefit-item">
                 <div className="landing-benefit-icon">
                   <i className="fas fa-check-circle"></i>
@@ -276,7 +354,7 @@ const Landing = () => {
                   <p>Tailored approaches for businesses of all sizes and industries.</p>
                 </div>
               </div>
-
+  
               <div className="landing-benefit-item">
                 <div className="landing-benefit-icon">
                   <i className="fas fa-check-circle"></i>
@@ -387,7 +465,7 @@ const Landing = () => {
             <div className="landing-footer-links">
               <h3>Connect</h3>
               <div className="landing-footer-social">
-                <a href="#"><i className="fab fa-facebook-f"></i></a>
+                <a href="https://www.facebook.com/difsys.hr"><i className="fab fa-facebook-f"></i></a>
                 <a href="#"><i className="fab fa-twitter"></i></a>
                 <a href="#"><i className="fab fa-linkedin-in"></i></a>
                 <a href="#"><i className="fab fa-instagram"></i></a>

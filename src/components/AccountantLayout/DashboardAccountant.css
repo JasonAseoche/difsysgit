@@ -1,320 +1,174 @@
 /* DashboardAccountant.css */
 
-* {
-    margin: 0;
-    padding: 0;
+/* Main Dashboard Container */
+.acc-dashboard-container {
+    padding: 20px;
+    background-color: #f8fafc;
+    width: 100%;
     box-sizing: border-box;
-}
-
-/* Container */
-.acc-dash-container {
-    height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-height: 100vh;
     display: flex;
     flex-direction: column;
-    padding: 1rem 1rem 1rem 2rem;
-
-    background-color: #f8fafc;
-    overflow: hidden;
-}
-
-/* Header Section with Cards */
-.acc-dash-header-section {
-    flex-shrink: 0;
-    margin-bottom: 2rem;
-}
-
-.acc-dash-cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-}
-
-.acc-dash-stat-card {
-    background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e2e8f0;
-    transition: all 0.3s ease;
-}
-
-.acc-dash-stat-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
-}
-
-.acc-dash-card-content {
+    overflow-y: auto;
+  }
+  
+  /* Loading and Error States */
+  .acc-loading-container, .acc-error-container {
     display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.acc-dash-card-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 10px;
-    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: 40px;
+    text-align: center;
+  }
+  
+  .acc-loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #e2e8f0;
+    border-top: 4px solid #3b82f6;
+    border-radius: 50%;
+    animation: acc-spin 1s linear infinite;
+    margin-bottom: 20px;
+  }
+  
+  @keyframes acc-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .acc-error-container button {
+    padding: 10px 20px;
+    background-color: #3b82f6;
     color: white;
-    flex-shrink: 0;
-}
-
-.acc-dash-employee-icon {
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-}
-
-.acc-dash-new-tasks-icon {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
-}
-
-.acc-dash-completed-tasks-icon {
-    background: linear-gradient(135deg, #10b981, #059669);
-}
-
-.acc-dash-payroll-icon {
-    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-}
-
-.acc-dash-card-info {
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .acc-error-container button:hover {
+    background-color: #2563eb;
+  }
+  
+  /* Main Layout Grid */
+  .acc-main-layout-grid {
     flex: 1;
-}
-
-.acc-dash-card-title {
-    font-size: 0.9rem;
-    color: #64748b;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-}
-
-.acc-dash-card-value {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #1e293b;
-    margin: 0;
-}
-
-/* Main Content */
-.acc-dash-main-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-.acc-dash-content-grid {
     display: grid;
     grid-template-columns: 1fr 374px;
-    gap: 1.5rem;
-    height: 100%;
-    margin-top: -4.7%;
-}
-
-.acc-dash-table-card {
-    background: rgb(247, 247, 247);
-    border-radius: 12px;
-    padding: 6rem 1.5rem 1.5rem 1.5rem ;
-    top: -55px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e2e8f0;
+    gap: 16px;
+    min-height: calc(100vh - 40px);
+    overflow: visible;
+  }
+  
+  /* Left Content Column */
+  .acc-left-content {
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-    z-index: 0;
-}
-
-/* Calendar Styles */
-.acc-dash-calendar-card {
-    background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e2e8f0;
+    gap: 16px;
+    min-height: 0;
+  }
+  
+  /* Summary Cards Styling - 3 cards */
+  .acc-summary-cards-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    flex-shrink: 0;
+  }
+  
+  .acc-summary-card {
     display: flex;
-    flex-direction: column;
-}
-
-.acc-dash-calendar-header {
-    display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
-}
-
-.acc-dash-calendar-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #1e293b;
-    margin: 0;
-}
-
-.acc-dash-calendar-nav {
-    background: none;
-    border: none;
-    color: #64748b;
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 6px;
-    transition: all 0.2s ease;
-}
-
-.acc-dash-calendar-nav:hover {
-    background: #f1f5f9;
-    color: #1e293b;
-}
-
-.acc-dash-calendar-grid {
-    margin-bottom: 1.5rem;
-}
-
-.acc-dash-calendar-weekdays {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-}
-
-.acc-dash-weekday {
-    text-align: center;
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: #64748b;
-    padding: 0.5rem 0;
-}
-
-.acc-dash-calendar-days {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 0.25rem;
-}
-
-.acc-dash-calendar-day {
-    aspect-ratio: 1;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .acc-summary-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+  
+  .acc-card-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.9rem;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: all 0.2s ease;
-    position: relative;
-}
-
-.acc-dash-calendar-day:hover {
-    background: #f1f5f9;
-}
-
-.acc-dash-calendar-day.acc-dash-other-month {
-    color: #cbd5e1;
-}
-
-.acc-dash-calendar-day.acc-dash-today {
-    background: #f59e0b;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    margin-right: 15px;
     color: white;
-    font-weight: 600;
-}
-
-.acc-dash-calendar-day.acc-dash-has-event::after {
-    content: '';
-    position: absolute;
-    bottom: 2px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 4px;
-    height: 4px;
-    background: #3b82f6;
-    border-radius: 50%;
-}
-
-.acc-dash-calendar-day.acc-dash-today.acc-dash-has-event::after {
-    background: white;
-}
-
-/* Events Section */
-.acc-dash-upcoming-events {
-    margin-top: 0.5rem;
-}
-
-.acc-dash-events-title {
-    font-size: 0.8rem;
-    font-weight: 600;
+  }
+  
+  .acc-card-icon svg {
+    width: 24px;
+    height: 24px;
+    fill: white;
+  }
+  
+  .acc-total-employees .acc-card-icon {
+    background-color: #3b82f6;
+  }
+  
+  .acc-new-tasks .acc-card-icon {
+    background-color: #f59e0b;
+  }
+  
+  .acc-completed-tasks .acc-card-icon {
+    background-color: #10b981;
+  }
+  
+  .acc-card-content {
+    flex: 1;
+  }
+  
+  .acc-card-label {
+    font-size: 14px;
     color: #64748b;
-    margin-bottom: 1rem;
-    letter-spacing: 0.05em;
-}
-
-.acc-dash-events-list {
+    margin-bottom: 5px;
+  }
+  
+  .acc-card-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e293b;
+    animation: acc-countUp 0.8s ease-out forwards;
+  }
+  
+  /* Tasks Table Section */
+  .acc-tasks-section {
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
-}
-
-.acc-dash-event-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem;
-    background: #f8fafc;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-}
-
-.acc-dash-event-item:hover {
-    background: #f1f5f9;
-}
-
-.acc-dash-event-indicator {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
-
-.acc-dash-event-indicator.acc-dash-development {
-    background: #f59e0b;
-}
-
-.acc-dash-event-indicator.acc-dash-ux {
-    background: #10b981;
-}
-
-.acc-dash-event-info {
     flex: 1;
-}
-
-.acc-dash-event-name {
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: #1e293b;
-    text-align: center;
-    margin-bottom: 0.25rem;
-}
-
-.acc-dash-event-time {
-    font-size: 0.8rem;
-    color: #64748b;
-}
-
-.acc-dash-table-header-card {
-    background: white;
-    border-radius: 12px 12px 0px 0px ;
-    padding: 1rem;
-    width: 73.39rem;
-    border: 1px solid #e2e8f0;
+    overflow: hidden;
+  }
+  
+  .acc-table-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    z-index: 1;
-}
-
-.acc-dash-table-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #1e293b;
+    padding: 16px;
+    border-bottom: 1px solid #e2e8f0;
+    flex-shrink: 0;
+  }
+  
+  .acc-table-title {
+    font-size: 16px;
+    color: #475569;
     margin: 0;
-}
-
-.acc-dash-filter-button {
+    font-weight: 600;
+  }
+  
+  .acc-filter-button {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -327,37 +181,39 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
-}
-
-.acc-dash-filter-button:hover {
+  }
+  
+  .acc-filter-button:hover {
     background: #e2e8f0;
     border-color: #cbd5e1;
-}
-
-.acc-dash-filter-button svg {
+  }
+  
+  .acc-filter-button svg {
     width: 16px;
     height: 16px;
-}
-
-/* Table */
-.acc-dash-table-container {
+  }
+  
+  .acc-table-container {
     flex: 1;
     overflow-y: auto;
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
-}
-
-.acc-dash-table {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .acc-table-container::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .acc-task-table {
     width: 100%;
     border-collapse: collapse;
-    background: white;
-}
-
-.acc-dash-table-header-row {
+  }
+  
+  .acc-table-header-row {
     background: #0b3d91;
-}
-
-.acc-dash-table-header-cell {
+  }
+  
+  .acc-table-header-cell {
     padding: 1rem;
     text-align: center;
     font-weight: 600;
@@ -365,30 +221,30 @@
     border-bottom: 1px solid #e2e8f0;
     border-right: 1px solid #e2e8f0;
     font-size: 0.9rem;
-}
-
-.acc-dash-table-row {
+  }
+  
+  .acc-table-row {
     transition: background-color 0.2s ease;
-}
-
-.acc-dash-table-row:hover {
+  }
+  
+  .acc-table-row:hover {
     background-color: #f8fafc;
-}
-
-.acc-dash-table-cell {
+  }
+  
+  .acc-table-cell {
     padding: 1rem;
     border-bottom: 1px solid #f1f5f9;
     vertical-align: middle;
     text-align: center;
-}
-
-.acc-dash-task-name {
+  }
+  
+  .acc-task-name {
     font-weight: 500;
     color: #1e293b;
     font-size: 0.9rem;
-}
-
-.acc-dash-status-badge {
+  }
+  
+  .acc-status-badge {
     display: inline-block;
     padding: 0.25rem 0.75rem;
     border-radius: 20px;
@@ -396,34 +252,34 @@
     font-weight: 500;
     text-align: center;
     min-width: 80px;
-}
-
-.acc-dash-status-completed {
+  }
+  
+  .acc-status-completed {
     background-color: #dcfce7;
     color: #166534;
-}
-
-.acc-dash-status-progress {
+  }
+  
+  .acc-status-progress {
     background-color: #dbeafe;
     color: #1e40af;
-}
-
-.acc-dash-status-pending {
+  }
+  
+  .acc-status-pending {
     background-color: #fef3c7;
     color: #92400e;
-}
-
-.acc-dash-status-default {
+  }
+  
+  .acc-status-default {
     background-color: #f1f5f9;
     color: #64748b;
-}
-
-.acc-dash-due-date {
+  }
+  
+  .acc-due-date {
     color: #64748b;
     font-size: 0.9rem;
-}
-
-.acc-dash-view-detail-btn {
+  }
+  
+  .acc-view-detail-btn {
     background: #0b3d91;
     color: white;
     border: none;
@@ -433,212 +289,480 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
-}
-
-.acc-dash-view-detail-btn:hover {
+  }
+  
+  .acc-view-detail-btn:hover {
     background: #2563eb;
     transform: translateY(-1px);
-}
-
-.acc-dash-view-detail-btn:active {
+  }
+  
+  .acc-view-detail-btn:active {
     transform: translateY(0);
-}
-
-/* Responsive Design */
-
-/* Tablet - 768px and below */
-@media (max-width: 768px) {
-    .acc-dash-container {
-        padding: 0.75rem;
+  }
+  
+  /* Calendar Card Styling - Full Height on Right */
+  .acc-calendar-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 40px);
+    max-height: calc(100vh - 40px);
+    overflow: hidden;
+  }
+  
+  .acc-calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-shrink: 0;
+  }
+  
+  .acc-calendar-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+  }
+  
+  .acc-calendar-nav {
+    background: none;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+  
+  .acc-calendar-nav:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+  }
+  
+  .acc-calendar-grid {
+    margin-bottom: 1.5rem;
+    flex-shrink: 0;
+  }
+  
+  .acc-calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .acc-weekday {
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #64748b;
+    padding: 0.5rem 0;
+  }
+  
+  .acc-calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.25rem;
+  }
+  
+  .acc-calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  
+  .acc-calendar-day:hover {
+    background: #f1f5f9;
+  }
+  
+  .acc-calendar-day.acc-other-month {
+    color: #cbd5e1;
+  }
+  
+  .acc-calendar-day.acc-today {
+    background: #f59e0b;
+    color: white;
+    font-weight: 600;
+  }
+  
+  .acc-calendar-day.acc-has-event::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background: #3b82f6;
+    border-radius: 50%;
+  }
+  
+  .acc-calendar-day.acc-today.acc-has-event::after {
+    background: white;
+  }
+  
+  /* Events Section */
+  .acc-upcoming-events {
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .acc-upcoming-events::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .acc-events-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 1rem;
+    letter-spacing: 0.05em;
+  }
+  
+  .acc-events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .acc-event-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+  }
+  
+  .acc-event-item:hover {
+    background: #f1f5f9;
+  }
+  
+  .acc-event-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  
+  .acc-event-indicator.acc-development {
+    background: #f59e0b;
+  }
+  
+  .acc-event-indicator.acc-ux {
+    background: #10b981;
+  }
+  
+  .acc-event-info {
+    flex: 1;
+  }
+  
+  .acc-event-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+  }
+  
+  .acc-event-time {
+    font-size: 0.8rem;
+    color: #64748b;
+  }
+  
+  /* Animations */
+  @keyframes acc-countUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
     }
-
-    .acc-dash-cards-grid {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
-
-    .acc-dash-stat-card {
-        padding: 1.25rem;
+  }
+  
+  /* Responsive Design */
+  @media screen and (max-width: 1400px) {
+    .acc-main-layout-grid {
+        grid-template-columns: 1fr 320px;
     }
-
-    .acc-dash-card-value {
-        font-size: 1.3rem;
+  }
+  
+  /* 1200px Media Query */
+  @media screen and (max-width: 1200px) {
+    .acc-dashboard-container {
+        min-height: 100vh;
+        overflow-y: auto;
     }
-
-    .acc-dash-content-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-
-    .acc-dash-table-card,
-    .acc-dash-calendar-card {
-        padding: 1.25rem;
-    }
-
-    .acc-dash-table-header {
+    
+    .acc-main-layout-grid {
+        display: flex;
         flex-direction: column;
-        gap: 1rem;
-        align-items: flex-start;
+        min-height: auto;
+        gap: 16px;
+        overflow: visible;
     }
-
-    .acc-dash-table-header-cell,
-    .acc-dash-table-cell {
+    
+    .acc-left-content {
+        order: 1;
+        overflow: visible;
+    }
+    
+    .acc-calendar-card {
+        order: 2;
+        min-height: 600px;
+        max-height: none;
+        flex-shrink: 0;
+    }
+    
+    .acc-tasks-section {
+        height: 400px;
+        min-height: 400px;
+        flex-shrink: 0;
+    }
+  }
+  
+  /* 768px Media Query */
+  @media screen and (max-width: 768px) {
+    .acc-dashboard-container {
+        min-height: 100vh;
+        overflow-y: auto;
+        padding: 16px;
+    }
+    
+    .acc-main-layout-grid {
+        display: flex;
+        flex-direction: column;
+        min-height: auto;
+        gap: 12px;
+        overflow: visible;
+    }
+    
+    .acc-left-content {
+        order: 1;
+        overflow: visible;
+    }
+    
+    .acc-summary-cards-container {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .acc-tasks-section {
+        height: 300px;
+        min-height: 300px;
+        flex-shrink: 0;
+        overflow: hidden;
+    }
+    
+    .acc-table-container {
+        overflow-y: auto;
+        max-height: calc(300px - 80px);
+    }
+    
+    .acc-calendar-card {
+        order: 2;
+        min-height: 500px;
+        max-height: none;
+        flex-shrink: 0;
+        overflow: hidden;
+    }
+    
+    .acc-calendar-grid {
+        flex-shrink: 0;
+        margin-bottom: 1rem;
+    }
+    
+    .acc-upcoming-events {
+        flex: 1;
+        overflow-y: auto;
+        min-height: 0;
+    }
+    
+    .acc-table-header-cell,
+    .acc-table-cell {
         padding: 0.75rem;
     }
-
-    .acc-dash-calendar-card {
-        order: -1;
+  }
+  
+  /* 480px Media Query */
+  @media screen and (max-width: 480px) {
+    .acc-dashboard-container {
+        padding: 12px;
+        min-height: 100vh;
     }
-}
-
-/* Mobile - 480px and below */
-@media (max-width: 480px) {
-    .acc-dash-container {
-        padding: 0.5rem;
+    
+    .acc-tasks-section {
+        height: 250px;
+        min-height: 250px;
+        padding: 12px;
     }
-
-    .acc-dash-cards-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-
-    .acc-dash-stat-card {
-        padding: 1rem;
-    }
-
-    .acc-dash-card-content {
-        gap: 0.75rem;
-    }
-
-    .acc-dash-card-icon {
-        width: 40px;
-        height: 40px;
-    }
-
-    .acc-dash-card-title {
-        font-size: 0.8rem;
-    }
-
-    .acc-dash-card-value {
-        font-size: 1.2rem;
-    }
-
-    .acc-dash-content-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-
-    .acc-dash-table-card,
-    .acc-dash-calendar-card {
-        padding: 1rem;
-    }
-
-    .acc-dash-table-title {
-        font-size: 1.1rem;
-    }
-
-    .acc-dash-filter-button {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.8rem;
-    }
-
-    .acc-dash-table-container {
+    
+    .acc-table-container {
+        max-height: calc(250px - 70px);
         overflow-x: auto;
     }
-
-    .acc-dash-table {
+    
+    .acc-task-table {
         min-width: 600px;
     }
-
-    .acc-dash-table-header-cell,
-    .acc-dash-table-cell {
+    
+    .acc-calendar-card {
+        min-height: 450px;
+        padding: 12px;
+    }
+    
+    .acc-calendar-header {
+        margin-bottom: 1rem;
+    }
+    
+    .acc-calendar-grid {
+        margin-bottom: 0.75rem;
+    }
+    
+    .acc-upcoming-events {
+        flex: 1;
+        min-height: 120px;
+    }
+    
+    .acc-table-header-cell,
+    .acc-table-cell {
         padding: 0.5rem;
     }
-
-    .acc-dash-task-name {
+    
+    .acc-task-name {
         font-size: 0.8rem;
     }
-
-    .acc-dash-status-badge {
+    
+    .acc-status-badge {
         font-size: 0.7rem;
         padding: 0.2rem 0.6rem;
         min-width: 70px;
     }
-
-    .acc-dash-due-date {
+    
+    .acc-due-date {
         font-size: 0.8rem;
     }
-
-    .acc-dash-view-detail-btn {
+    
+    .acc-view-detail-btn {
         padding: 0.4rem 0.8rem;
         font-size: 0.7rem;
     }
-
-    .acc-dash-calendar-card {
-        order: -1;
-    }
-
-    .acc-dash-calendar-title {
+    
+    .acc-calendar-title {
         font-size: 1rem;
     }
-
-    .acc-dash-calendar-day {
+    
+    .acc-calendar-day {
         font-size: 0.8rem;
     }
-
-    .acc-dash-event-name {
+    
+    .acc-event-name {
         font-size: 0.8rem;
     }
-
-    .acc-dash-event-time {
+    
+    .acc-event-time {
         font-size: 0.7rem;
     }
-}
-
-/* Very small screens */
-@media (max-width: 320px) {
-    .acc-dash-header-section {
-        margin-bottom: 1rem;
+  }
+  
+  /* Very small screens */
+  @media screen and (max-width: 320px) {
+    .acc-summary-cards-container {
+        gap: 8px;
     }
-
-    .acc-dash-table-header {
-        gap: 0.75rem;
+    
+    .acc-table-title {
+        font-size: 14px;
     }
-
-    .acc-dash-table-title {
-        font-size: 1rem;
-    }
-
-    .acc-dash-filter-button {
+    
+    .acc-filter-button {
         padding: 0.3rem 0.6rem;
         font-size: 0.75rem;
     }
-
-    .acc-dash-calendar-header {
+    
+    .acc-calendar-header {
         margin-bottom: 1rem;
     }
-
-    .acc-dash-calendar-title {
+    
+    .acc-calendar-title {
         font-size: 0.9rem;
     }
-}
-
-/* Scrollbar styling */
-.acc-dash-table-container::-webkit-scrollbar {
+  }
+  
+  /* Additional Height-Based Media Queries for Very Short Viewports */
+  @media screen and (max-height: 600px) {
+    .acc-dashboard-container {
+        min-height: auto;
+        height: auto;
+    }
+    
+    .acc-main-layout-grid {
+        min-height: auto;
+    }
+    
+    .acc-calendar-card {
+        min-height: 400px;
+        max-height: none;
+    }
+    
+    .acc-tasks-section {
+        min-height: 200px;
+        max-height: 250px;
+    }
+  }
+  
+  @media screen and (max-height: 400px) {
+    .acc-dashboard-container {
+        padding: 10px;
+    }
+    
+    .acc-summary-cards-container {
+        gap: 8px;
+    }
+    
+    .acc-tasks-section {
+        min-height: 150px;
+        max-height: 180px;
+        padding: 10px;
+    }
+    
+    .acc-calendar-card {
+        min-height: 300px;
+        padding: 10px;
+    }
+  }
+  
+  /* Scrollbar styling */
+  .acc-table-container::-webkit-scrollbar {
     width: 6px;
     height: 6px;
-}
-
-.acc-dash-table-container::-webkit-scrollbar-track {
+  }
+  
+  .acc-table-container::-webkit-scrollbar-track {
     background: #f1f5f9;
     border-radius: 3px;
-}
-
-.acc-dash-table-container::-webkit-scrollbar-thumb {
+  }
+  
+  .acc-table-container::-webkit-scrollbar-thumb {
     background: #cbd5e1;
     border-radius: 3px;
-}
-
-.acc-dash-table-container::-webkit-scrollbar-thumb:hover {
+  }
+  
+  .acc-table-container::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
-}
+  }

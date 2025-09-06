@@ -712,6 +712,10 @@
     .app-dash-map-container {
         height: 120px;
     }
+
+    .app-dash-company-section{
+        margin-top: -140px;
+    }
     
     .app-dash-company-footer {
         flex-direction: column;

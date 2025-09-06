@@ -8,7 +8,7 @@ import Profile from './components/ProfileAccount/Profile'
 import EmailVerification from './components/Verification/EmailVerification'
 import ManageFingeprint from './pages/DashboardAdminPages/ManageFingerprint'
 import About from './pages/DashboardAdminPages/About'
-import Contact from './pages/DashboardAdminPages/Contact'
+import TestAttendance from './pages/DashboardAdminPages/TestAttendance'
 import Dashboard from './pages/DashboardAdminPages/DashboardAdmin'
 import ManageAccounts from './pages/DashboardAdminPages/ManageAccounts'
 import PrivateRoute from './PrivateRoute'
@@ -25,6 +25,8 @@ import ApplicantsTracking from './pages/DashboardHRPages/ApplicantsTracking'
 import ManageExamination from './pages/DashboardHRPages/ManageExamination'
 import ManageRelation from './pages/DashboardHRPages/ManageRelation'
 import ManageHiring from './pages/DashboardHRPages/ManageHiring'
+import ManageDepartment from './pages/DashboardHRPages/ManageDepartment'
+import ManageEvents from './pages/DashboardHRPages/ManageEvents'
 
 // Accountant pages
 import DashboardAccountant from './pages/DashboardAccountantPages/DashboardAccountant'
@@ -84,7 +86,7 @@ const App = () => {
           } 
         />
 
-      <Route element={<PrivateRoute allowedRoles={['admin', 'hr', 'accountant', 'employee', 'supervisor']} />}>
+      <Route element={<PrivateRoute allowedRoles={['admin', 'hr', 'accountant', 'employee', 'supervisor', 'applicant']} />}>
         <Route path="/profile" element={<Profile/>} />
       </Route>
 
@@ -95,7 +97,7 @@ const App = () => {
           <Route path="/dashboard-admin" element={<Dashboard />} />
           <Route path="/manage-fingerprint" element={<ManageFingeprint />} />
           <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
+          <Route path="/test-attendance" element={<TestAttendance/>} />
           <Route path="/manage-accounts" element={<ManageAccounts />} />
         </Route>
         
@@ -111,6 +113,8 @@ const App = () => {
           <Route path="/employee-relation" element={<ManageRelation />} />
           <Route path="/manage-hiring" element={<ManageHiring />} />
           <Route path="/employee-personal" element={<EmPersonal />} />
+          <Route path="/manage-department" element={<ManageDepartment />} />
+          <Route path="/manage-events" element={<ManageEvents />} />
         </Route>
 
         {/* Accountant Routes */}

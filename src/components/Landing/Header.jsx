@@ -102,7 +102,6 @@ const Header = () => {
               </li>
             )}
           </div>
-          <li><a href="#home" onClick={() => setMenuActive(false)}>Home</a></li>
           <li><a href="#services" onClick={() => setMenuActive(false)}>Our Expertise</a></li>
           <li><a href="#benefits" onClick={() => setMenuActive(false)}>Why Difsys</a></li>
           <li><a href="#testimonials" onClick={() => setMenuActive(false)}>Contact Us</a></li>

@@ -27,7 +27,6 @@
     top: 0;
     z-index: 1000;
     padding: 10px 0;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .landing-nav-container {
@@ -92,24 +91,74 @@
 }
 
 .landing-btn-outline {
-    background-color: transparent;
+    position: relative;
+    overflow: hidden; /* so the animation doesn’t go outside */
+    background: transparent;
+    color: var(--landing-primary-color);
     border: 1px solid var(--landing-primary-color);
-    color: var(--landing-primary-white);
+    cursor: pointer;
+    transition: color 0.4s ease-in-out, border-color 0.4s ease-in-out;
+    z-index: 1;
+}
+
+/* Create the spreading color */
+.landing-btn-outline::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background-color: var(--landing-primary-color);
+    z-index: -1;
+    transition: width 0.4s ease-in-out;
+}
+
+/* On hover, expand the color */
+.landing-btn-outline:hover::before {
+    width: 100%;
 }
 
 .landing-btn-outline:hover {
-    background-color: var(--landing-primary-color);
     color: var(--landing-white);
+    border-color: var(--landing-primary-color);
 }
 
 .landing-btn-primary {
+    position: relative;
+    overflow: hidden;
     background-color: var(--landing-primary-color);
     color: var(--landing-white);
+    border: 1px solid var(--landing-primary-color);
+    cursor: pointer;
+    z-index: 1;
+    transition: color 0.4s ease-out, border-color 0.4s ease-out;
 }
 
-.landing-btn-primary:hover {
-    background-color: #072a66;
+/* White fill starts at the right side */
+.landing-btn-primary::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;   /* anchor to right */
+    width: 0;
+    height: 100%;
+    background-color: var(--landing-white);
+    z-index: -1;
+    transition: width 0.4s ease-out;
 }
+
+/* On hover → expand white background from right to left */
+.landing-btn-primary:hover::before {
+    width: 100%;
+}
+
+/* Text & border adapt */
+.landing-btn-primary:hover {
+    color: var(--landing-primary-color);
+    border-color: var(--landing-primary-color);
+}
+
 
 /* Mobile Navigation */
 .landing-menu-toggle {
@@ -381,6 +430,7 @@
 }
 
 /* Benefits Section */
+/* Benefits Section */
 .landing-benefits {
     padding: 80px 0;
     background-color: var(--landing-white);
@@ -390,20 +440,88 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 50px;
+    gap: 200px;
     padding: 0 20px;
 }
 
-.landing-benefits-image {
+.landing-benefits-gallery {
     flex: 1;
     min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
 }
 
-.landing-benefits-slider-image {
+.landing-gallery-container {
+    position: relative;
     width: 100%;
-    border-radius: 10px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    max-width: 500px;
+    height: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: visible;
+}
+
+.landing-gallery-image {
+    position: absolute;
+    width: 380px;
+    height: 280px;
+    border-radius: 15px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.landing-gallery-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     transition: all 0.3s ease;
+    border-radius: 15px;
+}
+
+.landing-gallery-image.active {
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+}
+
+.landing-gallery-image.active:hover {
+    transform: translateX(0) scale(1.05) !important;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+}
+
+.landing-gallery-image img.transitioning {
+    opacity: 0.8;
+    transform: scale(1.02);
+}
+
+.landing-gallery-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.landing-gallery-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: none;
+    background-color: #ddd;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.landing-gallery-indicator.active {
+    background-color: var(--landing-primary-color);
+    width: 32px;
+    border-radius: 6px;
+}
+
+.landing-gallery-indicator:hover {
+    background-color: var(--landing-secondary-color);
+    transform: scale(1.1);
 }
 
 .landing-benefits-text {
@@ -441,6 +559,7 @@
     color: #666;
     line-height: 1.5;
 }
+
 
 /* Testimonials Section */
 .landing-testimonials {
@@ -641,7 +760,61 @@
     }
     
     .landing-benefits-content {
-        gap: 30px;
+        gap: 70px;
+        padding: 0 15px;
+    }
+
+    .landing-benefits-gallery {
+        min-width: 280px;
+    }
+    
+    .landing-gallery-container {
+        max-width: 450px;
+        height: 320px;
+    }
+    
+    .landing-gallery-image {
+        width: 280px;
+        height: 240px;
+    }
+    
+    .landing-benefits-text {
+        min-width: 280px;
+    }
+    
+    .landing-benefits-text h2 {
+        font-size: 1.6rem;
+        margin-bottom: 18px;
+    }
+    
+    .landing-benefit-item {
+        margin-bottom: 18px;
+    }
+    
+    .landing-benefit-item h3 {
+        font-size: 1.1rem;
+    }
+    
+    .landing-benefit-item p {
+        font-size: 0.95rem;
+    }
+    
+    .landing-benefit-icon {
+        font-size: 18px;
+        margin-right: 12px;
+    }
+    
+    .landing-gallery-indicators {
+        gap: 10px;
+    }
+    
+    .landing-gallery-indicator {
+        width: 10px;
+        height: 10px;
+    }
+    
+    .landing-gallery-indicator.active {
+        width: 28px;
     }
     
     .landing-hero-content {
@@ -729,6 +902,10 @@
     .landing-auth-buttons {
         display: none;
     }
+
+    .landing-container {
+        padding: 0;
+    }
     
     .landing-mobile-auth-container {
         display: flex;
@@ -758,8 +935,9 @@
     .landing-login-link {
         color: var(--landing-primary-color) !important;
         border: 1px solid var(--landing-primary-color);
+        border-bottom: 1px solid var(--landing-primary-color) !important; /* Add this line */
     }
-    
+
     .landing-signup-link {
         color: var(--landing-white) !important;
         background-color: var(--landing-primary-color);
@@ -815,9 +993,25 @@
     
     .landing-benefits-content {
         flex-direction: column;
-        margin: 0 10px;
         gap: 30px;
+        overflow: hidden;
     }
+    
+    .landing-gallery-container {
+        height: 280px;
+        max-width: 100%;
+    }
+    
+    .landing-gallery-image {
+        width: 350px;
+        height: 300px;
+    }
+    
+    .landing-benefits-gallery,
+    .landing-benefits-text {
+        min-width: auto;
+    }
+
     
     .landing-benefits-image,
     .landing-benefits-text {
@@ -854,7 +1048,7 @@
 /* Small Mobile Devices (480px and below) */
 @media (max-width: 480px) {
     .landing-container {
-        padding: 0 15px;
+        padding: 0;
     }
     
     .landing-hero-content {
@@ -862,7 +1056,7 @@
     }
     
     .landing-hero-section h1 {
-        margin-top: -70%;
+        margin-top: -20%;
         font-size: 1.8rem;
     }
     
@@ -904,6 +1098,7 @@
     
     .landing-slider-nav-button {
         padding: 7px;
+        margin: 0 10px;
     }
     
     .landing-prev {
@@ -919,7 +1114,17 @@
     }
     
     .landing-benefits-content {
-        margin: 0 10px;
+        overflow: hidden;
+    }
+
+    .landing-gallery-container {
+        height: 320px;
+    }
+    
+    .landing-gallery-image {
+        width: 300px;
+        height: 260px;
+        margin-bottom: 50px;
     }
     
     .landing-testimonials-slider {

@@ -3,8 +3,9 @@
 /* Main Container */
 .employeeInquiriesContainer {
   padding: 10px 32px 32px 32px;
-  min-height: 100vh;
+  max-height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Inter', sans-serif;
+  overflow-y: auto;
 }
 
 /* Header Section */
@@ -150,7 +151,6 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .employeeCreateInquiryBtn:hover {
@@ -171,6 +171,8 @@
   justify-content: center;
   z-index: 1000;
   padding: 20px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Form Modal */
@@ -179,9 +181,11 @@
   border-radius: 16px;
   max-width: 600px;
   width: 100%;
-  max-height: 90vh;
+  max-height: calc(100vh - 40px);
   overflow-y: auto;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  -webkit-overflow-scrolling: touch;
+  margin: auto;
 }
 
 .employeeFormModalHeader {
@@ -610,6 +614,8 @@
   background: #f8fafc;
   min-height: 100vh;
   padding: 20px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .employeeDetailsPageHeader {
@@ -679,8 +685,9 @@
   background: #f8fafc;
   border-radius: 12px;
   padding: 24px;
-  max-height: 600px;
+  max-height: 50vh;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .employeeMessagesContainer h3 {
@@ -1035,9 +1042,8 @@
   font-size: 18px;
   color: #64748b;
 }
-/* Details View Status Badges - Add these to FileInquiries.css */
 
-/* Details view status badges - different sizing */
+/* Details View Status Badges */
 .employeeDetailsStatusBadge {
   padding: 4px 12px;
   border-radius: 20px;
@@ -1068,29 +1074,6 @@
   background-color: #f3f4f6;
   color: #374151;
 }
-
-/* Also add these status badge fixes for table view */
-.employeeStatusOpen {
-  background-color: #fef3c7;
-  color: #92400e;
-}
-
-.employeeStatusInProgress {
-  background-color: #dbeafe;
-  color: #1e40af;
-}
-
-.employeeStatusClosed {
-  background-color: #dcfce7;
-  color: #166534;
-}
-
-.employeeStatusCancelled {
-  background-color: #f3f4f6;
-  color: #374151;
-}
-
-/* Add these styles to both FileInquiries.css and ManageInquiries.css */
 
 /* File Viewer Modal Styles */
 .employeeImageViewer, .miImageViewer {
@@ -1286,38 +1269,7 @@
   transform: scale(1.1);
 }
 
-/* Responsive Design for File Viewer */
-@media (max-width: 768px) {
-  .employeeImageViewer, .miImageViewer {
-    max-width: 95vw;
-    max-height: 95vh;
-    margin: 10px;
-  }
-  
-  .employeeImageViewerHeader, .miImageViewerHeader {
-    padding: 16px 20px;
-  }
-  
-  .employeeImageViewerContent, .miImageViewerContent {
-    padding: 16px;
-    max-height: 60vh;
-  }
-  
-  .employeeFollowUpNotice {
-    flex-direction: column;
-    text-align: center;
-    gap: 8px;
-  }
-  
-  .employeeClearFollowUp {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    margin: 0;
-  }
-}
-
-/* Success Popup Styles - Add to FileInquiries.css */
+/* Success Popup Styles */
 
 /* Success Popup Backdrop */
 .employeeInquirySuccessBackdrop {
@@ -1330,9 +1282,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1500; /* Higher than modal backdrop */
+  z-index: 1500;
   padding: 20px;
   animation: employeeInquiryBackdropFadeIn 0.3s ease-out;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 @keyframes employeeInquiryBackdropFadeIn {
@@ -1602,95 +1556,6 @@
   }
 }
 
-/* Responsive Design */
-@media (max-width: 480px) {
-  .employeeInquirySuccessModal {
-    max-width: 95vw;
-    margin: 10px;
-  }
-  
-  .employeeInquirySuccessHeader {
-    padding: 24px 20px 20px;
-  }
-  
-  .employeeInquirySuccessContent {
-    padding: 20px;
-  }
-  
-  .employeeInquirySuccessFooter {
-    padding: 0 20px 20px;
-  }
-  
-  .employeeInquirySuccessTitle {
-    font-size: 20px;
-  }
-  
-  .employeeInquirySuccessMessage {
-    font-size: 14px;
-  }
-  
-  .employeeInquirySuccessIcon {
-    width: 64px;
-    height: 64px;
-  }
-  
-  .employeeInquirySuccessIconRipple {
-    width: 64px;
-    height: 64px;
-  }
-  
-  .employeeInquirySuccessDetails {
-    padding: 12px;
-  }
-  
-  .employeeInquirySuccessDetailItem {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
-    margin-bottom: 12px;
-  }
-  
-  .employeeInquirySuccessDetailValue {
-    align-self: flex-end;
-  }
-}
-
-/* Dark mode support (optional) */
-@media (prefers-color-scheme: dark) {
-  .employeeInquirySuccessModal {
-    background: white;
-    color: #1e293b;
-  }
-  
-  .employeeInquirySuccessContent {
-    background: white;
-  }
-  
-  .employeeInquirySuccessFooter {
-    background: white;
-  }
-  
-  .employeeInquirySuccessTitle {
-    color: #1e293b;
-  }
-  
-  .employeeInquirySuccessMessage {
-    color: #64748b;
-  }
-  
-  .employeeInquirySuccessDetails {
-    background: #f8fafc;
-  }
-  
-  .employeeInquirySuccessDetailValue {
-    color: #1e293b;
-  }
-  
-  .employeeInquirySuccessProgressBar {
-    background: #e2e8f0;
-  }
-}
-
 /* Loading State for File Viewer */
 .employeeImageViewerContent img, .miImageViewerContent img {
   opacity: 0;
@@ -1749,8 +1614,87 @@
 }
 
 @media (max-width: 768px) {
+  /* MOBILE SCROLL FIX: Remove min-height constraints */
   .employeeInquiriesContainer {
     padding: 20px;
+    min-height: auto;
+    height: auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .employeeDetailsPageGrid {
+    display: contents; /* This removes the grid container from the layout flow */
+  }
+  
+  .employeeDetailsPageWrapper {
+    padding: 16px 16px 126px 16px;
+    min-height: auto;
+    height: auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* MOBILE SCROLL FIX: Modal backdrop positioning */
+  .employeeModalBackdrop {
+    align-items: flex-start;
+    padding: 10px;
+    padding-top: 20px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* MOBILE SCROLL FIX: Form modal constraints */
+  .employeeFormModalWrapper {
+    margin: 0;
+    max-width: calc(100% - 20px);
+    max-height: calc(100vh - 40px);
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* MOBILE SCROLL FIX: Messages container height */
+  .employeeMessagesContainer {
+    max-height: 40vh;
+    padding: 16px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .employeeMessagesContainer {
+    max-height: 40vh;
+    padding: 16px;
+    -webkit-overflow-scrolling: touch;
+    order: 1; /* Messages first */
+  }
+
+
+  .employeeReplySection,
+  .employeeEditSection,
+  .employeeClosedTicketSection {
+    order: 2; /* Reply/Edit/Closed section second */
+  }
+  
+  /* MOBILE SCROLL FIX: Success modal */
+  .employeeInquirySuccessBackdrop {
+    align-items: center;
+    padding: 20px 10px;
+  }
+  
+  .employeeInquirySuccessModal {
+    max-width: 95vw;
+    margin: 0;
+  }
+  
+  /* MOBILE SCROLL FIX: Disable problematic hover transforms */
+  .employeeInfoCardItem:hover,
+  .employeeCreateInquiryBtn:hover,
+  .employeeSubmitBtn:hover,
+  .employeeEditBtn:hover,
+  .employeeViewBtn:hover,
+  .employeeSendBtn:hover,
+  .employeeClickableAttachment:hover,
+  .miClickableAttachment:hover {
+    transform: none;
   }
   
   .employeeHeaderWrapper {
@@ -1759,11 +1703,6 @@
   
   .employeeInfoCardsGrid {
     flex-direction: column;
-  }
-  
-  .employeeFormModalWrapper {
-    margin: 10px;
-    max-width: calc(100% - 20px);
   }
   
   .employeeInquiryForm {
@@ -1796,24 +1735,24 @@
     width: 100%;
   }
   
-  .employeeDetailsPageWrapper {
-    padding: 16px;
-  }
-  
   .employeeDetailsPageTitle {
     padding: 20px;
   }
   
   .employeeDetailsPageContent {
     padding: 24px;
+    display: flex;
+    flex-direction: column;
   }
-  
-  .employeeMessagesContainer {
-    padding: 16px;
+
+  .employeeReplySection {
+    order: 2;
+    margin-bottom: 25px;
   }
   
   .employeeTicketSummary {
     padding: 16px;
+    order: 3;
   }
   
   .employeeReplyActions {
@@ -1833,9 +1772,61 @@
     display: inline-block;
     margin-top: 4px;
   }
+  
+  .employeeImageViewer, .miImageViewer {
+    max-width: 95vw;
+    max-height: 95vh;
+    margin: 10px;
+  }
+  
+  .employeeImageViewerHeader, .miImageViewerHeader {
+    padding: 16px 20px;
+  }
+  
+  .employeeImageViewerContent, .miImageViewerContent {
+    padding: 16px;
+    max-height: 60vh;
+  }
+  
+  .employeeFollowUpNotice {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+  
+  .employeeClearFollowUp {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    margin: 0;
+  }
 }
 
 @media (max-width: 480px) {
+  /* MOBILE SCROLL FIX: Extra small screens */
+  .employeeInquiriesContainer {
+    padding: 15px;
+  }
+  
+  .employeeModalBackdrop {
+    padding: 5px;
+    padding-top: 10px;
+  }
+  
+  .employeeFormModalWrapper {
+    max-width: calc(100% - 10px);
+    border-radius: 12px;
+  }
+  
+  .employeeDetailsPageWrapper {
+    padding: 12px 12px 70px 12px;
+  }
+  
+  .employeeMessagesContainer {
+    max-height: 40vh;
+    padding: 12px;
+  }
+  
   .employeeNameDisplay {
     font-size: 24px;
   }
@@ -1866,7 +1857,53 @@
     padding: 20px;
   }
   
-  .employeeMessagesContainer {
-    padding: 16px;
+  .employeeInquirySuccessModal {
+    max-width: 95vw;
+    margin: 10px;
+  }
+  
+  .employeeInquirySuccessHeader {
+    padding: 24px 20px 20px;
+  }
+  
+  .employeeInquirySuccessContent {
+    padding: 20px;
+  }
+  
+  .employeeInquirySuccessFooter {
+    padding: 0 20px 20px;
+  }
+  
+  .employeeInquirySuccessTitle {
+    font-size: 20px;
+  }
+  
+  .employeeInquirySuccessMessage {
+    font-size: 14px;
+  }
+  
+  .employeeInquirySuccessIcon {
+    width: 64px;
+    height: 64px;
+  }
+  
+  .employeeInquirySuccessIconRipple {
+    width: 64px;
+    height: 64px;
+  }
+  
+  .employeeInquirySuccessDetails {
+    padding: 12px;
+  }
+  
+  .employeeInquirySuccessDetailItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+  
+  .employeeInquirySuccessDetailValue {
+    align-self: flex-end;
   }
 }

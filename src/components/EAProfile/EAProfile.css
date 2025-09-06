@@ -1,0 +1,1647 @@
+/* Enhanced EA Profile Container */
+.eaprof-details-container {
+    padding: 24px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  
+  /* Header Card */
+  .eaprof-header-card {
+    background: white;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .eaprof-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+  }
+  
+  .eaprof-title-section {
+    flex: 1;
+  }
+  
+  .eaprof-main-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0 0 4px 0;
+  }
+  
+  .eaprof-breadcrumb {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0;
+  }
+  
+  .eaprof-back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: #f3f4f6;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    color: #374151;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .eaprof-back-btn:hover {
+    background-color: #e5e7eb;
+  }
+  
+  .eaprof-back-arrow {
+    font-size: 16px;
+  }
+  
+  /* Tabs */
+  .eaprof-tabs-container {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .eaprof-tab {
+    padding: 12px 24px;
+    background: none;
+    border: none;
+    color: #6b7280;
+    font-size: 14px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  
+  .eaprof-tab:hover {
+    color: #374151;
+  }
+  
+  .eaprof-tab-active {
+    color: #3b82f6;
+    border-bottom-color: #3b82f6;
+  }
+  
+  /* Content Header */
+  .eaprof-content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  
+  .eaprof-section-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0;
+  }
+  
+  .eaprof-edit-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .eaprof-edit-btn:hover {
+    background-color: #2563eb;
+  }
+  
+  /* Basic Information Card */
+  .eaprof-basic-info-card {
+    background: white;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .eaprof-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0 0 24px 0;
+  }
+  
+  .eaprof-basic-content {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+  }
+  
+  .eaprof-left-section {
+    display: flex;
+    gap: 20px;
+    flex: 1;
+    align-items: flex-start;
+  }
+
+  .eaprof-profile-image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .eaprof-profile-image {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 3px solid #e5e7eb;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .eaprof-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .eaprof-avatar-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    font-weight: bold;
+    color: white;
+  }
+  
+  .eaprof-change-photo-btn {
+    padding: 6px 12px;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+  }
+  
+  .eaprof-change-photo-btn:hover {
+    background-color: #2563eb;
+  }
+  
+  .eaprof-change-photo-btn:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+  }
+  
+  .eaprof-profile-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+  }
+  
+  .eaprof-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+  }
+  
+  .eaprof-id {
+    font-size: 16px;
+    color: #6b7280;
+    margin: 0;
+  }
+  
+  .eaprof-gender,
+  .eaprof-email,
+  .eaprof-contact {
+    font-size: 16px;
+    color: #6b7280;
+    margin: 0;
+  }
+  
+  .eaprof-divider {
+    width: 1px;
+    background-color: #e5e7eb;
+    flex-shrink: 0;
+    align-self: stretch;
+  }
+  
+  .eaprof-right-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .eaprof-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .eaprof-right-section .eaprof-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  
+  .eaprof-right-section .eaprof-info-row:last-child {
+    margin-bottom: 0;
+  }
+  
+  .eaprof-info-label {
+    font-size: 16px;
+    color: #6b7280;
+  }
+  
+  .eaprof-right-section .eaprof-info-label {
+    font-size: 16px;
+    color: #6b7280;
+    flex-shrink: 0;
+    min-width: 120px;
+    margin: 0;
+  }
+  
+  .eaprof-info-value {
+    font-size: 16px;
+    color: #1a1a1a;
+    font-weight: 600;
+  }
+  
+  /* Basic Info Edit Input Styles */
+  .eaprof-basic-edit-input {
+    width: 200px;
+    padding: 8px 12px;
+    border: 2px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #1a1a1a;
+    background-color: white;
+    transition: border-color 0.2s;
+    font-family: inherit;
+    margin: 0;
+  }
+  
+  .eaprof-basic-edit-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  
+  .eaprof-basic-edit-input:hover {
+    border-color: #d1d5db;
+  }
+  
+  select.eaprof-basic-edit-input {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 8px center;
+    background-repeat: no-repeat;
+    background-size: 16px 12px;
+    padding-right: 32px;
+    appearance: none;
+  }
+  
+  input[type="date"].eaprof-basic-edit-input {
+    width: 200px;
+  }
+  
+  /* Two Card Row Layout */
+  .eaprof-two-card-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  
+  /* Address Card */
+  .eaprof-address-card {
+    background: white;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .eaprof-address-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .eaprof-address-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .eaprof-address-label {
+    font-size: 16px;
+    color: #6b7280;
+    font-weight: 600;
+  }
+  
+  .eaprof-address-value {
+    font-size: 16px;
+    color: #1a1a1a;
+    margin: 0;
+    line-height: 1.5;
+    font-weight: 500;
+  }
+  
+  /* Emergency Contact Card */
+  .eaprof-emergency-card {
+    background: white;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .eaprof-emergency-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .eaprof-emergency-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .eaprof-emergency-label {
+    font-size: 16px;
+    color: #6b7280;
+  }
+  
+  .eaprof-emergency-value {
+    font-size: 16px;
+    color: #1a1a1a;
+    font-weight: 600;
+  }
+  
+  /* Full Width Card */
+  .eaprof-full-width-card {
+    background: white;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    width: 100%;
+  }
+  
+  /* Skills Card with Pills Design */
+  .eaprof-skills-card {
+    background: white;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .eaprof-skills-pills-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  
+  .eaprof-skill-pill {
+    padding: 8px 16px;
+    border-radius: 50px;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    display: inline-block;
+    transition: all 0.2s ease;
+    cursor: default;
+  }
+  
+  .eaprof-skill-pill:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  .eaprof-skills-full-width {
+    grid-column: 1 / -1;
+  }
+  
+  .eaprof-skill-pill-editable {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .eaprof-skill-remove-btn {
+    background: rgba(255,255,255,0.3);
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    font-size: 12px;
+    transition: background-color 0.2s;
+  }
+  
+  .eaprof-skill-remove-btn:hover {
+    background: rgba(255,255,255,0.5);
+  }
+  
+  /* Education Card */
+  .eaprof-education-card {
+    background: white;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .eaprof-education-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  
+  .eaprof-education-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  
+  .eaprof-timeline-marker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  
+  .eaprof-timeline-circle {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #3b82f6;
+    border: 2px solid white;
+    box-shadow: 0 0 0 2px #3b82f6;
+  }
+  
+  .eaprof-timeline-line {
+    width: 2px;
+    height: 60px;
+    background-color: #e5e7eb;
+    margin-top: 4px;
+  }
+  
+  .eaprof-education-details {
+    flex: 1;
+  }
+  
+  .eaprof-education-degree {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 6px 0;
+  }
+  
+  .eaprof-education-field,
+  .eaprof-education-address,
+  .eaprof-education-year {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0 0 4px 0;
+  }
+  
+  /* Experience Card */
+  .eaprof-experience-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  
+  .eaprof-experience-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  
+  .eaprof-experience-details {
+    flex: 1;
+  }
+  
+  .eaprof-experience-position {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 6px 0;
+  }
+  
+  .eaprof-experience-company {
+    font-size: 14px;
+    color: #3b82f6;
+    margin: 0 0 4px 0;
+    font-weight: 600;
+  }
+  
+  .eaprof-experience-duration {
+    font-size: 12px;
+    color: #6b7280;
+    margin: 0 0 8px 0;
+    font-weight: 500;
+  }
+  
+  .eaprof-experience-description {
+    font-size: 14px;
+    color: #4b5563;
+    margin: 0;
+    line-height: 1.5;
+  }
+  
+  /* Family Card */
+  .eaprof-family-card {
+    background: white;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .eaprof-family-table {
+    width: 100%;
+  }
+  
+  .eaprof-table-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 16px;
+  }
+  
+  .eaprof-header-cell {
+    font-size: 16px;
+    font-weight: 700;
+    color: #374151;
+  }
+  
+  .eaprof-table-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  
+  .eaprof-table-row:last-child {
+    border-bottom: none;
+  }
+  
+  .eaprof-table-cell {
+    font-size: 16px;
+    color: #1a1a1a;
+    font-weight: 500;
+  }
+  
+  /* Edit Mode Styles */
+  .eaprof-edit-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 2px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 16px;
+    color: #1a1a1a;
+    background-color: white;
+    transition: border-color 0.2s;
+    margin-bottom: 8px;
+  }
+  
+  .eaprof-edit-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  
+  .eaprof-edit-name {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+  
+  .eaprof-edit-id {
+    font-size: 16px;
+    color: #6b7280;
+    margin-bottom: 12px;
+  }
+  
+  .eaprof-edit-select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 2px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 16px;
+    color: #1a1a1a;
+    background-color: white;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    margin-bottom: 8px;
+  }
+  
+  .eaprof-edit-select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  
+  .eaprof-edit-small {
+    max-width: 300px;
+  }
+  
+  .eaprof-edit-textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 2px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 16px;
+    color: #1a1a1a;
+    background-color: white;
+    resize: vertical;
+    min-height: 80px;
+    transition: border-color 0.2s;
+    font-family: inherit;
+  }
+  
+  .eaprof-edit-textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  
+  .eaprof-edit-table {
+    max-width: 150px;
+    padding: 6px 8px;
+    font-size: 14px;
+  }
+  
+  .eaprof-save-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: #10b981;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .eaprof-save-btn:hover {
+    background-color: #059669;
+  }
+  
+  .eaprof-cancel-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: #6b7280;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .eaprof-cancel-btn:hover {
+    background-color: #4b5563;
+  }
+  
+  /* Card Header for Education and Family */
+  .eaprof-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  
+  .eaprof-add-education-btn,
+  .eaprof-add-family-btn {
+    padding: 6px 12px;
+    background-color: #003D7C;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .eaprof-add-education-btn:hover,
+  .eaprof-add-family-btn:hover {
+    background-color: #059669;
+  }
+  
+  /* Education Edit Form */
+  .eaprof-education-edit-form {
+    width: 100%;
+  }
+  
+  .eaprof-education-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    align-items: center;
+  }
+  
+  .eaprof-education-row .eaprof-edit-input {
+    margin-bottom: 0;
+    flex: 1;
+  }
+  
+  .eaprof-date-row {
+    align-items: center;
+  }
+  
+  .eaprof-year-input {
+    max-width: 80px;
+    flex: none !important;
+  }
+  
+  .eaprof-date-separator {
+    font-size: 16px;
+    color: #6b7280;
+    font-weight: 500;
+    flex: none;
+  }
+  
+  /* Remove Button */
+  .eaprof-remove-btn {
+    width: 30px;
+    height: 30px;
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+    flex: none;
+  }
+  
+  .eaprof-remove-btn:hover {
+    background-color: #dc2626;
+  }
+  
+  .eaprof-remove-family-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+  }
+  
+  /* Edit Mode Actions */
+  .eaprof-edit-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  
+  .eaprof-edit-mode-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  
+  .eaprof-edit-save-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: #10b981;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .eaprof-edit-save-btn:hover {
+    background-color: #059669;
+  }
+  
+  .eaprof-edit-cancel-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: #6b7280;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .eaprof-edit-cancel-btn:hover {
+    background-color: #4b5563;
+  }
+  
+  /* Experience Card Header */
+  .eaprof-experience-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  
+  .eaprof-add-experience-btn {
+    padding: 6px 12px;
+    background-color: #10b981;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .eaprof-add-experience-btn:hover {
+    background-color: #059669;
+  }
+  
+  /* Experience Edit Form */
+  .eaprof-experience-edit-form {
+    width: 100%;
+  }
+  
+  .eaprof-experience-edit-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    align-items: center;
+  }
+  
+  .eaprof-experience-edit-row .eaprof-experience-edit-input {
+    margin-bottom: 0;
+    flex: 1;
+  }
+  
+  .eaprof-experience-edit-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 2px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 16px;
+    color: #1a1a1a;
+    background-color: white;
+    transition: border-color 0.2s;
+    margin-bottom: 8px;
+  }
+  
+  .eaprof-experience-edit-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  
+  .eaprof-experience-edit-textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 2px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 16px;
+    color: #1a1a1a;
+    background-color: white;
+    resize: vertical;
+    min-height: 80px;
+    transition: border-color 0.2s;
+    font-family: inherit;
+  }
+  
+  .eaprof-experience-edit-textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  
+  .eaprof-experience-remove-btn {
+    width: 30px;
+    height: 30px;
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+    flex: none;
+  }
+  
+  .eaprof-experience-remove-btn:hover {
+    background-color: #dc2626;
+  }
+  
+  /* Skills Card Header */
+  .eaprof-skills-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  
+  .eaprof-skill-add-container {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  
+  .eaprof-skill-add-input {
+    width: 150px;
+    padding: 8px 12px;
+    border: 2px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 16px;
+    color: #1a1a1a;
+    background-color: white;
+    transition: border-color 0.2s;
+    margin-bottom: 0;
+  }
+  
+  .eaprof-skill-add-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  
+  .eaprof-skill-add-btn {
+    padding: 6px 12px;
+    background-color: #10b981;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .eaprof-skill-add-btn:hover {
+    background-color: #059669;
+  }
+  
+  /* Loading and Error States */
+  .eaprof-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+  }
+  
+  .eaprof-loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f4f6;
+    border-top: 4px solid #3b82f6;
+    border-radius: 50%;
+    animation: eaprof-spin 1s linear infinite;
+    margin-bottom: 16px;
+  }
+  
+  .eaprof-loading p {
+    color: #6b7280;
+    font-size: 16px;
+    margin: 0;
+  }
+  
+  .eaprof-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    margin: 20px 0;
+  }
+  
+  .eaprof-error p {
+    color: #dc2626;
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .eaprof-error button {
+    background-color: #dc2626;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+  }
+  
+  .eaprof-error button:hover {
+    background-color: #b91c1c;
+  }
+  
+  /* Empty states */
+  .eaprof-no-experience,
+  .eaprof-no-skills {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+    color: #6b7280;
+    font-style: italic;
+    background-color: #f9fafb;
+    border-radius: 8px;
+    border: 2px dashed #d1d5db;
+  }
+  
+  .eaprof-no-experience p,
+  .eaprof-no-skills p {
+    margin: 0 0 16px 0;
+    font-size: 14px;
+  }
+  
+  .eaprof-no-experience .eaprof-add-experience-btn {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+  }
+  
+  .eaprof-no-experience .eaprof-add-experience-btn:hover {
+    background-color: #2563eb;
+  }
+  
+  .eaprof-no-data {
+    color: #9ca3af;
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  /* Family Name Container */
+  .eaprof-family-name-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+  
+  .eaprof-family-name-container .eaprof-edit-input {
+    flex: 1;
+    margin-bottom: 0;
+  }
+  
+  .eaprof-family-name-container .eaprof-remove-family-btn {
+    flex-shrink: 0;
+  }
+  
+  .eaprof-family-table .eaprof-table-header {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .eaprof-family-table .eaprof-table-row {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .eaprof-family-name-cell {
+    position: relative;
+  }
+  
+  /* Message Modal Overlay */
+  .eaprof-message-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: eaprof-fade-in 0.3s ease-out;
+  }
+  
+  /* Success Modal */
+  .eaprof-success-modal {
+    background: white;
+    border-radius: 16px;
+    padding: 40px 32px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    animation: eaprof-scale-in 0.3s ease-out;
+  }
+  
+  .eaprof-success-header h3 {
+    color: #065f46;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 16px 0 8px 0;
+  }
+  
+  .eaprof-success-header p {
+    color: #6b7280;
+    font-size: 16px;
+    margin: 0;
+  }
+  
+  .eaprof-success-icon-large {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    border-radius: 50%;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    animation: eaprof-bounce-in 0.5s ease-out 0.2s both;
+  }
+  
+  /* Error Modal */
+  .eaprof-error-modal {
+    background: white;
+    border-radius: 16px;
+    padding: 40px 32px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    animation: eaprof-scale-in 0.3s ease-out;
+  }
+  
+  .eaprof-error-header h3 {
+    color: #dc2626;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 16px 0 8px 0;
+  }
+  
+  .eaprof-error-header p {
+    color: #6b7280;
+    font-size: 16px;
+    margin: 0 0 24px 0;
+    line-height: 1.5;
+  }
+  
+  .eaprof-error-icon-large {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    border-radius: 50%;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    animation: eaprof-shake 0.5s ease-out 0.2s both;
+  }
+  
+  .eaprof-modal-close-btn {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .eaprof-modal-close-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+  }
+  
+  /* Loading Modal */
+  .eaprof-loading-modal {
+    background: white;
+    border-radius: 16px;
+    padding: 40px 32px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    animation: eaprof-scale-in 0.3s ease-out;
+  }
+  
+  .eaprof-loading-header h3 {
+    color: #374151;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 16px 0 8px 0;
+  }
+  
+  .eaprof-loading-header p {
+    color: #6b7280;
+    font-size: 16px;
+    margin: 0;
+  }
+  
+  .eaprof-save-spinner-large {
+    width: 60px;
+    height: 60px;
+    border: 6px solid #f3f4f6;
+    border-top: 6px solid #3b82f6;
+    border-radius: 50%;
+    animation: eaprof-spin 1s linear infinite;
+    margin: 0 auto 8px auto;
+  }
+  
+  .eaprof-save-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f3f4f6;
+    border-top: 2px solid #ffffff;
+    border-radius: 50%;
+    animation: eaprof-spin 1s linear infinite;
+  }
+  
+  /* Animations */
+  @keyframes eaprof-fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes eaprof-bounce-in {
+    0% {
+      opacity: 0;
+      transform: scale(0.3);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes eaprof-shake {
+    0%, 100% {
+      transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+      transform: translateX(-5px);
+    }
+    20%, 40%, 60%, 80% {
+      transform: translateX(5px);
+    }
+  }
+  
+  @keyframes eaprof-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  @keyframes eaprof-scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 1200px) {
+    .eaprof-two-card-row {
+      grid-template-columns: 1fr;
+    }
+    
+    .eaprof-basic-content {
+      flex-direction: column;
+      gap: 24px;
+    }
+    
+    .eaprof-divider {
+      width: 100%;
+      height: 1px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .eaprof-details-container {
+      padding: 16px;
+    }
+    
+    .eaprof-header-top {
+      flex-direction: column;
+      gap: 16px;
+      align-items: stretch;
+    }
+    
+    .eaprof-tabs-container {
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+  
+    .eaprof-tab {
+      padding: 10px 16px;
+      font-size: 13px;
+    }
+    
+    .eaprof-content-header {
+      flex-direction: column;
+      gap: 12px;
+      align-items: stretch;
+    }
+  
+    .eaprof-right-section .eaprof-info-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    
+    .eaprof-basic-edit-input {
+      width: 100%;
+      font-size: 16px;
+      padding: 10px 12px;
+    }
+    
+    select.eaprof-basic-edit-input {
+      padding-right: 36px;
+      background-size: 18px 14px;
+    }
+  
+    .eaprof-edit-small {
+      max-width: 100%;
+    }
+    
+    .eaprof-edit-table {
+      max-width: 100%;
+    }
+    
+    .eaprof-edit-actions {
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .eaprof-save-btn,
+    .eaprof-cancel-btn {
+      justify-content: center;
+    }
+  
+    .eaprof-card-header {
+      flex-direction: column;
+      gap: 12px;
+      align-items: stretch;
+    }
+    
+    .eaprof-add-education-btn,
+    .eaprof-add-family-btn {
+      align-self: center;
+      padding: 8px 16px;
+    }
+    
+    .eaprof-education-row {
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .eaprof-date-row {
+      flex-direction: row;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .eaprof-year-input {
+      max-width: 100px;
+    }
+    
+    .eaprof-family-table .eaprof-table-header {
+      grid-template-columns: 1fr 1fr 40px;
+    }
+    
+    .eaprof-family-table .eaprof-table-row {
+      grid-template-columns: 1fr 1fr 40px;
+    }
+  
+    .eaprof-family-name-container {
+      flex-direction: column;
+      gap: 4px;
+      align-items: stretch;
+    }
+    
+    .eaprof-family-name-container .eaprof-remove-family-btn {
+      align-self: flex-end;
+      width: 24px;
+      height: 24px;
+    }
+  
+    .eaprof-edit-mode-actions {
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .eaprof-edit-save-btn,
+    .eaprof-edit-cancel-btn {
+      justify-content: center;
+    }
+    
+    .eaprof-experience-card-header {
+      flex-direction: column;
+      gap: 12px;
+      align-items: stretch;
+    }
+    
+    .eaprof-add-experience-btn {
+      align-self: center;
+      padding: 8px 16px;
+    }
+    
+    .eaprof-experience-edit-row {
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .eaprof-skills-card-header {
+      flex-direction: column;
+      gap: 12px;
+      align-items: stretch;
+    }
+    
+    .eaprof-skill-add-container {
+      justify-content: center;
+    }
+    
+    .eaprof-skill-add-input {
+      width: 200px;
+    }
+  
+    .eaprof-basic-content {
+      flex-direction: column;
+    }
+    
+    .eaprof-divider {
+      display: none;
+    }
+    
+    .eaprof-left-section,
+    .eaprof-right-section {
+      width: 100%;
+    }
+    
+    .eaprof-left-section {
+      margin-bottom: 20px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .eaprof-details-container {
+      padding: 12px;
+    }
+  
+    .eaprof-header-card {
+      padding: 16px;
+    }
+  
+    .eaprof-basic-info-card,
+    .eaprof-address-card,
+    .eaprof-emergency-card,
+    .eaprof-skills-card,
+    .eaprof-education-card,
+    .eaprof-family-card {
+      padding: 16px;
+    }
+  
+    .eaprof-profile-image {
+      width: 120px;
+      height: 120px;
+    }
+  
+    .eaprof-right-section .eaprof-info-row {
+      margin-bottom: 20px;
+    }
+    
+    .eaprof-basic-edit-input {
+      padding: 12px;
+    }
+  
+    .eaprof-education-row .eaprof-edit-input {
+      font-size: 14px;
+    }
+    
+    .eaprof-year-input {
+      max-width: 80px;
+    }
+    
+    .eaprof-remove-btn {
+      width: 20px;
+      height: 20px;
+      font-size: 14px;
+    }
+  
+    .eaprof-family-name-container {
+      gap: 6px;
+    }
+    
+    .eaprof-education-row .eaprof-edit-select {
+      font-size: 14px;
+    }
+  
+    .eaprof-experience-edit-row .eaprof-experience-edit-input {
+      font-size: 14px;
+    }
+    
+    .eaprof-experience-remove-btn {
+      width: 25px;
+      height: 25px;
+      font-size: 14px;
+    }
+    
+    .eaprof-skill-add-input {
+      width: 150px;
+      font-size: 14px;
+    }
+  
+    .eaprof-success-modal,
+    .eaprof-error-modal,
+    .eaprof-loading-modal {
+      padding: 32px 24px;
+      margin: 20px;
+      width: calc(100% - 40px);
+    }
+    
+    .eaprof-success-header h3,
+    .eaprof-error-header h3,
+    .eaprof-loading-header h3 {
+      font-size: 20px;
+    }
+    
+    .eaprof-success-icon-large,
+    .eaprof-error-icon-large {
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+    }
+    
+    .eaprof-save-spinner-large {
+      width: 50px;
+      height: 50px;
+      border-width: 5px;
+    }
+  }

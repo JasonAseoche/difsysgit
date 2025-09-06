@@ -21,7 +21,12 @@ const ManageDocuments = () => {
   const [loading, setLoading] = useState(false);
   const [documentPreviews, setDocumentPreviews] = useState({});
   const [pdfJsLoaded, setPdfJsLoaded] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [pdfDocument, setPdfDocument] = useState(null);
+  const [pageCanvas, setPageCanvas] = useState(null);
   const fileInputRef = useRef(null);
+  const canvasRef = useRef(null);
 
   const requirements = [
     'Birth Certificate',
@@ -561,27 +566,165 @@ const ManageDocuments = () => {
   };
 
   const renderDocumentPreview = (doc) => {
-    if (doc.previewUrl) {
+    const goToPrevPage = () => {
+      if (currentPage > 1) {
+        setCurrentPage(currentPage - 1);
+      }
+    };
+  
+    const goToNextPage = () => {
+      if (currentPage < totalPages) {
+        setCurrentPage(currentPage + 1);
+      }
+    };
+  
+    if (doc.previewUrl && pdfJsLoaded) {
       return (
-        <div style={{ width: '100%', height: '500px' }}>
-          <iframe
-            src={doc.previewUrl}
-            width="100%"
-            height="100%"
-            style={{ border: 'none' }}
-            title={`PDF Preview: ${doc.name}`}
-          />
+        <div style={{ 
+          width: '100%', 
+          height: '80vh',  // 80% of viewport height
+          minHeight: '400px',  // Minimum height for small screens
+          maxHeight: '850px',  // Maximum height for large screens
+          display: 'flex', 
+          flexDirection: 'column' 
+        }}>
+          <div style={{ 
+            flex: 1, 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center',
+            backgroundColor: '#282828',
+            overflow: 'auto'
+          }}>
+            <canvas 
+              ref={canvasRef}
+              style={{ 
+                maxWidth: '100%', 
+                maxHeight: '100%',
+                boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
+              }} 
+            />
+          </div>
+          
+          <div style={{ 
+            padding: '16px', 
+            borderTop: '1px solid #e5e7eb',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            backgroundColor: 'white'
+          }}>
+            <button 
+              onClick={goToPrevPage}
+              disabled={currentPage <= 1}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: currentPage <= 1 ? '#f3f4f6' : '#003979',
+                color: currentPage <= 1 ? '#9ca3af' : 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: currentPage <= 1 ? 'not-allowed' : 'pointer',
+                transition: 'background-color 0.2s'
+              }}
+            >
+              Previous
+            </button>
+            
+            <span style={{ 
+              fontSize: '14px', 
+              color: '#6b7280',
+              fontWeight: '500'
+            }}>
+              Page {currentPage} of {totalPages}
+            </span>
+            
+            <button 
+              onClick={goToNextPage}
+              disabled={currentPage >= totalPages}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: currentPage >= totalPages ? '#f3f4f6' : '#003979',
+                color: currentPage >= totalPages ? '#9ca3af' : 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: currentPage >= totalPages ? 'not-allowed' : 'pointer',
+                transition: 'background-color 0.2s'
+              }}
+            >
+              Next
+            </button>
+          </div>
         </div>
       );
     }
     
     return (
-      <div className="md-emp-preview-placeholder" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '400px' }}>
+      <div className="md-emp-preview-placeholder" style={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        height: '400px' 
+      }}>
         <FileText size={80} color="#dc2626" />
         <p>{doc.type}</p>
         <p className="md-emp-preview-note">Preview not available</p>
       </div>
     );
+  };
+
+  // PDF loading effect - add this after your existing useEffects
+useEffect(() => {
+  if (selectedDocument?.previewUrl && pdfJsLoaded && window.pdfjsLib) {
+    const loadPdfDocument = async () => {
+      try {
+        const response = await fetch(selectedDocument.previewUrl);
+        const arrayBuffer = await response.arrayBuffer();
+        const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        setPdfDocument(pdf);
+        setTotalPages(pdf.numPages);
+        setCurrentPage(1);
+      } catch (error) {
+        console.error('Error loading PDF:', error);
+      }
+    };
+    loadPdfDocument();
+  }
+}, [selectedDocument?.previewUrl, pdfJsLoaded]);
+
+// PDF rendering effect
+useEffect(() => {
+  if (pdfDocument && currentPage && canvasRef.current) {
+    const renderPage = async () => {
+      try {
+        const page = await pdfDocument.getPage(currentPage);
+        const canvas = canvasRef.current;
+        const context = canvas.getContext('2d');
+        
+        const viewport = page.getViewport({ scale: 1.5 });
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        
+        const renderContext = {
+          canvasContext: context,
+          viewport: viewport
+        };
+        
+        await page.render(renderContext).promise;
+      } catch (error) {
+        console.error('Error rendering page:', error);
+      }
+    };
+    renderPage();
+  }
+}, [pdfDocument, currentPage]);
+  
+  // Also add this reset function to handle modal close
+  const resetPdfViewer = () => {
+    setCurrentPage(1);
+    setTotalPages(0);
+    setPdfDocument(null);
+    setPageCanvas(null);
   };
 
   const handleDownload = async (doc, event) => {
@@ -687,7 +830,14 @@ const ManageDocuments = () => {
       {/* Header Card */}
       <div className="md-emp-header-row">
         <div className="md-emp-title-card">
-          <h1 className="md-emp-main-title">Manage Documents</h1>
+          <h1 className="md-emp-main-title">MANAGE DOCUMENTS</h1>
+          <button 
+              className="md-emp-add-button"
+              onClick={() => setShowUploadModal(true)}
+            >
+              <Plus size={16} />
+              Add Document
+            </button>
         </div>
       </div>
 
@@ -695,16 +845,6 @@ const ManageDocuments = () => {
       <div className="md-emp-content-row">
         {/* Left Panel - Documents Grid */}
         <div className="md-emp-documents-panel">
-          <div className="md-emp-documents-header">
-            <h2 className="md-emp-documents-title">Uploaded Documents</h2>
-            <button 
-              className="md-emp-add-button"
-              onClick={() => setShowUploadModal(true)}
-            >
-              <Plus size={16} />
-              Add Document
-            </button>
-          </div>
 
           {/* Documents Grid */}
           <div className="md-emp-documents-grid">
@@ -1036,7 +1176,10 @@ const ManageDocuments = () => {
                 </button>
                 <button 
                   className="md-emp-close-button"
-                  onClick={() => setShowPreviewModal(false)}
+                  onClick={() => {
+                    setShowPreviewModal(false);
+                    resetPdfViewer();
+                  }}
                 >
                   <X size={20} />
                 </button>

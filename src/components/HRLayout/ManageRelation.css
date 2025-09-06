@@ -518,10 +518,6 @@
     border-left: 4px solid #3b82f6;
   }
   
-  .miEmployeeMessage {
-    border-left: 4px solid #10b981;
-  }
-  
   .miMessageHeader {
     display: flex;
     justify-content: space-between;
@@ -1135,145 +1131,163 @@
     color: #166534;
   }
   
-  /* Responsive adjustments for page view */
-  @media (max-width: 1200px) {
-    .miDetailsPageGrid {
-      grid-template-columns: 1fr;
-      gap: 24px;
-    }
-    
-    .miDetailsPage {
-      padding: 16px;
-    }
-    
-    .miDetailsPageTitle {
-      padding: 20px;
-    }
-    
-    .miDetailsPageContent {
-      padding: 24px;
-    }
+ /* ========================================
+   RESPONSIVE DESIGN - MOBILE FIRST
+   ======================================== */
+
+/* Large Desktop: 1200px and down */
+@media screen and (max-width: 1200px) {
+  /* Grid Layouts */
+  .miDetailsPageGrid,
+  .miDetailsGrid {
+    grid-template-columns: 1fr;
+    gap: 24px;
   }
   
-  @media (max-width: 768px) {
-    .miDetailsPageTitle h1 {
-      font-size: 24px;
-    }
-    
-    .miDetailsPageContent {
-      padding: 20px;
-    }
-    
-    .miDetailsPageContent .miMessagesContainer {
-      padding: 16px;
-    }
+  /* Summary Cards */
+  .miSummaryCards {
+    grid-template-columns: repeat(2, 1fr);
   }
   
-  /* Responsive Design */
-  @media screen and (max-width: 1200px) {
-    .miDetailsGrid {
-      grid-template-columns: 1fr;
-      gap: 24px;
-    }
-    
-    .miSummaryCards {
-      grid-template-columns: repeat(2, 1fr);
-    }
+  /* Page Layout */
+  .miDetailsPage {
+    padding: 16px;
   }
   
-  @media screen and (max-width: 768px) {
-    .miMainContainer {
-      padding: 16px;
-    }
-    
-    .miSummaryCards {
-      grid-template-columns: 1fr;
-    }
-    
-    .miFilterSection {
-      justify-content: stretch;
-    }
-    
-    .miFilterBtn {
-      width: 100%;
-      justify-content: center;
-    }
-    
-    .miFilterDropdown {
-      left: 0;
-      right: 0;
-    }
-    
-    .miFormModal,
-    .miDetailsModal {
-      margin: 10px;
-      max-width: calc(100% - 20px);
-    }
-    
-    .miForm,
-    .miDetailsContent {
-      padding: 24px;
-    }
-    
-    .miTableSection {
-      overflow-x: auto;
-    }
-    
-    .miDataTable {
-      min-width: 800px;
-    }
-    
-    .miTableRow td {
-      padding: 12px 16px;
-    }
-    
-    .miPaginationArea {
-      flex-direction: column;
-      gap: 16px;
-    }
-    
-    .miReplyActions {
-      flex-direction: column;
-      gap: 8px;
-    }
-    
-    .miReplyActions button {
-      width: 100%;
-    }
-    
-    .miFormActions {
-      flex-direction: column;
-      gap: 8px;
-    }
-    
-    .miFormActions button {
-      width: 100%;
-    }
+  .miDetailsPageTitle {
+    padding: 20px;
   }
   
-  @media screen and (max-width: 480px) {
-    .miDetailsHeader {
-      padding: 20px;
-    }
-    
-    .miDetailsTitle h2 {
-      font-size: 20px;
-    }
-    
-    .miFormHeader {
-      padding: 20px;
-    }
-    
-    .miForm,
-    .miDetailsContent {
-      padding: 20px;
-    }
-    
-    .miMessagesContainer {
-      padding: 16px;
-    }
-    
-    .miTicketSummary {
-      padding: 16px;
-    }
+  .miDetailsPageContent {
+    padding: 24px;
   }
+}
+
+/* Tablet: 768px and down */
+@media screen and (max-width: 768px) {
+  /* Page Structure */
+  .miDetailsPageGrid {
+    display: contents;
+  }
+
+  .miMessagesContainer{
+    order: 1
+  }
+
+  .miReplySection{
+    order:2;
+    margin-bottom: 20px;
+  }
+
+  .miTicketSummary{
+    order: 3;
+  }
+  
+  .miMainContainer {
+    padding: 16px;
+  }
+  
+  /* Typography */
+  .miDetailsPageTitle h1 {
+    font-size: 24px;
+  }
+  
+  /* Content Areas */
+  .miDetailsPageContent {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .miDetailsPageContent .miMessagesContainer {
+    padding: 16px;
+    order: 1;
+  }
+  
+  /* Summary Cards */
+  .miSummaryCards {
+    grid-template-columns: 1fr;
+  }
+  
+  /* Filter Section */
+  .miFilterSection {
+    justify-content: stretch;
+  }
+  
+  .miFilterBtn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .miFilterDropdown {
+    left: 0;
+    right: 0;
+  }
+  
+  /* Modals */
+  .miFormModal,
+  .miDetailsModal {
+    margin: 10px;
+    max-width: calc(100% - 20px);
+  }
+  
+  .miForm,
+  .miDetailsContent {
+    padding: 24px;
+  }
+  
+  /* Table Section */
+  .miTableSection {
+    overflow-x: auto;
+  }
+  
+  .miDataTable {
+    min-width: 800px;
+  }
+  
+  .miTableRow td {
+    padding: 12px 16px;
+  }
+  
+  /* Action Areas */
+  .miPaginationArea {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .miReplyActions,
+  .miFormActions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .miReplyActions button,
+  .miFormActions button {
+    width: 100%;
+  }
+}
+
+/* Mobile: 480px and down */
+@media screen and (max-width: 480px) {
+  /* Headers */
+  .miDetailsHeader,
+  .miFormHeader {
+    padding: 20px;
+  }
+  
+  /* Typography */
+  .miDetailsTitle h2 {
+    font-size: 20px;
+  }
+  
+  /* Content Areas */
+  .miForm,
+  .miDetailsContent {
+    padding: 20px;
+  }
+  
+  .miMessagesContainer,
+  .miTicketSummary {
+    padding: 16px;
+  }
+}

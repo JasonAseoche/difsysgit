@@ -56,7 +56,6 @@ const TimeKeeping = () => {
     leaveType: '',
     startDate: '',
     endDate: '',
-    priority: 'Medium',
     reason: '',
     attachments: null
   });
@@ -259,7 +258,6 @@ const TimeKeeping = () => {
           start_date: formData.startDate,
           end_date: formData.endDate,
           reason: formData.reason,
-          priority: formData.priority
         };
 
         const response = await api.put('/leave_management.php?action=update_request', updateData);
@@ -280,7 +278,6 @@ const TimeKeeping = () => {
           start_date: formData.startDate,
           end_date: formData.endDate,
           reason: formData.reason,
-          priority: formData.priority
         };
 
         const response = await api.post('/leave_management.php?action=submit', submitData);
@@ -564,8 +561,7 @@ const TimeKeeping = () => {
             </div>
             
             <form onSubmit={handleFormSubmit} className="timekeepingForm">
-              <div className="timekeepingFormRow">
-                <div className="timekeepingFormGroup">
+            <div className="timekeepingFormGroup">
                   <label>Leave Type *</label>
                   <select
                     value={formData.leaveType}
@@ -578,20 +574,6 @@ const TimeKeeping = () => {
                     ))}
                   </select>
                 </div>
-
-                <div className="timekeepingFormGroup">
-                  <label>Priority</label>
-                  <select
-                    value={formData.priority}
-                    onChange={(e) => setFormData({...formData, priority: e.target.value})}
-                  >
-                    <option value="Low">Low</option>
-                    <option value="Medium">Medium</option>
-                    <option value="High">High</option>
-                  </select>
-                </div>
-              </div>
-
               <div className="timekeepingFormRow">
                 <div className="timekeepingFormGroup">
                   <label>Start Date *</label>
@@ -681,7 +663,6 @@ const TimeKeeping = () => {
             </div>
             
             <form onSubmit={handleFormSubmit} className="timekeepingForm">
-              <div className="timekeepingFormRow">
                 <div className="timekeepingFormGroup">
                   <label>Leave Type</label>
                   <select
@@ -696,21 +677,6 @@ const TimeKeeping = () => {
                     ))}
                   </select>
                 </div>
-
-                <div className="timekeepingFormGroup">
-                  <label>Priority</label>
-                  <select
-                    value={formData.priority}
-                    onChange={(e) => setFormData({...formData, priority: e.target.value})}
-                    disabled={!isEditing}
-                  >
-                    <option value="Low">Low</option>
-                    <option value="Medium">Medium</option>
-                    <option value="High">High</option>
-                  </select>
-                </div>
-              </div>
-
               <div className="timekeepingFormRow">
                 <div className="timekeepingFormGroup">
                   <label>Start Date</label>
@@ -877,24 +843,24 @@ const TimeKeeping = () => {
           <div className="timekeepingInfoCard">
             <div className="timekeepingInfoIcon timekeepingIconGreen">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                <path d="M9 11H7v6h2v-6zm4 0h-2v6h2v-6zm4 0h-2v6h2v-6zm2-7h-3V2h-2v2H8V2H6v2H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H3V9h16v11z"/>
               </svg>
             </div>
             <div className="timekeepingInfoContent">
-              <p className="timekeepingInfoLabel">Employee ID</p>
-              <p className="timekeepingInfoValue">DIF{employeeInfo.emp_id}</p>
+              <p className="timekeepingInfoLabel">Vacation Leave Credits</p>
+              <p className="timekeepingInfoValue">{leaves.length > 0 ? leaves[0].vacation_credits - leaves[0].used_vacation : 15}</p>
             </div>
           </div>
 
           <div className="timekeepingInfoCard">
             <div className="timekeepingInfoIcon timekeepingIconBlue">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                <path d="M20.57,14.86L22,13.43L20.57,12L17,15.57L8.43,7L12,3.43L10.57,2L9.14,3.43L7.71,2L5.57,4.14L4.14,2.71L2.71,4.14L4.14,5.57L2,7.71L3.43,9.14L2,10.57L3.43,12L7,8.43L15.57,17L12,20.57L13.43,22L14.86,20.57L16.29,22L18.43,19.86L19.86,21.29L21.29,19.86L19.86,18.43L22,16.29L20.57,14.86Z"/>
               </svg>
             </div>
             <div className="timekeepingInfoContent">
-              <p className="timekeepingInfoLabel">Joining Date</p>
-              <p className="timekeepingInfoValue">22 January 2019</p>
+              <p className="timekeepingInfoLabel">Sick Leave Credits</p>
+              <p className="timekeepingInfoValue">{leaves.length > 0 ? leaves[0].sick_credits - leaves[0].used_sick : 10}</p>
             </div>
           </div>
 
@@ -906,7 +872,7 @@ const TimeKeeping = () => {
             </div>
             <div className="timekeepingInfoContent">
               <p className="timekeepingInfoLabel">Department</p>
-              <p className="timekeepingInfoValue">Account</p>
+              <p className="timekeepingInfoValue">{leaves.length > 0 ? leaves[0].department || 'Not Assigned' : 'Not Assigned'}</p>
             </div>
           </div>
         </div>

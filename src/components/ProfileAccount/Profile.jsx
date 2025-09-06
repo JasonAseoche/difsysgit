@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import EAProfile from '../EAProfile/EAProfile.jsx';
 import { getCurrentUser, getUserId, getUserRole } from '../../utils/auth';
 import './Profile.css';
 
@@ -76,7 +77,7 @@ const Profile = () => {
         
         // Check if user has allowed role
         // In the fetchProfileData function, around line 69
-        const allowedRoles = ['admin', 'hr', 'accountant', 'employee', 'supervisor']; // Add 'supervisor'
+        const allowedRoles = ['admin', 'applicant', 'hr', 'accountant', 'employee', 'supervisor']; // Add 'supervisor'
         if (!allowedRoles.includes(userRole)) {
           alert('Access denied. This page is only accessible to admin, hr, accountant, employee, and supervisor roles.');
           window.location.href = '/dashboard-' + userRole;
@@ -209,54 +210,81 @@ const Profile = () => {
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
-
+  
+    console.log('=== IMAGE UPLOAD DEBUG START ===');
+    
     // Validate file type
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
     if (!allowedTypes.includes(file.type)) {
       alert('Please select a valid image file (JPEG, PNG, GIF, or WebP)');
       return;
     }
-
+  
     // Validate file size (5MB)
     const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
       alert('File size must be less than 5MB');
       return;
     }
-
+  
     setUploading(true);
-
+  
     try {
       const userId = getUserId();
+      const userRole = getUserRole();
+      
+      console.log('User ID:', userId);
+      console.log('User Role:', userRole);
+      console.log('File:', file.name, file.type, file.size);
+      
       const formData = new FormData();
       formData.append('action', 'upload_image');
       formData.append('user_id', userId);
       formData.append('profile_image', file);
-
+  
+      // Log what we're sending
+      console.log('FormData contents:');
+      for (let pair of formData.entries()) {
+        console.log(pair[0] + ':', pair[1]);
+      }
+  
+      console.log('Making request to:', 'http://localhost/difsysapi/profile.php');
+  
       const response = await axios.post('http://localhost/difsysapi/profile.php', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-
+  
+      console.log('Response received:', response.data);
+  
       if (response.data.success) {
+        const newImageUrl = response.data.imageUrl;
+        console.log('New image URL:', newImageUrl);
+        
         setProfileData(prev => ({
           ...prev,
-          profileImage: response.data.imageUrl
+          profileImage: newImageUrl
         }));
+        
         alert('Profile image uploaded successfully!');
       } else {
-        alert('Error uploading image: ' + response.data.message);
+        console.error('Upload failed:', response.data.message);
+        alert('Error uploading image: ' + (response.data.message || 'Unknown error'));
       }
     } catch (error) {
-      console.error('Error uploading image:', error);
+      console.error('Upload error:', error);
       if (error.response) {
+        console.error('Server response status:', error.response.status);
+        console.error('Server response data:', error.response.data);
         alert('Error uploading image: ' + (error.response.data?.message || 'Server error'));
       } else {
+        console.error('Network error:', error.message);
         alert('Error uploading image. Please check your connection.');
       }
     } finally {
       setUploading(false);
+      console.log('=== IMAGE UPLOAD DEBUG END ===');
     }
   };
 
@@ -603,6 +631,11 @@ const Profile = () => {
       </div>
     );
   };
+
+  const userRole = getUserRole();
+  if (['employee', 'applicant'].includes(userRole?.toLowerCase())) {
+    return <EAProfile />;
+  }
 
   if (loading) {
     return (

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import jsPDF from 'jspdf';
 import { getCurrentUser, getUserId } from '../../utils/auth';
+import difsyslogo from '../../assets/difsyslogo.png';
 import '../../components/HRLayout/ManageExamination.css';
 
 const ManageExamination = () => {
@@ -122,6 +124,160 @@ const ManageExamination = () => {
     setTimeout(() => {
       setShowSuccessModal(false);
     }, 3000);
+  };
+
+  // PDF Export Function
+  const exportToPDF = async () => {
+    try {
+      const exam = exams.find(e => e.id === selectedResult?.exam_id);
+      const answers = Array.isArray(selectedResult.answers) ? selectedResult.answers : [];
+      const questions = Array.isArray(exam.questions) ? exam.questions : [];
+
+      // Create new PDF document
+      const pdf = new jsPDF();
+      const pageWidth = pdf.internal.pageSize.width;
+      const pageHeight = pdf.internal.pageSize.height;
+      const margin = 20;
+      let currentY = margin;
+
+      // Add logo
+      try {
+        // Convert logo to base64 if needed
+        const logoWidth = 30;
+        const logoHeight = 20;
+        pdf.addImage(difsyslogo, 'PNG', margin, currentY, logoWidth, logoHeight);
+        currentY += logoHeight + 10;
+      } catch (error) {
+        console.warn('Could not add logo to PDF:', error);
+        currentY += 10;
+      }
+
+      // Add applicant information
+      pdf.setFontSize(16);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text(`${selectedResult?.firstName} ${selectedResult?.lastName}`, margin, currentY);
+      currentY += 8;
+
+      // Get applicant position from applicants data
+      const applicantInfo = applicants.find(app => 
+        app.name === `${selectedResult?.firstName} ${selectedResult?.lastName}`
+      );
+      const position = applicantInfo?.position || 'Position Not Available';
+      
+      pdf.setFontSize(12);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text(`Position Applying: ${position}`, margin, currentY);
+      currentY += 15;
+
+      // Add exam title (centered)
+      pdf.setFontSize(18);
+      pdf.setFont('helvetica', 'bold');
+      const examTitle = selectedResult?.exam_title || 'Exam Results';
+      const titleWidth = pdf.getTextWidth(examTitle);
+      pdf.text(examTitle, (pageWidth - titleWidth) / 2, currentY);
+      currentY += 20;
+
+      // Add exam summary
+      pdf.setFontSize(12);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text(`Total Score: ${Math.round(selectedResult?.total_score || 0)}%`, margin, currentY);
+      currentY += 6;
+      pdf.text(`Time Taken: ${selectedResult?.time_taken || 'N/A'} minutes`, margin, currentY);
+      currentY += 6;
+      pdf.text(`Date: ${selectedResult?.completed_at ? new Date(selectedResult.completed_at).toLocaleDateString() : 'In Progress'}`, margin, currentY);
+      currentY += 6;
+      pdf.text(`Status: ${selectedResult?.status}`, margin, currentY);
+      currentY += 20;
+
+      // Add questions and answers
+      pdf.setFontSize(14);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Questions and Answers:', margin, currentY);
+      currentY += 15;
+
+      if (answers.length === 0) {
+        pdf.setFontSize(12);
+        pdf.setFont('helvetica', 'italic');
+        pdf.text('No answers available - exam may still be in progress.', margin, currentY);
+      } else {
+        answers.forEach((answer, index) => {
+          const question = questions.find(q => q.id === answer.questionId);
+          
+          if (question) {
+            // Check if we need a new page
+            if (currentY > pageHeight - 60) {
+              pdf.addPage();
+              currentY = margin;
+            }
+
+            // Question number and text
+            pdf.setFontSize(12);
+            pdf.setFont('helvetica', 'bold');
+            const questionText = `Question ${index + 1}: ${question.question}`;
+            
+            // Split long text into multiple lines
+            const questionLines = pdf.splitTextToSize(questionText, pageWidth - 2 * margin);
+            pdf.text(questionLines, margin, currentY);
+            currentY += questionLines.length * 6 + 3;
+
+            // Question type
+            pdf.setFontSize(10);
+            pdf.setFont('helvetica', 'italic');
+            pdf.text(`(${question.type} - ${question.points} pts)`, margin, currentY);
+            currentY += 8;
+
+            // Student answer
+            pdf.setFontSize(11);
+            pdf.setFont('helvetica', 'normal');
+            pdf.text('Answer:', margin, currentY);
+            currentY += 6;
+            
+            const studentAnswer = answer.answer || 'No answer provided';
+            const answerLines = pdf.splitTextToSize(studentAnswer, pageWidth - 2 * margin - 10);
+            pdf.text(answerLines, margin + 10, currentY);
+            currentY += answerLines.length * 5 + 5;
+
+            // Correct answer (for non-essay questions)
+            if (question.type !== 'essay' && question.correctAnswer) {
+              pdf.setFont('helvetica', 'bold');
+              pdf.text('Correct Answer:', margin, currentY);
+              currentY += 6;
+              pdf.setFont('helvetica', 'normal');
+              const correctLines = pdf.splitTextToSize(question.correctAnswer, pageWidth - 2 * margin - 10);
+              pdf.text(correctLines, margin + 10, currentY);
+              currentY += correctLines.length * 5 + 5;
+            }
+
+            // Score
+            pdf.setFont('helvetica', 'bold');
+            const score = getDisplayScore(answer.questionId, answer.score || 0);
+            pdf.text(`Score: ${score} / ${question.points} pts`, margin, currentY);
+            currentY += 15;
+
+            // Add separator line
+            pdf.setDrawColor(200, 200, 200);
+            pdf.line(margin, currentY, pageWidth - margin, currentY);
+            currentY += 10;
+          }
+        });
+      }
+
+      // Add footer
+      const footerY = pageHeight - 15;
+      pdf.setFontSize(8);
+      pdf.setFont('helvetica', 'italic');
+      pdf.text(`Generated on ${new Date().toLocaleString()}`, margin, footerY);
+      pdf.text('DIFSYS - Digital Information Filing System', pageWidth - margin - 80, footerY);
+
+      // Save the PDF
+      const fileName = `${selectedResult?.firstName}_${selectedResult?.lastName}_${examTitle.replace(/\s+/g, '_')}_Results.pdf`;
+      pdf.save(fileName);
+      
+      showSuccess('PDF exported successfully!');
+    } catch (error) {
+      console.error('Error exporting PDF:', error);
+      showSuccess('Error exporting PDF. Please try again.', 'error');
+    }
   };
 
   const handleAddExam = () => {
@@ -1128,6 +1284,20 @@ const ManageExamination = () => {
               {hasUnsavedChanges && (
                 <span className="exam-unsaved-changes">You have unsaved changes</span>
               )}
+              <button 
+                className="exam-btn-export"
+                onClick={exportToPDF}
+                title="Export Result to PDF"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M14 2V8H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M16 13H8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M16 17H8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M10 9H9H8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Export Result
+              </button>
             </div>
             <div className="exam-modal-footer-right">
               {hasUnsavedChanges && (

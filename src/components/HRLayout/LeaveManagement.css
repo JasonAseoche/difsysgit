@@ -37,20 +37,13 @@
   min-height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   opacity: 0;
-  transition: opacity 0.4s ease-in-out;
+
 }
 
 .hr-leave-container.hr-leave-active {
   opacity: 1;
 }
 
-.hr-leave-container.hr-leave-active .hr-leave-main-header {
-  animation: hrLeaveSlideFromLeft 0.5s ease-out forwards;
-}
-
-.hr-leave-container.hr-leave-active .hr-leave-content-area {
-  animation: hrLeaveSlideUp 0.5s ease-out 0.1s forwards;
-}
 
 .hr-leave-overlay {
   position: fixed;
@@ -428,20 +421,29 @@
   color: #6b7280;
 }
 
-/* Fixed Header */
-.hr-leave-main-header {
+.hr-leave-header-card {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.hr-leave-header-top {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 32px;
-  background-color: white;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  padding: 20px 24px;
-  border-bottom: 1px solid #e5e7eb;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  border-radius: 12px;
+}
+
+.hr-leave-title-section {
+  flex: 1;
+}
+
+.hr-leave-breadcrumb {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
 }
 
 .hr-leave-page-title {
@@ -515,7 +517,7 @@
   background: white;
   border-radius: 12px;
   padding: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.1);
   border: 1px solid #e5e7eb;
   transition: all 0.2s ease;
   opacity: 0;
@@ -604,6 +606,7 @@
 }
 
 .hr-leave-status-indicator {
+  max-width: 90px;
   padding: 4px 8px;
   border-radius: 12px;
   font-size: 11px;
@@ -615,7 +618,7 @@
 
 .hr-leave-status-approved {
   background-color: #dcfce7;
-  color: #166534;
+  color: #21ca62;
 }
 
 .hr-leave-status-pending {
@@ -639,7 +642,7 @@
   padding: 16px;
   background-color: #f9fafb;
   border-radius: 8px;
-  border-left: 4px solid #4f46e5;
+  border: 1px solid #4f46e5;
 }
 
 .hr-leave-info-row {
@@ -707,7 +710,7 @@
 }
 
 .hr-leave-btn-view {
-  background-color: #4f46e5;
+  background-color: #7069f3;
   color: white;
 }
 
@@ -717,7 +720,7 @@
 }
 
 .hr-leave-btn-approve {
-  background-color: #10b981;
+  background-color: #32ca97;
   color: white;
 }
 
@@ -727,7 +730,7 @@
 }
 
 .hr-leave-btn-decline {
-  background-color: #ef4444;
+  background-color: #d85656;
   color: white;
 }
 
@@ -919,6 +922,326 @@
   font-style: italic;
 }
 
+.hr-leave-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.hr-leave-tab {
+  padding: 12px 24px;
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 14px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.hr-leave-tab:hover {
+  color: #374151;
+}
+
+.hr-leave-tab.active {
+  color: #3b82f6;
+  border-bottom-color: #3b82f6;
+}
+
+/* Leave Credits Table Styles */
+.hr-leave-table-container {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+}
+
+.hr-leave-table-wrapper {
+  overflow-x: auto;
+}
+
+.hr-leave-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.hr-leave-table-header th {
+  background-color: #f8fafc;
+  padding: 16px 20px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.hr-leave-table-row {
+  border-bottom: 1px solid #f1f5f9;
+  transition: background-color 0.15s ease;
+}
+
+.hr-leave-table-row:hover {
+  background-color: #f8fafc;
+}
+
+.hr-leave-table-row:last-child {
+  border-bottom: none;
+}
+
+.hr-leave-table-row td {
+  padding: 16px 20px;
+  vertical-align: middle;
+}
+
+.hr-leave-emp-id-cell {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 14px;
+}
+
+.hr-leave-name-cell {
+  min-width: 250px;
+}
+
+.hr-leave-employee-info-table {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hr-leave-employee-avatar-small {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.hr-leave-employee-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hr-leave-employee-name-table {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.3;
+}
+
+.hr-leave-employee-position-table {
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.2;
+}
+
+.hr-leave-credits-cell {
+  min-width: 150px;
+}
+
+.hr-leave-credits-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hr-leave-credits-total {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.hr-leave-credits-used {
+  font-size: 12px;
+  color: #ef4444;
+  font-weight: 500;
+}
+
+.hr-leave-credits-remaining {
+  font-size: 12px;
+  color: #10b981;
+  font-weight: 500;
+}
+
+.hr-leave-actions-cell {
+  text-align: center;
+  min-width: 120px;
+}
+
+.hr-leave-manage-btn {
+  background: transparent;
+  color: #4f46e5;
+  border: 1px solid #4f46e5;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 80px;
+}
+
+.hr-leave-manage-btn:hover {
+  background: #4338ca;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+.hr-leave-empty-cell {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* Pagination Styles */
+.hr-leave-pagination-area {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background-color: #ffffff;
+  border-top: 1px solid #e2e8f0;
+}
+
+.hr-leave-pagination-info {
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 400;
+}
+
+.hr-leave-pagination-buttons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hr-leave-pagination-btn {
+  padding: 8px 12px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-weight: 500;
+  min-width: 36px;
+  text-align: center;
+}
+
+.hr-leave-pagination-btn:hover {
+  background-color: #f8fafc;
+  border-color: #94a3b8;
+}
+
+.hr-leave-pagination-active {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+  border-color: #3b82f6 !important;
+  font-weight: 600 !important;
+}
+
+.hr-leave-pagination-dots {
+  color: #94a3b8;
+  font-weight: 400;
+  padding: 0 8px;
+  font-size: 12px;
+}
+
+/* Credits Form Styles */
+.hr-leave-credits-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.hr-leave-credits-form input {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  fontSize: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.hr-leave-credits-form input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Status variations for HR approved pending */
+.hr-leave-status-hr-approved-pending {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.hr-leave-table-header th:nth-child(1), /* Employee ID */
+.hr-leave-table-row td:nth-child(1) {
+  width: 120px;
+  min-width: 120px;
+}
+
+.hr-leave-table-header th:nth-child(2), /* Employee Name */
+.hr-leave-table-row td:nth-child(2) {
+  width: 250px;
+  min-width: 250px;
+}
+
+.hr-leave-table-header th:nth-child(3), /* Vacation Leave Credits */
+.hr-leave-table-row td:nth-child(3) {
+  width: 180px;
+  min-width: 180px;
+  text-align: center;
+}
+
+.hr-leave-table-header th:nth-child(4), /* Sick Leave Credits */
+.hr-leave-table-row td:nth-child(4) {
+  width: 160px;
+  min-width: 160px;
+  text-align: center;
+}
+
+.hr-leave-table-header th:nth-child(5), /* Action */
+.hr-leave-table-row td:nth-child(5) {
+  width: 120px;
+  min-width: 120px;
+  text-align: center;
+}
+
+/* Ensure table layout is fixed for consistent column widths */
+.hr-leave-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+/* Center align the numeric credit values */
+.hr-leave-table-row td:nth-child(3),
+.hr-leave-table-row td:nth-child(4) {
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* Center align the action column header */
+.hr-leave-table-header th:nth-child(3),
+.hr-leave-table-header th:nth-child(4),
+.hr-leave-table-header th:nth-child(5) {
+  text-align: center;
+}
+
 /* Responsive Design */
 
 /* Large Desktop (1400px and up) */
@@ -1009,6 +1332,15 @@
     grid-template-columns: 1fr;
     gap: 16px;
   }
+
+  /* Table responsive styles for tablet */
+  .hr-leave-table-wrapper {
+    overflow-x: auto;
+  }
+  
+  .hr-leave-table {
+    min-width: 800px;
+  }
 }
 
 /* Mobile Large (481px to 767px) */
@@ -1043,41 +1375,34 @@
   .hr-leave-request-card {
     padding: 20px;
   }
-  
-  .hr-leave-employee-section {
-    gap: 16px;
-    margin-bottom: 16px;
+
+  /* Table styles for mobile */
+  .hr-leave-table {
+    min-width: 700px;
   }
   
-  .hr-leave-employee-avatar {
-    width: 50px;
-    height: 50px;
-    font-size: 16px;
-  }
-  
-  .hr-leave-employee-name {
-    font-size: 18px;
-  }
-  
-  .hr-leave-card-actions {
-    gap: 12px;
-  }
-  
-  .hr-leave-action-button {
+  .hr-leave-table-header th {
     padding: 12px 16px;
-    font-size: 14px;
+    font-size: 11px;
   }
   
-  .hr-leave-request-card:hover {
-    transform: translateY(-2px) scale(1.005);
+  .hr-leave-table-row td {
+    padding: 12px 16px;
   }
   
-  .hr-leave-action-button:hover {
-    transform: translateY(-1px);
+  .hr-leave-employee-info-table {
+    gap: 8px;
   }
   
-  .hr-leave-search-field:focus {
-    transform: scale(1.01);
+  .hr-leave-employee-avatar-small {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+  
+  .hr-leave-pagination-area {
+    flex-direction: column;
+    gap: 12px;
   }
 }
 
@@ -1114,61 +1439,39 @@
   .hr-leave-request-card {
     padding: 16px;
   }
-  
-  .hr-leave-employee-section {
-    gap: 12px;
-    margin-bottom: 16px;
+
+  /* Mobile table styles */
+  .hr-leave-table {
+    min-width: 600px;
   }
   
-  .hr-leave-employee-avatar {
-    width: 45px;
-    height: 45px;
-    font-size: 15px;
+  .hr-leave-table-header th {
+    padding: 10px 12px;
+    font-size: 10px;
   }
   
-  .hr-leave-employee-info {
-    min-width: 0;
+  .hr-leave-table-row td {
+    padding: 10px 12px;
   }
   
-  .hr-leave-employee-name {
-    font-size: 16px;
-    line-height: 1.4;
+  .hr-leave-name-cell {
+    min-width: 200px;
   }
   
-  .hr-leave-employee-position,
-  .hr-leave-employee-email {
-    font-size: 14px;
+  .hr-leave-credits-cell {
+    min-width: 120px;
   }
   
-  .hr-leave-details-section {
-    padding: 12px;
-    margin-bottom: 16px;
+  .hr-leave-actions-cell {
+    min-width: 100px;
   }
   
-  .hr-leave-card-actions {
-    gap: 10px;
+  .hr-leave-manage-btn {
+    padding: 6px 12px;
+    font-size: 11px;
+    min-width: 70px;
   }
   
-  .hr-leave-action-button {
-    padding: 10px 16px;
-    font-size: 14px;
-    border-radius: 6px;
-  }
-  
-  /* Minimal animations for small mobile */
-  .hr-leave-request-card:hover {
-    transform: translateY(-1px);
-  }
-  
-  .hr-leave-action-button:hover {
-    transform: none;
-  }
-  
-  .hr-leave-search-field:focus {
-    transform: none;
-  }
-  
-  /* Modal responsive */
   .hr-leave-modal-window {
     margin: 8px;
     max-width: calc(100% - 16px);
@@ -1207,43 +1510,5 @@
   
   .hr-leave-modal-footer .hr-leave-action-button {
     width: 100%;
-  }
-}
-
-/* Extra Small Mobile (below 320px) */
-@media (max-width: 319px) {
-  .hr-leave-container {
-    padding: 8px;
-  }
-  
-  .hr-leave-page-title {
-    font-size: 18px;
-  }
-  
-  .hr-leave-request-card {
-    padding: 12px;
-  }
-  
-  .hr-leave-employee-name {
-    font-size: 14px;
-  }
-  
-  .hr-leave-employee-position,
-  .hr-leave-employee-email {
-    font-size: 12px;
-  }
-  
-  .hr-leave-action-button {
-    padding: 8px 12px;
-    font-size: 12px;
-  }
-  
-  /* No hover animations for extra small screens */
-  .hr-leave-request-card:hover {
-    transform: none;
-  }
-  
-  .hr-leave-action-button:hover {
-    transform: none;
   }
 }

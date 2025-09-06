@@ -11,6 +11,9 @@ const ApplyNow = () => {
 
   const API_URL = 'http://localhost/difsysapi/manage_hiring.php';
 
+  // Company name for display
+  const COMPANY_NAME = "DIFSYS, INC";
+
   useEffect(() => {
     fetchJobPositions();
   }, []);
@@ -34,21 +37,67 @@ const ApplyNow = () => {
 
   const handleViewDetails = (job) => {
     setSelectedJob(job);
+    document.body.style.overflow = 'hidden';
   };
 
   const handleCloseModal = () => {
     setSelectedJob(null);
+    document.body.style.overflow = 'unset';
   };
 
   const handleSignUpToApply = () => {
     navigate('/signup');
   };
 
+  // Format date for display
+  const formatDate = (dateString) => {
+    if (!dateString) return new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+  };
+
+  // Generate job tags based on job data
+  const generateJobTags = (job) => {
+    const tags = [];
+    
+    if (job.type) tags.push(job.type);
+    else tags.push('Full time'); // Default
+    
+    if (job.level) tags.push(job.level);
+    else tags.push('Mid level'); // Default
+    
+    if (job.remote_option) tags.push('Remote');
+    else tags.push('On-site'); // Default
+    
+    return tags.slice(0, 3); // Limit to 3 tags
+  };
+
+  // Generate location - always show Cabuyao City
+  const generateLocation = (job) => {
+    return 'Cabuyao City';
+  };
+
+  // Close modal on Escape key press
+  useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === 'Escape' && selectedJob) {
+        handleCloseModal();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [selectedJob]);
+
   if (isLoading) {
     return (
       <div className="applynow-container">
         <div className="applynow-loading">
-          <p>Loading job positions...</p>
+          <div className="applynow-loading-spinner"></div>
+          <span>Loading available positions...</span>
         </div>
       </div>
     );
@@ -57,36 +106,73 @@ const ApplyNow = () => {
   return (
     <div className="applynow-container">
       <div className="applynow-header">
-        <h1 className="applynow-title">OUR COMPANY LOOK FOR</h1>
+        <h1 className="applynow-title">Open Positions</h1>
+        <p className="applynow-subtitle">
+          Join our team and build something amazing together
+        </p>
       </div>
       
       {jobPositions.length === 0 ? (
         <div className="applynow-no-positions">
-          <p>No job positions available at the moment. Please check back later.</p>
+          <h3>No Open Positions</h3>
+          <p>We don't have any open positions at the moment, but we're always looking for talented individuals. Check back soon!</p>
         </div>
       ) : (
         <div className="applynow-grid">
-          {jobPositions.map((job) => (
-            <div key={job.id} className="applynow-card">
-              <div className="applynow-card-image">
-                <img 
-                  src={job.image_path ? `http://localhost/difsysapi/${job.image_path}` : '/placeholder-image.jpg'} 
-                  alt={job.title}
-                  onError={(e) => { e.target.src = '/placeholder-image.jpg'; }}
-                />
+          {jobPositions.map((job, index) => {
+            const tags = generateJobTags(job);
+            const location = generateLocation(job);
+            
+            return (
+              <div 
+                key={job.id} 
+                className="applynow-card"
+                onClick={() => handleViewDetails(job)}
+              >
+                {/* WHITE OUTER CARD CONTENT */}
+                
+                {/* COLORED INNER CARD */}
+                <div className="applynow-inner-card">
+                  <div className="applynow-card-header">
+                    <span className="applynow-card-date">
+                      {formatDate(job.created_at)}
+                    </span>
+                  </div>
+
+                  <div>
+                    <div className="applynow-card-company">{COMPANY_NAME}</div>
+                    <h3 className="applynow-card-title">{job.title}</h3>
+                    
+                    <div className="applynow-card-tags">
+                      {tags.map((tag, tagIndex) => (
+                        <span key={tagIndex} className="applynow-card-tag">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="applynow-card-inner-footer">
+                    {/* Empty footer - location moved to white card */}
+                  </div>
+                </div>
+
+                {/* DETAILS BUTTON AND LOCATION ON WHITE CARD */}
+                <div className="applynow-card-footer">
+                  <span className="applynow-card-footer-location">{location}</span>
+                  <button 
+                    className="applynow-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleViewDetails(job);
+                    }}
+                  >
+                    Details
+                  </button>
+                </div>
               </div>
-              <div className="applynow-card-body">
-                <h3 className="applynow-card-title">{job.title}</h3>
-                <p className="applynow-card-text">{job.short_description}</p>
-                <button 
-                  className="applynow-btn"
-                  onClick={() => handleViewDetails(job)}
-                >
-                  View Details
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
@@ -94,56 +180,73 @@ const ApplyNow = () => {
       {selectedJob && (
         <div className="applynow-modal-overlay" onClick={handleCloseModal}>
           <div className="applynow-modal-card" onClick={(e) => e.stopPropagation()}>
-            <button className="applynow-modal-close" onClick={handleCloseModal}>
+            <button 
+              className="applynow-modal-close" 
+              onClick={handleCloseModal}
+              aria-label="Close modal"
+            >
               ×
             </button>
             
             <div className="applynow-modal-header">
-              <h2 className="applynow-modal-title">{selectedJob.title}</h2>
-              <button 
-                className="applynow-signup-btn"
-                onClick={handleSignUpToApply}
-              >
-                Sign Up to Apply
-              </button>
+              <div className="applynow-modal-header-content">
+                <div className="applynow-modal-title-section">
+                  <div className="applynow-modal-company">{COMPANY_NAME}</div>
+                  <h2 className="applynow-modal-title">{selectedJob.title}</h2>
+                  
+                  <div className="applynow-modal-meta">
+                    {generateJobTags(selectedJob).map((tag, index) => (
+                      <span key={index} className="applynow-modal-tag">
+                        {tag}
+                      </span>
+                    ))}
+                    <span className="applynow-modal-tag">
+                      {generateLocation(selectedJob)}
+                    </span>
+                  </div>
+                </div>
+                
+                <button 
+                  className="applynow-signup-btn"
+                  onClick={handleSignUpToApply}
+                >
+                  Apply Now
+                </button>
+              </div>
             </div>
             
             <div className="applynow-modal-content">
-              {/* Top Section - Image and About the Position */}
-              <div className="applynow-modal-top">
-                <div className="applynow-modal-image">
-                  <img 
-                    src={selectedJob.image_path ? `http://localhost/difsysapi/${selectedJob.image_path}` : '/placeholder-image.jpg'} 
-                    alt={selectedJob.title}
-                    onError={(e) => { e.target.src = '/placeholder-image.jpg'; }}
-                  />
-                </div>
-                
-                <div className="applynow-modal-about">
-                  <div className="applynow-modal-section">
-                    <h3 className="applynow-section-title">About the Position</h3>
-                    <p className="applynow-about-text">
-                      {selectedJob.short_description || selectedJob.description || 'No description available for this position.'}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Bottom Section - Requirements and Duties */}
-              <div className="applynow-modal-bottom">
+              <div className="applynow-modal-sections">
+                {/* About the Position */}
                 <div className="applynow-modal-section">
-                  <h3 className="applynow-section-title">List of Requirements</h3>
+                  <h3 className="applynow-section-title">About this Role</h3>
+                  <p className="applynow-about-text">
+                    {selectedJob.description || selectedJob.short_description || 
+                    `We are looking for a talented ${selectedJob.title} to join our dynamic team. This is an exciting opportunity to work on cutting-edge projects and make a significant impact in a collaborative environment. You'll be working with a team of passionate professionals who are dedicated to delivering exceptional results and pushing the boundaries of innovation.`}
+                  </p>
+                </div>
+
+                {/* Requirements */}
+                <div className="applynow-modal-section">
+                  <h3 className="applynow-section-title">What We're Looking For</h3>
                   <ul className="applynow-requirements-list">
                     {selectedJob.requirements && selectedJob.requirements.length > 0 ? (
                       selectedJob.requirements.map((req, index) => (
                         <li key={index}>{req}</li>
                       ))
                     ) : (
-                      <li>No specific requirements listed</li>
+                      <>
+                        <li>Bachelor's degree in relevant field or equivalent professional experience</li>
+                        <li>Strong problem-solving skills and attention to detail</li>
+                        <li>Excellent communication and collaboration abilities</li>
+                        <li>Passion for continuous learning and professional growth</li>
+                        <li>Ability to work effectively in a fast-paced, dynamic environment</li>
+                      </>
                     )}
                   </ul>
                 </div>
 
+                {/* Responsibilities */}
                 <div className="applynow-modal-section">
                   <h3 className="applynow-section-title">Duties and Responsibilities</h3>
                   <ul className="applynow-duties-list">
@@ -152,7 +255,14 @@ const ApplyNow = () => {
                         <li key={index}>{duty}</li>
                       ))
                     ) : (
-                      <li>No specific duties listed</li>
+                      <>
+                        <li>Collaborate with cross-functional teams to deliver high-quality solutions</li>
+                        <li>Contribute to the design and development of innovative products and features</li>
+                        <li>Participate in code reviews, planning sessions, and team meetings</li>
+                        <li>Stay up-to-date with industry best practices and emerging technologies</li>
+                        <li>Mentor junior team members and contribute to a positive team culture</li>
+                        <li>Take ownership of projects from conception to deployment</li>
+                      </>
                     )}
                   </ul>
                 </div>

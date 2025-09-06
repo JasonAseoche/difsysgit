@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../../components/AdminLayout/Dashboard.css';
+import DashboardHeader from '../../components/DashboardHeader/DashboardHeader';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   PieChart, Pie, Cell, LineChart, Line
@@ -86,6 +87,7 @@ const Dashboard = () => {
   return (
     <div className="dashboard-content">
   {/* Summary Cards */}
+    <DashboardHeader />
       <div className="summary-cards">
         {summaryCards.map((card, index) => (
           <div className="summary-card" key={index}>

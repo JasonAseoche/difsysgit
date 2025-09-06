@@ -5,6 +5,8 @@
   padding: 10px 32px 32px 32px;
   min-height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Inter', sans-serif;
+  overflow-y: auto;
+  background-color: #f8fafc;
 }
 
 /* Header Section */
@@ -17,8 +19,8 @@
   background: #ffffff;
   border-radius: 16px;
   padding: 32px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ffffff;
 }
 
 .attendanceProfileArea {
@@ -38,7 +40,6 @@
   color: white;
   font-weight: 700;
   font-size: 20px;
-  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
 }
 
 .attendanceAvatarText {
@@ -79,7 +80,7 @@
   background: #f8fafc;
   padding: 16px 20px;
   border-radius: 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #ffffff;
   transition: all 0.2s ease;
 }
 
@@ -144,8 +145,8 @@
   background: #ffffff;
   padding: 24px 20px;
   border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   text-align: center;
   transition: all 0.2s ease;
 }
@@ -202,8 +203,8 @@
   background: #ffffff;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ffffff;
 }
 
 .attendanceDataTable {
@@ -316,6 +317,13 @@
   border: 1px solid #fca5a5;
 }
 
+
+.attendanceStatusLate {
+  background-color: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
 .attendanceStatusLeave {
   background-color: #dbeafe;
   color: #1e40af;
@@ -405,6 +413,7 @@
 
 /* Responsive Design */
 @media (max-width: 1200px) {
+  
   .attendanceHeaderSection {
     flex-direction: column;
     align-items: flex-start;
@@ -423,7 +432,8 @@
 
 @media (max-width: 768px) {
   .attendanceMainContainer {
-    padding: 20px;
+    padding: 20px 20px 80px 20px;
+    max-height: 100vh;
   }
   
   .attendanceHeaderSection {
@@ -458,6 +468,7 @@
   .attendancePaginationArea {
     flex-direction: column;
     gap: 16px;
+    position: sticky;
   }
 }
 

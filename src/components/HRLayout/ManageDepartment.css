@@ -1,0 +1,1142 @@
+/* ManageDepartment.css - Enhanced Professional Version */
+
+.manage-dept-wrapper {
+    min-height: 100vh;
+    background-color: #f8fafc;
+    padding: -30px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    width: 100%;
+    box-sizing: border-box;
+    margin-left: 0;
+    transition: margin-left 0.3s ease, width 0.3s ease;
+  }
+  
+  /* Adjust for sidebar states */
+  .manage-dept-wrapper.sidebar-expanded {
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  .manage-dept-wrapper.sidebar-collapsed {
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  .manage-dept-container {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 24px;
+    box-sizing: border-box;
+    min-height: 100vh;
+  }
+  
+  /* Header Card */
+  .manage-dept-header-card {
+    background: white;
+    border-radius: 8px;  /* Changed from 12px */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 20px;  /* Changed from 42px */
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: box-shadow 0.2s ease;
+    border: 1px solid #f0f0f0;  /* Changed from #e5e7eb */
+    flex-wrap: wrap;  /* Add this */
+    gap: 15px;  /* Add this */
+    overflow: hidden;  /* Add this */
+    flex-shrink: 0;  /* Add this */
+    z-index: 10;  /* Add this */
+  }
+  
+  .manage-dept-header-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .manage-dept-header-left {
+    flex: 1;
+  }
+  
+  .manage-dept-header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 15px;
+    flex-wrap: wrap;
+  }
+  
+  .manage-dept-title {
+    font-size: clamp(24px, 4vw, 32px);
+    font-weight: 700;
+    color: #003979;  /* Changed from #1f2937 */
+    margin: 0;
+    letter-spacing: 0.2px;  /* Changed from -0.5px */
+    position: relative;  /* Add this */
+    display: inline-block;  /* Add this */
+  }
+  
+  /* Search Input */
+  .manage-dept-search-container {
+    position: relative;
+    top: 10px;
+    min-width: 280px;
+  }
+  
+  .manage-dept-search-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    background: white;
+    outline: none;
+  }
+  
+  .manage-dept-search-input:focus {
+    border-color: #0891b2;
+    box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.1);
+  }
+  
+  .manage-dept-search-input::placeholder {
+    color: #9ca3af;
+  }
+  
+  /* Enhanced Button Styles */
+  .manage-dept-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    white-space: nowrap;
+    min-height: 44px;
+    box-sizing: border-box;
+  }
+  
+  .manage-dept-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.1);
+  }
+  
+  .manage-dept-btn-primary {
+    background-color: #0891b2;
+    color: white;
+    border: 1px solid #0891b2;
+    padding: 12px 20px;
+    border-radius: 8px;
+  }
+  
+  .manage-dept-btn-primary:hover {
+    background-color: #0e7490;
+    border-color: #0e7490;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(8, 145, 178, 0.3);
+  }
+  
+  .manage-dept-btn-secondary {
+    background-color: #f9fafb;
+    color: #374151;
+    border: 1px solid #d1d5db;
+  }
+  
+  .manage-dept-btn-secondary:hover {
+    background-color: #f3f4f6;
+    border-color: #9ca3af;
+    transform: translateY(-1px);
+  }
+  
+  .manage-dept-btn-danger {
+    background-color: #ef4444;
+    color: white;
+    border: 1px solid #ef4444;
+  }
+  
+  .manage-dept-btn-danger:hover {
+    background-color: #dc2626;
+    border-color: #dc2626;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  }
+  
+  .manage-dept-btn-view {
+    background-color: #0891b2;
+    color: white;
+    border: 1px solid #0891b2;
+    padding: 8px 16px;
+    font-size: 13px;
+    min-height: 36px;
+  }
+  
+  .manage-dept-btn-sm {
+    padding: 8px 16px;
+    font-size: 13px;
+    min-height: 36px;
+  }
+  
+  /* Department Grid */
+  .manage-dept-departments-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 24px;
+    margin-top: 24px;
+  }
+  
+  .manage-dept-department-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    transition: all 0.3s ease;
+    border: 1px solid #e5e7eb;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .manage-dept-department-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border-color: #d1d5db;
+  }
+  
+  .manage-dept-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    gap: 16px;
+  }
+  
+  .manage-dept-department-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+    flex: 1;
+    line-height: 1.4;
+  }
+  
+  .manage-dept-card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  /* Info Items */
+  .manage-dept-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .manage-dept-info-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .manage-dept-info-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1f2937;
+  }
+  
+  /* Section Cards */
+  .manage-dept-section-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 24px;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+    border: 1px solid #e5e7eb;
+  }
+  
+  .manage-dept-section-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .manage-dept-section-header {
+    padding: 24px 32px 0 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  
+  .manage-dept-section-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+  }
+  
+  .manage-dept-section-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  
+  .manage-dept-table-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  /* Info Card */
+  .manage-dept-info-card {
+    padding: 0 32px 32px 32px;
+  }
+  
+  .manage-dept-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+    padding: 24px;
+    background: #f9fafb;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+  }
+  
+  /* Enhanced Form Elements */
+  .manage-dept-edit-input,
+  .manage-dept-edit-select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 14px;
+    background: white;
+    transition: all 0.2s ease;
+    outline: none;
+    box-sizing: border-box;
+  }
+  
+  .manage-dept-edit-input:focus,
+  .manage-dept-edit-select:focus {
+    border-color: #0891b2;
+    box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.1);
+  }
+  
+  /* Enhanced Table Styles */
+  .manage-dept-table-container {
+    padding: 0 32px 32px 32px;
+    overflow-x: auto;
+  }
+  
+  .manage-dept-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    min-width: 700px;
+  }
+  
+  .manage-dept-table th,
+  .manage-dept-table td {
+    padding: 16px 12px;
+    text-align: left;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+  }
+  
+  .manage-dept-table th {
+    background: #f9fafb;
+    font-weight: 600;
+    color: #374151;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  
+  .manage-dept-table td {
+    color: #1f2937;
+    font-size: 14px;
+  }
+  
+  .manage-dept-table tr:hover {
+    background-color: #f9fafb;
+  }
+  
+  .manage-dept-checkbox-col {
+    width: 48px;
+    padding: 16px 16px 16px 32px;
+  }
+  
+  .manage-dept-empty-state {
+    text-align: center;
+    color: #6b7280;
+    font-style: italic;
+    padding: 48px 16px;
+  }
+  
+  /* Enhanced Form Elements */
+  .manage-dept-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    padding: 32px;
+  }
+  
+  .manage-dept-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .manage-dept-form-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 4px;
+  }
+  
+  .manage-dept-form-input,
+  .manage-dept-form-select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 14px;
+    background: white;
+    transition: all 0.2s ease;
+    outline: none;
+    box-sizing: border-box;
+    min-height: 44px;
+  }
+  
+  .manage-dept-form-input:focus,
+  .manage-dept-form-select:focus {
+    border-color: #0891b2;
+    box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.1);
+  }
+  
+  .manage-dept-form-actions {
+    padding: 0 32px 32px 32px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  
+  /* Form Input Container for Supervisor Selection */
+  .manage-dept-supervisor-input-container {
+    position: relative;
+    width: 100%;
+  }
+  
+  .manage-dept-supervisor-input-container input {
+    background-color: #f9fafb;
+    cursor: pointer;
+    user-select: none;
+  }
+  
+  .manage-dept-supervisor-input-container input:hover {
+    background-color: #f3f4f6;
+  }
+  
+  .manage-dept-supervisor-input-container input:focus {
+    background-color: white;
+  }
+  
+  /* Modal Styles */
+  .manage-dept-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  .manage-dept-modal {
+    background: white;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow: hidden;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  }
+  
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  
+  .manage-dept-modal-header {
+    padding: 24px 32px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .manage-dept-modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+  }
+  
+  .manage-dept-modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 4px;
+    transition: color 0.2s ease;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+  }
+  
+  .manage-dept-modal-close:hover {
+    color: #374151;
+    background-color: #f3f4f6;
+  }
+  
+  .manage-dept-modal-content {
+    padding: 24px 32px;
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+  
+  .manage-dept-employee-list {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .manage-dept-employee-item {
+    padding: 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s ease;
+  }
+  
+  .manage-dept-employee-item:hover {
+    border-color: #d1d5db;
+    background-color: #f9fafb;
+  }
+  
+  .manage-dept-employee-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+  }
+  
+  .manage-dept-employee-name {
+    font-weight: 500;
+    color: #1f2937;
+    font-size: 14px;
+  }
+  
+  .manage-dept-employee-position {
+    font-size: 12px;
+    color: #6b7280;
+  }
+  
+  /* Checkbox Styling */
+  input[type="checkbox"] {
+    margin-top: 20px;
+    width: 16px;
+    height: 16px;
+    accent-color: #0891b2;
+    cursor: pointer;
+  }
+  
+  /* Loading States */
+  .manage-dept-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    color: #6b7280;
+  }
+  
+  .manage-dept-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e5e7eb;
+    border-top: 2px solid #0891b2;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 12px;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* Custom scrollbar */
+  
+  .manage-dept-modal-content::-webkit-scrollbar-track,
+  .manage-dept-table-container::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 1px;
+  }
+  
+  .manage-dept-modal-content::-webkit-scrollbar-thumb,
+  .manage-dept-table-container::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 1px;
+  }
+  
+  .manage-dept-modal-content::-webkit-scrollbar-thumb:hover,
+  .manage-dept-table-container::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+    border-radius: 3px;
+  }
+  
+  .manage-dept-modal-content::-webkit-scrollbar-thumb,
+  .manage-dept-table-container::-webkit-scrollbar-thumb,
+  .manage-dept-supervisor-options::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 1px;
+  }
+  
+  .manage-dept-modal-content::-webkit-scrollbar-thumb:hover,
+  .manage-dept-table-container::-webkit-scrollbar-thumb:hover,
+  .manage-dept-supervisor-options::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+  
+  /* ===== RESPONSIVE DESIGN ===== */
+  
+  /* Full width container adjustments for all screen sizes */
+  @media (min-width: 320px) {
+    .manage-dept-container {
+      max-width: none;
+      width: 100%;
+      margin: 0;
+      padding: 24px;
+    }
+  }
+  
+  /* Large Desktop (1400px+) */
+  @media (min-width: 1400px) {
+    .manage-dept-container {
+      padding: 32px;
+    }
+  
+    .manage-dept-departments-grid {
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+      gap: 32px;
+    }
+  
+    .manage-dept-form-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  /* Desktop (1200px - 1399px) */
+  @media (max-width: 1399px) and (min-width: 1200px) {
+    .manage-dept-departments-grid {
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    }
+  }
+  
+  /* Laptop (992px - 1199px) */
+  @media (max-width: 1199px) and (min-width: 992px) {
+    .manage-dept-container {
+      padding: 20px;
+    }
+  
+    .manage-dept-departments-grid {
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 20px;
+    }
+  
+    .manage-dept-form-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  
+    .manage-dept-search-container {
+      min-width: 240px;
+    }
+  }
+  
+  /* Tablet (768px - 991px) */
+  @media (max-width: 991px) and (min-width: 768px) {
+    .manage-dept-container {
+      padding: 16px;
+    }
+  
+    .manage-dept-header-card {
+      padding: 20px 24px;
+    }
+  
+    .manage-dept-header-right {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        width: 100%;
+        max-width: none; /* Change from 300px to none */
+      }
+  
+    .manage-dept-search-container {
+        min-width: 200px;
+        width: 100%;
+      }
+
+    .manage-dept-departments-grid {
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+    }
+  
+    .manage-dept-section-header {
+      padding: 20px 24px 0 24px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+    }
+  
+    .manage-dept-section-actions,
+    .manage-dept-table-actions {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  
+    .manage-dept-info-card {
+      padding: 0 24px 24px 24px;
+    }
+  
+    .manage-dept-table-container {
+      padding: 0 24px 24px 24px;
+    }
+  
+    .manage-dept-form-grid {
+      grid-template-columns: 1fr;
+      padding: 24px;
+    }
+  
+    .manage-dept-form-actions {
+      padding: 0 24px 24px 24px;
+      flex-direction: column;
+    }
+  }
+  
+  /* Large Mobile (576px - 767px) */
+  @media (max-width: 767px) and (min-width: 576px) {
+    .manage-dept-container {
+      padding: 12px;
+    }
+  
+    .manage-dept-header-card {
+      padding: 16px 20px;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 16px;
+    }
+  
+    .manage-dept-header-right {
+        flex-direction: column;
+        gap: 12px;
+        max-width: none;
+        width: 100%;
+      }
+
+      .manage-dept-search-container {
+        min-width: auto;
+        width: 100%;
+      }
+      .manage-dept-btn-primary {
+        width: 100%;
+      }
+  
+    .manage-dept-title {
+      font-size: 24px;
+      text-align: left;
+    }
+
+    
+  
+    .manage-dept-departments-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+  
+    .manage-dept-department-card {
+      padding: 20px;
+    }
+  
+    .manage-dept-card-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+  
+    .manage-dept-btn-view {
+      align-self: flex-end;
+    }
+  
+    .manage-dept-section-header {
+        padding: 16px 20px 0 20px;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+      }
+  
+    .manage-dept-section-actions,
+    .manage-dept-table-actions {
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    align-self: flex-start;
+    }
+
+    .manage-dept-table-actions .manage-dept-btn {
+    width: auto;
+    min-width: 80px;
+    }
+  
+    .manage-dept-info-card {
+      padding: 0 20px 20px 20px;
+    }
+  
+    .manage-dept-info-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+      padding: 20px;
+    }
+  
+    .manage-dept-table-container {
+      padding: 0 20px 20px 20px;
+    }
+  
+    .manage-dept-table {
+      min-width: 600px;
+    }
+  
+    .manage-dept-table th,
+    .manage-dept-table td {
+      padding: 12px 8px;
+      font-size: 13px;
+    }
+  
+    .manage-dept-form-grid {
+      padding: 20px;
+    }
+  
+    .manage-dept-form-actions {
+      padding: 0 20px 20px 20px;
+    }
+  
+    .manage-dept-modal {
+      margin: 16px;
+      max-width: none;
+    }
+  
+    .manage-dept-modal-header,
+    .manage-dept-modal-content {
+      padding: 20px;
+    }
+  }
+  
+  /* Small Mobile (320px - 575px) */
+  @media (max-width: 575px) {
+    .manage-dept-container {
+      padding: 8px;
+    }
+  
+    .manage-dept-header-card {
+      display: block;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+    }
+    
+    .manage-dept-header-right {
+        flex-direction: column;
+        gap: 12px;
+        max-width: none;
+        width: 100%;
+      }
+      
+      .manage-dept-search-container {
+        min-width: auto;
+        width: 100%;
+      }
+      
+      .manage-dept-btn-primary {
+        width: 100%;
+      }
+  
+    .manage-dept-title {
+      font-size: 20px;
+    }
+  
+    .manage-dept-btn {
+      padding: 10px 16px;
+      font-size: 13px;
+      min-height: 40px;
+    }
+  
+    .manage-dept-btn-sm {
+      padding: 6px 12px;
+      font-size: 12px;
+      min-height: 32px;
+    }
+  
+    .manage-dept-departments-grid {
+      gap: 12px;
+    }
+  
+    .manage-dept-department-card {
+      padding: 16px;
+    }
+  
+    .manage-dept-department-name {
+      font-size: 16px;
+    }
+  
+    .manage-dept-section-header {
+      padding: 12px 16px 0 16px;
+    }
+  
+    .manage-dept-section-title {
+      font-size: 18px;
+    }
+  
+    .manage-dept-info-card {
+      padding: 0 16px 16px 16px;
+    }
+  
+    .manage-dept-info-grid {
+      padding: 16px;
+      gap: 12px;
+    }
+  
+    .manage-dept-table-container {
+      padding: 0 16px 16px 16px;
+    }
+  
+    .manage-dept-table {
+      min-width: 500px;
+    }
+
+    .manage-dept-section-actions,
+    .manage-dept-table-actions {
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    }
+
+    .manage-dept-table-actions .manage-dept-btn {
+    width: auto;
+    min-width: 60px;
+    }
+  
+    .manage-dept-table th,
+    .manage-dept-table td {
+      padding: 10px 6px;
+      font-size: 12px;
+    }
+  
+    .manage-dept-checkbox-col {
+      padding: 10px 10px 10px 16px;
+    }
+  
+    .manage-dept-form-grid {
+      padding: 16px;
+      gap: 16px;
+    }
+  
+    .manage-dept-form-input,
+    .manage-dept-form-select,
+    .manage-dept-edit-input,
+    .manage-dept-edit-select {
+      padding: 10px 12px;
+      font-size: 13px;
+      min-height: 40px;
+    }
+  
+    .manage-dept-form-actions {
+      padding: 0 16px 16px 16px;
+      flex-direction: column;
+    }
+  
+    .manage-dept-modal {
+      margin: 8px;
+      border-radius: 8px;
+    }
+
+
+  
+    .manage-dept-modal-header,
+    .manage-dept-modal-content {
+      padding: 16px;
+    }
+  
+    .manage-dept-employee-item {
+      padding: 12px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+  
+    .manage-dept-supervisor-input-container input {
+      font-size: 13px;
+    }
+  }
+  
+  /* Extra Small Mobile (below 320px) */
+  @media (max-width: 319px) {
+    .manage-dept-container {
+      padding: 4px;
+    }
+  
+    .manage-dept-header-card {
+      padding: 8px 12px;
+    }
+  
+    .manage-dept-title {
+      font-size: 18px;
+    }
+  
+    .manage-dept-btn {
+      padding: 8px 12px;
+      font-size: 12px;
+      min-height: 36px;
+    }
+  
+    .manage-dept-department-card {
+      padding: 12px;
+    }
+  
+    .manage-dept-table {
+      min-width: 400px;
+    }
+  
+    .manage-dept-table th,
+    .manage-dept-table td {
+      padding: 8px 4px;
+      font-size: 11px;
+    }
+  }
+  
+  /* Landscape Orientation Adjustments */
+  @media screen and (max-height: 500px) and (orientation: landscape) {
+    .manage-dept-container {
+      padding: 8px;
+    }
+  
+    .manage-dept-header-card {
+      padding: 12px 16px;
+      margin-bottom: 12px;
+    }
+  
+    .manage-dept-title {
+      font-size: 20px;
+    }
+  
+    .manage-dept-departments-grid {
+      gap: 12px;
+    }
+  
+    .manage-dept-department-card {
+      padding: 16px;
+      min-height: auto;
+    }
+  
+    .manage-dept-modal {
+      max-height: 90vh;
+    }
+  
+    .manage-dept-modal-content {
+      max-height: 50vh;
+    }
+  }
+  
+  /* Print Styles */
+  @media print {
+    .manage-dept-wrapper {
+      background: white;
+    }
+  
+    .manage-dept-container {
+      padding: 0;
+    }
+  
+    .manage-dept-header-card {
+      box-shadow: none;
+      border: 1px solid #000;
+    }
+  
+    .manage-dept-btn,
+    .manage-dept-modal-overlay {
+      display: none;
+    }
+  
+    .manage-dept-department-card {
+      break-inside: avoid;
+      box-shadow: none;
+      border: 1px solid #000;
+    }
+  }
+  
+  /* High Contrast Mode Support */
+  @media (prefers-contrast: high) {
+    .manage-dept-department-card,
+    .manage-dept-section-card {
+      border-width: 2px;
+    }
+  
+    .manage-dept-btn {
+      border-width: 2px;
+    }
+  }
+  
+  /* Reduced Motion Support */
+  @media (prefers-reduced-motion: reduce) {
+    .manage-dept-department-card,
+    .manage-dept-btn,
+    .manage-dept-modal {
+      transition: none;
+      animation: none;
+    }
+  
+    .manage-dept-department-card:hover {
+      transform: none;
+    }
+  
+    .manage-dept-btn:hover {
+      transform: none;
+    }
+  }

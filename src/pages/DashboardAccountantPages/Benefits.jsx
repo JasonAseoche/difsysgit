@@ -28,10 +28,10 @@ const Benefits = () => {
 
   // Benefit types for file upload
   const benefitTypes = [
-    'SSS Contribution',
-    'Tax Contribution', 
-    'PhilHealth Contribution',
-    'PAG-IBIG Contribution'
+    'SSS',
+    'Tax', 
+    'PhilHealth',
+    'PAG-IBIG'
   ];
 
   // Initialize data on component mount

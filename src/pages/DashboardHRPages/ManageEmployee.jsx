@@ -14,6 +14,16 @@ const ManageEmployee = () => {
   const [loadedCards, setLoadedCards] = useState(0);
   const [viewingEmployee, setViewingEmployee] = useState(null);
   const [openDropdownId, setOpenDropdownId] = useState(null);
+
+  const [showChangeShiftModal, setShowChangeShiftModal] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [workDayFrom, setWorkDayFrom] = useState('');
+  const [workDayTo, setWorkDayTo] = useState('');
+  const [restDayFrom, setRestDayFrom] = useState('');
+  const [restDayTo, setRestDayTo] = useState('');
+  const [isUpdatingShift, setIsUpdatingShift] = useState(false);
+  const [shiftUpdateSuccess, setShiftUpdateSuccess] = useState(false);
+  const [shiftUpdateError, setShiftUpdateError] = useState(null);
   
   // Profile view states
   const [showProfileView, setShowProfileView] = useState(false);
@@ -32,6 +42,16 @@ const ManageEmployee = () => {
   const [selectedPosition, setSelectedPosition] = useState('');
   const [selectedWorkArrangement, setSelectedWorkArrangement] = useState('');
   const [isSubmissionSuccessful, setIsSubmissionSuccessful] = useState(false);
+
+  const dayOptions = [
+    'Monday',
+    'Tuesday', 
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday'
+  ];
 
   const positionOptions = [
     'Software Developer',
@@ -214,7 +234,104 @@ const ManageEmployee = () => {
   };
 
   const handleChangeShift = (employeeId) => {
-    console.log(`Change shift for employee ID: ${employeeId}`);
+    const employee = employees.find(emp => emp.id === employeeId);
+    setSelectedEmployee(employee);
+    setShowChangeShiftModal(true);
+    
+    // Pre-populate existing values if they exist
+    if (employee.workDays) {
+      const workDaysParts = employee.workDays.split('-');
+      if (workDaysParts.length === 2) {
+        setWorkDayFrom(workDaysParts[0]);
+        setWorkDayTo(workDaysParts[1]);
+      }
+    }
+    
+    if (employee.restDay) {
+      const restDayParts = employee.restDay.split('-');
+      if (restDayParts.length === 2) {
+        setRestDayFrom(restDayParts[0]);
+        setRestDayTo(restDayParts[1]);
+      }
+    }
+  };
+
+  const handleShiftUpdate = async () => {
+    if (!workDayFrom || !workDayTo) {
+      setShiftUpdateError('Please select both work day from and to.');
+      return;
+    }
+    
+    if (!restDayFrom || !restDayTo) {
+      setShiftUpdateError('Please select both rest day from and to.');
+      return;
+    }
+  
+    setIsUpdatingShift(true);
+    setShiftUpdateError(null);
+  
+    try {
+      const workDaysString = `${workDayFrom}-${workDayTo}`;
+      const restDayString = `${restDayFrom}-${restDayTo}`;
+      
+      const response = await axios.post('http://localhost/difsysapi/fetch_employee.php', {
+        emp_id: selectedEmployee.id,
+        work_days: workDaysString,
+        rest_day: restDayString
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (response.data.success) {
+        setShiftUpdateSuccess(true);
+        
+        // Update the employee in the local state
+        setEmployees(prev => 
+          prev.map(emp => 
+            emp.id === selectedEmployee.id 
+              ? { ...emp, workDays: workDaysString, restDay: restDayString }
+              : emp
+          )
+        );
+        
+        setTimeout(() => {
+          setShowChangeShiftModal(false);
+          setSelectedEmployee(null);
+          setWorkDayFrom('');
+          setWorkDayTo('');
+          setRestDayFrom('');
+          setRestDayTo('');
+          setShiftUpdateSuccess(false);
+        }, 2000);
+        
+      } else {
+        setShiftUpdateError(response.data.message || 'Failed to update shift');
+      }
+    } catch (err) {
+      console.error('Error updating shift:', err);
+      if (err.response) {
+        setShiftUpdateError(`Server error: ${err.response.data?.message || err.response.statusText}`);
+      } else if (err.request) {
+        setShiftUpdateError('No response from server. Please check your connection.');
+      } else {
+        setShiftUpdateError('Error: ' + err.message);
+      }
+    } finally {
+      setIsUpdatingShift(false);
+    }
+  };
+
+  const handleCloseChangeShiftModal = () => {
+    setShowChangeShiftModal(false);
+    setSelectedEmployee(null);
+    setWorkDayFrom('');
+    setWorkDayTo('');
+    setRestDayFrom('');
+    setRestDayTo('');
+    setShiftUpdateError(null);
+    setShiftUpdateSuccess(false);
   };
 
   const toggleDropdown = (employeeId, event) => {
@@ -699,6 +816,149 @@ const ManageEmployee = () => {
           </div>
         </div>
       )}
+
+
+      {/* Change Shift Modal */}
+        {showChangeShiftModal && (
+          <div className="me-form-overlay">
+            <div className="me-applicant-container">
+              <div className="me-form-header">
+                <h2>Change Employee Shift</h2>
+                <button className="me-close-button" onClick={handleCloseChangeShiftModal}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              
+              <div className="me-applicant-content">
+                {shiftUpdateSuccess ? (
+                  <div className="me-success-state">
+                    <div className="me-success-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <h3 className="me-success-title">Success!</h3>
+                    <p className="me-success-message">
+                      Shift updated successfully for {selectedEmployee?.firstName} {selectedEmployee?.lastName}
+                    </p>
+                    <div className="me-success-details">
+                      <p><strong>Work Days:</strong> {workDayFrom}-{workDayTo}</p>
+                      <p><strong>Rest Day:</strong> {restDayFrom}-{restDayTo}</p>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    {shiftUpdateError && (
+                      <div className="me-form-error-general">
+                        {shiftUpdateError}
+                      </div>
+                    )}
+                    
+                    {selectedEmployee && (
+                      <div className="me-employee-info-header">
+                        <div className="me-applicant-avatar">
+                          {renderAvatar(selectedEmployee, true)}
+                        </div>
+                        <div>
+                          <h3>{selectedEmployee.firstName} {selectedEmployee.lastName}</h3>
+                          <p>{selectedEmployee.position}</p>
+                          <p>Current Work Days: {selectedEmployee.workDays || 'Not set'}</p>
+                          <p>Current Rest Day: {selectedEmployee.restDay || 'Not set'}</p>
+                        </div>
+                      </div>
+                    )}
+                    
+                    <div className="me-form-dropdowns">
+                      <div className="me-dropdown-group">
+                        <label htmlFor="work-day-from" className="me-dropdown-label">Work Days From</label>
+                        <select
+                          id="work-day-from"
+                          value={workDayFrom}
+                          onChange={(e) => setWorkDayFrom(e.target.value)}
+                          className="me-dropdown-select"
+                        >
+                          <option value="">Select Day</option>
+                          {dayOptions.map((day, index) => (
+                            <option key={index} value={day}>{day}</option>
+                          ))}
+                        </select>
+                      </div>
+                      
+                      <div className="me-dropdown-group">
+                        <label htmlFor="work-day-to" className="me-dropdown-label">Work Days To</label>
+                        <select
+                          id="work-day-to"
+                          value={workDayTo}
+                          onChange={(e) => setWorkDayTo(e.target.value)}
+                          className="me-dropdown-select"
+                        >
+                          <option value="">Select Day</option>
+                          {dayOptions.map((day, index) => (
+                            <option key={index} value={day}>{day}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                    
+                    <div className="me-form-dropdowns">
+                      <div className="me-dropdown-group">
+                        <label htmlFor="rest-day-from" className="me-dropdown-label">Rest Day From</label>
+                        <select
+                          id="rest-day-from"
+                          value={restDayFrom}
+                          onChange={(e) => setRestDayFrom(e.target.value)}
+                          className="me-dropdown-select"
+                        >
+                          <option value="">Select Day</option>
+                          {dayOptions.map((day, index) => (
+                            <option key={index} value={day}>{day}</option>
+                          ))}
+                        </select>
+                      </div>
+                      
+                      <div className="me-dropdown-group">
+                        <label htmlFor="rest-day-to" className="me-dropdown-label">Rest Day To</label>
+                        <select
+                          id="rest-day-to"
+                          value={restDayTo}
+                          onChange={(e) => setRestDayTo(e.target.value)}
+                          className="me-dropdown-select"
+                        >
+                          <option value="">Select Day</option>
+                          {dayOptions.map((day, index) => (
+                            <option key={index} value={day}>{day}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  </>
+                )}
+                
+                {!shiftUpdateSuccess && (
+                  <div className="me-form-actions">
+                    <button 
+                      type="button" 
+                      className="me-form-cancel" 
+                      onClick={handleCloseChangeShiftModal}
+                    >
+                      Cancel
+                    </button>
+                    <button 
+                      type="button" 
+                      className="me-form-submit" 
+                      onClick={handleShiftUpdate}
+                      disabled={isUpdatingShift}
+                    >
+                      {isUpdatingShift ? 'Updating...' : 'Update Shift'}
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
       {/* Applicant Selection Overlay */}
       {showApplicantOverlay && (

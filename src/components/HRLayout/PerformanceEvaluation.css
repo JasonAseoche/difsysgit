@@ -23,7 +23,6 @@
   border: 1px solid #f0f0f0;
   flex-shrink: 0;
   z-index: 10;
-  transition: all 0.3s ease-in-out;
 }
 
 .performance-evaluation-header-content {
@@ -508,6 +507,13 @@
   box-shadow: 0 2px 4px rgba(0, 61, 124, 0.3);
 }
 
+.performance-evaluation-pagination-btn.performance-evaluation-active:hover:not(:disabled) {
+  background: linear-gradient(135deg, #003D7C 0%, #002a5c 100%);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 2px 4px rgba(0, 61, 124, 0.3);
+}
+
 .performance-evaluation-pagination-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -677,6 +683,7 @@
 
 /* Loading States */
 .performance-evaluation-loading {
+  margin-left: -100px;
   text-align: center;
   padding: 30px;
   color: #64748b;
@@ -689,11 +696,10 @@
 }
 
 .performance-evaluation-loading-spinner {
+  margin-top: 400px;
   width: 40px;
   height: 40px;
-  border: 3px solid rgba(59, 130, 246, 0.2);
-  border-radius: 50%;
-  border-top-color: #3b82f6;
+  color: #3b82f6;
   animation: performanceSpin 1s linear infinite;
 }
 
@@ -732,6 +738,12 @@
 
 /* Laptop (1500px and below) */
 @media (max-width: 1600px) {
+
+  .performance-evaluation-page {
+    padding-bottom: 60px;
+  }
+
+
   .performance-evaluation-header-container {
     padding: 18px;
     margin: 18px;
