@@ -1,4 +1,4 @@
-/* EmailVerification.css - Unique Classes to Prevent Conflicts */
+/* EmailVerification.css - Fixed with Working Progress Bar */
 
 .difsys-email-verification-container-unique {
     min-height: 100vh;
@@ -50,14 +50,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
 }
 
 .difsys-email-verification-otp-inputs-unique {
     display: flex;
     gap: 12px;
     justify-content: center;
-    margin-bottom: 20px;
 }
 
 .difsys-email-verification-otp-input-unique {
@@ -73,6 +71,11 @@
     transition: all 0.2s ease;
 }
 
+.difsys-email-verification-otp-input-unique::placeholder {
+    color: #ccc;
+    font-weight: 400;
+}
+
 .difsys-email-verification-otp-input-unique:focus {
     outline: none;
     border-color: #007bff;
@@ -85,25 +88,24 @@
 }
 
 .difsys-email-verification-error-message-unique {
-    color: #dc3545;
+    color: #dc2626;
     font-size: 14px;
     text-align: center;
-    padding: 8px 12px;
-    background: #f8d7da;
-    border: 1px solid #f5c6cb;
-    border-radius: 6px;
-    margin: 10px 0;
+    padding: 12px 16px;
+    font-weight: 500;
+    animation: difsys-shake-once-unique 0.4s ease-in-out;
 }
 
 .difsys-email-verification-success-message-unique {
-    color: #155724;
+    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    border: 1px solid #86efac;
+    color: #059669;
     font-size: 14px;
     text-align: center;
-    padding: 8px 12px;
-    background: #d4edda;
-    border: 1px solid #c3e6cb;
-    border-radius: 6px;
-    margin: 10px 0;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 15px 0;
+    font-weight: 500;
 }
 
 .difsys-email-verification-actions-unique {
@@ -111,6 +113,7 @@
     flex-direction: column;
     gap: 15px;
     width: 100%;
+    margin-top: 20px;
 }
 
 .difsys-email-verification-verify-button-unique {
@@ -128,10 +131,36 @@
 
 .difsys-email-verification-verify-button-unique:hover:not(:disabled) {
     background: #0056b3;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.25);
 }
 
 .difsys-email-verification-verify-button-unique:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Test Button Styles */
+.difsys-email-verification-test-button-unique {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.difsys-email-verification-test-button-unique:hover:not(:disabled) {
+    background: #218838;
+    transform: translateY(-1px);
+}
+
+.difsys-email-verification-test-button-unique:disabled {
     background: #6c757d;
     cursor: not-allowed;
     transform: none;
@@ -185,7 +214,13 @@
     100% { transform: translateY(-50%) rotate(360deg); }
 }
 
-/* SUCCESS MODAL - COMPLETELY UNIQUE CLASSES */
+@keyframes difsys-shake-once-unique {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+}
+
+/* SUCCESS MODAL - FIXED PROGRESS BAR */
 
 .difsys-success-overlay-unique {
     position: fixed;
@@ -199,7 +234,6 @@
     justify-content: center;
     align-items: center;
     z-index: 10000;
-    /* NO ANIMATION ON OVERLAY */
 }
 
 .difsys-success-modal-unique {
@@ -213,7 +247,6 @@
         0 20px 25px -5px rgba(0, 0, 0, 0.1),
         0 10px 10px -5px rgba(0, 0, 0, 0.04);
     border: 1px solid rgba(229, 231, 235, 0.8);
-    /* NO ANIMATION ON MODAL CONTAINER */
     position: relative;
 }
 
@@ -236,7 +269,6 @@
     font-size: 36px;
     font-weight: bold;
     line-height: 1;
-    /* NO ANIMATION */
 }
 
 .difsys-success-title-unique {
@@ -244,7 +276,6 @@
     font-size: 24px;
     font-weight: 700;
     margin: 0 0 12px 0;
-    /* NO ANIMATION */
 }
 
 .difsys-success-subtitle-unique {
@@ -252,7 +283,6 @@
     font-size: 16px;
     margin: 0 0 32px 0;
     line-height: 1.5;
-    /* NO ANIMATION */
 }
 
 .difsys-success-progress-unique {
@@ -262,7 +292,6 @@
     border-radius: 4px;
     overflow: hidden;
     margin-top: 8px;
-    /* NO ANIMATION */
 }
 
 .difsys-success-progress-bar-unique {
@@ -270,15 +299,26 @@
     background: linear-gradient(90deg, #10b981, #059669);
     border-radius: 4px;
     width: 0%;
-    /* Use transition instead of animation to prevent looping */
-    transition: width 4s ease-out;
+    /* Use CSS animation instead of transition for better reliability */
+}
+
+.difsys-success-progress-bar-unique.difsys-progress-active-unique {
+    animation: difsys-progress-fill-unique 1s ease-out forwards;
+}
+
+@keyframes difsys-progress-fill-unique {
+    0% {
+        width: 0%;
+    }
+    100% {
+        width: 200%;
+    }
 }
 
 .difsys-success-progress-text-unique {
     font-size: 14px;
     color: #9ca3af;
     margin-top: 8px;
-    /* NO ANIMATION */
 }
 
 /* Verified States */
@@ -294,46 +334,6 @@
     color: white !important;
     cursor: default !important;
     box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3) !important;
-}
-
-/* Progress bar class for triggering transition */
-.difsys-success-progress-bar-unique.difsys-progress-active-unique {
-    width: 100%;
-}
-
-/* Enhanced Button States */
-.difsys-email-verification-verify-button-unique:not(:disabled):hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.25);
-}
-
-/* Error Message with Simple Shake */
-.difsys-email-verification-error-message-unique {
-    background: linear-gradient(135deg, #fef2f2, #fee2e2);
-    border: 1px solid #fca5a5;
-    color: #dc2626;
-    padding: 12px 16px;
-    border-radius: 8px;
-    margin: 15px 0;
-    font-weight: 500;
-    animation: difsys-shake-once-unique 0.4s ease-in-out;
-}
-
-@keyframes difsys-shake-once-unique {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-4px); }
-    75% { transform: translateX(4px); }
-}
-
-/* Success Message */
-.difsys-email-verification-success-message-unique {
-    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-    border: 1px solid #86efac;
-    color: #059669;
-    padding: 12px 16px;
-    border-radius: 8px;
-    margin: 15px 0;
-    font-weight: 500;
 }
 
 /* Responsive Design */

@@ -427,20 +427,45 @@ const ManageExamination = () => {
     try {
       const dueDate = new Date();
       dueDate.setDate(dueDate.getDate() + 7); // 7 days from now
-
-      await axios.post('http://localhost/difsysapi/exam_api.php?endpoint=assign-exam', {
+  
+      const response = await axios.post('http://localhost/difsysapi/exam_api.php?endpoint=assign-exam', {
         exam_id: selectedExam.id,
         app_ids: selectedApplicants,
         assigned_by: userId,
         due_date: dueDate.toISOString().split('T')[0]
       });
-
-      setShowGiveExamModal(false);
-      setSelectedApplicants([]);
-      showSuccess(`Exam assigned to ${selectedApplicants.length} applicant(s) successfully!`);
-      
-      // Refresh applicants list to remove assigned ones from future Give modals
-      await fetchApplicants();
+  
+      if (response.data.success) {
+        // Send notifications to assigned applicants
+        for (const applicantId of selectedApplicants) {
+          try {
+            await fetch('http://localhost/difsysapi/notifications_api.php', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                user_id: applicantId,
+                user_role: 'applicant',
+                type: 'exam_assigned',
+                title: 'New Exam Assigned',
+                message: `You have been assigned a new exam: ${selectedExam.title}. Please complete it before the due date.`,
+                related_id: selectedExam.id,
+                related_type: 'exam'
+              })
+            });
+          } catch (error) {
+            console.error('Error sending notification:', error);
+          }
+        }
+  
+        setShowGiveExamModal(false);
+        setSelectedApplicants([]);
+        showSuccess(`Exam assigned to ${selectedApplicants.length} applicant(s) successfully!`);
+        
+        // Refresh applicants list to remove assigned ones from future Give modals
+        await fetchApplicants();
+      } else {
+        throw new Error(response.data.message || 'Failed to assign exam');
+      }
     } catch (error) {
       console.error('Error assigning exam:', error);
       showSuccess('Error assigning exam. Please try again.', 'error');
@@ -545,17 +570,39 @@ const ManageExamination = () => {
         answers: updatedAnswers
       });
 
-      // Update the local state
-      setSelectedResult(prev => ({
-        ...prev,
-        total_score: newTotalScore,
-        answers: updatedAnswers
-      }));
-
-      setEditedScores({});
-      setHasUnsavedChanges(false);
-      await fetchResults();
-      showSuccess('Scores updated successfully!');
+      if (response.data.success) {
+        // Send notification to applicant about grade update
+        try {
+          const exam = exams.find(e => e.id === selectedResult?.exam_id);
+          await fetch('http://localhost/difsysapi/notifications_api.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              user_id: selectedResult.app_id,
+              user_role: 'applicant',
+              type: 'exam_graded',
+              title: 'Exam Results Available',
+              message: `Your exam "${exam?.title || 'Unknown Exam'}" has been graded. Your score: ${newTotalScore}%`,
+              related_id: selectedResult.exam_id,
+              related_type: 'exam'
+            })
+          });
+        } catch (error) {
+          console.error('Error sending notification:', error);
+        }
+      
+        // Update the local state
+        setSelectedResult(prev => ({
+          ...prev,
+          total_score: newTotalScore,
+          answers: updatedAnswers
+        }));
+      
+        setEditedScores({});
+        setHasUnsavedChanges(false);
+        await fetchResults();
+        showSuccess('Scores updated successfully!');
+      }
     } catch (error) {
       console.error('Error updating scores:', error);
       showSuccess('Error updating scores. Please try again.', 'error');

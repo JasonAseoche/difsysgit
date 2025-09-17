@@ -898,6 +898,10 @@
         border-bottom: 1px solid #eee;
         white-space: normal;
     }
+
+    .landing-logo{
+        margin-left: 10px;
+    }
     
     .landing-auth-buttons {
         display: none;

@@ -222,6 +222,25 @@ const UploadResume = () => {
       });
       
       if (response.data.success) {
+        // Send notification to HR
+        try {
+          await fetch('http://localhost/difsysapi/notifications_api.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              user_id: 0,
+              user_role: 'HR',
+              type: 'resume_uploaded',
+              title: 'New Resume Uploaded',
+              message: `${formData.firstName} ${formData.lastName} has uploaded their resume for the position: ${formData.position}`,
+              related_id: userId,
+              related_type: 'applicant'
+            })
+          });
+        } catch (error) {
+          console.error('Error sending notification:', error);
+        }
+      
         showAlert('Application submitted successfully!', 'success');
         setTimeout(() => {
           navigate('/dashboard-applicant');

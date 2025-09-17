@@ -515,7 +515,11 @@
   }
   
   .miHRMessage {
-    border-left: 4px solid #3b82f6;
+    border: 1px solid #cacaca;
+  }
+
+  .miEmployeeMessage {
+    border: 1px solid #cacaca;
   }
   
   .miMessageHeader {
@@ -1184,7 +1188,7 @@
   }
   
   .miMainContainer {
-    padding: 16px;
+    padding: 0px;
   }
   
   /* Typography */

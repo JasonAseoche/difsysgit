@@ -23,6 +23,20 @@ const TakeExam = () => {
   const currentUser = getCurrentUser();
   const userId = getUserId();
 
+  // Helper function to check if exam has essay questions
+  const hasEssayQuestions = () => {
+    return selectedExam?.questions?.some(question => question.type === 'essay');
+  };
+
+  // Helper function to check if user answered any essay questions
+  const hasAnsweredEssayQuestions = () => {
+    if (!selectedExam?.questions) return false;
+    
+    return selectedExam.questions.some(question => {
+      return question.type === 'essay' && answers[question.id] && answers[question.id].trim() !== '';
+    });
+  };
+
   const saveExamProgress = useCallback(async () => {
     if (!selectedExam || !examStarted || !isProgressLoaded) return;
     
@@ -266,11 +280,12 @@ const TakeExam = () => {
       setShowSubmitModal(true);
       return;
     }
-
+  
     try {
       const { totalScore, maxScore } = calculateScore();
       const timeTakenMinutes = Math.ceil(timeElapsed / 60);
       
+      // First submit the exam
       await axios.post('http://localhost/difsysapi/exam_api.php?endpoint=submit-exam', {
         assignment_id: selectedExam.id,
         answers: Object.keys(answers).map(questionId => {
@@ -278,10 +293,8 @@ const TakeExam = () => {
           let score = 0;
           
           if (question?.type === 'multiple-choice') {
-            // Auto-grade multiple choice questions
             score = answers[questionId] === question.correctAnswer ? question.points : 0;
           }
-          // Essay questions get 0 score initially - will be graded manually by HR
           
           return {
             questionId: parseInt(questionId),
@@ -294,11 +307,34 @@ const TakeExam = () => {
         time_taken: timeTakenMinutes
       });
       
+      // Update UI immediately after successful exam submission
       setScore((totalScore / maxScore) * 100);
       setExamCompleted(true);
       setShowSubmitModal(false);
-      
       fetchExamsData();
+      
+      // Send notification to HR (don't let this fail the whole process)
+      setTimeout(async () => {
+        try {
+          await fetch('http://localhost/difsysapi/notifications_api.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              user_id: 0,
+              user_role: 'HR',
+              type: 'exam_submitted',
+              title: 'Exam Submitted',
+              message: `${applicantInfo?.firstName || 'Applicant'} ${applicantInfo?.lastName || ''} has submitted the exam: ${selectedExam.title}`,
+              related_id: selectedExam.id,
+              related_type: 'exam'
+            })
+          });
+          console.log('Notification sent successfully');
+        } catch (notifError) {
+          console.error('Error sending notification (non-critical):', notifError);
+        }
+      }, 100);
+      
     } catch (error) {
       console.error('Error submitting exam:', error);
       alert('Error submitting exam. Please try again.');
@@ -475,64 +511,152 @@ const TakeExam = () => {
     return (
       <div className="take-exam-container">
         <div className="take-exam-completion">
-          <div className="take-exam-completion-icon">🎉</div>
-          <h2>Exam Completed!</h2>
-          <p>Thank you for taking the exam. Your answers have been submitted successfully.</p>
-          
-          <div className="take-exam-completion-stats">
-            <div className="take-exam-stat-item">
-              <div className="take-exam-stat-label">Score</div>
-              <div className="take-exam-stat-value">{Math.round(score)}%</div>
+          <div className="take-exam-completion-header">
+            <div className="take-exam-completion-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="m9 12 2 2 4-4"/>
+              </svg>
             </div>
-            <div className="take-exam-stat-item">
-              <div className="take-exam-stat-label">Time Taken</div>
-              <div className="take-exam-stat-value">
-                {completedAttempt?.time_taken ? `${completedAttempt.time_taken} min` : `${Math.ceil(timeElapsed / 60)} min`}
+            <div className="take-exam-completion-text">
+              <h2>Exam Submitted Successfully!</h2>
+              <p>Your answers have been recorded and saved in the system.</p>
+              
+              {hasAnsweredEssayQuestions() && (
+                <div className="take-exam-hr-review-notice">
+                  <div className="take-exam-hr-notice-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10"/>
+                      <path d="M12 6v6l4 2"/>
+                    </svg>
+                  </div>
+                  <div className="take-exam-hr-notice-text">
+                    <strong>Pending HR Review</strong>
+                    <span>Your essay answers are currently being reviewed by HR. Final scores will be updated once the review is complete.</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="take-exam-completion-summary">
+            <div className="take-exam-summary-grid">
+              <div className="take-exam-summary-item">
+                <div className="take-exam-summary-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#14db8f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-percent-icon lucide-percent"><line x1="19" x2="5" y1="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
+                </div>
+                <div className="take-exam-summary-content">
+                  <div className="take-exam-summary-label">Current Score</div>
+                  <div className="take-exam-summary-value">{Math.round(score)}%</div>
+                  {hasAnsweredEssayQuestions() && (
+                    <div className="take-exam-summary-note">Preliminary score (excluding essays)</div>
+                  )}
+                </div>
               </div>
-            </div>
-            <div className="take-exam-stat-item">
-              <div className="take-exam-stat-label">Questions</div>
-              <div className="take-exam-stat-value">{selectedExam.questions.length}</div>
+
+              <div className="take-exam-summary-item">
+                <div className="take-exam-summary-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12,6 12,12 16,14"/>
+                  </svg>
+                </div>
+                <div className="take-exam-summary-content">
+                  <div className="take-exam-summary-label">Time Taken</div>
+                  <div className="take-exam-summary-value">
+                    {completedAttempt?.time_taken ? `${completedAttempt.time_taken} min` : `${Math.ceil(timeElapsed / 60)} min`}
+                  </div>
+                </div>
+              </div>
+
+              <div className="take-exam-summary-item">
+                <div className="take-exam-summary-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#14db8f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-scroll-text-icon lucide-scroll-text"><path d="M15 12h-5"/><path d="M15 8h-5"/><path d="M19 17V5a2 2 0 0 0-2-2H4"/><path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3"/></svg>
+                </div>
+                <div className="take-exam-summary-content">
+                  <div className="take-exam-summary-label">Questions Answered</div>
+                  <div className="take-exam-summary-value">{Object.keys(answers).length}/{selectedExam.questions.length}</div>
+                </div>
+              </div>
             </div>
           </div>
           
           <div className="take-exam-review-section">
-            <h3>Your Answers Review</h3>
+            <h3>Answer Review</h3>
             <div className="take-exam-answers-review">
               {selectedExam.questions.map((question, index) => (
                 <div key={question.id} className="take-exam-review-question">
                   <div className="take-exam-review-question-header">
                     <span className="take-exam-review-question-number">Question {index + 1}</span>
-                    <span className="take-exam-review-question-points">{question.points} points</span>
-                  </div>
-                  <div className="take-exam-review-question-text">Question: {question.question}</div>
-                  <div className="take-exam-review-answer">
-                    <strong>Your Answer:</strong> {answers[question.id] || 'No answer provided'}
-                  </div>
-                  {question.type === 'multiple-choice' && question.correctAnswer && (
-                    <div className="take-exam-review-correct">
-                      <strong>Correct Answer:</strong> {question.correctAnswer}
+                    <div className="take-exam-review-meta">
+                      <span className="take-exam-review-question-type">{question.type === 'multiple-choice' ? 'Multiple Choice' : 'Essay'}</span>
+                      <span className={`take-exam-review-question-points ${
+                          question.type === 'multiple-choice' 
+                            ? (answers[question.id] === question.correctAnswer ? 'correct' : 'incorrect')
+                            : 'essay'
+                        }`}>
+                          {question.type === 'multiple-choice' 
+                            ? (answers[question.id] === question.correctAnswer ? `${question.points} pts` : '0 pts')
+                            : `${question.points} pts`
+                          }
+                        </span>
                     </div>
-                  )}
+                  </div>
+                  
+                  <div className="take-exam-review-question-text">{question.question}</div>
+                  
+                  <div className="take-exam-review-answer-section">
+                    <div className="take-exam-review-your-answer">
+                      <strong>Your Answer:</strong>
+                      <div className="take-exam-answer-content">
+                        {answers[question.id] || <span className="take-exam-no-answer">No answer provided</span>}
+                      </div>
+                    </div>
+                    
+                    {question.type === 'multiple-choice' && question.correctAnswer && (
+                      <div className="take-exam-review-correct-answer">
+                        <strong>Correct Answer:</strong>
+                        <div className="take-exam-correct-content">{question.correctAnswer}</div>
+                      </div>
+                    )}
+                    
+                    {question.type === 'essay' && answers[question.id] && (
+                      <div className="take-exam-essay-pending">
+                        <div className="take-exam-pending-icon">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                          </svg>
+                        </div>
+                        <span>Waiting for HR to review your answer</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
           </div>
           
-          <button 
-            className="take-exam-start-button"
-            onClick={() => {
-              setSelectedExam(null);
-              setExamCompleted(false);
-              setExamStarted(false);
-              setAnswers({});
-              setCurrentQuestionIndex(0);
-              setScore(0);
-              setIsProgressLoaded(false);
-            }}
-          >
-            Back to Exams
-          </button>
+          <div className="take-exam-completion-actions">
+            <button 
+              className="take-exam-back-to-exams-btn"
+              onClick={() => {
+                setSelectedExam(null);
+                setExamCompleted(false);
+                setExamStarted(false);
+                setAnswers({});
+                setCurrentQuestionIndex(0);
+                setScore(0);
+                setIsProgressLoaded(false);
+              }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m12 19-7-7 7-7"/>
+                <path d="M19 12H5"/>
+              </svg>
+              Back to Exams
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -656,7 +780,7 @@ const TakeExam = () => {
                 </div>
                 
                 <button 
-                  className="take-exam-back-button"
+                  className="take-exam-back-buttons1"
                   onClick={() => setSelectedExam(null)}
                 >
                   Back to Exams
@@ -684,7 +808,7 @@ const TakeExam = () => {
                     {hasExamProgress(selectedExam.exam_id) ? 'Resume Exam' : 'Start Exam'}
                   </button>
                   <button 
-                    className="take-exam-back-button"
+                    className="take-exam-back-buttons1"
                     onClick={() => setSelectedExam(null)}
                   >
                     Back to Exams

@@ -401,13 +401,54 @@ const DashboardEmployee = () => {
       
       
       if (response.data.success) {
-        const { shouldStartTimer, isBreakTime: apiBreakTime, record } = response.data;
+        const { shouldStartTimer, isBreakTime: apiBreakTime, record, timeOutDetected } = response.data;
+        
+        // Check for immediate time out
+        console.log('🔍 CHECK TIMER STATUS DEBUG:', {
+          hasTimeOut: record?.time_out,
+          timeOutDetected,
+          currentIsTimeIn: isTimeIn,
+          record
+        });
+        
+        // Check for immediate time out - MOVE THIS TO THE TOP
+        if (timeOutDetected && isTimeIn) {
+          console.log('🛑 TIME OUT DETECTED - Stopping timer immediately');
+          
+          if (timerIntervalRef.current) {
+            clearInterval(timerIntervalRef.current);
+            timerIntervalRef.current = null;
+          }
+          
+          setIsTimeIn(false);
+          setCurrentTime(0);
+          setTimeInStart(null);
+          setIsOnBreak(false);
+          setIsAutoBreak(false);
+          setBreakStartTime(null);
+          setIsOvertime(false);
+          setAutoRefreshEnabled(true);
+          setBreakTimeAccumulated(0);
+          
+          // Force immediate re-render
+          setTimeout(() => {
+            setIsTimeIn(false);
+            setCurrentTime(0);
+            console.log('🔄 FORCE UPDATE - Timer stopped due to time out');
+          }, 0);
+          
+          showCustomAlert('success', 'Time Out Detected', 'Biometric time out recorded successfully');
+          return;
+        }
         
         console.log('Timer Status Data:', {
           shouldStartTimer,
           apiBreakTime,
           record,
-          currentIsTimeIn: isTimeIn
+          currentIsTimeIn: isTimeIn,
+          recordHasTimeOut: record?.time_out,
+          recordLastModified: record?.last_time_in || record?.time_out,
+          timeOutDetected
         });
         
         const recordShiftType = record?.shift_type || await detectCurrentShiftType(); // CHANGED: Made async
@@ -415,6 +456,13 @@ const DashboardEmployee = () => {
         
         // PRIORITY 1: Check if timer should STOP (employee timed out)
         if (isTimeIn && record && record.time_out) {
+          console.log('🛑 STOPPING TIMER - Employee timed out');
+          
+          // Force immediate timer stop
+          if (timerIntervalRef.current) {
+            clearInterval(timerIntervalRef.current);
+            timerIntervalRef.current = null;
+          }
           
           setIsTimeIn(false);
           setCurrentTime(0);
@@ -432,6 +480,12 @@ const DashboardEmployee = () => {
           
           showCustomAlert('success', 'Time Out Completed', 
             `Biometric time out recorded at ${record.time_out}\nTotal hours worked: ${hoursWorked}h`);
+          
+          // Force immediate state update
+          setTimeout(() => {
+            setIsTimeIn(false);
+            setCurrentTime(0);
+          }, 100);
           return;
         }
         
@@ -474,7 +528,7 @@ const DashboardEmployee = () => {
             canStartTimer = currentHour >= 8;
             validationMessage = `Day shift check: Current hour ${currentHour} >= 8 = ${canStartTimer}`;
           } else if (recordShiftType === 'night') {
-            // Night shift: Only during actual work hours (10:00 PM - 6:00 AM)
+            // Night shift: Only during actual work hours (10:00 PM - 8:00 AM)
             // NOT during early arrival period (6:00 PM - 9:59 PM)
             const isWorkHours = currentHour >= 22 || currentHour < 8;
             
@@ -484,17 +538,21 @@ const DashboardEmployee = () => {
               const isCurrentlyEarly = currentHour >= 18 && currentHour < 22;
               
               if (isEarlyArrival && isCurrentlyEarly) {
-                // Employee timed in early and current time is still in early period
+                // Employee timed in early and current time is still in early period - NO TIMER
                 canStartTimer = false;
                 validationMessage = `Night shift early arrival: Time in at ${timeInHour}:xx, current hour ${currentHour} - timer waits until 10 PM`;
-              } else if (isEarlyArrival && !isCurrentlyEarly) {
-                // Employee timed in early but now it's work time
-                canStartTimer = isWorkHours;
-                validationMessage = `Night shift post-early arrival: Now ${currentHour}:xx, work hours = ${isWorkHours}`;
+              } else if (isEarlyArrival && currentHour >= 22) {
+                // Employee timed in early but now it's 10 PM or later - START TIMER
+                canStartTimer = true;
+                validationMessage = `Night shift: Early arrival ended, now ${currentHour}:xx - starting timer`;
+              } else if (isEarlyArrival && currentHour < 8) {
+                // Employee timed in early and it's next day work hours - START TIMER
+                canStartTimer = true;
+                validationMessage = `Night shift: Early arrival, next day work hours ${currentHour}:xx - starting timer`;
               } else {
-                // Normal night shift time in
+                // Normal time in during work hours
                 canStartTimer = isWorkHours;
-                validationMessage = `Night shift normal: Current hour ${currentHour}, work hours (22+ OR <6) = ${isWorkHours}`;
+                validationMessage = `Night shift normal: Current hour ${currentHour}, work hours (22+ OR <8) = ${isWorkHours}`;
               }
             } else {
               canStartTimer = isWorkHours;
@@ -544,6 +602,20 @@ const DashboardEmployee = () => {
           if (recordShiftType === 'day') {
             setTimeout(async () => await manageBreakTime(), 1000); // CHANGED: Made async
           }
+
+          setTimeout(() => {
+            setIsTimeIn(true);
+            setCurrentTime(elapsedSeconds);
+            console.log('🔄 FORCED STATE UPDATE - Timer started:', { 
+              isTimeIn: true, 
+              elapsedSeconds,
+              biometricUpdate: true 
+            });
+          }, 50);
+          
+          setTimeout(() => {
+            console.log('🔄 UI state confirmation:', { isTimeIn, currentTime });
+          }, 200);
           
           
         } else {
@@ -579,38 +651,6 @@ const DashboardEmployee = () => {
     let currentSessionSeconds = 0;
     const accumulatedSeconds = accumulatedMinutes * 60;
     
-    // Create consistent session key for localStorage
-    const sessionKey = `session_${date}_${effectiveTimeIn.replace(/:/g, '')}_${shiftType}`;
-    console.log('Session key:', sessionKey);
-    
-    // Helper function to get stored session data
-    const getStoredSessionData = () => {
-      try {
-        const storedData = localStorage.getItem(sessionKey);
-        if (storedData) {
-          const parsedData = JSON.parse(storedData);
-          console.log('Retrieved stored session data:', parsedData);
-          return parsedData;
-        }
-      } catch (e) {
-        console.log('Error parsing stored session data:', e);
-      }
-      return null;
-    };
-    
-    // Helper function to store session data
-    const storeSessionData = (seconds) => {
-      const sessionData = {
-        accumulated: seconds,
-        lastUpdate: new Date().toISOString(),
-        effectiveTimeIn: effectiveTimeIn,
-        date: date,
-        shiftType: shiftType
-      };
-      localStorage.setItem(sessionKey, JSON.stringify(sessionData));
-      console.log('Stored session data:', sessionData);
-    };
-    
     // Check if this is a re-entry (lastTimeIn exists and is different from original timeIn)
     const isReEntry = lastTimeIn && lastTimeIn !== timeIn;
     
@@ -629,11 +669,6 @@ const DashboardEmployee = () => {
           effectiveStartTime = new Date(`${date} 08:00:00`);
           console.log('DAY SHIFT RE-ENTRY: Before 8 AM - waiting for work hours');
         } else {
-          // Get stored session data first
-          const storedData = getStoredSessionData();
-          let storedSeconds = storedData ? storedData.accumulated : 0;
-          
-          // Calculate fresh elapsed time
           effectiveStartTime = new Date(`${date} ${lastTimeIn}`);
           
           if (lastTimeInHour < 8) {
@@ -656,13 +691,7 @@ const DashboardEmployee = () => {
             }
           }
           
-          // Use maximum between stored and fresh calculation
-          currentSessionSeconds = Math.max(storedSeconds, currentSessionSeconds);
-          
-          console.log('DAY SHIFT RE-ENTRY: Stored:', storedSeconds, 'Fresh:', currentSessionSeconds, 'Using:', currentSessionSeconds);
-          
-          // Store updated session data
-          storeSessionData(currentSessionSeconds);
+          console.log('DAY SHIFT RE-ENTRY: Current session seconds:', currentSessionSeconds);
         }
         
       } else {
@@ -675,32 +704,26 @@ const DashboardEmployee = () => {
         console.log('- Last time in hour:', lastTimeInHour);
         console.log('- Current hour:', currentHour);
         
-        // Get stored session data
-        const storedData = getStoredSessionData();
-        let storedSeconds = storedData ? storedData.accumulated : 0;
-        
         if (lastTimeInHour >= 18 && lastTimeInHour < 22) {
           // Re-entry during early arrival (6PM-9:59PM)
           if (currentHour >= 18 && currentHour < 22) {
             // Still in early arrival period
-            currentSessionSeconds = Math.max(storedSeconds, 0);
+            currentSessionSeconds = 0;
             effectiveStartTime = new Date(`${date} 22:00:00`);
-            console.log('- Still in early arrival, using stored:', currentSessionSeconds);
+            console.log('- Still in early arrival, no seconds counted');
           } else if (currentHour >= 22) {
             // Now in work hours - calculate from 10 PM
             effectiveStartTime = new Date(`${date} 22:00:00`);
             const currentTimeForCalc = new Date(`${date} ${currentHour.toString().padStart(2, '0')}:${currentMinutes.toString().padStart(2, '0')}:00`);
-            const freshSeconds = Math.floor((currentTimeForCalc - effectiveStartTime) / 1000);
-            currentSessionSeconds = Math.max(storedSeconds, freshSeconds);
+            currentSessionSeconds = Math.floor((currentTimeForCalc - effectiveStartTime) / 1000);
             console.log('- Counting from 10 PM same day:', currentSessionSeconds);
           } else if (currentHour >= 0 && currentHour < 8) {
             // Next day - count from 10 PM to current time
             effectiveStartTime = new Date(`${date} 22:00:00`);
             const hoursFromTenPM = (24 - 22) + currentHour;
             const minutesFromTenPM = hoursFromTenPM * 60 + currentMinutes;
-            const freshSeconds = minutesFromTenPM * 60;
-            currentSessionSeconds = Math.max(storedSeconds, freshSeconds);
-            console.log('- Next day calculation, using:', currentSessionSeconds);
+            currentSessionSeconds = minutesFromTenPM * 60;
+            console.log('- Next day calculation:', currentSessionSeconds);
           }
           
         } else if (lastTimeInHour >= 22) {
@@ -710,19 +733,17 @@ const DashboardEmployee = () => {
           if (currentHour >= 22) {
             // Same day work hours
             const timeInDate = new Date(`${date} ${lastTimeIn}`);
-            const freshSeconds = Math.floor((currentTimeUTC8 - timeInDate) / 1000);
-            currentSessionSeconds = Math.max(storedSeconds, freshSeconds);
+            currentSessionSeconds = Math.floor((currentTimeUTC8 - timeInDate) / 1000);
             effectiveStartTime = timeInDate;
-            console.log('- Night shift re-entry, using:', currentSessionSeconds);
+            console.log('- Night shift re-entry, seconds:', currentSessionSeconds);
           } else if (currentHour >= 0 && currentHour < 8) {
             // Crossed to next day
             const lastHour = parseInt(lastTimeIn.split(':')[0]);
             const lastMinute = parseInt(lastTimeIn.split(':')[1]);
             const minutesToMidnight = (23 - lastHour) * 60 + (60 - lastMinute);
             const minutesAfterMidnight = currentHour * 60 + currentMinutes;
-            const freshSeconds = (minutesToMidnight + minutesAfterMidnight) * 60;
-            currentSessionSeconds = Math.max(storedSeconds, freshSeconds);
-            console.log('- Crossed midnight, using:', currentSessionSeconds);
+            currentSessionSeconds = (minutesToMidnight + minutesAfterMidnight) * 60;
+            console.log('- Crossed midnight, seconds:', currentSessionSeconds);
           }
           
         } else if (lastTimeInHour >= 0 && lastTimeInHour < 8) {
@@ -733,13 +754,9 @@ const DashboardEmployee = () => {
           const currentTimeForCalc = new Date(`${date} ${currentHour.toString().padStart(2, '0')}:${currentMinutes.toString().padStart(2, '0')}:00`);
           currentTimeForCalc.setDate(currentTimeForCalc.getDate() + 1);
           
-          const freshSeconds = Math.floor((currentTimeForCalc - effectiveStartTime) / 1000);
-          currentSessionSeconds = Math.max(storedSeconds, freshSeconds);
-          console.log('- Next day work hours re-entry, using:', currentSessionSeconds);
+          currentSessionSeconds = Math.floor((currentTimeForCalc - effectiveStartTime) / 1000);
+          console.log('- Next day work hours re-entry, seconds:', currentSessionSeconds);
         }
-        
-        // Store updated session data
-        storeSessionData(currentSessionSeconds);
         
         currentSessionSeconds = Math.max(0, currentSessionSeconds);
         if (currentSessionSeconds > 28800) {
@@ -761,22 +778,17 @@ const DashboardEmployee = () => {
         console.log('- Time in hour:', timeInHour);
         console.log('- Current hour:', currentHour);
         
-        // Get stored session data
-        const storedData = getStoredSessionData();
-        let storedSeconds = storedData ? storedData.accumulated : 0;
-        
         if (currentHour < 8) {
           // Current time is before work starts
-          currentSessionSeconds = Math.max(storedSeconds, 0);
+          currentSessionSeconds = 0;
           effectiveStartTime = new Date(`${date} 08:00:00`);
-          console.log('- Before work hours, using stored:', currentSessionSeconds);
+          console.log('- Before work hours, no seconds counted');
         } else {
           // Work hours - calculate elapsed time from actual time-in or 8:00 AM
           if (timeInHour < 8) {
             // Early time-in, start counting from 8:00 AM
             effectiveStartTime = new Date(`${date} 08:00:00`);
-            const freshSeconds = Math.floor((currentTimeUTC8 - effectiveStartTime) / 1000);
-            currentSessionSeconds = Math.max(storedSeconds, freshSeconds);
+            currentSessionSeconds = Math.floor((currentTimeUTC8 - effectiveStartTime) / 1000);
             
             // Apply lunch break deduction if applicable
             if (currentHour >= 13) {
@@ -789,8 +801,7 @@ const DashboardEmployee = () => {
           } else {
             // Normal time-in during work hours
             effectiveStartTime = new Date(`${date} ${effectiveTimeIn}`);
-            const freshSeconds = Math.floor((currentTimeUTC8 - effectiveStartTime) / 1000);
-            currentSessionSeconds = Math.max(storedSeconds, freshSeconds);
+            currentSessionSeconds = Math.floor((currentTimeUTC8 - effectiveStartTime) / 1000);
             
             // Apply lunch break deduction if applicable
             if (timeInHour < 12 && currentHour >= 13) {
@@ -802,11 +813,8 @@ const DashboardEmployee = () => {
             }
           }
           
-          console.log('- Day shift calculation, stored:', storedSeconds, 'fresh calculation, using:', currentSessionSeconds);
+          console.log('- Day shift calculation, current session seconds:', currentSessionSeconds);
         }
-        
-        // Store session data
-        storeSessionData(currentSessionSeconds);
         
       } else {
         // NIGHT SHIFT FIRST TIME-IN
@@ -818,58 +826,40 @@ const DashboardEmployee = () => {
         console.log('- Time in hour:', timeInHour);
         console.log('- Current hour:', currentHour);
         
-        // Get stored session data
-        const storedData = getStoredSessionData();
-        let storedSeconds = storedData ? storedData.accumulated : 0;
-        
         if (timeInHour >= 18 && timeInHour < 22) {
           // Early arrival (6PM-9:59PM)
           if (currentHour >= 18 && currentHour < 22) {
             // Still in early arrival period
-            currentSessionSeconds = Math.max(storedSeconds, 0);
+            currentSessionSeconds = 0;
             effectiveStartTime = new Date(`${date} 22:00:00`);
-            console.log('- Early arrival, using stored:', currentSessionSeconds);
+            console.log('- Early arrival, no seconds counted');
           } else if (currentHour >= 22) {
-            // Now in work hours - calculate from 10 PM or current time
+            // Now in work hours - calculate from 10 PM
             effectiveStartTime = new Date(`${date} 22:00:00`);
-            const freshSeconds = Math.floor((currentTimeUTC8 - effectiveStartTime) / 1000);
-            currentSessionSeconds = Math.max(storedSeconds, freshSeconds);
-            console.log('- Work hours started, using:', currentSessionSeconds);
+            currentSessionSeconds = Math.floor((currentTimeUTC8 - effectiveStartTime) / 1000);
+            console.log('- Work hours started, seconds:', currentSessionSeconds);
           } else if (currentHour >= 0 && currentHour < 8) {
             // Next day - calculate total time from 10 PM
             effectiveStartTime = new Date(`${date} 22:00:00`);
             const hoursFromTenPM = (24 - 22) + currentHour;
             const minutesFromTenPM = hoursFromTenPM * 60 + currentMinute;
-            const freshSeconds = minutesFromTenPM * 60;
-            currentSessionSeconds = Math.max(storedSeconds, freshSeconds);
-            console.log('- Next day work hours, using:', currentSessionSeconds);
+            currentSessionSeconds = minutesFromTenPM * 60;
+            console.log('- Next day work hours, seconds:', currentSessionSeconds);
           }
           
         } else if (timeInHour >= 22) {
           // Time in during work hours (10 PM onwards)
           const timeInDate = new Date(`${date} ${effectiveTimeIn}`);
-          const freshSeconds = Math.floor((currentTimeUTC8 - timeInDate) / 1000);
-          currentSessionSeconds = Math.max(storedSeconds, freshSeconds);
+          currentSessionSeconds = Math.floor((currentTimeUTC8 - timeInDate) / 1000);
           effectiveStartTime = timeInDate;
-          console.log('- Work hours time-in, using:', currentSessionSeconds);
+          console.log('- Work hours time-in, seconds:', currentSessionSeconds);
           
         } else if (timeInHour >= 0 && timeInHour < 8) {
-          // Time in during next day work hours - FIXED: Both dates must be same day
-          const timeInDate = new Date(`${date} ${effectiveTimeIn}`);
-          timeInDate.setDate(timeInDate.getDate() + 1); // Next day for time-in
-          
-          // Also move currentTimeUTC8 to next day for calculation
-          const currentTimeNextDay = new Date(currentTimeUTC8);
-          currentTimeNextDay.setDate(currentTimeNextDay.getDate() + 1);
-          
-          currentSessionSeconds = Math.floor((currentTimeNextDay - timeInDate) / 1000);
-          currentSessionSeconds = Math.max(0, currentSessionSeconds);
-          effectiveStartTime = timeInDate;
-          console.log('- Next day work hours time-in, elapsed seconds:', currentSessionSeconds);
+          // Time in during next day work hours (12 AM - 8 AM) - start fresh
+          currentSessionSeconds = 0;
+          effectiveStartTime = new Date(`${date} ${effectiveTimeIn}`);
+          console.log('- Next day work hours time-in, starting fresh');
         }
-        
-        // Store session data
-        storeSessionData(currentSessionSeconds);
       }
     }
     
@@ -898,18 +888,6 @@ const DashboardEmployee = () => {
     };
   };
 
-  const cleanupSession = (timeInStart, shiftType) => {
-    if (timeInStart) {
-      const dateStr = timeInStart.toISOString().split('T')[0];
-      const timeStr = timeInStart.toISOString().split('T')[1].substring(0,8).replace(/:/g, '');
-      const sessionKey = `session_${dateStr}_${timeStr}_${shiftType}`;
-      
-      console.log('Cleaning up session:', sessionKey);
-      localStorage.removeItem(sessionKey);
-    }
-  };
-
-  
   // Fetch employee info and today's status on component mount
   useEffect(() => {
     if (employeeInfo.emp_id) {
@@ -921,7 +899,7 @@ const DashboardEmployee = () => {
   // Set up auto-refresh for biometric employees
   useEffect(() => {
     if (employeeInfo.emp_id && workArrangement !== 'Work From Home' && autoRefreshEnabled) {
-      statusCheckIntervalRef.current = setInterval(checkTimerStatus, 3000);
+      statusCheckIntervalRef.current = setInterval(checkTimerStatus, 1200);
     } else if (statusCheckIntervalRef.current) {
       clearInterval(statusCheckIntervalRef.current);
       statusCheckIntervalRef.current = null;
@@ -1091,10 +1069,15 @@ const DashboardEmployee = () => {
           // FIXED: Now we can safely check elapsedSeconds since it's already calculated
           if (!shouldStartTimer) {
             // Special case: if employee is actually timed in and has valid elapsed time, allow small timers
-            if (record && record.time_in && !record.time_out && elapsedSeconds >= 0) {
-              console.log('ALLOWING TIMER - Employee is timed in with', elapsedSeconds, 'seconds');
+            // Only override if there's actual accumulated work time or we're past work start time
+            const hasWorkTime = elapsedSeconds > 0;
+            const isPastWorkStart = (recordShiftType === 'day' && currentHour >= 8) || 
+                                    (recordShiftType === 'night' && (currentHour >= 22 || currentHour < 8));
+
+            if (record && record.time_in && !record.time_out && (hasWorkTime || isPastWorkStart)) {
+              console.log('ALLOWING TIMER - Has work time:', hasWorkTime, 'or past work start:', isPastWorkStart);
               shouldStartTimer = true;
-              validationReason = `Overriding validation - employee has valid time record with ${elapsedSeconds}s elapsed`;
+              validationReason = `Override: hasWorkTime=${hasWorkTime}, isPastWorkStart=${isPastWorkStart}`;
             } else {
               console.log('NOT STARTING TIMER -', validationReason);
               setIsTimeIn(false);
@@ -1223,12 +1206,24 @@ const DashboardEmployee = () => {
             effectiveStartTime = now;
             
           }
-          
-          // Check if should start timer now (only for day shift early time-in)
+
+          // Check if should start timer now
           const currentHour = now.getHours();
-          const shouldStartTimerNow = currentShift === 'day' 
-            ? currentHour >= 8  // Day shift: only start timer at 8:00 AM or later
-            : (currentHour >= 22 || currentHour < 6); // Night shift: existing logic (work hours only, not early arrival)
+          let shouldStartTimerNow = false;
+
+          if (currentShift === 'day') {
+            // Day shift: only start timer at 8:00 AM or later
+            shouldStartTimerNow = currentHour >= 8;
+          } else {
+            // Night shift: only during actual work hours (10:00 PM - 8:00 AM), NOT during early arrival (6:00 PM - 9:59 PM)
+            if (currentHour >= 18 && currentHour < 22) {
+              // Early arrival period - don't start timer
+              shouldStartTimerNow = false;
+            } else {
+              // Actual work hours
+              shouldStartTimerNow = (currentHour >= 22 || currentHour < 8);
+            }
+          }
 
           if (shouldStartTimerNow) {
             setIsTimeIn(true);
@@ -1236,7 +1231,7 @@ const DashboardEmployee = () => {
             setCurrentTime(elapsedSeconds);
             setAutoRefreshEnabled(false);
           } else {
-            // Day shift early time-in: don't start timer yet
+            // Early time-in: don't start timer yet, but keep record for later
             setIsTimeIn(false);
             setTimeInStart(null);
             setCurrentTime(0);

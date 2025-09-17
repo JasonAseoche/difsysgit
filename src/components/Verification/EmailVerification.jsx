@@ -18,6 +18,7 @@ const EmailVerification = () => {
     
     const navigate = useNavigate();
     const location = useLocation();
+    const inputRefs = useRef([]);
     
     // Get user data from location state or localStorage
     const userData = location.state?.user || JSON.parse(localStorage.getItem('tempUser') || '{}');
@@ -43,9 +44,36 @@ const EmailVerification = () => {
         return () => clearInterval(timer);
     }, [userData.email, navigate]);
     
+    // Handle OTP input changes with numeric validation and paste support
     const handleOtpChange = (index, value) => {
-        if (value.length > 1) return;
+        // Allow only numeric values
+        if (!/^\d*$/.test(value)) return;
         
+        // Handle paste - if more than 1 character, it's likely a paste
+        if (value.length > 1) {
+            const pastedValue = value.slice(0, 6); // Take only first 6 digits
+            const newOtp = [...otp];
+            
+            // Fill the boxes starting from current index
+            for (let i = 0; i < pastedValue.length && (index + i) < 6; i++) {
+                newOtp[index + i] = pastedValue[i];
+            }
+            
+            setOtp(newOtp);
+            
+            // Focus the next empty box or the last filled box
+            const nextIndex = Math.min(index + pastedValue.length, 5);
+            if (inputRefs.current[nextIndex]) {
+                inputRefs.current[nextIndex].focus();
+            }
+            
+            // Clear any previous errors when user pastes
+            if (error) setError('');
+            if (success) setSuccess('');
+            return;
+        }
+        
+        // Handle single character input
         const newOtp = [...otp];
         newOtp[index] = value;
         setOtp(newOtp);
@@ -54,21 +82,23 @@ const EmailVerification = () => {
         if (error) setError('');
         if (success) setSuccess('');
         
-        // Auto-focus next input but DON'T auto-submit
+        // Auto-focus next input
         if (value && index < 5) {
-            const nextInput = document.getElementById(`difsys-otp-input-${index + 1}`);
-            if (nextInput) nextInput.focus();
+            if (inputRefs.current[index + 1]) {
+                inputRefs.current[index + 1].focus();
+            }
         }
     };
     
     const handleKeyDown = (index, e) => {
         if (e.key === 'Backspace' && !otp[index] && index > 0) {
-            const prevInput = document.getElementById(`difsys-otp-input-${index - 1}`);
-            if (prevInput) prevInput.focus();
+            if (inputRefs.current[index - 1]) {
+                inputRefs.current[index - 1].focus();
+            }
         }
     };
 
-    // Get redirect path based on user role - UPDATED FOR APPLICANT FLOW
+    // Get redirect path based on user role
     const getRedirectPath = (role) => {
         const normalizedRole = role.toLowerCase();
         switch (normalizedRole) {
@@ -81,8 +111,6 @@ const EmailVerification = () => {
             case 'employee': 
                 return '/dashboard-employee';
             case 'applicant': 
-                // For applicants, redirect to upload-resume after verification
-                // This is their first time, so they need to fill out the application
                 return '/upload-resume';
             default: 
                 return '/dashboard-admin';
@@ -145,7 +173,7 @@ const EmailVerification = () => {
                 localStorage.setItem('user', JSON.stringify(verifiedUserData));
                 localStorage.setItem('isAuthenticated', 'true');
                 localStorage.setItem('userRole', userData.role.toLowerCase());
-                localStorage.setItem('userId', userData.id.toString()); // Add userId for API calls
+                localStorage.setItem('userId', userData.id.toString());
                 localStorage.removeItem('tempUser');
                 
                 // Wait for animation to complete before redirecting
@@ -153,7 +181,7 @@ const EmailVerification = () => {
                     const redirectPath = getRedirectPath(userData.role);
                     console.log(`Email verification successful for ${userData.role}, redirecting to ${redirectPath}`);
                     navigate(redirectPath);
-                }, 4000); // 4 seconds to show the success animation
+                }, 4000);
                 
             } else {
                 setError(response.data.message || 'Invalid OTP');
@@ -161,8 +189,9 @@ const EmailVerification = () => {
                 setOtp(['', '', '', '', '', '']);
                 // Focus first input
                 setTimeout(() => {
-                    const firstInput = document.getElementById('difsys-otp-input-0');
-                    if (firstInput) firstInput.focus();
+                    if (inputRefs.current[0]) {
+                        inputRefs.current[0].focus();
+                    }
                 }, 100);
             }
         } catch (error) {
@@ -193,8 +222,9 @@ const EmailVerification = () => {
                 
                 // Focus first input
                 setTimeout(() => {
-                    const firstInput = document.getElementById('difsys-otp-input-0');
-                    if (firstInput) firstInput.focus();
+                    if (inputRefs.current[0]) {
+                        inputRefs.current[0].focus();
+                    }
                 }, 100);
                 
                 // Restart timer
@@ -221,27 +251,41 @@ const EmailVerification = () => {
         }
     };
     
+    // Test function to trigger success animation
+    const handleTestSuccess = () => {
+        setIsLoading(true);
+        setError('');
+        setSuccess('');
+        
+        setTimeout(() => {
+            setIsVerified(true);
+            setSuccess('Account verified successfully!');
+            setIsLoading(false);
+            
+            setTimeout(() => {
+                setShowSuccessAnimation(true);
+            }, 100);
+        }, 1000);
+    };
+    
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
     
-    // Success Animation Component with unique classes - FIXED NO RE-RENDER
+    // Success Animation Component - FIXED VERSION
     const DifsysSuccessModal = memo(() => {
-        const progressStarted = useRef(false);
         const [progressActive, setProgressActive] = useState(false);
 
         useEffect(() => {
-            // Only start once, prevent re-triggering
-            if (!progressStarted.current) {
-                progressStarted.current = true;
-                const timer = setTimeout(() => {
-                    setProgressActive(true);
-                }, 500);
-                return () => clearTimeout(timer);
-            }
-        }, []); // Empty dependency array - runs only once
+            // Start progress animation immediately when component mounts
+            const timer = setTimeout(() => {
+                setProgressActive(true);
+            }, 200);
+            
+            return () => clearTimeout(timer);
+        }, []);
 
         // Dynamic message based on user role
         const getRedirectMessage = () => {
@@ -253,7 +297,7 @@ const EmailVerification = () => {
         };
 
         return (
-            <div className="difsys-success-overlay-unique" key="difsys-success-static">
+            <div className="difsys-success-overlay-unique">
                 <div className="difsys-success-modal-unique">
                     <div className="difsys-success-icon-wrapper-unique">
                         <div className="difsys-success-icon-unique">
@@ -273,7 +317,7 @@ const EmailVerification = () => {
     
     return (
         <div className="difsys-email-verification-container-unique">
-            {showSuccessAnimation && <DifsysSuccessModal key="success-modal-permanent" />}
+            {showSuccessAnimation && <DifsysSuccessModal />}
             
             <div className="difsys-email-verification-card-unique">
                 <div className="difsys-email-verification-header-unique">
@@ -290,9 +334,11 @@ const EmailVerification = () => {
                         {otp.map((digit, index) => (
                             <input
                                 key={index}
-                                id={`difsys-otp-input-${index}`}
+                                ref={el => inputRefs.current[index] = el}
                                 type="text"
-                                maxLength="1"
+                                inputMode="numeric"
+                                pattern="[0-9]*"
+                                maxLength="6"
                                 value={digit}
                                 onChange={(e) => handleOtpChange(index, e.target.value)}
                                 onKeyDown={(e) => handleKeyDown(index, e)}
@@ -315,7 +361,6 @@ const EmailVerification = () => {
                              isVerified ? '✓ Verified' : 
                              'Verify Account'}
                         </button>
-                        
                         <button
                             onClick={handleResendOTP}
                             disabled={!canResend || isResending || isVerified}

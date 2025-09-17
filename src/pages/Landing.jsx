@@ -29,7 +29,7 @@ const Landing = () => {
       <main id = "home" className="landing-hero-section">
         <img src={difsysteam} alt="Background" className="landing-hero-bg" />
         <div className="landing-hero-content">
-          <h1>Digitally Intelligent Facility System, Inc.</h1>
+          <h1>Digitally Intelligent Facility Systems, Inc.</h1>
           <p className="landing-hero-text">
             Your hiring journey starts here — efficient, simple, successful.
           </p>
@@ -330,8 +330,8 @@ const Landing = () => {
                   <i className="fas fa-check-circle"></i>
                 </div>
                 <div>
-                  <h3>Industry Expertise</h3>
-                  <p>With years of experience in facility management, we understand your unique challenges.</p>
+                  <h3>Expertise and Specialization</h3>
+                  <p>Our team is highly skilled in Automation Systems, Building Management Systems, Energy Management Systems, CCTV, FDAS, Solar Panels, and Door Access solutions.</p>
                 </div>
               </div>
   
@@ -340,8 +340,8 @@ const Landing = () => {
                   <i className="fas fa-check-circle"></i>
                 </div>
                 <div>
-                  <h3>Advanced Technology</h3>
-                  <p>Our digital systems leverage cutting-edge AI and data analytics for optimal results.</p>
+                  <h3>Quality and Reliability</h3>
+                  <p>We ensure that every project meets the highest standards, focusing on performance, safety, and sustainability.</p>
                 </div>
               </div>
   
@@ -350,8 +350,8 @@ const Landing = () => {
                   <i className="fas fa-check-circle"></i>
                 </div>
                 <div>
-                  <h3>Customized Solutions</h3>
-                  <p>Tailored approaches for businesses of all sizes and industries.</p>
+                  <h3>Client-Centered Approach</h3>
+                  <p>We value our clients by providing cost-effective, customized solutions that maximize efficiency and long-term value.</p>
                 </div>
               </div>
   
@@ -360,8 +360,8 @@ const Landing = () => {
                   <i className="fas fa-check-circle"></i>
                 </div>
                 <div>
-                  <h3>Dedicated Support</h3>
-                  <p>24/7 customer service and technical support for uninterrupted operations.</p>
+                  <h3>Innovation and Adaptability</h3>
+                  <p>We integrate modern technology to keep up with the ever-changing demands of industries and businesses.</p>
                 </div>
               </div>
             </div>

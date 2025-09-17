@@ -282,11 +282,70 @@ const LeaveManagement = () => {
   };
 
   const handleApprove = async (request) => {
-    showCustomConfirm(
-      'Confirm Approval',
-      `Are you sure you want to approve ${request.name}'s leave request?`,
-      () => approveRequest(request)
-    );
+    // Create a temporary state to track the paid status for this specific request
+    let isPaidTemp = 'No';
+    
+    const handleApprovalWithPaidOption = () => {
+      setConfirmData({
+        title: 'Confirm Approval',
+        message: (
+          <div>
+            <p>Are you sure you want to approve {request.name}'s leave request?</p>
+            <div style={{ marginTop: '15px', padding: '10px', backgroundColor: '#f8f9fa', borderRadius: '4px' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', fontWeight: '500' }}>
+                <input
+                  type="checkbox"
+                  defaultChecked={false}
+                  onChange={(e) => {
+                    isPaidTemp = e.target.checked ? 'Yes' : 'No';
+                  }}
+                  style={{ transform: 'scale(1.2)' }}
+                />
+                Mark as Paid Leave
+              </label>
+            </div>
+          </div>
+        ),
+        onConfirm: () => approveRequestWithPaidStatus(request, isPaidTemp)
+      });
+      setShowConfirm(true);
+    };
+  
+    handleApprovalWithPaidOption();
+  };
+
+  const approveRequestWithPaidStatus = async (request, isPaid = 'No') => {
+    try {
+      setLoading(true);
+      
+      const response = await api.put('/leave_management.php?action=update_hr_status', {
+        leave_id: request.leave_id,
+        status: 'Approved',
+        comments: 'Approved by HR',
+        is_paid: isPaid
+        // Remove hr_id: 1
+      });
+  
+      if (response.data.success) {
+        showCustomAlert('success', 'Success', 'Leave request approved successfully');
+        await loadLeaveRequests();
+      } else {
+        showCustomAlert('error', 'Error', 'Failed to approve leave request: ' + response.data.message);
+      }
+    } catch (error) {
+      console.error('Error approving leave request:', error);
+      
+      let errorMessage = 'An error occurred while approving the leave request';
+      if (error.response && error.response.data && error.response.data.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      showCustomAlert('error', 'Error', errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const declineRequest = async (request, reason) => {
@@ -516,7 +575,7 @@ const LeaveManagement = () => {
         <div className="hr-leave-confirm-overlay">
           <div className="hr-leave-confirm-box">
             <h3>{confirmData.title}</h3>
-            <p>{confirmData.message}</p>
+            <div>{typeof confirmData.message === 'string' ? <p>{confirmData.message}</p> : confirmData.message}</div>
             <div className="hr-leave-confirm-buttons">
               <button 
                 className="hr-leave-action-btn hr-leave-btn-cancel"

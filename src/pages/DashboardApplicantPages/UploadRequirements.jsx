@@ -453,6 +453,28 @@ const fetchRequirements = async () => {
       setUploadProgress(100);
       
       if (result.success) {
+        // Send notification to HR
+        try {
+          const userData = localStorage.getItem('user');
+          const user = userData ? JSON.parse(userData) : null;
+          
+          await fetch('http://localhost/difsysapi/notifications_api.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              user_id: 0,
+              user_role: 'HR',
+              type: 'requirements_uploaded',
+              title: 'Requirements Uploaded',
+              message: `${user?.firstName || 'Applicant'} ${user?.lastName || ''} has uploaded required documents: ${stagedFile.requirement}`,
+              related_id: getUserId(),
+              related_type: 'applicant'
+            })
+          });
+        } catch (error) {
+          console.error('Error sending notification:', error);
+        }
+      
         // Create file object for preview
         const newFile = {
           id: result.id,

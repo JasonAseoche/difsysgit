@@ -252,13 +252,7 @@ const handleViewPayslip = async (id) => {
     if (response.data.success) {
       if (response.data.data.found && response.data.data.download_url) {
         // Create a proper link element instead of using window.open
-        const link = document.createElement('a');
-        link.href = response.data.data.download_url;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        window.open(response.data.data.download_url, '_blank', 'noopener,noreferrer');
       } else {
         alert(response.data.data.message || 'Payslip not yet available for this period');
       }

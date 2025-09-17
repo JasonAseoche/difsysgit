@@ -308,6 +308,7 @@
 .apptrack-candidate-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  z-index: 500;
 }
 
 .apptrack-card-header {
@@ -807,7 +808,8 @@
 
 .apptrack-requirement-input {
   flex: 1;
-  padding: 12px 16px;
+  margin-top: 20px;
+  padding: 22.5px 16px;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   font-size: 14px;
@@ -1132,6 +1134,33 @@
   background: #f8fafc;
   border-radius: 8px;
   border: 1px solid #e2e8f0;
+}
+
+.apptrack-requirement-select {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+  background: white;
+}
+
+.apptrack-requirement-select:focus {
+  border-color: #3b82f6;
+}
+
+.apptrack-requirement-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.apptrack-requirement-item .apptrack-requirement-input {
+  flex: 1;
+  min-width: 200px;
 }
 
 .apptrack-additional-info h5 {

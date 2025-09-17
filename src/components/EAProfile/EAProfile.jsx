@@ -39,9 +39,9 @@ const EAProfile = () => {
   const userId = getUserId();
 
   const tabs = [
-    'Personal Info',
-    'Employee Details'
-  ];
+  'Personal Info',
+  userLevel === 'employee' ? 'Employee Details' : 'Applicant Details'
+];
 
   // Check user access on component mount
   useEffect(() => {
@@ -343,30 +343,35 @@ const EAProfile = () => {
     const initials = getInitials(employeeData.name);
     const avatarColor = getAvatarColor(employeeData.name || 'User');
     
-    if (employeeData.profileImage) {
-      return (
-        <img 
-          src={employeeData.profileImage.startsWith('http') ? 
-            employeeData.profileImage : 
-            `http://localhost/difsysapi/${employeeData.profileImage}`
-          } 
-          alt="Profile" 
-          className="eaprof-avatar"
-          onError={(e) => {
-            e.target.style.display = 'none';
-            e.target.nextSibling.style.display = 'flex';
-          }}
-        />
-      );
-    }
-    
     return (
-      <div 
-        className="eaprof-avatar-fallback"
-        style={{ backgroundColor: avatarColor }}
-      >
-        {initials}
-      </div>
+      <>
+        {employeeData.profileImage && (
+          <img 
+            src={employeeData.profileImage.startsWith('http') ? 
+              employeeData.profileImage : 
+              `http://localhost/difsysapi/${employeeData.profileImage}`
+            } 
+            alt="Profile" 
+            className="eaprof-avatar"
+            onError={(e) => {
+              e.target.style.display = 'none';
+              const fallback = e.target.nextSibling;
+              if (fallback) {
+                fallback.style.display = 'flex';
+              }
+            }}
+          />
+        )}
+        <div 
+          className="eaprof-avatar-fallback"
+          style={{ 
+            backgroundColor: avatarColor,
+            display: employeeData.profileImage ? 'none' : 'flex'
+          }}
+        >
+          {initials}
+        </div>
+      </>
     );
   };
 
@@ -796,6 +801,7 @@ const EAProfile = () => {
       case 'Personal Info':
         return renderPersonalInfo();
       case 'Employee Details':
+      case 'Applicant Details':
         return <EADetails userLevel={userLevel} />;
       default:
         return renderPersonalInfo();

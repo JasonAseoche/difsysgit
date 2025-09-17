@@ -622,6 +622,14 @@ const ManageEmployee = () => {
     dropdownRefs.current[id] = element;
   };
 
+  const handleEditFromDropdown = (employeeId) => {
+    const employee = employees.find(emp => emp.id === employeeId);
+    if (employee) {
+      navigate(`/employee-personal?user_id=${employee.id}`);
+    }
+    setOpenDropdownId(null); // Close the dropdown
+  };
+
   // Format work days and status for display
   const formatWorkDays = (workDays) => {
     return workDays || 'Monday-Friday';
@@ -1242,10 +1250,7 @@ const ManageEmployee = () => {
                         <div className="me-dropdown-menu">
                           <button 
                             className="me-dropdown-item me-edit-item"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleEdit(employee.id, e);
-                            }}
+                            onClick={() => handleEditFromDropdown(employee.id)}
                           >
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />

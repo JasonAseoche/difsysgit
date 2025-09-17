@@ -140,7 +140,7 @@ const ManageRelation = () => {
       alert('Please enter a message');
       return;
     }
-
+  
     try {
       const formData = new FormData();
       formData.append('action', 'sendReply');
@@ -149,17 +149,21 @@ const ManageRelation = () => {
       formData.append('close_ticket', closeTicket);
       formData.append('sender_type', 'hr');
       
+      // Add HR user ID - you'll need to get this from your authentication system
+      const hrUserId = getCurrentUser()?.id || getUserId(); // Replace with actual HR user ID
+      formData.append('sender_id', hrUserId);
+      
       // Auto-update status to "In Progress" if ticket is currently "Open"
       if (selectedTicket.status === 'Open' && !closeTicket) {
         formData.append('update_status', 'In Progress');
       }
       
       if (replyForm.attachments) formData.append('attachment', replyForm.attachments);
-
+  
       const response = await axios.post(API_BASE_URL, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-
+  
       if (response.data.success) {
         await handleViewDetails(selectedTicket);
         await fetchTickets();
@@ -555,8 +559,36 @@ const ManageRelation = () => {
                     <div key={message.id} className={`miMessageCard ${message.sender_type === 'hr' ? 'miHRMessage' : 'miEmployeeMessage'}`}>
                       <div className="miMessageHeader">
                         <div className="miMessageSender">
-                          <div className="miSenderAvatar">
-                            {message.sender.split(' ').map(n => n[0]).join('')}
+                        <div className="miSenderAvatar">
+                            {message.sender_profile?.profile_image_url ? (
+                              <img 
+                                src={message.sender_profile.profile_image_url}
+                                alt={message.sender}
+                                style={{
+                                  width: '100%',
+                                  height: '100%',
+                                  borderRadius: '50%',
+                                  objectFit: 'cover'
+                                }}
+                                onError={(e) => {
+                                  e.target.style.display = 'none';
+                                  e.target.nextSibling.style.display = 'flex';
+                                }}
+                              />
+                            ) : null}
+                            <span 
+                              style={{ 
+                                display: message.sender_profile?.profile_image_url ? 'none' : 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: '100%',
+                                height: '100%',
+                                fontSize: '12px',
+                                fontWeight: 'bold'
+                              }}
+                            >
+                              {message.sender.split(' ').map(n => n[0]).join('')}
+                            </span>
                           </div>
                           <div className="miSenderInfo">
                             <p className="miSenderName">{message.sender}</p>

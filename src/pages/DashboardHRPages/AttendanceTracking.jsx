@@ -135,7 +135,7 @@ const AttendanceTracking = () => {
         setLoading(true);
       }
       
-      const response = await axios.get(`${API_BASE_URL}?action=get_attendance_records&limit=100`);
+      const response = await axios.get(`${API_BASE_URL}?action=get_attendance_records&limit=1000`);
       if (response.data.success) {
         const formattedRecords = response.data.records
           .filter(record => record.date === selectedDate)

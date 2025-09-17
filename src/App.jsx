@@ -1,68 +1,66 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import MainPage from './pages/Landing'
-import ApplyNow from './pages/ApplyNow'
-import SignUp from './pages/SignUp'
-import LogIn from './pages/LogIn'
-import Profile from './components/ProfileAccount/Profile'
-import EmailVerification from './components/Verification/EmailVerification'
-import ManageFingeprint from './pages/DashboardAdminPages/ManageFingerprint'
-import About from './pages/DashboardAdminPages/About'
-import TestAttendance from './pages/DashboardAdminPages/TestAttendance'
-import Dashboard from './pages/DashboardAdminPages/DashboardAdmin'
-import ManageAccounts from './pages/DashboardAdminPages/ManageAccounts'
+
+// Import audited components with aliases to match your original structure
+import {
+  AuditedMainPage as MainPage,
+  AuditedApplyNow as ApplyNow,
+  AuditedSignUp as SignUp,
+  AuditedLogIn as LogIn,
+  AuditedProfile as Profile,
+  AuditedEmailVerification as EmailVerification,
+  AuditedChangePassword as ChangePassword,
+  AuditedDashboard as Dashboard,
+  AuditedManageAccounts as ManageAccounts,
+  AuditedManageFingeprint as ManageFingeprint,
+  AuditedTestAttendance as TestAttendance,
+  AuditedDemoAttendance as DemoAttendance,
+  AuditedAbout as About,
+  AuditedDashboardHR as DashboardHR,
+  AuditedManageEmployee as ManageEmployee,
+  AuditedAttendanceTracking as AttendanceTracking,
+  AuditedPerformanceEvaluation as PerformanceEvaluation,
+  AuditedLeaveManagement as LeaveManagement,
+  AuditedApplicantsTracking as ApplicantsTracking,
+  AuditedManageExamination as ManageExamination,
+  AuditedManageRelation as ManageRelation,
+  AuditedManageHiring as ManageHiring,
+  AuditedManageDepartment as ManageDepartment,
+  AuditedManageEvents as ManageEvents,
+  AuditedNotifications as Notifications,
+  AuditedEmPersonal as EmPersonal,
+  AuditedDashboardAccountant as DashboardAccountant,
+  AuditedPayrollAccount as PayrollAccount,
+  AuditedGeneratePayroll as GeneratePayroll,
+  AuditedManagePayroll as ManagePayroll,
+  AuditedBenefits as Benefits,
+  AuditedEmployeeAttendance as EmployeeAttendance,
+  AuditedDashboardEmployee as DashboardEmployee,
+  AuditedAttendance as Attendance,
+  AuditedManageDocuments as ManageDocuments,
+  AuditedMyPayroll as MyPayroll,
+  AuditedTimeKeeping as TimeKeeping,
+  AuditedFileInquiries as FileInquiries,
+  AuditedDashboardApplicant as DashboardApplicant,
+  AuditedUploadRequirements as UploadRequirements,
+  AuditedSetupProfile as SetupProfile,
+  AuditedTakeExam as TakeExam,
+  AuditedUploadResume as UploadResume,
+  AuditedDashboardSupervisor as DashboardSupervisor,
+  AuditedTeamManagement as TeamManagement,
+  AuditedSupervisorAttendance as SupervisorAttendance,
+  AuditedPerformanceReview as PerformanceReview,
+  AuditedLeaveApproval as LeaveApproval,
+  AuditedReports as Reports,
+  Unauthorized
+} from './AuditedComponents'
+
+// Add the audit trail component
+import AuditTrail from './pages/DashboardAdminPages/AuditTrail'
+
+// Keep your original imports
 import PrivateRoute from './PrivateRoute'
-
-
-// Import new pages for different roles
-// HR pages
-import DashboardHR from './pages/DashboardHRPages/DashboardHR'
-import ManageEmployee from './pages/DashboardHRPages/ManageEmployee'
-import AttendanceTracking from './pages/DashboardHRPages/AttendanceTracking'
-import PerformanceEvaluation from './pages/DashboardHRPages/PerformanceEvaluation'
-import LeaveManagement from './pages/DashboardHRPages/LeaveManagement'
-import ApplicantsTracking from './pages/DashboardHRPages/ApplicantsTracking'
-import ManageExamination from './pages/DashboardHRPages/ManageExamination'
-import ManageRelation from './pages/DashboardHRPages/ManageRelation'
-import ManageHiring from './pages/DashboardHRPages/ManageHiring'
-import ManageDepartment from './pages/DashboardHRPages/ManageDepartment'
-import ManageEvents from './pages/DashboardHRPages/ManageEvents'
-
-// Accountant pages
-import DashboardAccountant from './pages/DashboardAccountantPages/DashboardAccountant'
-import PayrollAccount from './pages/DashboardAccountantPages/PayrollAccount'
-import GeneratePayroll from './pages/DashboardAccountantPages/GeneratePayroll'
-import ManagePayroll from './pages/DashboardAccountantPages/ManagePayroll'
-import Benefits from './pages/DashboardAccountantPages/Benefits'
-import EmployeeAttendance from './pages/DashboardAccountantPages/EmployeeAttendance'
-
-// Employee pages
-import DashboardEmployee from './pages/DashboardEmployeePages/DashboardEmployee'
-import Attendance from './pages/DashboardEmployeePages/Attendance'
-import ManageDocuments from './pages/DashboardEmployeePages/ManageDocuments'
-import MyPayroll from './pages/DashboardEmployeePages/MyPayroll'
-import TimeKeeping from './pages/DashboardEmployeePages/TimeKeeping'
-import FileInquiries from './pages/DashboardEmployeePages/FileInquiries'
-import EmPersonal from './pages/DashboardHRPages/EMPersonal'
-
-// Applicant pages
-import DashboardApplicant from './pages/DashboardApplicantPages/DashboardApplicant'
-import UploadRequirements from './pages/DashboardApplicantPages/UploadRequirements'
-import SetupProfile from './pages/DashboardApplicantPages/SetupProfile'
-import TakeExam from './pages/DashboardApplicantPages/TakeExam'
-import UploadResume from './pages/DashboardApplicantPages/UploadResume'
 import ApplicantRouteGuard from './pages/ApplicantRouteGuard'
-
-// Supervisor pages
-import DashboardSupervisor from './pages/DashboardSupervisorPages/DashboardSupervisor'
-import TeamManagement from './pages/DashboardSupervisorPages/TeamManagement'
-import SupervisorAttendance from './pages/DashboardSupervisorPages/SupervisorAttendance'
-import PerformanceReview from './pages/DashboardSupervisorPages/PerformanceReview'
-import LeaveApproval from './pages/DashboardSupervisorPages/LeaveApproval'
-import Reports from './pages/DashboardSupervisorPages/Reports'
-
-// For role-based access you might want to import an unauthorized page
-import Unauthorized from './pages/Unauthorized'
 
 const App = () => {
   return (
@@ -72,8 +70,10 @@ const App = () => {
         <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<LogIn />} />
         <Route path="/verify-email" element={<EmailVerification />} />
+        <Route path="/change-password" element={<ChangePassword />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/apply-now" element={<ApplyNow />} />
+        <Route path="/notifications" element={<Notifications />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
 
         {/* Upload Resume - Accessible immediately after email verification for applicants */}
@@ -86,9 +86,9 @@ const App = () => {
           } 
         />
 
-      <Route element={<PrivateRoute allowedRoles={['admin', 'hr', 'accountant', 'employee', 'supervisor', 'applicant']} />}>
-        <Route path="/profile" element={<Profile/>} />
-      </Route>
+        <Route element={<PrivateRoute allowedRoles={['admin', 'hr', 'accountant', 'employee', 'supervisor', 'applicant']} />}>
+          <Route path="/profile" element={<Profile/>} />
+        </Route>
 
         {/* Dashboard Routes with Role-Based Access */}
         
@@ -98,7 +98,9 @@ const App = () => {
           <Route path="/manage-fingerprint" element={<ManageFingeprint />} />
           <Route path="/about" element={<About />} />
           <Route path="/test-attendance" element={<TestAttendance/>} />
+          <Route path="/demo-attendance" element={<DemoAttendance/>} />
           <Route path="/manage-accounts" element={<ManageAccounts />} />
+          <Route path="/audit-trail" element={<AuditTrail />} />
         </Route>
         
         {/* HR Routes */}

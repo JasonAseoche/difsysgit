@@ -762,8 +762,36 @@ const FileInquiries = () => {
                     <div key={message.id} className={`employeeMessageCard ${message.sender_type === 'hr' ? 'employeeHRMessage' : 'employeeEmployeeMessage'}`}>
                       <div className="employeeMessageHeader">
                         <div className="employeeMessageSender">
-                          <div className="employeeSenderAvatar">
-                            {message.sender.split(' ').map(n => n[0]).join('')}
+                        <div className="employeeSenderAvatar">
+                            {message.sender_profile?.profile_image_url ? (
+                              <img 
+                                src={message.sender_profile.profile_image_url}
+                                alt={message.sender}
+                                style={{
+                                  width: '100%',
+                                  height: '100%',
+                                  borderRadius: '50%',
+                                  objectFit: 'cover'
+                                }}
+                                onError={(e) => {
+                                  e.target.style.display = 'none';
+                                  e.target.nextSibling.style.display = 'flex';
+                                }}
+                              />
+                            ) : null}
+                            <span 
+                              style={{ 
+                                display: message.sender_profile?.profile_image_url ? 'none' : 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: '100%',
+                                height: '100%',
+                                fontSize: '12px',
+                                fontWeight: 'bold'
+                              }}
+                            >
+                              {message.sender.split(' ').map(n => n[0]).join('')}
+                            </span>
                           </div>
                           <div className="employeeSenderInfo">
                             <p className="employeeSenderName">{message.sender}</p>

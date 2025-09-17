@@ -36,6 +36,26 @@ export const getCurrentUser = () => {
 }
 
 /**
+ * Get user data in the format expected by components
+ * @returns {Object|null} Object with user property or null if not authenticated
+ */
+export const getUserData = () => {
+  const token = localStorage.getItem('token')
+  const user = getCurrentUser()
+  
+  if (!token || !user) {
+    return null
+  }
+  
+  return {
+    user: user,
+    token: token,
+    role: getUserRole(),
+    id: getUserId()
+  }
+}
+
+/**
  * Check if the user has one of the specified roles
  * @param {string[]} allowedRoles - Array of roles to check against
  * @returns {boolean} True if the user has one of the allowed roles

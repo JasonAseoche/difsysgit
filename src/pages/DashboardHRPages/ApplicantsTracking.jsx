@@ -22,7 +22,7 @@ const ApplicantsTracking = () => {
   const [error, setError] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
   const [imageErrors, setImageErrors] = useState(new Set());
-  const [requirements, setRequirements] = useState(['']);
+  const [requirements, setRequirements] = useState([{ type: '', customText: '' }]);
 
   // API Base URL
   const API_BASE_URL = 'http://localhost/difsysapi/applicant_tracking.php';
@@ -204,6 +204,25 @@ const ApplicantsTracking = () => {
       });
 
       if (response.data.success) {
+        // Send notification to applicant
+        try {
+          await fetch('http://localhost/difsysapi/notifications_api.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              user_id: appId,
+              user_role: 'applicant',
+              type: 'interview_scheduled',
+              title: 'Interview Scheduled',
+              message: `Your interview has been scheduled for ${date} at ${time}. Please be prepared and arrive on time.`,
+              related_id: appId,
+              related_type: 'interview'
+            })
+          });
+        } catch (error) {
+          console.error('Error sending notification:', error);
+        }
+      
         alert('Interview scheduled successfully! Email notification sent to the applicant.');
         window.location.href = window.location.href;
         return true;
@@ -233,6 +252,27 @@ const ApplicantsTracking = () => {
       });
 
       if (response.data.success) {
+        // Send notification to applicant for decline status
+        if (status.toLowerCase() === 'declined') {
+          try {
+            await fetch('http://localhost/difsysapi/notifications_api.php', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                user_id: appId,
+                user_role: 'applicant',
+                type: 'application_declined',
+                title: 'Application Status Update',
+                message: 'Thank you for your interest in our position. After careful consideration, we have decided to move forward with other candidates.',
+                related_id: appId,
+                related_type: 'application'
+              })
+            });
+          } catch (error) {
+            console.error('Error sending notification:', error);
+          }
+        }
+      
         alert(`Application ${status.toLowerCase()} successfully! Email notification sent to the applicant.`);
         window.location.href = window.location.href;
         return true;
@@ -256,12 +296,31 @@ const ApplicantsTracking = () => {
       const response = await axios.post(API_BASE_URL, {
         app_id: appId,
         status: 'approved',
-        requirements: requirementsList.filter(req => req.trim() !== '')
+        requirements: requirementsList.map(req => req.type === 'Other Requirements' ? req.customText : req.type).filter(req => req.trim() !== '')
       }, {
         params: { action: 'approve_with_requirements' }
       });
 
       if (response.data.success) {
+        // Send notification to applicant
+        try {
+          await fetch('http://localhost/difsysapi/notifications_api.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              user_id: appId,
+              user_role: 'applicant',
+              type: 'application_approved',
+              title: 'Application Approved',
+              message: 'Congratulations! Your application has been approved. Please upload the required documents to proceed.',
+              related_id: appId,
+              related_type: 'application'
+            })
+          });
+        } catch (error) {
+          console.error('Error sending notification:', error);
+        }
+      
         alert('Application approved successfully! Requirements list sent to the applicant.');
         window.location.href = window.location.href;
         return true;
@@ -313,7 +372,7 @@ const ApplicantsTracking = () => {
 
   const handleApproveClick = (candidate) => {
     setApprovalCandidate(candidate);
-    setRequirements(['']);
+    setRequirements([{ type: '', customText: '' }]);
     setShowApprovalModal(true);
     setActiveDropdown(null);
   };
@@ -338,12 +397,12 @@ const ApplicantsTracking = () => {
   };
 
   const handleApprovalConfirm = async () => {
-    if (approvalCandidate && requirements.some(req => req.trim() !== '')) {
+    if (approvalCandidate && requirements.some(req => req.type !== '' && (req.type !== 'Other Requirements' || req.customText.trim() !== ''))) {
       const success = await approveWithRequirements(approvalCandidate.app_id, requirements);
       if (success) {
         setShowApprovalModal(false);
         setApprovalCandidate(null);
-        setRequirements(['']);
+        setRequirements([{ type: '', customText: '' }]);
       }
     }
   };
@@ -351,7 +410,7 @@ const ApplicantsTracking = () => {
   const handleApprovalCancel = () => {
     setShowApprovalModal(false);
     setApprovalCandidate(null);
-    setRequirements(['']);
+    setRequirements([{ type: '', customText: '' }]);
   };
 
   const handleViewDetails = async (candidate) => {
@@ -369,9 +428,24 @@ const ApplicantsTracking = () => {
     document.body.removeChild(link);
   };
 
+ // Predefined requirements list
+  const predefinedRequirements = [
+    'Cover Letter',
+    '2x2 ID Picture', 
+    'Valid ID',
+    'NBI Clearance',
+    'Police Clearance',
+    'Barangay Clearance',
+    'Transcript of Records (TOR)',
+    'Diploma',
+    'Employment Certificate',
+    'Medical/Health Certificate',
+    'Other Requirements'
+  ];
+
   // Requirements management
   const addRequirement = () => {
-    setRequirements([...requirements, '']);
+    setRequirements([...requirements, { type: '', customText: '' }]);
   };
 
   const removeRequirement = (index) => {
@@ -381,9 +455,9 @@ const ApplicantsTracking = () => {
     }
   };
 
-  const updateRequirement = (index, value) => {
+  const updateRequirement = (index, field, value) => {
     const newRequirements = [...requirements];
-    newRequirements[index] = value;
+    newRequirements[index] = { ...newRequirements[index], [field]: value };
     setRequirements(newRequirements);
   };
 
@@ -786,13 +860,25 @@ const ApplicantsTracking = () => {
                 <div className="apptrack-requirements-list">
                   {requirements.map((requirement, index) => (
                     <div key={index} className="apptrack-requirement-item">
-                      <input
-                        type="text"
-                        className="apptrack-requirement-input"
-                        value={requirement}
-                        onChange={(e) => updateRequirement(index, e.target.value)}
-                        placeholder={`Requirement ${index + 1}`}
-                      />
+                      <select
+                        className="apptrack-requirement-select"
+                        value={requirement.type}
+                        onChange={(e) => updateRequirement(index, 'type', e.target.value)}
+                      >
+                        <option value="">Select Requirement</option>
+                        {predefinedRequirements.map((req, idx) => (
+                          <option key={idx} value={req}>{req}</option>
+                        ))}
+                      </select>
+                      {requirement.type === 'Other Requirements' && (
+                        <input
+                          type="text"
+                          className="apptrack-requirement-input"
+                          value={requirement.customText}
+                          onChange={(e) => updateRequirement(index, 'customText', e.target.value)}
+                          placeholder="Specify other requirement"
+                        />
+                      )}
                       {requirements.length > 1 && (
                         <button 
                           className="apptrack-requirement-remove"
@@ -824,7 +910,7 @@ const ApplicantsTracking = () => {
               <button 
                 className="apptrack-btn apptrack-btn-approve"
                 onClick={handleApprovalConfirm}
-                disabled={!requirements.some(req => req.trim() !== '') || actionLoading}
+                disabled={!requirements.some(req => req.type !== '' && (req.type !== 'Other Requirements' || req.customText.trim() !== '')) || actionLoading}
               >
                 {actionLoading ? 'Approving...' : 'Approve Application'}
               </button>

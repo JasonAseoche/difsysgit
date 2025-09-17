@@ -14,51 +14,54 @@ const DashboardHeader = () => {
   const [dashNotificationsOpen, setDashNotificationsOpen] = useState(false);
   const [dashSettingsOpen, setDashSettingsOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [dashNotifications, setDashNotifications] = useState([
-    {
-      id: 1,
-      type: 'leave_request',
-      title: 'Leave Request Pending',
-      message: 'John Smith has submitted a leave request for review',
-      time: '2 hours ago',
-      unread: true
-    },
-    {
-      id: 2,
-      type: 'new_employee',
-      title: 'New Employee Onboarding',
-      message: 'Sarah Johnson will start on Monday. Please prepare onboarding materials.',
-      time: '4 hours ago',
-      unread: true
-    },
-    {
-      id: 3,
-      type: 'document_update',
-      title: 'Policy Update Required',
-      message: 'Company policies need to be updated in the system',
-      time: '1 day ago',
-      unread: false
-    },
-    {
-      id: 4,
-      type: 'performance_review',
-      title: 'Performance Reviews Due',
-      message: 'Q4 performance reviews are due this Friday',
-      time: '2 days ago',
-      unread: true
-    },
-    {
-      id: 5,
-      type: 'attendance_alert',
-      title: 'Attendance Alert',
-      message: 'Multiple employees have exceeded break time limits',
-      time: '3 days ago',
-      unread: false
-    }
-  ]);
-
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [dashNotifications, setDashNotifications] = useState([]);
   const dashNotificationsRef = useRef(null);
   const dashSettingsRef = useRef(null);
+
+  const fetchNotificationCount = async () => {
+    try {
+      const userData = localStorage.getItem('user');
+      if (userData) {
+        const user = JSON.parse(userData);
+        const response = await fetch(`http://localhost/difsysapi/notifications_api.php?user_id=${user.id}&user_role=${user.role}&unread_only=true`);
+        const data = await response.json();
+        if (data.success) {
+          setNotificationCount(data.unread_count);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching notification count:', error);
+    }
+  };
+
+  const fetchDashNotifications = async () => {
+    try {
+      const userData = localStorage.getItem('user');
+      if (userData) {
+        const user = JSON.parse(userData);
+        const response = await fetch(`http://localhost/difsysapi/notifications_api.php?user_id=${user.id}&user_role=${user.role}&limit=5`);
+        const data = await response.json();
+        if (data.success) {
+          setDashNotifications(data.notifications);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching dashboard notifications:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchNotificationCount();
+    fetchDashNotifications(); // Add this line
+    
+    // Poll for new notifications every 30 seconds
+    const interval = setInterval(() => {
+      fetchNotificationCount();
+      fetchDashNotifications(); // Add this line
+    }, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Get user data from localStorage and fetch from database if needed
   useEffect(() => {
@@ -145,6 +148,23 @@ const DashboardHeader = () => {
 
   const getDashNotificationIcon = (type) => {
     switch (type) {
+      case 'resume_uploaded':
+        return '📄';
+      case 'exam_submitted':
+        return '📝';
+      case 'requirements_uploaded':
+        return '📋';
+      case 'interview_scheduled':
+        return '🗓️';
+      case 'application_approved':
+        return '✅';
+      case 'application_declined':
+        return '❌';
+      case 'exam_assigned':
+        return '📚';
+      case 'exam_graded':
+        return '🎯';
+      // Keep old ones for backwards compatibility
       case 'leave_request':
         return '🏖️';
       case 'new_employee':
@@ -160,20 +180,53 @@ const DashboardHeader = () => {
     }
   };
 
-  const unreadCount = dashNotifications.filter(notif => notif.unread).length;
+  const unreadCount = dashNotifications.filter(notif => !notif.is_read).length;
 
-  const markDashAsRead = (id) => {
-    setDashNotifications(prev => 
-      prev.map(notif => 
-        notif.id === id ? { ...notif, unread: false } : notif
-      )
-    );
+  const markDashAsRead = async (id) => {
+    try {
+      await fetch('http://localhost/difsysapi/notifications_api.php', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ notification_id: id })
+      });
+      
+      setDashNotifications(prev => 
+        prev.map(notif => 
+          notif.id === id ? { ...notif, is_read: true } : notif
+        )
+      );
+      
+      // Update the notification count
+      fetchNotificationCount();
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+    }
   };
 
-  const markDashAllAsRead = () => {
-    setDashNotifications(prev => 
-      prev.map(notif => ({ ...notif, unread: false }))
-    );
+  const markDashAllAsRead = async () => {
+    try {
+      const userData = localStorage.getItem('user');
+      if (userData) {
+        const user = JSON.parse(userData);
+        await fetch('http://localhost/difsysapi/notifications_api.php', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            user_id: user.id, 
+            user_role: user.role 
+          })
+        });
+        
+        setDashNotifications(prev => 
+          prev.map(notif => ({ ...notif, is_read: true }))
+        );
+        
+        // Update the notification count
+        fetchNotificationCount();
+      }
+    } catch (error) {
+      console.error('Error marking all notifications as read:', error);
+    }
   };
 
   // Logout handler
@@ -255,9 +308,9 @@ const DashboardHeader = () => {
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-            {unreadCount > 0 && (
-              <span className="dash-notification-badge">{unreadCount}</span>
-            )}
+            {notificationCount > 0 && (
+                <span className="dash-notification-badge">{notificationCount}</span>
+              )}
           </button>
           
           {dashNotificationsOpen && (
@@ -271,10 +324,10 @@ const DashboardHeader = () => {
                 )}
               </div>
               <div className="dash-notifications-list">
-                {dashNotifications.map(notification => (
+              {dashNotifications.map(notification => (
                   <div 
                     key={notification.id} 
-                    className={`dash-notification-item ${notification.unread ? 'dash-unread' : ''}`}
+                    className={`dash-notification-item ${!notification.is_read ? 'dash-unread' : ''}`}
                     onClick={() => markDashAsRead(notification.id)}
                   >
                     <div className="dash-notification-icon">
@@ -283,14 +336,21 @@ const DashboardHeader = () => {
                     <div className="dash-notification-content">
                       <h4 className="dash-notification-title">{notification.title}</h4>
                       <p className="dash-notification-message">{notification.message}</p>
-                      <span className="dash-notification-time">{notification.time}</span>
+                      <span className="dash-notification-time">
+                        {new Date(notification.created_at).toLocaleString()}
+                      </span>
                     </div>
-                    {notification.unread && <div className="dash-unread-dot"></div>}
+                    {!notification.is_read && <div className="dash-unread-dot"></div>}
                   </div>
                 ))}
               </div>
               <div className="dash-dropdown-footer">
-                <button className="dash-view-all-notifications-btn">View All Notifications</button>
+              <button 
+                  className="dash-view-all-notifications-btn"
+                  onClick={() => navigate('/notifications')}
+                >
+                  View All Notifications
+                </button>
               </div>
             </div>
           )}

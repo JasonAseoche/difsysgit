@@ -206,14 +206,19 @@ const LeaveApproval = () => {
         leave_id: selectedRequest.id,
         status: status,
         comments: comments,
-        supervisor_id: supervisorInfo.supervisor_id
+        supervisor_id: supervisorInfo.supervisor_id,
+        // Include leave details for attendance creation
+        emp_id: selectedRequest.emp_id,
+        start_date: selectedRequest.startDate,
+        end_date: selectedRequest.endDate,
+        is_paid: selectedRequest.is_paid || 'No'
       });
   
       if (response.data.success) {
         showCustomAlert('success', 'Success', `Leave request ${status.toLowerCase()} successfully`);
         setShowViewDetails(false);
         setSelectedRequest(null);
-        await loadLeaveRequests(supervisorInfo.supervisor_id); // Reload the list
+        await loadLeaveRequests(supervisorInfo.supervisor_id);
       } else {
         showCustomAlert('error', 'Error', 'Failed to update leave request: ' + response.data.message);
       }
