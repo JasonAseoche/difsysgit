@@ -552,3 +552,139 @@
     font-size: 14px;
   }
 }
+/* Preview Modal Styles */
+.upload-resume-preview-modal {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 700px;
+  max-height: 80vh;
+  overflow: hidden;
+}
+
+.upload-resume-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.upload-resume-preview-header h3 {
+  margin: 0;
+  color: #072a66;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.upload-resume-close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #64748b;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.upload-resume-close-btn:hover {
+  background-color: #e2e8f0;
+}
+
+.upload-resume-preview-content {
+  padding: 24px;
+  max-height: 450px;
+  overflow: auto;
+}
+
+.upload-resume-file-info {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.upload-resume-file-info .upload-resume-file-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+
+.upload-resume-file-info h4 {
+  color: #072a66;
+  margin: 0 0 12px 0;
+  font-size: 18px;
+}
+
+.upload-resume-file-info p {
+  color: #64748b;
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+.upload-resume-preview-note {
+  font-style: italic;
+  margin-top: 16px !important;
+}
+
+.upload-resume-preview-actions {
+  padding: 20px 24px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.upload-resume-replace-btn {
+  background: #64748b;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.upload-resume-replace-btn:hover {
+  background: #475569;
+}
+
+.upload-resume-save-submit-btn {
+  background: #059669;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.upload-resume-save-submit-btn:hover {
+  background: #047857;
+}
+
+@media (max-width: 768px) {
+  .upload-resume-preview-modal {
+    width: 95%;
+    max-height: 85vh;
+  }
+  
+  .upload-resume-preview-actions {
+    flex-direction: column;
+  }
+  
+  .upload-resume-replace-btn,
+  .upload-resume-save-submit-btn {
+    width: 100%;
+    padding: 12px;
+  }
+}

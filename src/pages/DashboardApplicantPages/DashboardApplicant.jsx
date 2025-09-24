@@ -12,9 +12,21 @@ const DashboardApplicant = () => {
     role: 'Applicant'
   });
 
-  const [applicantStatus, setApplicantStatus] = useState('pending'); // New state for applicant status
+  const [applicantStatus, setApplicantStatus] = useState('pending');
   const [currentDate, setCurrentDate] = useState('');
   const [loading, setLoading] = useState(true);
+  const [showProgressModal, setShowProgressModal] = useState(false);
+  
+  // New state for real progress data
+  const [progressData, setProgressData] = useState({
+    applicationSubmitted: null,
+    examAssigned: null,
+    examCompleted: null,
+    interviewScheduled: null,
+    requirementsApproved: null,
+    allRequirementsUploaded: false
+  });
+  const [interviewDetails, setInterviewDetails] = useState(null);
 
   useEffect(() => {
     // Get current date
@@ -31,9 +43,6 @@ const DashboardApplicant = () => {
     const userId = getUserId();
     const currentUser = getCurrentUser();
     
-    console.log('Debug - User ID from auth:', userId); // Debug log
-    console.log('Debug - Current User from auth:', currentUser); // Debug log
-    
     if (userId && currentUser) {
       const userDetails = {
         firstName: currentUser.firstName || 'Guest',
@@ -45,9 +54,9 @@ const DashboardApplicant = () => {
       
       setUserInfo(userDetails);
       
-      // Wait a bit for userInfo to be set, then fetch status
+      // Wait a bit for userInfo to be set, then fetch data
       setTimeout(() => {
-        fetchApplicantStatus(userId);
+        fetchApplicantData(userId);
       }, 100);
       
     } else {
@@ -59,52 +68,29 @@ const DashboardApplicant = () => {
   }, []);
 
   useEffect(() => {
-            document.title = "DIFSYS | DASHBOARD APPLICANT";
-          }, []);
+    document.title = "DIFSYS | DASHBOARD APPLICANT";
+  }, []);
 
-  // Add useEffect to fetch status when userInfo changes
-  useEffect(() => {
-    if (userInfo.firstName !== '' && userInfo.firstName !== 'Guest') {
-      const userId = getUserId();
-      if (userId) {
-        fetchApplicantStatus(userId);
-      }
-    }
-  }, [userInfo.email]); // Trigger when email is set
-
-  const fetchApplicantStatus = async (userId) => {
+  // Fetch all applicant data including progress
+  const fetchApplicantData = async (userId) => {
     try {
-      console.log('Debug - Fetching status for user ID:', userId); // Debug log
-      
-      // Try multiple approaches to find the applicant record
-      // First try with the userId as app_id
+      // Fetch applicant status
       let response = await fetch(`http://localhost/difsysapi/get_applicant_status.php?app_id=${userId}`);
       let data = await response.json();
       
-      console.log('Debug - API Response (by app_id):', data); // Debug log
-      
-      // If that doesn't work, try to find by user info (email, firstName, lastName)
       if (!data.success && userInfo.email) {
-        console.log('Debug - Trying to fetch by email:', userInfo.email);
         response = await fetch(`http://localhost/difsysapi/get_applicant_status.php?email=${encodeURIComponent(userInfo.email)}`);
         data = await response.json();
-        console.log('Debug - API Response (by email):', data);
       }
       
       if (data.success && data.status) {
-        console.log('Debug - Setting status to:', data.status); // Debug log
         setApplicantStatus(data.status.toLowerCase());
-      } else {
-        console.log('Debug - API call failed or no status returned:', data); // Debug log
-        
-        // For debugging: If Chi Gona is logged in, set to scheduled directly
-        if (userInfo.firstName === 'Chi' && userInfo.lastName === 'Gona') {
-          console.log('Debug - Manually setting Chi Gona to scheduled for testing');
-          setApplicantStatus('scheduled');
-        }
       }
-  
-      // Also fetch profile image
+
+      // Fetch progress data with status data
+      await fetchProgressData(userId, data);
+      
+      // Fetch profile image
       try {
         const profileResponse = await fetch(`http://localhost/difsysapi/profile_management.php?id=${userId}&type=user`);
         const profileData = await profileResponse.json();
@@ -118,13 +104,89 @@ const DashboardApplicant = () => {
         console.log('Could not fetch profile image:', error);
       }
     } catch (error) {
-      console.error('Error fetching applicant status:', error);
-      
-      // For debugging: If Chi Gona is logged in, set to scheduled directly
-      if (userInfo.firstName === 'Chi' && userInfo.lastName === 'Gona') {
-        console.log('Debug - Error occurred, but manually setting Chi Gona to scheduled for testing');
-        setApplicantStatus('scheduled');
+      console.error('Error fetching applicant data:', error);
+    }
+  };
+
+  const fetchProgressData = async (userId, statusData = null) => {
+    try {
+      // 1. Get application submitted date from applicant_files table
+      const filesResponse = await fetch(`http://localhost/difsysapi/file-manager.php?action=files&app_id=${userId}`);
+      const filesData = await filesResponse.json();
+      let applicationSubmitted = null;
+      if (filesData.success && filesData.files && filesData.files.length > 0) {
+        // Get the earliest uploaded file as application submission date
+        const uploadDates = filesData.files.map(file => new Date(file.uploaded_at));
+        applicationSubmitted = new Date(Math.min(...uploadDates));
       }
+
+      // 2. Check if exam is assigned (from exam assignments)
+      const examResponse = await fetch(`http://localhost/difsysapi/exam_api.php?endpoint=assignments&app_id=${userId}`);
+      const examData = await examResponse.json();
+      let examAssigned = null;
+      if (examData && examData.length > 0) {
+        examAssigned = new Date(examData[0].assigned_at);
+      }
+
+      // 3. Check if exam is completed (from exam attempts)
+      const attemptsResponse = await fetch(`http://localhost/difsysapi/exam_api.php?endpoint=attempts&app_id=${userId}`);
+      const attemptsData = await attemptsResponse.json();
+      let examCompleted = null;
+      if (attemptsData && attemptsData.length > 0) {
+        const completedAttempt = attemptsData.find(attempt => attempt.status === 'Completed');
+        if (completedAttempt) {
+          examCompleted = new Date(completedAttempt.completed_at);
+        }
+      }
+
+      // 4. Check interview schedule from applicant status (use statusData if available)
+      let interviewScheduled = null;
+      let interviewInfo = null;
+      if (statusData && statusData.interview_details && statusData.interview_details.scheduled) {
+        interviewScheduled = new Date(`${statusData.interview_details.date} ${statusData.interview_details.time}`);
+        interviewInfo = {
+          date: statusData.interview_details.date,
+          time: statusData.interview_details.time
+        };
+      }
+
+      // 5. Check if requirements are approved and uploaded
+      let requirementsApproved = null;
+      let allRequirementsUploaded = false;
+      
+      // Check if status is approved (requirements approved)
+      const currentStatus = statusData ? statusData.status : applicantStatus;
+      if (currentStatus === 'approved') {
+        requirementsApproved = new Date(); // Set approval date
+        
+        // Get requirements from HR
+        const reqResponse = await fetch(`http://localhost/difsysapi/get_applicant_requirements.php?app_id=${userId}`);
+        const reqData = await reqResponse.json();
+        
+        if (reqData.success && reqData.requirements) {
+          const requirements = reqData.requirements;
+          
+          // Check if all requirements are uploaded
+          if (filesData.success && filesData.files) {
+            const uploadedTypes = filesData.files.map(file => file.type_file);
+            allRequirementsUploaded = requirements.every(req => uploadedTypes.includes(req));
+          }
+        }
+      }
+
+      setProgressData({
+        applicationSubmitted,
+        examAssigned,
+        examCompleted,
+        interviewScheduled,
+        requirementsApproved,
+        allRequirementsUploaded
+      });
+
+      setInterviewDetails(interviewInfo);
+
+    } catch (error) {
+      console.error('Error fetching progress data:', error);
     }
   };
 
@@ -135,15 +197,15 @@ const DashboardApplicant = () => {
   const getStatusText = () => {
     switch(applicantStatus.toLowerCase()) {
       case 'pending':
-        return 'Pending';
+        return 'Your Application is pending, wait for the HR review you application.';
       case 'scheduled':
-        return 'Scheduled';
+        return 'Your application has been reviewed and scheduled for interview.';
       case 'approved':
-        return 'Approved';
+        return 'Congratulations! Your application has been approved. Please check the following requirements to upload in "Upload Requirements".';
       case 'declined':
-        return 'Declined';
+        return 'We regret to inform you that your application has been declined.';
       default:
-        return 'Pending';
+        return 'Your Application is pending, wait for the HR review you application.';
     }
   };
 
@@ -160,6 +222,239 @@ const DashboardApplicant = () => {
       default:
         return 'app-dash-pending-status';
     }
+  };
+
+  const getStatusIcon = () => {
+    switch(applicantStatus.toLowerCase()) {
+      case 'pending':
+        return (
+          <div className="app-dash-status-icon app-dash-pending-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12,6 12,12 16,14"/>
+            </svg>
+          </div>
+        );
+      case 'scheduled':
+        return (
+          <div className="app-dash-status-icon app-dash-scheduled-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
+        );
+      case 'approved':
+        return (
+          <div className="app-dash-status-icon app-dash-approved-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22,4 12,14.01 9,11.01"/>
+            </svg>
+          </div>
+        );
+      case 'declined':
+        return (
+          <div className="app-dash-status-icon app-dash-declined-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="15" y1="9" x2="9" y2="15"/>
+              <line x1="9" y1="9" x2="15" y2="15"/>
+            </svg>
+          </div>
+        );
+      default:
+        return (
+          <div className="app-dash-status-icon app-dash-pending-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12,6 12,12 16,14"/>
+            </svg>
+          </div>
+        );
+    }
+  };
+
+  // Function to get real progress steps based on actual data
+  const getProgressSteps = () => {
+    const steps = [];
+    
+    // 1. Application Submitted
+    steps.push({
+      id: 'submitted',
+      title: 'Application Submitted',
+      date: progressData.applicationSubmitted ? progressData.applicationSubmitted.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) : '',
+      description: 'Your application has been successfully submitted',
+      status: progressData.applicationSubmitted ? 'completed' : 'upcoming'
+    });
+
+    // 2. Application Under Review
+    steps.push({
+      id: 'review',
+      title: 'Application Under Review',
+      date: progressData.applicationSubmitted ? new Date(progressData.applicationSubmitted.getTime() + 24*60*60*1000).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) : '',
+      description: 'HR is reviewing your application and documents',
+      status: progressData.examAssigned || progressData.interviewScheduled || progressData.requirementsApproved ? 'completed' : (progressData.applicationSubmitted ? 'current' : 'upcoming')
+    });
+
+    // 3. Take Exam
+    let examStatus = 'upcoming';
+    let examDescription = 'Wait for HR to assign you an exam';
+    let examDate = '';
+    
+    if (progressData.examCompleted) {
+      examStatus = 'completed';
+      examDescription = 'You have successfully completed the exam';
+      examDate = progressData.examCompleted.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+    } else if (progressData.examAssigned) {
+      examStatus = 'current';
+      examDescription = 'Exam has been assigned to you. Please complete it as soon as possible';
+      examDate = progressData.examAssigned.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+    }
+
+    steps.push({
+      id: 'exam',
+      title: 'Take Exam',
+      date: examDate,
+      description: examDescription,
+      status: examStatus
+    });
+
+    // 4. Schedule for Interview (On-Site)
+    let interviewStatus = 'upcoming';
+    let interviewDescription = 'Wait for the HR to schedule you for on-site interview';
+    let interviewDate = '';
+    
+    if (progressData.requirementsApproved) {
+      // If approved, interview is considered completed
+      interviewStatus = 'completed';
+      interviewDescription = 'Interview process completed successfully';
+      interviewDate = progressData.requirementsApproved.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+    } else if (progressData.interviewScheduled && interviewDetails) {
+      interviewStatus = 'current';
+      interviewDescription = `You are scheduled for Interview. Please prepare yourself and arrive on time. Date: ${interviewDetails.date}, Time: ${interviewDetails.time}`;
+      interviewDate = progressData.interviewScheduled.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+    } else if (progressData.examCompleted) {
+      interviewStatus = 'current';
+    }
+
+    steps.push({
+      id: 'interview',
+      title: 'Schedule for Interview (On-Site)',
+      date: interviewDate,
+      description: interviewDescription,
+      status: interviewStatus
+    });
+
+    // 5. Upload Requirements
+    let requirementsStatus = 'upcoming';
+    let requirementsDescription = 'Wait for HR approval to proceed with requirements upload';
+    let requirementsDate = '';
+    
+    if (progressData.requirementsApproved) {
+      if (progressData.allRequirementsUploaded) {
+        requirementsStatus = 'completed';
+        requirementsDescription = 'All required documents have been successfully uploaded';
+        requirementsDate = progressData.requirementsApproved.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+      } else {
+        requirementsStatus = 'current';
+        requirementsDescription = 'Congratulations! Your application has been approved. Please check the following requirements to upload in "Upload Requirements"';
+        requirementsDate = progressData.requirementsApproved.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+      }
+    }
+
+    steps.push({
+      id: 'requirements',
+      title: 'Upload Requirements',
+      date: requirementsDate,
+      description: requirementsDescription,
+      status: requirementsStatus
+    });
+
+    // 6. Onboard
+    steps.push({
+      id: 'onboard',
+      title: 'Onboard',
+      date: '',
+      description: 'Wait for the HR to complete your onboarding process and provide further instructions',
+      status: progressData.allRequirementsUploaded ? 'current' : 'upcoming'
+    });
+
+    return steps;
+  };
+
+  // Modal component
+  const ProgressModal = () => {
+    if (!showProgressModal) return null;
+
+    const steps = getProgressSteps();
+
+    return (
+      <div className="app-dash-modal-overlay" onClick={() => setShowProgressModal(false)}>
+        <div className="app-dash-modal-content" onClick={(e) => e.stopPropagation()}>
+          <div className="app-dash-modal-header">
+            <h2>Application Progress</h2>
+            <button 
+              className="app-dash-modal-close"
+              onClick={() => setShowProgressModal(false)}
+            >
+              ×
+            </button>
+          </div>
+          
+          <div className="app-dash-modal-body">
+            <div className="app-dash-progress-timeline">
+              {steps.map((step, index) => {
+                // Determine line status for connection to next step
+                let lineStatus = 'upcoming';
+                if (step.status === 'completed') {
+                  lineStatus = 'completed';
+                } else if (step.status === 'current') {
+                  lineStatus = 'current';
+                }
+                
+                return (
+                  <div key={step.id} className="app-dash-timeline-item">
+                    <div className="app-dash-timeline-connector">
+                      <div className={`app-dash-timeline-circle ${step.status}`}>
+                        {step.status === 'completed' && (
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                            <polyline points="20,6 9,17 4,12"/>
+                          </svg>
+                        )}
+                        {step.status === 'current' && step.id !== 'declined' && applicantStatus !== 'declined' && (
+                          <div className="app-dash-current-dot"></div>
+                        )}
+                        {step.status === 'declined' && (
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                            <line x1="18" y1="6" x2="6" y2="18"/>
+                            <line x1="6" y1="6" x2="18" y2="18"/>
+                          </svg>
+                        )}
+                        {step.status === 'upcoming' && (
+                          <div className="app-dash-step-number">{index + 1}</div>
+                        )}
+                      </div>
+                      {index < steps.length - 1 && (
+                        <div className={`app-dash-timeline-line ${lineStatus}`}></div>
+                      )}
+                    </div>
+                    
+                    <div className="app-dash-timeline-content">
+                      <h3 className={`app-dash-timeline-title ${step.status}`}>{step.title}</h3>
+                      {step.date && <p className="app-dash-timeline-date">{step.date}</p>}
+                      <p className="app-dash-timeline-description">{step.description}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   if (loading) {
@@ -180,21 +475,8 @@ const DashboardApplicant = () => {
 
       {/* Main Content */}
       <div className="app-dash-content">
-        {/* Video and Mission/Vision Section */}
+        {/* Mission, Vision, and Application Status Section */}
         <div className="app-dash-main-section">
-          <div className="app-dash-video-card">
-            <div className="app-dash-video-container">
-              <video 
-                className="app-dash-video-player" 
-                controls 
-                poster="/api/placeholder/640/360"
-              >
-                <source src="/videos/company-intro.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            </div>
-          </div>
-          
           <div className="app-dash-info-cards">
             <div className="app-dash-info-card app-dash-mission-card">
               <div className="app-dash-card-header">
@@ -220,6 +502,22 @@ const DashboardApplicant = () => {
                   spaces through cutting-edge technology and exceptional service.
                 </p>
               </div>
+            </div>
+          </div>
+          
+          <div className="app-dash-status-card">
+            <div className="app-dash-card-header">
+              <h3>Your Application Status</h3>
+            </div>
+            <div className="app-dash-status-content">
+              {getStatusIcon()}
+              <p className="app-dash-status-text">{getStatusText()}</p>
+              <button 
+                className="app-dash-progress-btn" 
+                onClick={() => setShowProgressModal(true)}
+              >
+                CLICK TO VIEW YOUR PROGRESS
+              </button>
             </div>
           </div>
         </div>
@@ -309,6 +607,9 @@ const DashboardApplicant = () => {
           </div>
         </div>
       </div>
+
+      {/* Progress Modal */}
+      <ProgressModal />
     </div>
   );
 };

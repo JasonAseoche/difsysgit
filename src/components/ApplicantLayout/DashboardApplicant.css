@@ -1,7 +1,7 @@
-/* DashboardApplicant.css - Fixed Non-scrollable Layout without global selectors */
+/* DashboardApplicant.css - Updated Layout with Application Status Card */
 
 .app-dash-container {
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     padding: 1rem;
@@ -141,50 +141,16 @@
     height: calc(100vh - 180px); /* Subtract header + padding + gaps */
 }
 
-/* Main Section with Video and Mission/Vision - Fixed height */
+/* Main Section with Mission/Vision and Application Status - Fixed height */
 .app-dash-main-section {
     flex: 0 0 auto;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
-    height: 280px;
+    height: 340px;
 }
 
-.app-dash-video-card {
-    background: white;
-    border-radius: 12px;
-    padding: 1rem;
-    height: 330px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e2e8f0;
-    transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-.app-dash-video-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.app-dash-video-container {
-    width: 100%;
-    flex: 1;
-    border-radius: 8px;
-    overflow: hidden;
-    background: #f1f5f9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 0;
-}
-
-.app-dash-video-player {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
+/* Left column: Mission and Vision cards */
 .app-dash-info-cards {
     display: flex;
     flex-direction: column;
@@ -235,11 +201,99 @@
     margin: 0;
 }
 
+/* Right column: Application Status card */
+.app-dash-status-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.app-dash-status-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.app-dash-status-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 1rem;
+    padding:0;
+}
+
+.app-dash-status-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+}
+
+.app-dash-pending-icon {
+    background: #fef3c7;
+    color: #f59e0b;
+}
+
+.app-dash-scheduled-icon {
+    background: #dbeafe;
+    color: #3b82f6;
+}
+
+.app-dash-approved-icon {
+    background: #d1fae5;
+    color: #10b981;
+}
+
+.app-dash-declined-icon {
+    background: #fee2e2;
+    color: #ef4444;
+}
+
+.app-dash-status-text {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #475569;
+    margin: 0;
+    padding: 0 1rem;
+}
+
+.app-dash-progress-btn {
+    background: #8b5cf6;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 0.5rem;
+}
+
+.app-dash-progress-btn:hover {
+    background: #7c3aed;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(139, 92, 246, 0.3);
+}
+
 /* Company Information Section - Flexible height */
 .app-dash-company-section {
     flex: 1;
     min-height: 0;
     overflow: hidden;
+    margin-top: -50px;
 }
 
 .app-dash-company-card {
@@ -423,8 +477,6 @@
         padding: 1.5rem 2rem; /* Increase padding for larger screens */
         min-height: 80px; /* Ensure minimum height */
     }
-
-   
     
     .app-dash-main-section {
         height: auto; /* Remove fixed height */
@@ -433,16 +485,31 @@
         gap: 1.5rem; /* Increase gap for better spacing */
     }
     
-    .app-dash-video-card {
-        min-height: 420px; /* Ensure adequate height for video */
-    }
-    
     .app-dash-info-cards {
-        min-height: 320px; /* Match video card height */
+        min-height: 320px; /* Match status card height */
     }
     
     .app-dash-info-card {
         min-height: 150px; /* Adequate height for mission/vision content */
+    }
+    
+    .app-dash-status-card {
+        min-height: 320px; /* Ensure adequate height for status content */
+        padding: 2rem; /* Increase padding */
+    }
+    
+    .app-dash-status-icon {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .app-dash-status-text {
+        font-size: 1.1rem;
+    }
+    
+    .app-dash-progress-btn {
+        padding: 1rem 2rem;
+        font-size: 1rem;
     }
     
     .app-dash-company-section {
@@ -541,14 +608,206 @@
     }
 }
 
-/* Tablet - 768px to 1024px */
-@media (max-width: 1024px) {
+/* Specific styling for 1024px screens - iPad Pro and similar tablets */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .app-dash-container {
+        padding: 1rem;
+        height: auto;
+        min-height: 100vh;
+        overflow: visible;
+    }
+    
+    .app-dash-content {
+        height: auto;
+        overflow: visible;
+        max-height: none;
+        padding-bottom: 2rem;
+        gap: 1rem;
+    }
+    
+    .app-dash-header {
+        height: auto;
+        min-height: 80px;
+        margin-bottom: 1rem;
+    }
+    
+    .app-dash-header-content {
+        padding: 1.25rem 1.5rem;
+        min-height: 80px;
+    }
+    
+    .app-dash-greeting {
+        font-size: 1.4rem;
+    }
+    
+    .app-dash-date {
+        font-size: 0.95rem;
+    }
+    
+    .app-dash-user-avatar {
+        width: 50px;
+        height: 50px;
+        font-size: 1.1rem;
+    }
+    
+    .app-dash-status-badge {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.95rem;
+    }
+    
+    .app-dash-main-section {
+        height: auto;
+        min-height: 300px;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.25rem;
+    }
+    
+    .app-dash-info-cards {
+        min-height: 300px;
+        gap: 1rem;
+    }
+    
+    .app-dash-info-card {
+        min-height: 140px;
+        padding: 1.25rem;
+    }
+    
+    .app-dash-card-header h3 {
+        font-size: 1.15rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .app-dash-card-content p {
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+    
+    .app-dash-status-card {
+        min-height: 300px;
+        padding: 1.75rem;
+    }
+    
+    .app-dash-status-icon {
+        width: 75px;
+        height: 75px;
+    }
+    
+    .app-dash-status-text {
+        font-size: 0.95rem;
+        padding: 0 0.75rem;
+    }
+    
+    .app-dash-progress-btn {
+        padding: 0.8rem 1.6rem;
+        font-size: 0.9rem;
+    }
+    
+    .app-dash-company-section {
+        margin-top: 0;
+        flex: 1;
+        min-height: 0;
+    }
+    
+    .app-dash-company-card {
+        height: auto;
+        min-height: 450px;
+        padding: 1.75rem;
+        margin-top: 0;
+    }
+    
+    .app-dash-company-header {
+        margin-bottom: 1.25rem;
+        padding-bottom: 1.25rem;
+        gap: 1.25rem;
+    }
+    
+    .app-dash-company-logo {
+        width: 65px;
+        height: 65px;
+    }
+    
+    .app-dash-company-title h2 {
+        font-size: 1.5rem;
+    }
+    
+    .app-dash-company-tagline {
+        font-size: 0.9rem;
+    }
+    
+    .app-dash-company-content {
+        margin-bottom: 1.25rem;
+        flex: 1;
+    }
+    
+    .app-dash-company-info {
+        gap: 1.5rem;
+        height: auto;
+        min-height: 300px;
+    }
+    
+    .app-dash-info-section {
+        min-height: 200px;
+    }
+    
+    .app-dash-info-section h4 {
+        font-size: 1.2rem;
+        margin-bottom: 0.9rem;
+    }
+    
+    .app-dash-info-item {
+        margin-bottom: 1.1rem;
+        gap: 0.75rem;
+    }
+    
+    .app-dash-info-item p {
+        font-size: 0.95rem;
+        line-height: 1.4;
+    }
+    
+    .app-dash-info-item strong {
+        font-size: 0.95rem;
+    }
+    
+    .app-dash-info-icon {
+        font-size: 1.3rem;
+    }
+    
+    .app-dash-map-section h4 {
+        font-size: 1.2rem;
+        margin-bottom: 0.9rem;
+    }
+    
+    .app-dash-map-container {
+        height: 200px;
+    }
+    
+    .app-dash-company-footer {
+        margin-top: 1.25rem;
+        padding-top: 1.25rem;
+    }
+    
+    .app-dash-copyright p {
+        font-size: 0.9rem;
+    }
+}
+
+/* Tablet - 768px and below (keeps your original tablet styles) */
+@media (max-width: 768px) {
     .app-dash-container {
         padding: 0.75rem 0.75rem 0rem 1rem;
     }
     
     .app-dash-content {
         height: calc(90vh - 170px);
+    }
+
+    .app-dash-status-card {
+        padding: 1.5rem;
+    }
+
+    .app-dash-status-icon {
+        width: 70px;
+        height: 70px;
     }
 
     .app-dash-company-card {
@@ -692,16 +951,32 @@
         gap: 0.75rem;
     }
     
-    .app-dash-video-card {
-        height: 200px;
-        order: 1;
-    }
-    
     .app-dash-info-cards {
-        order: 2;
+        order: 1;
         flex-direction: row;
         gap: 0.75rem;
-        height: 140px;
+        height: 180px;
+    }
+    
+    .app-dash-status-card {
+        order: 2;
+        height: 200px;
+        padding: 1rem;
+    }
+
+    .app-dash-status-icon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .app-dash-status-text {
+        font-size: 0.9rem;
+        padding: 0 0.5rem;
+    }
+
+    .app-dash-progress-btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.85rem;
     }
     
     .app-dash-company-info {
@@ -721,10 +996,6 @@
         flex-direction: column;
         gap: 0.75rem;
         text-align: center;
-    }
-    
-    .app-dash-social-icons {
-        justify-content: center;
     }
 }
 
@@ -781,15 +1052,10 @@
         gap: 0.5rem;
     }
     
-    .app-dash-video-card {
-        height: 190px;
-        padding: 0.75rem;
-    }
-    
     .app-dash-info-cards {
         flex-direction: column;
         gap: 0.5rem;
-        height: 360px;
+        height: 240px;
     }
     
     .app-dash-info-card {
@@ -804,6 +1070,26 @@
     .app-dash-card-content p {
         font-size: 0.8rem;
         line-height: 1.3;
+    }
+
+    .app-dash-status-card {
+        height: 200px;
+        padding: 0.75rem;
+    }
+
+    .app-dash-status-icon {
+        width: 50px;
+        height: 50px;
+    }
+
+    .app-dash-status-text {
+        font-size: 0.85rem;
+        padding: 0 0.25rem;
+    }
+
+    .app-dash-progress-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
     }
     
     .app-dash-company-card {
@@ -821,10 +1107,6 @@
     .app-dash-company-logo {
         width: 50px;
         height: 50px;
-    }
-    
-    .app-dash-logo-text {
-        font-size: 1rem;
     }
     
     .app-dash-company-title h2 {
@@ -917,10 +1199,6 @@
         font-size: 1rem;
     }
     
-    .app-dash-video-card {
-        height: 140px;
-    }
-    
     .app-dash-company-title h2 {
         font-size: 1.1rem;
     }
@@ -934,12 +1212,398 @@
         height: auto;
     }
     
+    .app-dash-status-card {
+        height: auto;
+        min-height: 180px;
+    }
+
+    .app-dash-status-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .app-dash-status-text {
+        font-size: 0.8rem;
+    }
+    
     .app-dash-company-card {
         height: auto;
     }
     
     .app-dash-company-info {
         height: auto;
+    }
+}
+
+/* Progress Modal Styles */
+.app-dash-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+    backdrop-filter: blur(4px);
+}
+
+.app-dash-modal-content {
+    background: white;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    animation: app-dash-modal-appear 0.3s ease-out;
+}
+
+@keyframes app-dash-modal-appear {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.app-dash-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #e2e8f0;
+    background: #f8fafc;
+}
+
+.app-dash-modal-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #003979;
+}
+
+.app-dash-modal-close {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #64748b;
+    padding: 0.25rem;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.app-dash-modal-close:hover {
+    background: #e2e8f0;
+    color: #003979;
+}
+
+.app-dash-modal-body {
+    padding: 2rem;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+/* Timeline Styles */
+.app-dash-progress-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.app-dash-timeline-item {
+    display: flex;
+    gap: 1.5rem;
+    position: relative;
+}
+
+.app-dash-timeline-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.app-dash-timeline-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    position: relative;
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.app-dash-timeline-circle.completed {
+    background: #10b981;
+    color: white;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.app-dash-timeline-circle.current {
+    background: #3b82f6;
+    color: white;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    animation: app-dash-pulse-current 2s infinite;
+}
+
+.app-dash-timeline-circle.declined {
+    background: #ef4444;
+    color: white;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.app-dash-timeline-circle.upcoming {
+    background: #f1f5f9;
+    color: #94a3b8;
+    border: 2px solid #e2e8f0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.app-dash-current-dot {
+    width: 12px;
+    height: 12px;
+    background: white;
+    border-radius: 50%;
+    animation: app-dash-pulse-dot-modal 1.5s infinite;
+}
+
+@keyframes app-dash-pulse-current {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    }
+}
+
+@keyframes app-dash-pulse-dot-modal {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(0.8);
+    }
+}
+
+.app-dash-timeline-line {
+    width: 3px;
+    height: 100px;
+    background: #e2e8f0;
+    margin-top: -5px;
+    margin-bottom: -5px;
+    transition: all 0.3s ease;
+}
+
+.app-dash-timeline-line.completed {
+    background: #10b981;
+}
+
+.app-dash-timeline-line.current {
+    background: #e2e8f0;
+}
+
+.app-dash-timeline-line.upcoming {
+    background: #e2e8f0;
+}
+
+.app-dash-timeline-content {
+    flex: 1;
+    
+}
+
+.app-dash-timeline-title {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.app-dash-timeline-title.completed {
+    color: #10b981;
+}
+
+.app-dash-timeline-title.current {
+    color: #3b82f6;
+}
+
+.app-dash-timeline-title.declined {
+    color: #ef4444;
+}
+
+.app-dash-timeline-title.upcoming {
+    color: #94a3b8;
+}
+
+.app-dash-step-number {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #94a3b8;
+}
+
+.app-dash-current-indicator {
+    margin-top: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    background: #dbeafe;
+    color: #1e40af;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    display: inline-block;
+    animation: app-dash-pulse-indicator 2s infinite;
+}
+
+@keyframes app-dash-pulse-indicator {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.app-dash-timeline-date {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.9rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.app-dash-timeline-description {
+    margin: 0;
+    color: #64748b;
+    line-height: 1.5;
+    font-size: 0.95rem;
+}
+
+/* Modal Responsive Design */
+@media (max-width: 768px) {
+    .app-dash-modal-overlay {
+        padding: 0.5rem;
+    }
+    
+    .app-dash-modal-content {
+        max-width: 100%;
+        max-height: 90vh;
+        border-radius: 12px;
+    }
+    
+    .app-dash-modal-header {
+        padding: 1rem 1.5rem;
+    }
+    
+    .app-dash-modal-header h2 {
+        font-size: 1.3rem;
+    }
+    
+    .app-dash-modal-body {
+        padding: 1.5rem;
+    }
+    
+    .app-dash-timeline-item {
+        gap: 1rem;
+    }
+    
+    .app-dash-timeline-circle {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .app-dash-timeline-line {
+        height: 50px;
+    }
+    
+    .app-dash-timeline-title {
+        font-size: 1.1rem;
+    }
+    
+    .app-dash-timeline-date {
+        font-size: 0.85rem;
+    }
+    
+    .app-dash-timeline-description {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .app-dash-modal-content {
+        border-radius: 8px;
+    }
+    
+    .app-dash-modal-header {
+        padding: 1rem;
+    }
+    
+    .app-dash-modal-header h2 {
+        font-size: 1.2rem;
+    }
+    
+    .app-dash-modal-close {
+        width: 35px;
+        height: 35px;
+        font-size: 1.5rem;
+    }
+    
+    .app-dash-modal-body {
+        padding: 1rem;
+    }
+    
+    .app-dash-timeline-item {
+        gap: 0.75rem;
+    }
+    
+    .app-dash-timeline-circle {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .app-dash-current-dot {
+        width: 10px;
+        height: 10px;
+    }
+    
+    .app-dash-timeline-line {
+        width: 2px;
+        height: 40px;
+    }
+    
+    .app-dash-timeline-content {
+        padding: 0.25rem 0 1.5rem 0;
+    }
+    
+    .app-dash-timeline-title {
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .app-dash-timeline-date {
+        font-size: 0.8rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .app-dash-timeline-description {
+        font-size: 0.85rem;
     }
 }
 
@@ -964,8 +1628,15 @@
         min-height: auto;
     }
     
-    .app-dash-video-card {
-        height: 140px;
+    .app-dash-status-card {
+        height: auto;
+        min-height: 160px;
+        padding: 1rem;
+    }
+
+    .app-dash-status-icon {
+        width: 50px;
+        height: 50px;
     }
     
     .app-dash-company-card {
@@ -979,5 +1650,18 @@
     
     .app-dash-company-info {
         height: auto; /* Remove fixed height */
+    }
+    
+    .app-dash-modal-content {
+        max-height: 95vh;
+    }
+    
+    .app-dash-modal-body {
+        max-height: 70vh;
+        padding: 1rem;
+    }
+    
+    .app-dash-timeline-line {
+        height: 35px;
     }
 }

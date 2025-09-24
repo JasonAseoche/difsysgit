@@ -7,6 +7,9 @@ const UploadResume = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [positions, setPositions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   
@@ -95,6 +98,17 @@ const UploadResume = () => {
     }
   };
 
+  const generatePDFPreview = async (file) => {
+  try {
+    const fileUrl = URL.createObjectURL(file);
+    setPreviewUrl(fileUrl);
+    return fileUrl;
+  } catch (error) {
+    console.error('Error generating preview:', error);
+    return null;
+  }
+};
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -115,56 +129,75 @@ const UploadResume = () => {
     }
   };
 
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-      if (!allowedTypes.includes(file.type)) {
-        showAlert('Please select a PDF, DOC, or DOCX file.', 'warning');
-        e.target.value = '';
-        return;
-      }
-      
-      const maxSize = 10 * 1024 * 1024;
-      if (file.size > maxSize) {
-        showAlert('File size must be less than 10MB.', 'warning');
-        e.target.value = '';
-        return;
-      }
-      
-      setFormData(prev => ({
-        ...prev,
-        resume: file
-      }));
+  const handleFileUpload = async (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    if (!allowedTypes.includes(file.type)) {
+      showAlert('Please select a PDF, DOC, or DOCX file.', 'warning');
+      e.target.value = '';
+      return;
     }
-  };
+    
+    const maxSize = 10 * 1024 * 1024;
+    if (file.size > maxSize) {
+      showAlert('File size must be less than 10MB.', 'warning');
+      e.target.value = '';
+      return;
+    }
+    
+    setFormData(prev => ({
+      ...prev,
+      resume: file
+    }));
+
+    // Generate preview and show modal
+    if (file.type === 'application/pdf') {
+      await generatePDFPreview(file);
+      setShowPreviewModal(true);
+    } else {
+      // For DOC/DOCX files, just show the modal without preview
+      setPreviewUrl(null);
+      setShowPreviewModal(true);
+    }
+  }
+};
 
   const handleDragOver = (e) => {
     e.preventDefault();
   };
 
-  const handleDrop = (e) => {
-    e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    if (file) {
-      const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-      if (!allowedTypes.includes(file.type)) {
-        showAlert('Please select a PDF, DOC, or DOCX file.', 'warning');
-        return;
-      }
-      
-      const maxSize = 10 * 1024 * 1024;
-      if (file.size > maxSize) {
-        showAlert('File size must be less than 10MB.', 'warning');
-        return;
-      }
-      
-      setFormData(prev => ({
-        ...prev,
-        resume: file
-      }));
+  const handleDrop = async (e) => {
+  e.preventDefault();
+  const file = e.dataTransfer.files[0];
+  if (file) {
+    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    if (!allowedTypes.includes(file.type)) {
+      showAlert('Please select a PDF, DOC, or DOCX file.', 'warning');
+      return;
     }
-  };
+    
+    const maxSize = 10 * 1024 * 1024;
+    if (file.size > maxSize) {
+      showAlert('File size must be less than 10MB.', 'warning');
+      return;
+    }
+    
+    setFormData(prev => ({
+      ...prev,
+      resume: file
+    }));
+
+    // Generate preview and show modal
+    if (file.type === 'application/pdf') {
+      await generatePDFPreview(file);
+      setShowPreviewModal(true);
+    } else {
+      setPreviewUrl(null);
+      setShowPreviewModal(true);
+    }
+  }
+};
 
   const validateForm = () => {
     const requiredFields = ['position', 'firstName', 'lastName', 'email'];
@@ -256,6 +289,31 @@ const UploadResume = () => {
       setIsSubmitting(false);
     }
   };
+
+  const handleReplaceFile = () => {
+  setShowPreviewModal(false);
+  setPreviewUrl(null);
+  setFormData(prev => ({ ...prev, resume: null }));
+  document.getElementById('upload-resume-file-input').click();
+};
+
+const handleSaveAndSubmit = () => {
+  setShowPreviewModal(false);
+  setShowConfirmModal(true);
+};
+
+const handleConfirmSubmit = () => {
+  setShowConfirmModal(false);
+  handleSubmit();
+};
+
+const closePreviewModal = () => {
+  setShowPreviewModal(false);
+  if (previewUrl) {
+    URL.revokeObjectURL(previewUrl);
+    setPreviewUrl(null);
+  }
+};
 
   if (isLoading) {
     return (
@@ -523,6 +581,75 @@ const UploadResume = () => {
           </div>
         )}
       </div>
+      {/* Document Preview Modal */}
+{showPreviewModal && formData.resume && (
+  <div className="custom-alert-overlay" onClick={closePreviewModal}>
+    <div className="upload-resume-preview-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="upload-resume-preview-header">
+        <h3>Document Preview</h3>
+        <button className="upload-resume-close-btn" onClick={closePreviewModal}>×</button>
+      </div>
+      <div className="upload-resume-preview-content">
+        {previewUrl ? (
+          <iframe 
+            src={previewUrl} 
+            title="Document Preview"
+            style={{ width: '100%', height: '400px', border: 'none' }}
+          />
+        ) : (
+          <div className="upload-resume-file-info">
+            <div className="upload-resume-file-icon">📄</div>
+            <h4>{formData.resume.name}</h4>
+            <p>File Type: {formData.resume.type}</p>
+            <p>Size: {(formData.resume.size / 1024 / 1024).toFixed(2)} MB</p>
+            <p className="upload-resume-preview-note">Preview not available for this file type</p>
+          </div>
+        )}
+      </div>
+      <div className="upload-resume-preview-actions">
+        <button className="upload-resume-replace-btn" onClick={handleReplaceFile}>
+          Replace Document
+        </button>
+        <button className="upload-resume-save-submit-btn" onClick={handleSaveAndSubmit}>
+          Save and Submit Application
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+{/* Confirmation Modal */}
+{showConfirmModal && (
+  <div className="custom-alert-overlay" onClick={() => setShowConfirmModal(false)}>
+    <div className="custom-alert-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="custom-alert-body">
+        <div className="custom-alert-icon custom-alert-icon-info">i</div>
+        <div className="custom-alert-content">
+          <h3 className="custom-alert-title">Ready to Submit?</h3>
+          <p className="custom-alert-message">
+            Are you confident that all the information provided is accurate and complete? 
+            Once submitted, you may not be able to make changes to your application.
+          </p>
+        </div>
+      </div>
+      <div className="custom-alert-footer">
+        <button 
+          className="custom-alert-btn" 
+          style={{ backgroundColor: '#6b7280', marginRight: '12px' }}
+          onClick={() => setShowConfirmModal(false)}
+        >
+          Review Again
+        </button>
+        <button 
+          className="custom-alert-btn custom-alert-btn-info"
+          onClick={handleConfirmSubmit}
+        >
+          Submit Application
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 };
