@@ -77,29 +77,21 @@ const EmpDocuments = ({ empId }) => {
       if (response.data.documents && response.data.documents.length > 0) {
         const documents = response.data.documents.map(doc => ({
           ...doc,
-          isUploaded: true // Mark as uploaded from backend
+          isUploaded: true
         }));
         setDocumentsData(documents);
-        
-        // Generate previews for uploaded documents
         generatePreviewsForDocuments(documents);
       } else {
         setDocumentsData([]);
       }
     } catch (error) {
       console.error('Error fetching documents:', error);
-      console.error('Fetch error details:', {
-        message: error.message,
-        response: error.response?.data,
-        status: error.response?.status
-      });
       setDocumentsData([]);
     } finally {
       setLoading(false);
     }
   };
 
-  // Helper function to determine file type from extension
   const getFileTypeFromExtension = (fileName) => {
     const extension = fileName.split('.').pop().toLowerCase();
     switch (extension) {
@@ -116,19 +108,14 @@ const EmpDocuments = ({ empId }) => {
     }
   };
 
-  // Generate previews for documents fetched from backend
   const generatePreviewsForDocuments = async (documents) => {
     const previews = {};
     
     for (const doc of documents) {
-      // Use the original fileType from API or determine from extension
       const fileType = doc.fileType || getFileTypeFromExtension(doc.name);
-      
-      console.log('Generating preview for:', doc.name, 'FileType:', fileType);
       
       if (fileType === 'pdf' || fileType === 'image') {
         try {
-          // Fetch document content for preview generation
           const response = await axios.get(`${API_BASE_URL}/empdocsatt.php`, {
             params: { 
               document_id: doc.id,
@@ -136,16 +123,11 @@ const EmpDocuments = ({ empId }) => {
             }
           });
 
-          console.log('Preview API response for', doc.name, ':', response.data);
-
           if (fileType === 'image' && response.data.content) {
-            // For images, create data URL from base64
             const mimeType = response.data.mime_type || 'image/jpeg';
             const imageUrl = `data:${mimeType};base64,${response.data.content}`;
             previews[doc.id] = imageUrl;
-            console.log('Generated image preview for:', doc.name);
           } else if (fileType === 'pdf' && response.data.content) {
-            // Convert base64 to blob and generate PDF preview
             try {
               const binaryString = atob(response.data.content);
               const bytes = new Uint8Array(binaryString.length);
@@ -156,10 +138,9 @@ const EmpDocuments = ({ empId }) => {
               const pdfPreview = await generatePDFPreview(blob);
               if (pdfPreview) {
                 previews[doc.id] = pdfPreview;
-                console.log('Generated PDF preview for:', doc.name);
               }
             } catch (pdfError) {
-              console.error('Error generating PDF preview for', doc.name, ':', pdfError);
+              console.error('Error generating PDF preview:', pdfError);
             }
           }
         } catch (error) {
@@ -168,16 +149,12 @@ const EmpDocuments = ({ empId }) => {
       }
     }
     
-    console.log('All generated previews:', Object.keys(previews));
-    // Update all previews at once to avoid multiple re-renders
     setDocumentPreviews(previews);
   };
 
-  // Generate PDF preview using PDF.js
   const generatePDFPreview = async (file) => {
     try {
       if (!window.pdfjsLib) {
-        console.log('PDF.js not loaded yet');
         return null;
       }
 
@@ -253,7 +230,6 @@ const EmpDocuments = ({ empId }) => {
       setLoading(true);
       
       if (doc.isUploaded) {
-        // For backend documents, fetch full content
         const response = await axios.get(`${API_BASE_URL}/empdocsatt.php`, {
           params: { 
             document_id: doc.id,
@@ -265,7 +241,7 @@ const EmpDocuments = ({ empId }) => {
           setSelectedDocument({
             ...doc,
             previewData: response.data,
-            fileType: doc.fileType || getFileTypeFromExtension(doc.name) // Keep original fileType
+            fileType: doc.fileType || getFileTypeFromExtension(doc.name)
           });
         } else {
           setSelectedDocument({
@@ -274,7 +250,6 @@ const EmpDocuments = ({ empId }) => {
           });
         }
       } else {
-        // For newly uploaded documents
         setSelectedDocument({
           ...doc,
           fileType: doc.fileType || getFileTypeFromExtension(doc.name)
@@ -299,18 +274,16 @@ const EmpDocuments = ({ empId }) => {
     
     try {
       if (doc.isUploaded) {
-        // Download from backend with proper headers
         const response = await axios.get(`${API_BASE_URL}/empdocsatt.php`, {
           params: { 
             document_id: doc.id,
-            download: true // Add download flag to ensure proper response
+            download: true
           },
           responseType: 'blob'
         });
 
-        // Determine proper MIME type based on file extension
         const fileType = getFileTypeFromExtension(doc.name);
-        let mimeType = 'application/octet-stream'; // Default
+        let mimeType = 'application/octet-stream';
         
         switch (fileType) {
           case 'pdf':
@@ -350,7 +323,6 @@ const EmpDocuments = ({ empId }) => {
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
       } else if (doc.file) {
-        // Download newly uploaded file
         const url = URL.createObjectURL(doc.file);
         const link = document.createElement('a');
         link.href = url;
@@ -400,46 +372,26 @@ const EmpDocuments = ({ empId }) => {
     
     try {
       for (const file of files) {
-        console.log('Uploading file:', file.name, 'Size:', file.size, 'Type:', file.type);
-        
-        // Upload to backend directly
         const formData = new FormData();
         formData.append('file', file);
         formData.append('emp_id', userId);
         formData.append('file_type', getFileTypeFromName(file.name));
-
-        console.log('FormData contents:', {
-          file: file.name,
-          emp_id: userId,
-          file_type: getFileTypeFromName(file.name)
-        });
 
         const response = await axios.post(`${API_BASE_URL}/empdocsatt.php`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
         });
-        
-        console.log('Upload response:', response.data);
       }
       
-      // Show success message
       setUploadSuccess(true);
       setTimeout(() => setUploadSuccess(false), 3000);
       
-      // Refresh documents list from backend to get all documents including newly uploaded ones
       await fetchDocuments();
-      
       setShowUploadModal(false);
       
     } catch (error) {
       console.error('Error uploading files:', error);
-      console.error('Error details:', {
-        message: error.message,
-        response: error.response?.data,
-        status: error.response?.status,
-        statusText: error.response?.statusText
-      });
       
       let errorMessage = 'Failed to upload files. Please try again.';
       if (error.response?.data?.error) {
@@ -455,13 +407,6 @@ const EmpDocuments = ({ empId }) => {
     } finally {
       setUploadLoading(false);
     }
-  };
-
-  const getFileType = (mimeType) => {
-    if (mimeType.includes('pdf')) return 'pdf';
-    if (mimeType.includes('image')) return 'image';
-    if (mimeType.includes('spreadsheet') || mimeType.includes('excel')) return 'excel';
-    return 'other';
   };
 
   const getFileTypeFromName = (fileName) => {
@@ -492,7 +437,7 @@ const EmpDocuments = ({ empId }) => {
       return;
     }
 
-    if (!confirm(`Are you sure you want to delete ${selectedDocuments.length} document(s)?`)) {
+    if (!window.confirm(`Are you sure you want to delete ${selectedDocuments.length} document(s)?`)) {
       return;
     }
 
@@ -514,27 +459,19 @@ const EmpDocuments = ({ empId }) => {
   };
 
   const renderDocumentPreview = (doc) => {
-    // Use original fileType from API or determine from extension  
     const fileType = doc.fileType || getFileTypeFromExtension(doc.name);
-    
-    console.log('Rendering preview for:', doc.name, 'FileType:', fileType, 'PreviewData:', !!doc.previewData);
     
     if (fileType === 'image') {
       let imageSrc;
       if (doc.previewData && doc.previewData.content) {
         const mimeType = doc.previewData.mime_type || 'image/jpeg';
         imageSrc = `data:${mimeType};base64,${doc.previewData.content}`;
-        console.log('Using preview data for image:', doc.name);
       } else if (doc.file) {
         imageSrc = URL.createObjectURL(doc.file);
-        console.log('Using file object for image:', doc.name);
       } else if (doc.previewDataUrl) {
         imageSrc = doc.previewDataUrl;
-        console.log('Using preview data URL for image:', doc.name);
       } else {
-        // Try to get from documentPreviews
         imageSrc = documentPreviews[doc.id];
-        console.log('Using cached preview for image:', doc.name, !!imageSrc);
       }
       
       return imageSrc ? (
@@ -544,10 +481,6 @@ const EmpDocuments = ({ empId }) => {
             alt={doc.name}
             className="empdet-preview-image"
             style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
-            onError={(e) => {
-              console.error('Image failed to load:', e.target.src);
-              e.target.style.display = 'none';
-            }}
           />
         </div>
       ) : (
@@ -558,25 +491,21 @@ const EmpDocuments = ({ empId }) => {
         </div>
       );
     } else if (fileType === 'pdf') {
-      // For PDF preview, show iframe if browser supports it, otherwise show download message
       if (doc.previewData && doc.previewData.content) {
         const pdfDataUri = `data:application/pdf;base64,${doc.previewData.content}`;
-        console.log('Rendering PDF iframe for:', doc.name);
         return (
-          <div style={{ width: '100%', height: '500px' }}>
+          <div style={{ width: '100%', height: '800px' }}>
             <iframe
               src={pdfDataUri}
               width="100%"
               height="100%"
               style={{ border: 'none' }}
               title={`PDF Preview: ${doc.name}`}
-              onError={() => console.error('PDF iframe failed to load')}
             />
           </div>
         );
       }
       
-      console.log('No PDF content available for:', doc.name);
       return (
         <div className="empdet-preview-placeholder" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '400px' }}>
           <FileText size={80} color="#dc2626" />
@@ -596,10 +525,8 @@ const EmpDocuments = ({ empId }) => {
   };
 
   const renderCardPreview = (doc) => {
-    // Use original fileType from API or determine from extension
     const fileType = doc.fileType || getFileTypeFromExtension(doc.name);
     
-    // For images
     if (fileType === 'image') {
       const previewUrl = documentPreviews[doc.id];
       if (previewUrl) {
@@ -614,7 +541,6 @@ const EmpDocuments = ({ empId }) => {
       }
     }
     
-    // For PDFs
     if (fileType === 'pdf') {
       const previewUrl = documentPreviews[doc.id];
       if (previewUrl) {
@@ -629,7 +555,6 @@ const EmpDocuments = ({ empId }) => {
       }
     }
     
-    // Default icon fallback
     return (
       <div className="empdet-card-preview-placeholder">
         {getDocumentIcon(fileType)}
@@ -639,7 +564,6 @@ const EmpDocuments = ({ empId }) => {
 
   return (
     <div style={{ padding: '20px' }}>
-      {/* Debug info */}
       {!userId && (
         <div style={{ 
           padding: '10px', 
@@ -652,7 +576,6 @@ const EmpDocuments = ({ empId }) => {
         </div>
       )}
       
-      {/* Content Header */}
       <div className="empdet-content-header">
         <h2 className="empdet-section-title">Documents</h2>
         <button className="empdet-edit-btn" onClick={handleEditClick}>
@@ -726,72 +649,67 @@ const EmpDocuments = ({ empId }) => {
           </div>
         )}
         
-        <div className="empdet-documents-grid">
-          {documentsData.length > 0 ? documentsData.map((doc) => (
-            <div 
-              key={doc.id} 
-              className="empdet-document-card"
-              onClick={() => handleDocumentClick(doc)}
-              style={{ cursor: 'pointer' }}
-            >
-              <div className="empdet-document-preview-container">
-                <div className="empdet-document-preview">
-                  {renderCardPreview(doc)}
-                </div>
-                <div className="empdet-document-preview-overlay">
-                  <div className="empdet-document-icon">
-                    {getDocumentIcon(doc.fileType || getFileTypeFromExtension(doc.name))}
+        {documentsData.length > 0 ? (
+          <div className="empdet-documents-grid">
+            {documentsData.map((doc) => (
+              <div 
+                key={doc.id} 
+                className="empdet-document-card"
+                onClick={() => handleDocumentClick(doc)}
+                style={{ cursor: 'pointer' }}
+              >
+                <div className="empdet-document-preview-container">
+                  <div className="empdet-document-preview">
+                    {renderCardPreview(doc)}
+                  </div>
+                  <div className="empdet-document-preview-overlay">
+                    <div className="empdet-document-icon">
+                      {getDocumentIcon(doc.fileType || getFileTypeFromExtension(doc.name))}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="empdet-document-info">
-                <h4 className="empdet-document-name">{doc.name}</h4>
-                <p className="empdet-document-type">{doc.type}</p>
-                <p className="empdet-document-date">
-                  Uploaded: {new Date(doc.uploadDate).toLocaleDateString()}
-                </p>
-              </div>
-              <div className="empdet-document-actions">
-                <button 
-                  className="empdet-download-btn"
-                  onClick={(e) => handleDownload(doc, e)}
-                  title="Download Document"
-                >
-                  <Download size={16} />
-                </button>
-                {showEditActions && (
-                  <input 
-                    type="checkbox" 
-                    className="empdet-document-checkbox"
-                    checked={selectedDocuments.includes(doc.id)}
-                    onChange={(e) => {
-                      e.stopPropagation();
-                      handleDocumentSelect(doc.id, e.target.checked);
-                    }}
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                )}
-              </div>
-            </div>
-          )) : (
-            <div className="empdet-no-documents">
-              <div className="empdet-no-documents-content">
-                <FileText size={48} color="#6b7280" />
-                <h3>No Documents Found</h3>
-                <p>This employee has no documents uploaded yet.</p>
-                {showEditActions && (
-                  <button className="empdet-add-btn" onClick={handleAddDocumentClick}>
-                    <Plus size={16} />
-                    Upload First Document
+                <div className="empdet-document-info">
+                  <h4 className="empdet-document-name">{doc.name}</h4>
+                  <p className="empdet-document-type">{doc.type}</p>
+                  <p className="empdet-document-date">
+                    Uploaded: {new Date(doc.uploadDate).toLocaleDateString()}
+                  </p>
+                </div>
+                <div className="empdet-document-actions">
+                  <button 
+                    className="empdet-download-btn"
+                    onClick={(e) => handleDownload(doc, e)}
+                    title="Download Document"
+                  >
+                    <Download size={16} />
                   </button>
-                )}
+                  {showEditActions && (
+                    <input 
+                      type="checkbox" 
+                      className="empdet-document-checkbox"
+                      checked={selectedDocuments.includes(doc.id)}
+                      onChange={(e) => {
+                        e.stopPropagation();
+                        handleDocumentSelect(doc.id, e.target.checked);
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  )}
+                </div>
               </div>
+            ))}
+          </div>
+        ) : (
+          <div className="empdet-no-documents">
+            <div className="empdet-no-documents-content">
+              <FileText size={48} color="#6b7280" />
+              <h3>No Documents Found</h3>
+              <p>This employee has no documents uploaded yet.</p>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
-      {/* Upload Modal */}
       {showUploadModal && (
         <div className="empdet-upload-modal-overlay">
           <div className="empdet-upload-modal">
@@ -834,7 +752,6 @@ const EmpDocuments = ({ empId }) => {
         </div>
       )}
 
-      {/* Preview Modal */}
       {showPreviewModal && selectedDocument && (
         <div className="empdet-preview-modal-overlay">
           <div className="empdet-preview-modal">

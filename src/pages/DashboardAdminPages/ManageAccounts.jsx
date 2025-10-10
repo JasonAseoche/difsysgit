@@ -5,10 +5,11 @@ import '../../components/AdminLayout/ManageAccount.css';
 
 const ManageAccounts = () => {
   const [accounts, setAccounts] = useState([]);
+  const [filteredAccounts, setFilteredAccounts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [modalMode, setModalMode] = useState('add'); // 'add' or 'edit'
+  const [modalMode, setModalMode] = useState('add');
   const [currentAccount, setCurrentAccount] = useState({
     id: '',
     firstName: '',
@@ -22,13 +23,54 @@ const ManageAccounts = () => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
 
-  // API base URL
+  // Filter states
+  const [sortOrder, setSortOrder] = useState('latest');
+  const [roleFilter, setRoleFilter] = useState('all');
+  const [showFilterDropdown, setShowFilterDropdown] = useState(false);
+
   const API_URL = 'http://localhost/difsysapi/';
 
-  // Fetch all accounts
   useEffect(() => {
     fetchAccounts();
   }, []);
+
+  useEffect(() => {
+    applyFilters();
+  }, [searchTerm, accounts, sortOrder, roleFilter]);
+
+  const applyFilters = () => {
+    let filtered = [...accounts];
+
+    // Apply search filter
+    if (searchTerm) {
+      const searchLower = searchTerm.toLowerCase();
+      filtered = filtered.filter(account => 
+        account.firstName.toLowerCase().includes(searchLower) ||
+        account.lastName.toLowerCase().includes(searchLower) ||
+        account.email.toLowerCase().includes(searchLower) ||
+        account.role.toLowerCase().includes(searchLower)
+      );
+    }
+
+    // Apply role filter
+    if (roleFilter !== 'all') {
+      filtered = filtered.filter(account => account.role.toLowerCase() === roleFilter.toLowerCase());
+    }
+
+    // Apply sort order
+    filtered.sort((a, b) => {
+      const aValue = a.id || 0;
+      const bValue = b.id || 0;
+      
+      if (sortOrder === 'latest') {
+        return bValue - aValue;
+      } else {
+        return aValue - bValue;
+      }
+    });
+
+    setFilteredAccounts(filtered);
+  };
 
   const fetchAccounts = async () => {
     setIsLoading(true);
@@ -67,56 +109,65 @@ const ManageAccounts = () => {
   const openEditModal = (account) => {
     setCurrentAccount({
       ...account,
-      password: '', // Don't populate password for security
+      password: '',
     });
     setModalMode('edit');
     setShowModal(true);
   };
+
   const confirmDelete = (id) => {
     setDeleteId(id);
     setShowDeleteConfirm(true);
   };
 
+  const handleFilterChange = (filterType, value) => {
+    if (filterType === 'sort') {
+      setSortOrder(value);
+    } else if (filterType === 'role') {
+      setRoleFilter(value);
+    }
+    setShowFilterDropdown(false);
+  };
+
+  const getFilterDisplayText = () => {
+    const sortText = sortOrder === 'latest' ? 'Latest' : 'Oldest';
+    const roleText = roleFilter === 'all' ? 'All Roles' : 
+                    roleFilter.charAt(0).toUpperCase() + roleFilter.slice(1);
+    return `${sortText} • ${roleText}`;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Simple validation
     if (!currentAccount.firstName || !currentAccount.lastName || !currentAccount.email) {
       setMessage({ text: 'Please fill all required fields', type: 'error' });
       return;
     }
     
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(currentAccount.email)) {
       setMessage({ text: 'Please enter a valid email address', type: 'error' });
       return;
     }
     
-    // Password validation for new accounts
     if (modalMode === 'add' && (!currentAccount.password || currentAccount.password.length < 6)) {
       setMessage({ text: 'Password must be at least 6 characters', type: 'error' });
       return;
     }
     
     try {
-      // Create form data
       const formData = new FormData();
       Object.keys(currentAccount).forEach(key => {
         formData.append(key, currentAccount[key]);
       });
       
-      // Set Axios config
       const config = {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       };
       
-      // Determine which endpoint to use
       const url = modalMode === 'add' ? 'add_account.php' : 'update_account.php';
-      
-      // Make the request
       const response = await axios.post(`${API_URL}${url}`, formData, config);
       
       if (response.data.success) {
@@ -128,7 +179,6 @@ const ManageAccounts = () => {
       }
     } catch (error) {
       console.error(`Error ${modalMode}ing account:`, error);
-      // Handle specific error messages from the server if available
       if (error.response && error.response.data && error.response.data.message) {
         setMessage({ text: error.response.data.message, type: 'error' });
       } else {
@@ -158,7 +208,6 @@ const ManageAccounts = () => {
       }
     } catch (error) {
       console.error('Error deleting account:', error);
-      // Handle specific error messages from the server if available
       if (error.response && error.response.data && error.response.data.message) {
         setMessage({ text: error.response.data.message, type: 'error' });
       } else {
@@ -170,17 +219,6 @@ const ManageAccounts = () => {
     }
   };
 
-  const filteredAccounts = accounts.filter(account => {
-    const searchLower = searchTerm.toLowerCase();
-    return (
-      account.firstName.toLowerCase().includes(searchLower) ||
-      account.lastName.toLowerCase().includes(searchLower) ||
-      account.email.toLowerCase().includes(searchLower) ||
-      account.role.toLowerCase().includes(searchLower)
-    );
-  });
-
-  // Get role badge class based on role
   const getRoleBadgeClass = (role) => {
     switch (role.toLowerCase()) {
       case 'admin':
@@ -193,15 +231,13 @@ const ManageAccounts = () => {
         return 'manage-account-role-employee';
       case 'applicant':
         return 'manage-account-role-applicant';
-      case 'supervisor':  // Add this line
-        return 'manage-account-role-supervisor';  // Add this line
+      case 'supervisor':
+        return 'manage-account-role-supervisor';
       default:
         return 'manage-account-role-user';
     }
   };
 
-  
-  // Clear message after 5 seconds
   useEffect(() => {
     if (message.text) {
       const timer = setTimeout(() => {
@@ -213,7 +249,6 @@ const ManageAccounts = () => {
 
   return (
     <div className="manage-account-container">
-      {/* Header */}
       <div className="manage-account-content-wrapper">
         <div className="manage-account-header-card">
           <div className="manage-account-header-content">
@@ -237,6 +272,95 @@ const ManageAccounts = () => {
                   </button>
                 )}
               </div>
+
+              {/* Mobile Filter - Only visible on mobile */}
+              <div className="manage-account-mobile-filter-container">
+                <button
+                  className="manage-account-filter-button"
+                  onClick={() => setShowFilterDropdown(!showFilterDropdown)}
+                >
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clipRule="evenodd" />
+                  </svg>
+                  <span className="manage-account-filter-text">{getFilterDisplayText()}</span>
+                  <svg 
+                    width="12" 
+                    height="12" 
+                    viewBox="0 0 20 20" 
+                    fill="currentColor"
+                    className={`manage-account-filter-chevron ${showFilterDropdown ? 'manage-account-filter-chevron-open' : ''}`}
+                  >
+                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </button>
+                
+                {showFilterDropdown && (
+                  <div className="manage-account-filter-dropdown">
+                    <div className="manage-account-filter-section">
+                      <h4 className="manage-account-filter-section-title">Sort</h4>
+                      <button
+                        className={`manage-account-filter-option ${sortOrder === 'latest' ? 'manage-account-filter-option-active' : ''}`}
+                        onClick={() => handleFilterChange('sort', 'latest')}
+                      >
+                        Latest
+                      </button>
+                      <button
+                        className={`manage-account-filter-option ${sortOrder === 'oldest' ? 'manage-account-filter-option-active' : ''}`}
+                        onClick={() => handleFilterChange('sort', 'oldest')}
+                      >
+                        Oldest
+                      </button>
+                    </div>
+                    
+                    <div className="manage-account-filter-section">
+                      <h4 className="manage-account-filter-section-title">Role</h4>
+                      <button
+                        className={`manage-account-filter-option ${roleFilter === 'all' ? 'manage-account-filter-option-active' : ''}`}
+                        onClick={() => handleFilterChange('role', 'all')}
+                      >
+                        All Roles
+                      </button>
+                      <button
+                        className={`manage-account-filter-option ${roleFilter === 'accountant' ? 'manage-account-filter-option-active' : ''}`}
+                        onClick={() => handleFilterChange('role', 'accountant')}
+                      >
+                        Accountant
+                      </button>
+                      <button
+                        className={`manage-account-filter-option ${roleFilter === 'admin' ? 'manage-account-filter-option-active' : ''}`}
+                        onClick={() => handleFilterChange('role', 'admin')}
+                      >
+                        Admin
+                      </button>
+                      <button
+                        className={`manage-account-filter-option ${roleFilter === 'applicant' ? 'manage-account-filter-option-active' : ''}`}
+                        onClick={() => handleFilterChange('role', 'applicant')}
+                      >
+                        Applicant
+                      </button>
+                      <button
+                        className={`manage-account-filter-option ${roleFilter === 'employee' ? 'manage-account-filter-option-active' : ''}`}
+                        onClick={() => handleFilterChange('role', 'employee')}
+                      >
+                        Employee
+                      </button>
+                      <button
+                        className={`manage-account-filter-option ${roleFilter === 'hr' ? 'manage-account-filter-option-active' : ''}`}
+                        onClick={() => handleFilterChange('role', 'hr')}
+                      >
+                        HR
+                      </button>
+                      <button
+                        className={`manage-account-filter-option ${roleFilter === 'supervisor' ? 'manage-account-filter-option-active' : ''}`}
+                        onClick={() => handleFilterChange('role', 'supervisor')}
+                      >
+                        Supervisor
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               <button
                 onClick={openAddModal}
                 className="manage-account-add-button"
@@ -248,7 +372,6 @@ const ManageAccounts = () => {
           </div>
         </div>
 
-        {/* Message */}
         {message.text && (
           <div className={`manage-account-message ${message.type === 'success' ? 'manage-account-message-success' : 'manage-account-message-error'}`}>
             <AlertCircle size={20} className="manage-account-message-icon" />
@@ -256,7 +379,6 @@ const ManageAccounts = () => {
           </div>
         )}
 
-        {/* Table */}
         <div className="manage-account-table-container">
           {isLoading ? (
             <div className="manage-account-loading-container">
@@ -276,14 +398,17 @@ const ManageAccounts = () => {
             </div>
           ) : filteredAccounts.length === 0 ? (
             <div className="manage-account-empty-container">
-              {searchTerm ? (
+              {searchTerm || roleFilter !== 'all' ? (
                 <>
-                  <p className="manage-account-empty-text">No accounts found matching "{searchTerm}"</p>
+                  <p className="manage-account-empty-text">No accounts found matching current filters</p>
                   <button 
-                    onClick={() => setSearchTerm('')}
+                    onClick={() => {
+                      setSearchTerm('');
+                      setRoleFilter('all');
+                    }}
                     className="manage-account-empty-action"
                   >
-                    Clear search
+                    Clear filters
                   </button>
                 </>
               ) : (
@@ -301,55 +426,144 @@ const ManageAccounts = () => {
             </div>
           ) : (
             <div className="manage-account-table-scroll">
-                <table className="manage-account-accounts-table">
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Email</th>
-                      <th>Role</th>
-                      <th className="manage-account-actions-header">Actions</th>
+              <table className="manage-account-accounts-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th className="manage-account-actions-header">
+                      <div className="manage-account-filter-header">
+                        Actions
+                        <div className="manage-account-filter-container">
+                          <button
+                            className="manage-account-filter-button"
+                            onClick={() => setShowFilterDropdown(!showFilterDropdown)}
+                          >
+                            <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+                              <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clipRule="evenodd" />
+                            </svg>
+                            <span className="manage-account-filter-text">{getFilterDisplayText()}</span>
+                            <svg 
+                              width="12" 
+                              height="12" 
+                              viewBox="0 0 20 20" 
+                              fill="currentColor"
+                              className={`manage-account-filter-chevron ${showFilterDropdown ? 'manage-account-filter-chevron-open' : ''}`}
+                            >
+                              <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                            </svg>
+                          </button>
+                          
+                          {showFilterDropdown && (
+                            <div className="manage-account-filter-dropdown">
+                              <div className="manage-account-filter-section">
+                                <h4 className="manage-account-filter-section-title">Sort</h4>
+                                <button
+                                  className={`manage-account-filter-option ${sortOrder === 'latest' ? 'manage-account-filter-option-active' : ''}`}
+                                  onClick={() => handleFilterChange('sort', 'latest')}
+                                >
+                                  Latest
+                                </button>
+                                <button
+                                  className={`manage-account-filter-option ${sortOrder === 'oldest' ? 'manage-account-filter-option-active' : ''}`}
+                                  onClick={() => handleFilterChange('sort', 'oldest')}
+                                >
+                                  Oldest
+                                </button>
+                              </div>
+                              
+                              <div className="manage-account-filter-section">
+                                <h4 className="manage-account-filter-section-title">Role</h4>
+                                <button
+                                  className={`manage-account-filter-option ${roleFilter === 'all' ? 'manage-account-filter-option-active' : ''}`}
+                                  onClick={() => handleFilterChange('role', 'all')}
+                                >
+                                  All Roles
+                                </button>
+                                <button
+                                  className={`manage-account-filter-option ${roleFilter === 'accountant' ? 'manage-account-filter-option-active' : ''}`}
+                                  onClick={() => handleFilterChange('role', 'accountant')}
+                                >
+                                  Accountant
+                                </button>
+                                <button
+                                  className={`manage-account-filter-option ${roleFilter === 'admin' ? 'manage-account-filter-option-active' : ''}`}
+                                  onClick={() => handleFilterChange('role', 'admin')}
+                                >
+                                  Admin
+                                </button>
+                                <button
+                                  className={`manage-account-filter-option ${roleFilter === 'applicant' ? 'manage-account-filter-option-active' : ''}`}
+                                  onClick={() => handleFilterChange('role', 'applicant')}
+                                >
+                                  Applicant
+                                </button>
+                                <button
+                                  className={`manage-account-filter-option ${roleFilter === 'employee' ? 'manage-account-filter-option-active' : ''}`}
+                                  onClick={() => handleFilterChange('role', 'employee')}
+                                >
+                                  Employee
+                                </button>
+                                <button
+                                  className={`manage-account-filter-option ${roleFilter === 'hr' ? 'manage-account-filter-option-active' : ''}`}
+                                  onClick={() => handleFilterChange('role', 'hr')}
+                                >
+                                  HR
+                                </button>
+                                <button
+                                  className={`manage-account-filter-option ${roleFilter === 'supervisor' ? 'manage-account-filter-option-active' : ''}`}
+                                  onClick={() => handleFilterChange('role', 'supervisor')}
+                                >
+                                  Supervisor
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredAccounts.map((account) => (
+                    <tr key={account.id}>
+                      <td data-label="Name: ">
+                        <div className="manage-account-account-name">{account.firstName} {account.lastName}</div>
+                      </td>
+                      <td data-label="Email: " className="manage-account-account-email">{account.email}</td>
+                      <td data-label="Role: ">
+                        <span className={`manage-account-role-badge ${getRoleBadgeClass(account.role)}`}>
+                          {account.role.charAt(0).toUpperCase() + account.role.slice(1)}
+                        </span>
+                      </td>
+                      <td data-label="Actions: " className="manage-account-actions-cell">
+                        <div className="manage-account-actions-buttons">
+                          <button
+                            onClick={() => openEditModal(account)}
+                            className="manage-account-action-button manage-account-edit-button"
+                            title="Edit account"
+                          >
+                            <Edit2 size={18} />
+                          </button>
+                          <button
+                            onClick={() => confirmDelete(account.id)}
+                            className="manage-account-action-button manage-account-delete-button"
+                            title="Delete account"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        </div>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {filteredAccounts.map((account) => (
-                      <tr key={account.id}>
-                        <td data-label="Name: ">
-                          <div className="manage-account-account-name">{account.firstName} {account.lastName}</div>
-                        </td>
-                        <td data-label="Email: " className="manage-account-account-email">{account.email}</td>
-                        <td data-label="Role: ">
-                          <span className={`manage-account-role-badge ${getRoleBadgeClass(account.role)}`}>
-                            {account.role.charAt(0).toUpperCase() + account.role.slice(1)}
-                          </span>
-                        </td>
-                        <td data-label="Actions: " className="manage-account-actions-cell">
-                          <div className="manage-account-actions-buttons">
-                            <button
-                              onClick={() => openEditModal(account)}
-                              className="manage-account-action-button manage-account-edit-button"
-                              title="Edit account"
-                            >
-                              <Edit2 size={18} />
-                            </button>
-                            <button
-                              onClick={() => confirmDelete(account.id)}
-                              className="manage-account-action-button manage-account-delete-button"
-                              title="Delete account"
-                            >
-                              <Trash2 size={18} />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </div>
 
-      {/* Add/Edit Modal */}
       {showModal && (
         <div className="manage-account-modal-overlay">
           <div className="manage-account-modal-content" onClick={(e) => e.stopPropagation()}>
@@ -431,7 +645,7 @@ const ManageAccounts = () => {
                     className="manage-account-form-select"
                   >
                     <option value="admin">Admin</option>
-                    <option value="supervisor">Supervisor</option>  {/* Add this line */}
+                    <option value="supervisor">Supervisor</option>
                     <option value="hr">HR</option>
                     <option value="accountant">Accountant</option>
                     <option value="employee">Employee</option>
@@ -461,7 +675,6 @@ const ManageAccounts = () => {
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
         <div className="manage-account-modal-overlay">
           <div className="manage-account-confirm-modal">

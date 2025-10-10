@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Calendar, Eye, Check, X, Filter, Search, Mail, Phone, MapPin, Clock, MoreVertical, FileText, File, ChevronDown, Download, AlertCircle, Loader, User, Plus, Trash2 } from 'lucide-react';
+import { Calendar, Eye, Check, X, Filter, Search, Mail, Phone, MapPin, Clock, MoreVertical, FileText, File, ChevronDown, Download, AlertCircle, Loader, User, Plus, Trash2, CheckCircle, XCircle, Info } from 'lucide-react';
 import '../../components/HRLayout/ApplicantTracking.css'; 
+
 
 const ApplicantsTracking = () => {
   const [candidates, setCandidates] = useState([]);
@@ -23,42 +24,38 @@ const ApplicantsTracking = () => {
   const [actionLoading, setActionLoading] = useState(false);
   const [imageErrors, setImageErrors] = useState(new Set());
   const [requirements, setRequirements] = useState([{ type: '', customText: '' }]);
+  const [customAlert, setCustomAlert] = useState({ show: false, type: '', title: '', message: '' });
 
-  // API Base URL
   const API_BASE_URL = 'http://localhost/difsysapi/applicant_tracking.php';
-
-  // Configure axios defaults
   axios.defaults.headers.common['Content-Type'] = 'application/json';
-
-  // Default avatar fallback
   const DEFAULT_AVATAR = 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face';
 
-  // Handle image error
+  const showAlert = (type, title, message) => {
+    setCustomAlert({ show: true, type, title, message });
+    setTimeout(() => {
+      setCustomAlert({ show: false, type: '', title: '', message: '' });
+    }, 4000);
+  };
+
   const handleImageError = (candidateId) => {
     setImageErrors(prev => new Set(prev).add(candidateId));
   };
 
-  // Get avatar URL with fallback
   const getAvatarUrl = (candidate) => {
     if (imageErrors.has(candidate.id)) {
       return DEFAULT_AVATAR;
     }
-    
     if (!candidate.avatar || candidate.avatar === '') {
       return DEFAULT_AVATAR;
     }
-    
     if (candidate.avatar.startsWith('http')) {
       return candidate.avatar;
     }
-    
     return `http://localhost/difsysapi/${candidate.avatar}`;
   };
 
-  // Function to render employee avatar with profile image or initials fallback
   const renderEmployeeAvatar = (candidate) => {
     const initials = candidate.name.split(' ').map(n => n[0]).join('').toUpperCase();
-    
     const colors = [
       'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
@@ -71,14 +68,9 @@ const ApplicantsTracking = () => {
       'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
       'linear-gradient(135deg, #ff8a80 0%, #ea7066 100%)'
     ];
-    
     const colorIndex = candidate.id % colors.length;
     const backgroundColor = colors[colorIndex];
-    
-    const hasValidAvatar = candidate.avatar && 
-                          candidate.avatar !== DEFAULT_AVATAR && 
-                          candidate.avatar !== '' && 
-                          !imageErrors.has(candidate.id);
+    const hasValidAvatar = candidate.avatar && candidate.avatar !== DEFAULT_AVATAR && candidate.avatar !== '' && !imageErrors.has(candidate.id);
     
     return (
       <div className="apptrack-candidate-avatar">
@@ -98,20 +90,16 @@ const ApplicantsTracking = () => {
     );
   };
 
-  // Fetch applicants from API
   const fetchApplicants = async () => {
     try {
       setLoading(true);
       setError(null);
-      
       const response = await axios.get(API_BASE_URL, {
         params: {
           action: 'applicants',
-          search: searchTerm,
-          status: filterStatus === 'all' ? '' : mapStatusToDb(filterStatus)
+          search: searchTerm
         }
       });
-
       if (response.data.success) {
         const processedCandidates = response.data.data.map(candidate => ({
           ...candidate,
@@ -127,13 +115,11 @@ const ApplicantsTracking = () => {
     }
   };
 
-  // Fetch statistics
   const fetchStats = async () => {
     try {
       const response = await axios.get(API_BASE_URL, {
         params: { action: 'stats' }
       });
-
       if (response.data.success) {
         setStats(response.data.data);
       }
@@ -142,20 +128,16 @@ const ApplicantsTracking = () => {
     }
   };
 
-  // Fetch applicant details
   const fetchApplicantDetails = async (appId) => {
     try {
       setActionLoading(true);
-      
       setCandidateFiles([]);
-      
       const response = await axios.get(API_BASE_URL, {
         params: {
           action: 'applicant_details',
           app_id: appId
         }
       });
-
       if (response.data.success) {
         const processedApplicant = {
           ...response.data.data,
@@ -173,13 +155,11 @@ const ApplicantsTracking = () => {
     }
   };
 
-  // Handle file view in new tab
   const handleFileView = (fileId, fileName) => {
     const fileUrl = `${API_BASE_URL}?action=download_file&file_id=${fileId}`;
     window.open(fileUrl, '_blank');
   };
 
-  // Map frontend status to database status
   const mapStatusToDb = (status) => {
     const statusMap = {
       'New Applicant': 'pending',
@@ -190,11 +170,9 @@ const ApplicantsTracking = () => {
     return statusMap[status] || status.toLowerCase();
   };
 
-  // Schedule interview
   const scheduleInterview = async (appId, date, time) => {
     try {
       setActionLoading(true);
-      
       const response = await axios.post(API_BASE_URL, {
         app_id: appId,
         date: date,
@@ -202,9 +180,7 @@ const ApplicantsTracking = () => {
       }, {
         params: { action: 'schedule_interview' }
       });
-
       if (response.data.success) {
-        // Send notification to applicant
         try {
           await fetch('http://localhost/difsysapi/notifications_api.php', {
             method: 'POST',
@@ -222,27 +198,27 @@ const ApplicantsTracking = () => {
         } catch (error) {
           console.error('Error sending notification:', error);
         }
-      
-        alert('Interview scheduled successfully! Email notification sent to the applicant.');
-        window.location.href = window.location.href;
+        
+        await fetchApplicants();
+        await fetchStats();
+        showAlert('success', 'Interview Scheduled!', 'Interview scheduled successfully! Email notification sent to the applicant.');
+        
         return true;
       } else {
-        setError(response.data.error);
+        showAlert('error', 'Scheduling Failed', response.data.error);
         return false;
       }
     } catch (err) {
-      setError('Failed to schedule interview: ' + (err.response?.data?.error || err.message));
+      showAlert('error', 'Scheduling Failed', 'Failed to schedule interview: ' + (err.response?.data?.error || err.message));
       return false;
     } finally {
       setActionLoading(false);
     }
   };
 
-  // Update candidate status
   const updateCandidateStatus = async (appId, status, comments = '') => {
     try {
       setActionLoading(true);
-      
       const response = await axios.post(API_BASE_URL, {
         app_id: appId,
         status: mapStatusToDb(status),
@@ -250,9 +226,8 @@ const ApplicantsTracking = () => {
       }, {
         params: { action: 'update_status' }
       });
-
+      
       if (response.data.success) {
-        // Send notification to applicant for decline status
         if (status.toLowerCase() === 'declined') {
           try {
             await fetch('http://localhost/difsysapi/notifications_api.php', {
@@ -272,27 +247,28 @@ const ApplicantsTracking = () => {
             console.error('Error sending notification:', error);
           }
         }
-      
-        alert(`Application ${status.toLowerCase()} successfully! Email notification sent to the applicant.`);
-        window.location.href = window.location.href;
+        
+        const statusText = status.toLowerCase() === 'declined' ? 'declined' : status.toLowerCase();
+          await fetchApplicants();
+          await fetchStats();
+          showAlert('success', 'Status Updated!', `Application ${statusText} successfully! Email notification sent to the applicant.`);
+        
         return true;
       } else {
-        setError(response.data.error);
+        showAlert('error', 'Update Failed', response.data.error);
         return false;
       }
     } catch (err) {
-      setError('Failed to update status: ' + (err.response?.data?.error || err.message));
+      showAlert('error', 'Update Failed', 'Failed to update status: ' + (err.response?.data?.error || err.message));
       return false;
     } finally {
       setActionLoading(false);
     }
   };
 
-  // Approve with requirements
   const approveWithRequirements = async (appId, requirementsList) => {
     try {
       setActionLoading(true);
-      
       const response = await axios.post(API_BASE_URL, {
         app_id: appId,
         status: 'approved',
@@ -300,9 +276,7 @@ const ApplicantsTracking = () => {
       }, {
         params: { action: 'approve_with_requirements' }
       });
-
       if (response.data.success) {
-        // Send notification to applicant
         try {
           await fetch('http://localhost/difsysapi/notifications_api.php', {
             method: 'POST',
@@ -320,23 +294,24 @@ const ApplicantsTracking = () => {
         } catch (error) {
           console.error('Error sending notification:', error);
         }
-      
-        alert('Application approved successfully! Requirements list sent to the applicant.');
-        window.location.href = window.location.href;
+        
+        await fetchApplicants();
+        await fetchStats();
+        showAlert('success', 'Application Approved!', 'Application approved successfully! Requirements list sent to the applicant.');
+        
         return true;
       } else {
-        setError(response.data.error);
+        showAlert('error', 'Approval Failed', response.data.error);
         return false;
       }
     } catch (err) {
-      setError('Failed to approve application: ' + (err.response?.data?.error || err.message));
+      showAlert('error', 'Approval Failed', 'Failed to approve application: ' + (err.response?.data?.error || err.message));
       return false;
     } finally {
       setActionLoading(false);
     }
   };
 
-  // Get status color class
   const getStatusColor = (status) => {
     const colors = {
       "New Applicant": "apptrack-status-new",
@@ -347,7 +322,6 @@ const ApplicantsTracking = () => {
     return colors[status] || "apptrack-status-default";
   };
 
-  // Filter candidates based on search and status
   const filteredCandidates = candidates.filter(candidate => {
     const matchesSearch = candidate.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          candidate.position.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -356,11 +330,10 @@ const ApplicantsTracking = () => {
     return matchesSearch && matchesFilter;
   });
 
-  // Handle actions
   const handleStatusUpdate = async (appId, newStatus) => {
     const success = await updateCandidateStatus(appId, newStatus);
-    if (success) {
-      setActiveDropdown(null);
+    if (success && selectedCandidate) {
+      setSelectedCandidate(null);
     }
   };
 
@@ -428,7 +401,6 @@ const ApplicantsTracking = () => {
     document.body.removeChild(link);
   };
 
- // Predefined requirements list
   const predefinedRequirements = [
     'Cover Letter',
     '2x2 ID Picture', 
@@ -443,7 +415,6 @@ const ApplicantsTracking = () => {
     'Other Requirements'
   ];
 
-  // Requirements management
   const addRequirement = () => {
     setRequirements([...requirements, { type: '', customText: '' }]);
   };
@@ -465,7 +436,6 @@ const ApplicantsTracking = () => {
     document.title = "DIFSYS | APPLICANTS TRACKING";
   }, []);
 
-  // Effect hooks
   useEffect(() => {
     fetchApplicants();
     fetchStats();
@@ -473,31 +443,24 @@ const ApplicantsTracking = () => {
 
   useEffect(() => {
     const delayedSearch = setTimeout(() => {
-      if (searchTerm !== '' || filterStatus !== 'all') {
-        fetchApplicants();
-      }
+      fetchApplicants();
     }, 300);
-
     return () => clearTimeout(delayedSearch);
   }, [searchTerm, filterStatus]);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = () => {
       setActiveDropdown(null);
       setShowFilterDropdown(false);
     };
-    
     if (activeDropdown || showFilterDropdown) {
       document.addEventListener('click', handleClickOutside);
     }
-    
     return () => {
       document.removeEventListener('click', handleClickOutside);
     };
   }, [activeDropdown, showFilterDropdown]);
 
-  // Show loading state
   if (loading) {
     return (
       <div className="apptrack-container">
@@ -511,7 +474,6 @@ const ApplicantsTracking = () => {
 
   return (
     <div className="apptrack-container">
-      {/* Error Message */}
       {error && (
         <div className="apptrack-error">
           <AlertCircle size={20} />
@@ -520,7 +482,26 @@ const ApplicantsTracking = () => {
         </div>
       )}
 
-      {/* Action Loading Overlay */}
+      {customAlert.show && (
+        <div className={`custom-alert custom-alert-${customAlert.type}`}>
+          <div className="custom-alert-icon">
+            {customAlert.type === 'success' && <CheckCircle size={24} />}
+            {customAlert.type === 'error' && <XCircle size={24} />}
+            {customAlert.type === 'info' && <Info size={24} />}
+          </div>
+          <div className="custom-alert-content">
+            <h4 className="custom-alert-title">{customAlert.title}</h4>
+            <p className="custom-alert-message">{customAlert.message}</p>
+          </div>
+          <button 
+            className="custom-alert-close"
+            onClick={() => setCustomAlert({ show: false, type: '', title: '', message: '' })}
+          >
+            <X size={18} />
+          </button>
+        </div>
+      )}
+
       {actionLoading && (
         <div className="apptrack-action-loading">
           <Loader className="apptrack-loading-spinner" />
@@ -528,7 +509,6 @@ const ApplicantsTracking = () => {
         </div>
       )}
 
-      {/* Header Section */}
       <div className="apptrack-header-section">
         <div className="apptrack-profile-area">
           <div className="apptrack-profile-details">
@@ -537,7 +517,6 @@ const ApplicantsTracking = () => {
           </div>
         </div>
 
-        {/* Info Cards */}
         <div className="apptrack-info-cards">
           <div className="apptrack-info-card">
             <div className="apptrack-info-icon apptrack-icon-blue">
@@ -548,7 +527,6 @@ const ApplicantsTracking = () => {
               <p className="apptrack-info-value">{stats.total}</p>
             </div>
           </div>
-          
           <div className="apptrack-info-card">
             <div className="apptrack-info-icon apptrack-icon-green">
               <Check size={20} />
@@ -558,7 +536,6 @@ const ApplicantsTracking = () => {
               <p className="apptrack-info-value">{stats.approved}</p>
             </div>
           </div>
-          
           <div className="apptrack-info-card">
             <div className="apptrack-info-icon apptrack-icon-purple">
               <Calendar size={20} />
@@ -568,7 +545,6 @@ const ApplicantsTracking = () => {
               <p className="apptrack-info-value">{stats.scheduled}</p>
             </div>
           </div>
-
           <div className="apptrack-info-card">
             <div className="apptrack-info-icon apptrack-icon-red">
               <X size={20} />
@@ -581,7 +557,6 @@ const ApplicantsTracking = () => {
         </div>
       </div>
 
-      {/* Search and Filter Section */}
       <div className="apptrack-search-section">
         <div className="apptrack-search-container">
           <Search className="apptrack-search-icon" />
@@ -593,7 +568,6 @@ const ApplicantsTracking = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        
         <div className="apptrack-filter-container">
           <button 
             className="apptrack-filter-btn"
@@ -608,7 +582,6 @@ const ApplicantsTracking = () => {
             </span>
             <ChevronDown size={16} className={`apptrack-filter-chevron ${showFilterDropdown ? 'rotated' : ''}`} />
           </button>
-          
           {showFilterDropdown && (
             <div className="apptrack-filter-dropdown">
               <button 
@@ -661,7 +634,6 @@ const ApplicantsTracking = () => {
         </div>
       </div>
 
-      {/* Candidates Grid */}
       <div className="apptrack-candidates-grid">
         {filteredCandidates.length === 0 ? (
           <div className="apptrack-no-results">
@@ -671,12 +643,11 @@ const ApplicantsTracking = () => {
           filteredCandidates.map((candidate) => (
             <div key={candidate.id} className="apptrack-candidate-card">
               <div className="apptrack-card-header">
-              {renderEmployeeAvatar(candidate)}
+                {renderEmployeeAvatar(candidate)}
                 <div className="apptrack-candidate-info">
                   <h3 className="apptrack-candidate-name">{candidate.name}</h3>
                   <p className="apptrack-candidate-position">{candidate.position}</p>
                 </div>
-
                 <div className="apptrack-card-menu">
                   <button 
                     className="apptrack-menu-btn"
@@ -687,7 +658,6 @@ const ApplicantsTracking = () => {
                   >
                     <MoreVertical size={16} />
                   </button>
-                  
                   {activeDropdown === candidate.id && (
                     <div className="apptrack-dropdown">
                       <button 
@@ -722,7 +692,6 @@ const ApplicantsTracking = () => {
                   )}
                 </div>
               </div>
-
               <div className="apptrack-card-body">
                 <div className="apptrack-contact-info">
                   <div className="apptrack-contact-item">
@@ -742,7 +711,6 @@ const ApplicantsTracking = () => {
                     <span>Applied {new Date(candidate.appliedDate).toLocaleDateString()}</span>
                   </div>
                 </div>
-
                 <div className="apptrack-status-section">
                   <span className={`apptrack-status-badge ${getStatusColor(candidate.status)}`}>
                     {candidate.status}
@@ -754,7 +722,6 @@ const ApplicantsTracking = () => {
         )}
       </div>
 
-      {/* Schedule Modal */}
       {showScheduleModal && (
         <div className="apptrack-modal-overlay" onClick={handleScheduleCancel}>
           <div className="apptrack-schedule-modal" onClick={(e) => e.stopPropagation()}>
@@ -764,7 +731,6 @@ const ApplicantsTracking = () => {
                 <X size={20} />
               </button>
             </div>
-            
             <div className="apptrack-modal-body">
               <div className="apptrack-candidate-info-modal">
                 <img 
@@ -778,7 +744,6 @@ const ApplicantsTracking = () => {
                   <p>{scheduleCandidate?.position}</p>
                 </div>
               </div>
-              
               <div className="apptrack-schedule-form">
                 <div className="apptrack-form-group">
                   <label>Select Date</label>
@@ -790,7 +755,6 @@ const ApplicantsTracking = () => {
                     min={new Date().toISOString().split('T')[0]}
                   />
                 </div>
-                
                 <div className="apptrack-form-group">
                   <label>Select Time</label>
                   <select
@@ -809,7 +773,6 @@ const ApplicantsTracking = () => {
                 </div>
               </div>
             </div>
-            
             <div className="apptrack-modal-actions">
               <button className="apptrack-btn apptrack-btn-cancel" onClick={handleScheduleCancel}>
                 Cancel
@@ -826,7 +789,6 @@ const ApplicantsTracking = () => {
         </div>
       )}
 
-      {/* Approval Modal */}
       {showApprovalModal && (
         <div className="apptrack-modal-overlay" onClick={handleApprovalCancel}>
           <div className="apptrack-approval-modal" onClick={(e) => e.stopPropagation()}>
@@ -836,7 +798,6 @@ const ApplicantsTracking = () => {
                 <X size={20} />
               </button>
             </div>
-            
             <div className="apptrack-modal-body">
               <div className="apptrack-candidate-info-modal">
                 <img 
@@ -850,13 +811,11 @@ const ApplicantsTracking = () => {
                   <p>{approvalCandidate?.position}</p>
                 </div>
               </div>
-              
               <div className="apptrack-requirements-form">
                 <div className="apptrack-requirements-header">
                   <h4>Requirements List</h4>
                   <p>Enter the documents/requirements the applicant needs to upload:</p>
                 </div>
-                
                 <div className="apptrack-requirements-list">
                   {requirements.map((requirement, index) => (
                     <div key={index} className="apptrack-requirement-item">
@@ -891,7 +850,6 @@ const ApplicantsTracking = () => {
                     </div>
                   ))}
                 </div>
-                
                 <button 
                   className="apptrack-add-requirement"
                   onClick={addRequirement}
@@ -902,7 +860,6 @@ const ApplicantsTracking = () => {
                 </button>
               </div>
             </div>
-            
             <div className="apptrack-modal-actions">
               <button className="apptrack-btn apptrack-btn-cancel" onClick={handleApprovalCancel}>
                 Cancel
@@ -919,7 +876,6 @@ const ApplicantsTracking = () => {
         </div>
       )}
 
-      {/* Candidate Detail Modal */}
       {selectedCandidate && (
         <div className="apptrack-modal-overlay" onClick={() => setSelectedCandidate(null)}>
           <div className="apptrack-detail-modal" onClick={(e) => e.stopPropagation()}>
@@ -929,7 +885,6 @@ const ApplicantsTracking = () => {
                 <X size={20} />
               </button>
             </div>
-            
             <div className="apptrack-modal-body-large">
               <div className="apptrack-candidate-section">
                 <div className="apptrack-candidate-header-modal">
@@ -947,7 +902,6 @@ const ApplicantsTracking = () => {
                     </span>
                   </div>
                 </div>
-                
                 <div className="apptrack-contact-details">
                   <h5>Contact Information</h5>
                   <div className="apptrack-detail-item">
@@ -967,8 +921,6 @@ const ApplicantsTracking = () => {
                     <span>Applied on {new Date(selectedCandidate.appliedDate).toLocaleDateString()}</span>
                   </div>
                 </div>
-
-                {/* Additional Information */}
                 {selectedCandidate.dateOfBirth && (
                   <div className="apptrack-additional-info">
                     <h5>Personal Information</h5>
@@ -992,15 +944,12 @@ const ApplicantsTracking = () => {
                     </div>
                   </div>
                 )}
-
                 {selectedCandidate.objective && (
                   <div className="apptrack-objective-section">
                     <h5>Objective</h5>
                     <p>{selectedCandidate.objective}</p>
                   </div>
                 )}
-
-                {/* Files Section */}
                 {candidateFiles.length > 0 && (
                   <div className="apptrack-files-section">
                     <div className="apptrack-files-header">
@@ -1009,7 +958,6 @@ const ApplicantsTracking = () => {
                         Documents ({candidateFiles.length})
                       </h5>
                     </div>
-                    
                     <div className="apptrack-files-grid">
                       {candidateFiles.map((file) => (
                         <div key={file.id} className="apptrack-file-card">
@@ -1042,7 +990,6 @@ const ApplicantsTracking = () => {
                     </div>
                   </div>
                 )}
-
                 {candidateFiles.length === 0 && (
                   <div className="apptrack-no-files">
                     <FileText size={48} color="#94a3b8" />
@@ -1051,7 +998,6 @@ const ApplicantsTracking = () => {
                 )}
               </div>
             </div>
-            
             <div className="apptrack-modal-actions">
               <button 
                 className="apptrack-btn apptrack-btn-schedule"
@@ -1079,7 +1025,6 @@ const ApplicantsTracking = () => {
                 className="apptrack-btn apptrack-btn-decline"
                 onClick={() => {
                   handleStatusUpdate(selectedCandidate.app_id, 'Declined');
-                  setSelectedCandidate(null);
                 }}
                 disabled={actionLoading}
               >

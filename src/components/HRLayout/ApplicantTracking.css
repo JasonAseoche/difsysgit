@@ -1127,6 +1127,147 @@
   flex-shrink: 0;
 }
 
+/* Custom Alert Styles - Clean & Simple */
+.custom-alert {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  min-width: 350px;
+  max-width: 500px;
+  padding: 16px 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  z-index: 10000;
+  animation: slideInRight 0.3s ease-out;
+  border: 2px solid #e5e7eb;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Success Alert - Green Border */
+.custom-alert-success {
+  border-color: #10b981;
+  background: white;
+}
+
+/* Error Alert - Red Border */
+.custom-alert-error {
+  border-color: #ef4444;
+  background: white;
+}
+
+/* Info/Schedule Alert - Orange Border */
+.custom-alert-info {
+  border-color: #f97316;
+  background: white;
+}
+
+.custom-alert-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin-top: 2px;
+}
+
+.custom-alert-success .custom-alert-icon {
+  background: #10b981;
+  color: white;
+}
+
+.custom-alert-error .custom-alert-icon {
+  background: #ef4444;
+  color: white;
+}
+
+.custom-alert-info .custom-alert-icon {
+  background: #f97316;
+  color: white;
+}
+
+.custom-alert-content {
+  flex: 1;
+  padding-top: 2px;
+}
+
+.custom-alert-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  color: #1f2937;
+  line-height: 1.4;
+}
+
+.custom-alert-message {
+  font-size: 14px;
+  margin: 0;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.custom-alert-close {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: #9ca3af;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.custom-alert-close:hover {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.custom-alert-close:active {
+  transform: scale(0.95);
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+  .custom-alert {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    min-width: auto;
+    max-width: none;
+  }
+}
+
+/* Multiple alerts stacking */
+.custom-alert + .custom-alert {
+  margin-top: 12px;
+}
+
+/* Subtle hover effect */
+.custom-alert:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+  transition: box-shadow 0.2s ease;
+}
+
 /* Additional Information Section */
 .apptrack-additional-info {
   margin-bottom: 24px;

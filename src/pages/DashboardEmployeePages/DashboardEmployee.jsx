@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { getCurrentUser, getUserId } from '../../utils/auth';
-import DashboardHeader from '../../components/DashboardHeader/DashboardHeader';
 import '../../components/EmployeeLayout/DashboardEmployee.css';
 
 const DashboardEmployee = () => {
@@ -1656,7 +1655,6 @@ const DashboardEmployee = () => {
     <div className="emp-dash-container">
       <div className="emp-dash-content">
         {/* Time Tracking Section */}
-        <DashboardHeader />
         <div className="emp-dash-time-section">
           <div className="emp-dash-time-card emp-dash-main-card">
             <div className="emp-dash-card-header">

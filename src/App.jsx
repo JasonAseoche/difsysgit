@@ -37,6 +37,7 @@ import {
   AuditedEmployeeAttendance as EmployeeAttendance,
   AuditedDashboardEmployee as DashboardEmployee,
   AuditedAttendance as Attendance,
+  AuditedOvertimeRequest as OvertimeRequest,
   AuditedManageDocuments as ManageDocuments,
   AuditedMyPayroll as MyPayroll,
   AuditedTimeKeeping as TimeKeeping,
@@ -133,6 +134,7 @@ const App = () => {
         <Route element={<PrivateRoute allowedRoles={['employee']} />}>
           <Route path="/dashboard-employee" element={<DashboardEmployee />} />
           <Route path="/attendance" element={<Attendance />} />
+          <Route path="/overtime-request" element={<OvertimeRequest />} />  
           <Route path="/manage-documents" element={<ManageDocuments />} />
           <Route path="/my-payroll" element={<MyPayroll />} />
           <Route path="/time-keeping" element={<TimeKeeping />} />

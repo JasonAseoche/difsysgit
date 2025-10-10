@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect } from 'react';
-import DashboardHeader from '../../components/DashboardHeader/DashboardHeader';
+
 import '../../components/AccountantLayout/DashboardAccountant.css';
 
 const DashboardAccountant = () => {
@@ -57,8 +57,6 @@ const DashboardAccountant = () => {
 
   return (
     <div className="acc-dashboard-container">
-      <DashboardHeader />
-      
       {/* Main Layout Grid */}
       <div className="acc-main-layout-grid">
         

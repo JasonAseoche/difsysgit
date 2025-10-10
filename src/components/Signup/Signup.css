@@ -880,3 +880,326 @@ input:focus {
     top: 30px;
   }
 }
+
+/* Password Strength Styles */
+.password-strength {
+  margin-top: 8px;
+}
+
+.password-strength-bar {
+  width: 100%;
+  height: 4px;
+  background-color: #e0e0e0;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.password-strength-fill {
+  height: 100%;
+  transition: width 0.3s ease, background-color 0.3s ease;
+  border-radius: 2px;
+}
+
+.password-strength-fill.very-weak {
+  background-color: #ff4444;
+}
+
+.password-strength-fill.weak {
+  background-color: #ff8800;
+}
+
+.password-strength-fill.fair {
+  background-color: #ffbb00;
+}
+
+.password-strength-fill.good {
+  background-color: #88cc00;
+}
+
+.password-strength-fill.strong {
+  background-color: #00cc44;
+}
+
+.password-strength-fill.very-strong {
+  background-color: #00aa00;
+}
+
+.password-strength-text {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.password-strength-text.very-weak {
+  color: #ff4444;
+}
+
+.password-strength-text.weak {
+  color: #ff8800;
+}
+
+.password-strength-text.fair {
+  color: #ffbb00;
+}
+
+.password-strength-text.good {
+  color: #88cc00;
+}
+
+.password-strength-text.strong {
+  color: #00cc44;
+}
+
+.password-strength-text.very-strong {
+  color: #00aa00;
+}
+
+/* Terms and Conditions Styles */
+.terms-container {
+  margin: 20px 0;
+  text-align: left;
+}
+
+.terms-checkbox-container {
+  display: flex;
+  align-items: flex-start;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1.4;
+  position: relative;
+  padding-left: 25px;
+}
+
+.terms-checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  height: 16px;
+  width: 16px;
+  background-color: #fff;
+  border: 2px solid #ddd;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+.terms-checkbox-container:hover input ~ .checkmark {
+  border-color: #003979;
+}
+
+.terms-checkbox-container input:checked ~ .checkmark {
+  background-color: #003979;
+  border-color: #003979;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.terms-checkbox-container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.terms-checkbox-container .checkmark:after {
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.terms-text {
+  color: #666;
+  margin-left: 5px;
+}
+
+.terms-link {
+  background: none;
+  border: none;
+  color: #003979;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: inherit;
+  padding: 0;
+  font-weight: 500;
+}
+
+.terms-link:hover {
+  color: #002d5c;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  padding: 20px;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 80vh;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h2 {
+  color: #003979;
+  font-size: 20px;
+  margin: 0;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close:hover {
+  color: #003979;
+}
+
+.modal-body {
+  padding: 20px 24px;
+  max-height: 60vh;
+  overflow-y: auto;
+  line-height: 1.6;
+}
+
+.modal-body h3 {
+  color: #003979;
+  font-size: 16px;
+  margin: 20px 0 10px 0;
+}
+
+.modal-body h3:first-child {
+  margin-top: 0;
+}
+
+.modal-body p {
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.modal-body ul {
+  margin: 10px 0 10px 20px;
+  color: #333;
+}
+
+.modal-body li {
+  margin-bottom: 6px;
+}
+
+.modal-footer {
+  padding: 16px 24px 20px;
+  border-top: 1px solid #eee;
+  text-align: right;
+}
+
+.modal-btn {
+  background-color: #003979;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.modal-btn:hover {
+  background-color: #002d5c;
+}
+
+/* Mobile responsiveness for modals */
+@media (max-width: 480px) {
+  .modal-content {
+    margin: 10px;
+    max-width: calc(100% - 20px);
+  }
+  
+  .modal-header {
+    padding: 16px 20px 12px;
+  }
+  
+  .modal-header h2 {
+    font-size: 18px;
+  }
+  
+  .modal-body {
+    padding: 16px 20px;
+    font-size: 14px;
+  }
+  
+  .modal-body h3 {
+    font-size: 15px;
+  }
+  
+  .modal-footer {
+    padding: 12px 20px 16px;
+  }
+  
+  .terms-checkbox-container {
+    font-size: 13px;
+  }
+  
+  .password-strength-text {
+    font-size: 11px;
+  }
+}
+
+.password-error-message {
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: 5px;
+  font-weight: 500;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  padding: 8px 10px;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .password-error-message {
+    font-size: 11px;
+    padding: 6px 8px;
+  }
+}

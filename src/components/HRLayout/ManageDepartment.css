@@ -639,6 +639,291 @@
   .manage-dept-supervisor-options::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
   }
+
+  /* Position Modal Specific Styles - ALL WHITE */
+.manage-dept-position-list {
+  padding: 12px 0;
+  margin-bottom: 20px;
+  background-color: #ffffff !important;
+}
+
+.manage-dept-position-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  margin-bottom: 4px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+  background-color: #ffffff !important;
+}
+
+.manage-dept-position-item:hover {
+  background-color: #f8f9fa !important;
+}
+
+.manage-dept-position-item label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  width: 100%;
+}
+
+.manage-dept-position-item input[type="checkbox"] {
+  margin-right: 10px;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #d1d5db;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.manage-dept-position-item input[type="checkbox"]:checked {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+  background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='m13.854 3.646-7.5 7.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6 10.293l7.146-7.147a.5.5 0 0 1 .708.708z'/%3e%3c/svg%3e");
+  background-size: 12px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.manage-dept-position-item input[type="checkbox"]:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.manage-dept-position-item span {
+  flex: 1;
+  color: #1f2937;
+}
+
+/* Other Position Section - WHITE */
+.manage-dept-other-position {
+  margin-bottom: 20px;
+  padding: 16px 12px;
+  border-top: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+  background-color: #ffffff !important;
+}
+
+.manage-dept-other-position h4 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+  background-color: transparent !important;
+}
+
+.manage-dept-other-input {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background-color: transparent !important;
+}
+
+.manage-dept-other-input input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+  background-color: #ffffff !important;
+}
+
+.manage-dept-other-input input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background-color: #ffffff !important;
+}
+
+.manage-dept-other-input button {
+  padding: 8px 16px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.manage-dept-other-input button:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.manage-dept-other-input button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Selected Positions Display - WHITE */
+.manage-dept-selected-positions {
+  margin-bottom: 20px;
+  padding: 16px 12px;
+  background-color: #ffffff !important;
+}
+
+.manage-dept-selected-positions h4 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+  background-color: transparent !important;
+}
+
+.manage-dept-position-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  background-color: transparent !important;
+}
+
+.manage-dept-position-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background-color: #dbeafe !important;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.manage-dept-position-tag:hover {
+  background-color: #bfdbfe !important;
+}
+
+.manage-dept-position-tag button {
+  background: none;
+  border: none;
+  color: #1e40af;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.manage-dept-position-tag button:hover {
+  background-color: rgba(30, 64, 175, 0.2) !important;
+}
+
+/* Modal Actions - WHITE */
+.manage-dept-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+  background-color: #ffffff !important;
+}
+
+.manage-dept-modal-actions button {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 80px;
+}
+
+.manage-dept-modal-actions button:first-child {
+  background-color: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.manage-dept-modal-actions button:first-child:hover {
+  background-color: #e5e7eb;
+}
+
+.manage-dept-modal-actions button:last-child {
+  background-color: #3b82f6;
+  color: white;
+  border: 1px solid #3b82f6;
+}
+
+.manage-dept-modal-actions button:last-child:hover {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+/* Position Input Container - WHITE */
+.manage-dept-positions-input-container {
+  width: 100%;
+  background-color: #ffffff !important;
+}
+
+.manage-dept-positions-input-container input {
+  width: 100%;
+  cursor: pointer;
+  background-color: #ffffff !important;
+}
+
+.manage-dept-positions-input-container input:hover {
+  background-color: #ffffff !important;
+}
+
+/* Modal Content Override */
+.manage-dept-modal-content {
+  background-color: #ffffff !important;
+}
+
+/* Remove any focus outlines that might cause dark backgrounds */
+.manage-dept-position-item:focus-within {
+  background-color: #ffffff !important;
+  outline: none !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .manage-dept-position-tags {
+    justify-content: flex-start;
+    background-color: transparent !important;
+  }
+  
+  .manage-dept-position-tag {
+    font-size: 12px;
+    padding: 4px 10px;
+  }
+  
+  .manage-dept-other-input {
+    flex-direction: column;
+    align-items: stretch;
+    background-color: transparent !important;
+  }
+  
+  .manage-dept-other-input button {
+    margin-top: 8px;
+  }
+  
+  .manage-dept-modal-actions {
+    flex-direction: column-reverse;
+    background-color: #ffffff !important;
+  }
+  
+  .manage-dept-modal-actions button {
+    width: 100%;
+  }
+}
   
   /* ===== RESPONSIVE DESIGN ===== */
   

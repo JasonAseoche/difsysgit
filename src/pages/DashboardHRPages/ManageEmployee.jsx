@@ -54,16 +54,16 @@ const ManageEmployee = () => {
   ];
 
   const positionOptions = [
-    'Software Developer',
-    'Project Manager',
-    'UI/UX Designer',
-    'Data Analyst',
+    'Senior Accoutant',
+    'Accounting Assistant',
+    'Welder',
+    'Helper',
     'HR Specialist',
-    'Marketing Coordinator',
+    'Electrician',
     'Sales Representative',
-    'Quality Assurance',
-    'System Administrator',
-    'Business Analyst'
+    'Purchasing Staff',
+    'Technical Sales Engineer',
+    'Driver',
   ];
   
   const workArrangementOptions = [
@@ -377,15 +377,38 @@ const ManageEmployee = () => {
     }, 2000);
   };
 
-  const handleApplicantSelect = (applicantId) => {
-    setSelectedApplicants(prev => {
-      if (prev.includes(applicantId)) {
-        return prev.filter(id => id !== applicantId);
-      } else {
-        return [...prev, applicantId];
+ const handleApplicantSelect = (applicantId) => {
+  console.log('Selected applicant ID:', applicantId);
+  
+  setSelectedApplicants(prev => {
+    if (prev.includes(applicantId)) {
+      // Removing applicant
+      const newSelected = prev.filter(id => id !== applicantId);
+      console.log('Removing applicant, remaining selected:', newSelected);
+      
+      if (newSelected.length === 0) {
+        console.log('No applicants selected, clearing position');
+        setSelectedPosition('');
       }
-    });
-  };
+      
+      return newSelected;
+    } else {
+      // Adding applicant - auto-fill position
+      const selectedApplicant = applicants.find(applicant => applicant.id === applicantId);
+      console.log('Found applicant:', selectedApplicant);
+      console.log('Applicant position:', selectedApplicant?.position);
+      
+      if (selectedApplicant && selectedApplicant.position) {
+        console.log('Setting position to:', selectedApplicant.position);
+        setSelectedPosition(selectedApplicant.position);
+      } else {
+        console.log('No position found for applicant');
+      }
+      
+      return [...prev, applicantId];
+    }
+  });
+};
 
   const handleAddSelectedEmployees = async () => {
     if (selectedApplicants.length === 0) {
@@ -1019,6 +1042,12 @@ const ManageEmployee = () => {
                         {positionOptions.map((position, index) => (
                           <option key={index} value={position}>{position}</option>
                         ))}
+                        {/* Dynamically add the selected position if it's not in the predefined list */}
+                        {selectedPosition && !positionOptions.includes(selectedPosition) && (
+                          <option key="dynamic-position" value={selectedPosition}>
+                            {selectedPosition}
+                          </option>
+                        )}
                       </select>
                     </div>
                     

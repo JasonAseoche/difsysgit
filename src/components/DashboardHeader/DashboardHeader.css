@@ -3,7 +3,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 70px;
+  background-color: #f8fafc;
+  height: 60px;
+  padding: 20px 20px 0px 20px;
 }
 
 .dash-header-left {

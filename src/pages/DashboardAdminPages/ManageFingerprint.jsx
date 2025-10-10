@@ -10,6 +10,11 @@ const ManageFingerprint = () => {
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
 
+  // Filter states
+  const [sortOrder, setSortOrder] = useState('latest'); // 'latest' or 'oldest'
+  const [statusFilter, setStatusFilter] = useState('all'); // 'all', 'registered', 'unregistered'
+  const [showFilterDropdown, setShowFilterDropdown] = useState(false);
+
   // Modal states
   const [showModal, setShowModal] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState(null);
@@ -27,17 +32,44 @@ const ManageFingerprint = () => {
   }, []);
 
   useEffect(() => {
+    applyFilters();
+  }, [searchTerm, accounts, sortOrder, statusFilter]);
+
+  const applyFilters = () => {
+    let filtered = [...accounts];
+
+    // Apply search filter
     if (searchTerm) {
-      const filtered = accounts.filter(account => 
+      filtered = filtered.filter(account => 
         account.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         account.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         account.email.toLowerCase().includes(searchTerm.toLowerCase())
       );
-      setFilteredAccounts(filtered);
-    } else {
-      setFilteredAccounts(accounts);
     }
-  }, [searchTerm, accounts]);
+
+    // Apply status filter
+    if (statusFilter !== 'all') {
+      if (statusFilter === 'registered') {
+        filtered = filtered.filter(account => account.fingerprint_status === 'Registered');
+      } else if (statusFilter === 'unregistered') {
+        filtered = filtered.filter(account => account.fingerprint_status !== 'Registered');
+      }
+    }
+
+    // Apply sort order
+    filtered.sort((a, b) => {
+      const aValue = a.id || 0;
+      const bValue = b.id || 0;
+      
+      if (sortOrder === 'latest') {
+        return bValue - aValue;
+      } else {
+        return aValue - bValue;
+      }
+    });
+
+    setFilteredAccounts(filtered);
+  };
 
   const fetchAccounts = async () => {
     try {
@@ -92,7 +124,7 @@ const ManageFingerprint = () => {
 
         if (data.success) {
           showMessage('Fingerprint unregistered successfully!', 'success');
-          fetchAccounts(); // Refresh the accounts list
+          fetchAccounts();
         } else {
           throw new Error(data.error || 'Failed to unregister fingerprint');
         }
@@ -115,7 +147,6 @@ const ManageFingerprint = () => {
     setFailureMessage('');
 
     try {
-      // Start the registration process
       const response = await fetch(`${currentApiUrl}/fingerprint_management.php`, {
         method: 'POST',
         headers: {
@@ -131,7 +162,6 @@ const ManageFingerprint = () => {
       const data = await response.json();
 
       if (data.success) {
-        // Start polling for fingerprint data
         pollForFingerprintData();
       } else {
         throw new Error(data.error || 'Failed to start registration');
@@ -146,7 +176,7 @@ const ManageFingerprint = () => {
   };
 
   const pollForFingerprintData = async () => {
-    const maxAttempts = 30; // 30 seconds timeout
+    const maxAttempts = 30;
     let attempts = 0;
 
     const poll = async () => {
@@ -157,7 +187,6 @@ const ManageFingerprint = () => {
         const data = await response.json();
 
         if (data.success && data.status === 'completed') {
-          // Registration successful
           setRegistrationStatus('success');
           setWaitingForFingerprint(false);
           setModalLoading(false);
@@ -165,33 +194,28 @@ const ManageFingerprint = () => {
           setTimeout(() => {
             setShowModal(false);
             showMessage('Fingerprint registered successfully!', 'success');
-            fetchAccounts(); // Refresh the accounts list
+            fetchAccounts();
           }, 2000);
           
         } else if (data.success && data.status === 'failed') {
-          // Registration failed - wrong fingerprint scanned
           setRegistrationStatus('failed');
           setWaitingForFingerprint(false);
           setModalLoading(false);
           setFailureMessage(data.message || 'Wrong fingerprint was scanned. Please try again.');
           
         } else if (data.success && data.status === 'waiting') {
-          // Still waiting, continue polling
           if (attempts < maxAttempts) {
-            setTimeout(poll, 1000); // Poll every second
+            setTimeout(poll, 1000);
           } else {
-            // Timeout
             setRegistrationStatus('timeout');
             setWaitingForFingerprint(false);
             setModalLoading(false);
           }
         } else if (data.success && data.status === 'expired') {
-          // Registration expired
           setRegistrationStatus('expired');
           setWaitingForFingerprint(false);
           setModalLoading(false);
         } else {
-          // Error or failed
           setRegistrationStatus('error');
           setWaitingForFingerprint(false);
           setModalLoading(false);
@@ -232,6 +256,22 @@ const ManageFingerprint = () => {
 
   const clearSearch = () => {
     setSearchTerm('');
+  };
+
+  const handleFilterChange = (filterType, value) => {
+    if (filterType === 'sort') {
+      setSortOrder(value);
+    } else if (filterType === 'status') {
+      setStatusFilter(value);
+    }
+    setShowFilterDropdown(false);
+  };
+
+  const getFilterDisplayText = () => {
+    const sortText = sortOrder === 'latest' ? 'Latest' : 'Oldest';
+    const statusText = statusFilter === 'all' ? 'All Status' : 
+                      statusFilter === 'registered' ? 'Registered' : 'Unregistered';
+    return `${sortText} • ${statusText}`;
   };
 
   if (loading) {
@@ -276,6 +316,70 @@ const ManageFingerprint = () => {
                       <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                     </svg>
                   </button>
+                )}
+              </div>
+              
+              {/* Mobile Filter - Duplicate for mobile header */}
+              <div className="fingerprint-mobile-filter-container">
+                <button
+                  className="fingerprint-filter-button"
+                  onClick={() => setShowFilterDropdown(!showFilterDropdown)}
+                >
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clipRule="evenodd" />
+                  </svg>
+                  <span className="fingerprint-filter-text">{getFilterDisplayText()}</span>
+                  <svg 
+                    width="12" 
+                    height="12" 
+                    viewBox="0 0 20 20" 
+                    fill="currentColor"
+                    className={`fingerprint-filter-chevron ${showFilterDropdown ? 'fingerprint-filter-chevron-open' : ''}`}
+                  >
+                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </button>
+                
+                {showFilterDropdown && (
+                  <div className="fingerprint-filter-dropdown">
+                    <div className="fingerprint-filter-section">
+                      <h4 className="fingerprint-filter-section-title">Sort</h4>
+                      <button
+                        className={`fingerprint-filter-option ${sortOrder === 'latest' ? 'fingerprint-filter-option-active' : ''}`}
+                        onClick={() => handleFilterChange('sort', 'latest')}
+                      >
+                        Latest
+                      </button>
+                      <button
+                        className={`fingerprint-filter-option ${sortOrder === 'oldest' ? 'fingerprint-filter-option-active' : ''}`}
+                        onClick={() => handleFilterChange('sort', 'oldest')}
+                      >
+                        Oldest
+                      </button>
+                    </div>
+                    
+                    <div className="fingerprint-filter-section">
+                      <h4 className="fingerprint-filter-section-title">Status</h4>
+                      <button
+                        className={`fingerprint-filter-option ${statusFilter === 'all' ? 'fingerprint-filter-option-active' : ''}`}
+                        onClick={() => handleFilterChange('status', 'all')}
+                      >
+                        All Status
+                      </button>
+                      <button
+                        className={`fingerprint-filter-option ${statusFilter === 'registered' ? 'fingerprint-filter-option-active' : ''}`}
+                        onClick={() => handleFilterChange('status', 'registered')}
+                      >
+                        Registered
+                      </button>
+                      <button
+                        className={`fingerprint-filter-option ${statusFilter === 'unregistered' ? 'fingerprint-filter-option-active' : ''}`}
+                        onClick={() => handleFilterChange('status', 'unregistered')}
+                      >
+                        Unregistered
+                      </button>
+                    </div>
+                  </div>
                 )}
               </div>
             </div>
@@ -327,7 +431,73 @@ const ManageFingerprint = () => {
                       <th>Email</th>
                       <th>Fingerprint ID</th>
                       <th>Fingerprint Status</th>
-                      <th className="fingerprint-actions-header">Actions</th>
+                      <th className="fingerprint-actions-header">
+                        <div className="fingerprint-filter-header">
+                          Actions
+                          <div className="fingerprint-filter-container">
+                            <button
+                              className="fingerprint-filter-button"
+                              onClick={() => setShowFilterDropdown(!showFilterDropdown)}
+                            >
+                              <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clipRule="evenodd" />
+                              </svg>
+                              <span className="fingerprint-filter-text">{getFilterDisplayText()}</span>
+                              <svg 
+                                width="12" 
+                                height="12" 
+                                viewBox="0 0 20 20" 
+                                fill="currentColor"
+                                className={`fingerprint-filter-chevron ${showFilterDropdown ? 'fingerprint-filter-chevron-open' : ''}`}
+                              >
+                                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                              </svg>
+                            </button>
+                            
+                            {showFilterDropdown && (
+                              <div className="fingerprint-filter-dropdown">
+                                <div className="fingerprint-filter-section">
+                                  <h4 className="fingerprint-filter-section-title">Sort</h4>
+                                  <button
+                                    className={`fingerprint-filter-option ${sortOrder === 'latest' ? 'fingerprint-filter-option-active' : ''}`}
+                                    onClick={() => handleFilterChange('sort', 'latest')}
+                                  >
+                                    Latest
+                                  </button>
+                                  <button
+                                    className={`fingerprint-filter-option ${sortOrder === 'oldest' ? 'fingerprint-filter-option-active' : ''}`}
+                                    onClick={() => handleFilterChange('sort', 'oldest')}
+                                  >
+                                    Oldest
+                                  </button>
+                                </div>
+                                
+                                <div className="fingerprint-filter-section">
+                                  <h4 className="fingerprint-filter-section-title">Status</h4>
+                                  <button
+                                    className={`fingerprint-filter-option ${statusFilter === 'all' ? 'fingerprint-filter-option-active' : ''}`}
+                                    onClick={() => handleFilterChange('status', 'all')}
+                                  >
+                                    All Status
+                                  </button>
+                                  <button
+                                    className={`fingerprint-filter-option ${statusFilter === 'registered' ? 'fingerprint-filter-option-active' : ''}`}
+                                    onClick={() => handleFilterChange('status', 'registered')}
+                                  >
+                                    Registered
+                                  </button>
+                                  <button
+                                    className={`fingerprint-filter-option ${statusFilter === 'unregistered' ? 'fingerprint-filter-option-active' : ''}`}
+                                    onClick={() => handleFilterChange('status', 'unregistered')}
+                                  >
+                                    Unregistered
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </th>
                     </tr>
                   </thead>
                   <tbody>

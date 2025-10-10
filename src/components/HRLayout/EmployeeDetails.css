@@ -1554,7 +1554,7 @@ input[type="number"].empdet-edit-input::-webkit-inner-spin-button {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   width: 100%;
   max-width: 800px;
-  max-height: 90vh;
+  max-height: 95vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -1636,7 +1636,13 @@ input[type="number"].empdet-edit-input::-webkit-inner-spin-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 400px;
+  min-height: 600px;
+  scrollbar-width: none;
+  -ms-overflow-style: none; 
+}
+
+.empdet-preview-modal-content::-webkit-scrollbar {
+  display: none;
 }
 
 .empdet-preview-image {
@@ -2817,20 +2823,31 @@ input[type="number"].empdet-edit-input::-webkit-inner-spin-button {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 300px;
+  min-height: 400px;
+  width: 100%;
   border: 2px dashed #e2e8f0;
   border-radius: 8px;
   background-color: #f8fafc;
+  margin: 0;
 }
 
 .empdet-no-documents-content {
   text-align: center;
   color: #6b7280;
+  padding: 40px;
+}
+
+.empdet-no-documents-content svg,
+.empdet-no-documents-content .empdet-no-documents-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  color: #94a3b8;
 }
 
 .empdet-no-documents-content h3 {
   margin: 16px 0 8px 0;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 600;
   color: #374151;
 }
@@ -2839,4 +2856,7 @@ input[type="number"].empdet-edit-input::-webkit-inner-spin-button {
   margin: 0 0 16px 0;
   font-size: 14px;
   color: #6b7280;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
 }

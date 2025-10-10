@@ -18,12 +18,12 @@ const UploadRequirements = () => {
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [documentPreviews, setDocumentPreviews] = useState({}); // Added missing state
-  const [pdfJsLoaded, setPdfJsLoaded] = useState(false); // Track PDF.js loading
+  const [documentPreviews, setDocumentPreviews] = useState({});
+  const [pdfJsLoaded, setPdfJsLoaded] = useState(false);
   const [requirements, setRequirements] = useState([]);
+  const [loadingRequirements, setLoadingRequirements] = useState(false);
+  const [fileToDelete, setFileToDelete] = useState(null);
   const fileInputRef = useRef(null);
-
-
 
   // Load PDF.js library
   useEffect(() => {
@@ -34,7 +34,6 @@ const UploadRequirements = () => {
       }
 
       try {
-        // Load PDF.js from CDN
         const script = document.createElement('script');
         script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
         script.onload = () => {
@@ -56,18 +55,6 @@ const UploadRequirements = () => {
     loadPdfJs();
   }, []);
 
-  // Check authentication on component mount
-  useEffect(() => {
-    if (!isAuthenticated()) {
-      window.location.href = '/login';
-      return;
-    }
-    
-    // Load existing files when component mounts
-    loadExistingFiles();
-    fetchUserStatus();
-  }, []);
-
   useEffect(() => {
     document.title = "DIFSYS | UPLOAD REQUIREMENTS";
   }, []);
@@ -78,37 +65,32 @@ const UploadRequirements = () => {
       return;
     }
     
-    // Load existing files and requirements when component mounts
     loadExistingFiles();
     fetchUserStatus();
-    fetchRequirements(); // Add this line
+    fetchRequirements();
   }, []);
 
-  const [loadingRequirements, setLoadingRequirements] = useState(false);
-
-// Fetch requirements from HR
-const fetchRequirements = async () => {
-  setLoadingRequirements(true);
-  try {
-    const userId = getUserId();
-    const response = await fetch(`http://localhost/difsysapi/get_applicant_requirements.php?app_id=${userId}`);
-    
-    if (response.ok) {
-      const data = await response.json();
-      if (data.success && data.requirements) {
-        setRequirements(data.requirements);
-      } else {
-        // Default requirements if none set by HR
-        setRequirements(['Resume/CV', 'Government ID']);
+  const fetchRequirements = async () => {
+    setLoadingRequirements(true);
+    try {
+      const userId = getUserId();
+      const response = await fetch(`http://localhost/difsysapi/get_applicant_requirements.php?app_id=${userId}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.requirements) {
+          setRequirements(data.requirements);
+        } else {
+          setRequirements(['Resume/CV', 'Government ID']);
+        }
       }
+    } catch (error) {
+      console.error('Error fetching requirements:', error);
+      setRequirements(['Resume/CV', 'Government ID']);
+    } finally {
+      setLoadingRequirements(false);
     }
-  } catch (error) {
-    console.error('Error fetching requirements:', error);
-    setRequirements(['Resume/CV', 'Government ID']);
-  } finally {
-    setLoadingRequirements(false);
-  }
-};
+  };
 
   const fetchUserStatus = async () => {
     try {
@@ -120,13 +102,12 @@ const fetchRequirements = async () => {
         if (data.success && data.status) {
           setUserStatus(data.status);
         } else {
-          // If no record found, default to pending
           setUserStatus(data.status || 'pending');
         }
       }
     } catch (error) {
       console.error('Error fetching user status:', error);
-      setUserStatus('pending'); // Default fallback
+      setUserStatus('pending');
     }
   };
 
@@ -143,14 +124,13 @@ const fetchRequirements = async () => {
             id: file.id,
             name: file.name,
             type: file.type_file,
-            fileType: 'pdf', // All files are PDFs
+            fileType: 'pdf',
             uploadDate: file.uploaded_at,
             size: file.size,
             isUploaded: true
           }));
           setUploadedFiles(documents);
           
-          // Generate previews for uploaded documents only if PDF.js is loaded
           if (pdfJsLoaded && documents.length > 0) {
             generatePreviewsForDocuments(documents);
           }
@@ -163,14 +143,12 @@ const fetchRequirements = async () => {
     }
   };
 
-  // Re-generate previews when PDF.js loads and we have documents
   useEffect(() => {
     if (pdfJsLoaded && uploadedFiles.length > 0) {
       generatePreviewsForDocuments(uploadedFiles);
     }
   }, [pdfJsLoaded, uploadedFiles]);
 
-  // Generate previews for documents fetched from backend (based on EmpDocuments approach)
   const generatePreviewsForDocuments = async (documents) => {
     if (!pdfJsLoaded) {
       console.log('PDF.js not loaded yet, skipping preview generation');
@@ -186,7 +164,6 @@ const fetchRequirements = async () => {
       
       if (doc.fileType === 'pdf' || getFileTypeFromExtension(doc.name) === 'pdf') {
         try {
-          // Fetch document content for preview generation using the preview parameter
           const response = await fetch(`http://localhost/difsysapi/file-manager.php?action=file&id=${doc.id}&app_id=${getUserId()}&preview=true`);
 
           if (response.ok) {
@@ -194,7 +171,6 @@ const fetchRequirements = async () => {
             console.log('Preview API response for', doc.name, ':', data);
 
             if (data.content) {
-              // Convert base64 to blob and generate PDF preview
               try {
                 const binaryString = atob(data.content);
                 const bytes = new Uint8Array(binaryString.length);
@@ -219,11 +195,9 @@ const fetchRequirements = async () => {
     }
     
     console.log('Generated previews for', Object.keys(previews).length, 'documents');
-    // Update all previews at once to avoid multiple re-renders
     setDocumentPreviews(prev => ({ ...prev, ...previews }));
   };
 
-  // Helper function to determine file type from extension
   const getFileTypeFromExtension = (fileName) => {
     const extension = fileName.split('.').pop().toLowerCase();
     switch (extension) {
@@ -240,7 +214,6 @@ const fetchRequirements = async () => {
     }
   };
 
-  // Generate PDF preview using PDF.js
   const generatePDFPreview = async (file) => {
     try {
       if (!window.pdfjsLib || !pdfJsLoaded) {
@@ -249,65 +222,59 @@ const fetchRequirements = async () => {
       }
 
       console.log('Generating PDF preview...');
-    const arrayBuffer = await file.arrayBuffer();
-    const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-    const page = await pdf.getPage(1);
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      const page = await pdf.getPage(1);
 
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
 
-    const viewport = page.getViewport({ scale: 1 });
+      const viewport = page.getViewport({ scale: 1 });
 
-    // Responsive canvas dimensions
-    let canvasWidth, canvasHeight;
-    const screenWidth = window.innerWidth;
+      let canvasWidth, canvasHeight;
+      const screenWidth = window.innerWidth;
 
-    if (screenWidth <= 480) {
-      // Small mobile
-      canvasWidth = 240;
-      canvasHeight = 150;
-    } else if (screenWidth <= 768) {
-      // Mobile/tablet
-      canvasWidth = 260;
-      canvasHeight = 165;
-    } else if (screenWidth <= 1024) {
-      // Tablet/small desktop
-      canvasWidth = 270;
-      canvasHeight = 175;
-    } else {
-      // Desktop
-      canvasWidth = 280;
-      canvasHeight = 180;
-    }
+      if (screenWidth <= 480) {
+        canvasWidth = 240;
+        canvasHeight = 150;
+      } else if (screenWidth <= 768) {
+        canvasWidth = 260;
+        canvasHeight = 165;
+      } else if (screenWidth <= 1024) {
+        canvasWidth = 270;
+        canvasHeight = 175;
+      } else {
+        canvasWidth = 280;
+        canvasHeight = 180;
+      }
 
-    canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
+      canvas.width = canvasWidth;
+      canvas.height = canvasHeight;
 
-    const scaleX = canvas.width / viewport.width;
-    const scaleY = canvas.height / viewport.height;
-    const scale = Math.min(scaleX, scaleY) * 2.2;
+      const scaleX = canvas.width / viewport.width;
+      const scaleY = canvas.height / viewport.height;
+      const scale = Math.min(scaleX, scaleY) * 2.2;
 
-    const scaledViewport = page.getViewport({ scale });
+      const scaledViewport = page.getViewport({ scale });
 
-    const offsetX = (canvas.width - scaledViewport.width) / 2;
+      const offsetX = (canvas.width - scaledViewport.width) / 2;
 
-    // Responsive Y offset based on screen size
-    let offsetY;
-    if (screenWidth <= 480) {
-      offsetY = -30; // Less offset for small screens
-    } else if (screenWidth <= 768) {
-      offsetY = -40; // Medium offset for mobile
-    } else if (screenWidth <= 1024) {
-      offsetY = -45; // Standard offset for tablets
-    } else {
-      offsetY = -50; // Full offset for desktop
-    }
+      let offsetY;
+      if (screenWidth <= 480) {
+        offsetY = -30;
+      } else if (screenWidth <= 768) {
+        offsetY = -40;
+      } else if (screenWidth <= 1024) {
+        offsetY = -45;
+      } else {
+        offsetY = -50;
+      }
 
-    context.fillStyle = 'white';
-    context.fillRect(0, 0, canvas.width, canvas.height);
+      context.fillStyle = 'white';
+      context.fillRect(0, 0, canvas.width, canvas.height);
 
-    context.save();
-    context.translate(offsetX, offsetY);
+      context.save();
+      context.translate(offsetX, offsetY);
       
       await page.render({
         canvasContext: context,
@@ -326,10 +293,9 @@ const fetchRequirements = async () => {
   };
 
   const validateFile = (file) => {
-    const maxSize = 10 * 1024 * 1024; // 10MB
+    const maxSize = 10 * 1024 * 1024;
     const allowedTypes = ['application/pdf'];
     
-    // Check file extension as well
     const fileName = file.name.toLowerCase();
     const hasValidExtension = fileName.endsWith('.pdf');
     
@@ -380,7 +346,7 @@ const fetchRequirements = async () => {
       return;
     }
 
-    const file = files[0]; // Only handle one file at a time
+    const file = files[0];
     const validationError = validateFile(file);
     
     if (validationError) {
@@ -388,7 +354,6 @@ const fetchRequirements = async () => {
       return;
     }
 
-    // Stage the file instead of uploading immediately
     setStagedFile({
       file: file,
       requirement: selectedRequirement,
@@ -410,7 +375,6 @@ const fetchRequirements = async () => {
       return;
     }
 
-    // If there's a staged file, proceed with upload
     proceedWithUpload();
   };
 
@@ -420,7 +384,6 @@ const fetchRequirements = async () => {
       return;
     }
 
-    // Check if this requirement type already exists for this user
     const existingFile = uploadedFiles.find(f => f.type === stagedFile.requirement);
     if (existingFile) {
       const confirmReplace = window.confirm(
@@ -436,14 +399,13 @@ const fetchRequirements = async () => {
     setMessage({ type: 'info', text: 'Uploading file...' });
 
     try {
-      // Simulate upload progress with more realistic timing
       const progressInterval = setInterval(() => {
         setUploadProgress(prev => {
           if (prev >= 90) {
             clearInterval(progressInterval);
             return prev;
           }
-          return prev + Math.random() * 15; // More realistic progress
+          return prev + Math.random() * 15;
         });
       }, 300);
 
@@ -453,7 +415,6 @@ const fetchRequirements = async () => {
       setUploadProgress(100);
       
       if (result.success) {
-        // Send notification to HR
         try {
           const userData = localStorage.getItem('user');
           const user = userData ? JSON.parse(userData) : null;
@@ -475,7 +436,6 @@ const fetchRequirements = async () => {
           console.error('Error sending notification:', error);
         }
       
-        // Create file object for preview
         const newFile = {
           id: result.id,
           name: stagedFile.file.name,
@@ -485,18 +445,16 @@ const fetchRequirements = async () => {
           uploadDate: new Date().toISOString()
         };
 
-        // Remove existing file of same type if replacing
         let updatedFiles = uploadedFiles.filter(f => f.type !== stagedFile.requirement);
         updatedFiles.push(newFile);
         
         setUploadedFiles(updatedFiles);
         setCurrentFileIndex(updatedFiles.length - 1);
-        setStagedFile(null); // Clear staged file
+        setStagedFile(null);
         setSelectedRequirement('');
         setMessage({ type: 'success', text: 'File uploaded successfully!' });
         setShowUploadModal(false);
 
-        // Generate preview for the new file if PDF.js is loaded
         if (pdfJsLoaded) {
           generatePreviewsForDocuments([newFile]);
         }
@@ -509,7 +467,6 @@ const fetchRequirements = async () => {
       setIsUploading(false);
       setUploadProgress(0);
       
-      // Clear message after 5 seconds
       setTimeout(() => {
         setMessage({ type: '', text: '' });
       }, 5000);
@@ -536,7 +493,6 @@ const fetchRequirements = async () => {
     setIsDragging(false);
     const files = e.dataTransfer.files;
     if (files.length > 0) {
-      // Filter for PDF files only
       const pdfFiles = Array.from(files).filter(file => 
         file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')
       );
@@ -565,15 +521,9 @@ const fetchRequirements = async () => {
     fileInputRef.current.click();
   };
 
-  const handlePreviousFile = () => {
-    setCurrentFileIndex(prev => Math.max(0, prev - 1));
-  };
-
-  const handleNextFile = () => {
-    setCurrentFileIndex(prev => Math.min(uploadedFiles.length - 1, prev + 1));
-  };
-
-  const handleDeleteFile = () => {
+  const handleDeleteFile = (doc, event) => {
+    event.stopPropagation();
+    setFileToDelete(doc);
     setShowDeleteModal(true);
   };
 
@@ -600,8 +550,6 @@ const fetchRequirements = async () => {
   };
 
   const confirmDeleteFile = async () => {
-    const fileToDelete = uploadedFiles[currentFileIndex];
-    
     if (!fileToDelete) {
       setShowDeleteModal(false);
       return;
@@ -610,11 +558,9 @@ const fetchRequirements = async () => {
     try {
       await deleteFileFromServer(fileToDelete.id);
       
-      const newFiles = uploadedFiles.filter((_, index) => index !== currentFileIndex);
+      const newFiles = uploadedFiles.filter(file => file.id !== fileToDelete.id);
       setUploadedFiles(newFiles);
-      setCurrentFileIndex(prev => Math.min(prev, newFiles.length - 1));
       
-      // Remove preview for deleted file
       setDocumentPreviews(prev => {
         const newPreviews = { ...prev };
         delete newPreviews[fileToDelete.id];
@@ -623,7 +569,6 @@ const fetchRequirements = async () => {
       
       setMessage({ type: 'success', text: 'File deleted successfully!' });
       
-      // Clear message after 3 seconds
       setTimeout(() => {
         setMessage({ type: '', text: '' });
       }, 3000);
@@ -631,6 +576,7 @@ const fetchRequirements = async () => {
       setMessage({ type: 'error', text: error.message });
     }
     
+    setFileToDelete(null);
     setShowDeleteModal(false);
   };
 
@@ -676,7 +622,6 @@ const fetchRequirements = async () => {
     try {
       setLoading(true);
       
-      // For backend documents, fetch full content using preview parameter
       const response = await fetch(`http://localhost/difsysapi/file-manager.php?action=file&id=${doc.id}&app_id=${getUserId()}&preview=true`);
 
       if (response.ok) {
@@ -705,7 +650,6 @@ const fetchRequirements = async () => {
   };
 
   const renderCardPreview = (doc) => {
-    // Ensure documentPreviews exists and has the preview
     const previewUrl = documentPreviews && documentPreviews[doc.id];
     
     console.log('Rendering card preview for:', doc.name, 'Preview available:', !!previewUrl);
@@ -730,7 +674,6 @@ const fetchRequirements = async () => {
       );
     }
     
-    // Default PDF icon fallback
     return (
       <div style={{ 
         width: '100%', 
@@ -834,107 +777,115 @@ const fetchRequirements = async () => {
       ) : (
         /* Normal Upload Interface */
         <div className="upload-req-content-row">
-        {/* Left Panel - Documents Grid */}
-        <div className="upload-req-documents-panel">
-          <div className="upload-req-documents-header">
-            <h2 className="upload-req-documents-title">Uploaded Documents</h2>
-            <button 
-              className="upload-req-add-button"
-              onClick={() => setShowUploadModal(true)}
-            >
-              <Plus size={16} />
-              Add Document
-            </button>
-          </div>
+          {/* Left Panel - Documents Grid */}
+          <div className="upload-req-documents-panel">
+            <div className="upload-req-documents-header">
+              <h2 className="upload-req-documents-title">Uploaded Documents</h2>
+              <button 
+                className="upload-req-add-button"
+                onClick={() => setShowUploadModal(true)}
+              >
+                <Plus size={16} />
+                Add Document
+              </button>
+            </div>
 
-          {/* Documents Grid */}
-          <div className="upload-req-documents-grid">
-            {loading ? (
-              <div className="upload-req-loading">
-                <div className="upload-req-loading-spinner"></div>
-                <p>Loading documents...</p>
-              </div>
-            ) : uploadedFiles.length > 0 ? (
-              uploadedFiles.map((doc) => (
-                <div 
-                  key={doc.id} 
-                  className="upload-req-document-card"
-                  onClick={() => handleDocumentClick(doc)}
-                >
-                  <div className="upload-req-document-preview-container">
-                    <div className="upload-req-document-preview">
-                      {renderCardPreview(doc)}
-                    </div>
-                    <div className="upload-req-document-preview-overlay">
-                      <div className="upload-req-document-icon">
-                        <FileText size={20} color="#dc2626" />
+            {/* Documents Grid */}
+            <div className="upload-req-documents-grid">
+              {loading ? (
+                <div className="upload-req-loading">
+                  <div className="upload-req-loading-spinner"></div>
+                  <p>Loading documents...</p>
+                </div>
+              ) : uploadedFiles.length > 0 ? (
+                uploadedFiles.map((doc) => (
+                  <div 
+                    key={doc.id} 
+                    className="upload-req-document-card"
+                    onClick={() => handleDocumentClick(doc)}
+                  >
+                    <div className="upload-req-document-preview-container">
+                      <div className="upload-req-document-preview">
+                        {renderCardPreview(doc)}
+                      </div>
+                      <div className="upload-req-document-preview-overlay">
+                        <div className="upload-req-document-icon">
+                          <FileText size={20} color="#dc2626" />
+                        </div>
                       </div>
                     </div>
+                    <div className="upload-req-document-info">
+                      <h4 className="upload-req-document-name">{doc.name}</h4>
+                      <p className="upload-req-document-type">{doc.type}</p>
+                      <p className="upload-req-document-date">
+                        Uploaded: {new Date(doc.uploadDate).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <div className="upload-req-document-actions">
+                      <button 
+                        className="upload-req-download-button"
+                        onClick={(e) => handleDownload(doc, e)}
+                        title="Download"
+                      >
+                        <Download size={16} />
+                      </button>
+                      <button 
+                        className="upload-req-delete-button"
+                        onClick={(e) => handleDeleteFile(doc, e)}
+                        title="Delete"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
                   </div>
-                  <div className="upload-req-document-info">
-                    <h4 className="upload-req-document-name">{doc.name}</h4>
-                    <p className="upload-req-document-type">{doc.type}</p>
-                    <p className="upload-req-document-date">
-                      Uploaded: {new Date(doc.uploadDate).toLocaleDateString()}
-                    </p>
-                  </div>
-                  <div className="upload-req-document-actions">
-                    <button 
-                      className="upload-req-download-button"
-                      onClick={(e) => handleDownload(doc, e)}
-                    >
-                      <Download size={16} />
-                    </button>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="upload-req-no-documents">
-                <FileText size={48} color="#6b7280" />
-                <h3>No Documents Found</h3>
-                <p>You have no documents uploaded yet.</p>
-                <button 
-                  className="upload-req-add-button"
-                  onClick={() => setShowUploadModal(true)}
-                >
-                  <Plus size={16} />
-                  Upload First Document
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Right Panel - Requirements List */}
-        <div className="upload-req-requirements-panel">
-          <h3 className="upload-req-requirements-title">List of Requirements</h3>
-          
-          <div className="upload-req-requirements-list">
-            {loadingRequirements ? (
-              <div className="upload-req-loading">
-                <div className="upload-req-loading-spinner"></div>
-                <p>Loading requirements...</p>
-              </div>
-            ) : requirements.length > 0 ? (
-              requirements.map((requirement, index) => (
-                <div key={index} className="upload-req-requirement-item">
-                  <span className="upload-req-requirement-name">{requirement}</span>
-                  <span 
-                    className="upload-req-requirement-status"
-                    style={{ backgroundColor: getRequirementStatusColor(requirement) }}
+                ))
+              ) : (
+                <div className="upload-req-no-documents">
+                  <FileText size={48} color="#6b7280" />
+                  <h3>No Documents Found</h3>
+                  <p>You have no documents uploaded yet.</p>
+                  <button 
+                    className="upload-req-add-button"
+                    onClick={() => setShowUploadModal(true)}
                   >
-                    {getRequirementStatus(requirement)}
-                  </span>
+                    <Plus size={16} />
+                    Upload First Document
+                  </button>
                 </div>
-              ))
-            ) : (
-              <div className="upload-req-no-requirements">
-                <p>No requirements have been set by HR yet.</p>
-              </div>
-            )}
+              )}
+            </div>
+          </div>
+
+          {/* Right Panel - Requirements List */}
+          <div className="upload-req-requirements-panel">
+            <h3 className="upload-req-requirements-title">List of Requirements</h3>
+            
+            <div className="upload-req-requirements-list">
+              {loadingRequirements ? (
+                <div className="upload-req-loading">
+                  <div className="upload-req-loading-spinner"></div>
+                  <p>Loading requirements...</p>
+                </div>
+              ) : requirements.length > 0 ? (
+                requirements.map((requirement, index) => (
+                  <div key={index} className="upload-req-requirement-item">
+                    <span className="upload-req-requirement-name">{requirement}</span>
+                    <span 
+                      className="upload-req-requirement-status"
+                      style={{ backgroundColor: getRequirementStatusColor(requirement) }}
+                    >
+                      {getRequirementStatus(requirement)}
+                    </span>
+                  </div>
+                ))
+              ) : (
+                <div className="upload-req-no-requirements">
+                  <p>No requirements have been set by HR yet.</p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-              </div>
       )}
 
       {/* Upload Modal */}
@@ -1092,11 +1043,14 @@ const fetchRequirements = async () => {
         <div className="upload-req-modal-overlay">
           <div className="upload-req-modal">
             <h3>Are you sure you want to delete this file?</h3>
-            <p>This action cannot be undone.</p>
+            <p>{fileToDelete ? `"${fileToDelete.name}" will be permanently deleted.` : 'This action cannot be undone.'}</p>
             <div className="upload-req-modal-buttons">
               <button 
                 className="upload-req-modal-btn upload-req-modal-btn-no"
-                onClick={() => setShowDeleteModal(false)}
+                onClick={() => {
+                  setShowDeleteModal(false);
+                  setFileToDelete(null);
+                }}
               >
                 Cancel
               </button>

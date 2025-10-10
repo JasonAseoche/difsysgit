@@ -493,17 +493,17 @@ useEffect(() => {
             </div>
           </div>
 
-          <div className="attendanceInfoCard">
-            <div className="attendanceInfoIcon attendanceIconPurple">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M16.2,16.2L11,13V7H12.5V12.2L17,14.9L16.2,16.2Z"/>
-              </svg>
-            </div>
-            <div className="attendanceInfoContent">
-              <p className="attendanceInfoLabel">Absent Days</p>
-              <p className="attendanceInfoValue">{stats.absentDays}</p>
-            </div>
-          </div>
+          <button 
+              className="attendanceOvertimeRequestBtn"
+              onClick={() => window.location.href = '/overtime-request'}
+            >
+              <div className="attendanceOvertimeRequestIcon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M16.2,16.2L11,13V7H12.5V12.2L17,14.9L16.2,16.2Z"/>
+                </svg>
+              </div>
+              <span className="attendanceOvertimeRequestText">Overtime Request</span>
+            </button>
         </div>
       </div>
 

@@ -1,6 +1,5 @@
 import React from 'react'
 import '../../components/SupervisorLayout/DashboardSupervisor.css'
-import DashboardHeader from '../../components/DashboardHeader/DashboardHeader'
 
 const DashboardSupervisor = () => {
   const overviewData = [
@@ -66,8 +65,6 @@ const DashboardSupervisor = () => {
 
   return (
     <div className="supervisor-dashboard-container">
-      <DashboardHeader />
-      
       <div className="supervisor-dashboard-content">
         <div className="supervisor-main-layout">
           {/* Left Column */}

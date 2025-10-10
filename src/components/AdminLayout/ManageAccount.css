@@ -1,4 +1,4 @@
-/* ManageAccounts.css - Unique Classnames */
+/* ManageAccounts.css - Fixed Dropdown Overflow Issues */
 
 /* Base styles */
 * {
@@ -103,6 +103,118 @@
   color: #6b7280;
 }
 
+/* Filter styles */
+.manage-account-filter-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.manage-account-filter-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Mobile filter container - hidden on desktop */
+.manage-account-mobile-filter-container {
+  position: relative;
+  display: none;
+}
+
+.manage-account-filter-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  color: #374151;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.manage-account-filter-button:hover {
+  background-color: #e5e7eb;
+  border-color: #9ca3af;
+}
+
+.manage-account-filter-text {
+  font-weight: 500;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.manage-account-filter-chevron {
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.manage-account-filter-chevron-open {
+  transform: rotate(180deg);
+}
+
+.manage-account-filter-dropdown {
+  position: fixed; /* Changed from absolute to fixed */
+  min-width: 200px;
+  background-color: white;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  z-index: 9999;
+  padding: 0.5rem;
+  /* Position will be set dynamically via JavaScript */
+}
+
+.manage-account-filter-section {
+  margin-bottom: 0.5rem;
+}
+
+.manage-account-filter-section:last-child {
+  margin-bottom: 0;
+}
+
+.manage-account-filter-section-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 0.5rem 0;
+  padding: 0 0.5rem;
+}
+
+.manage-account-filter-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem;
+  border: none;
+  background: none;
+  color: #374151;
+  font-size: 0.875rem;
+  cursor: pointer;
+  border-radius: 0.375rem;
+  transition: all 0.2s;
+}
+
+.manage-account-filter-option:hover {
+  background-color: #f3f4f6;
+}
+
+.manage-account-filter-option-active {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.manage-account-filter-option-active:hover {
+  background-color: #2563eb;
+}
+
 /* Button styles */
 .manage-account-add-button {
   display: flex;
@@ -116,10 +228,9 @@
   cursor: pointer;
   font-weight: 500;
   transition: background-color 0.2s;
-  /* Add fixed dimensions */
   min-width: 170px;
   height: 42px;
-  white-space: nowrap; /* Prevent text wrapping */
+  white-space: nowrap;
 }
 
 .manage-account-add-button:hover {
@@ -159,13 +270,16 @@
   flex-shrink: 0;
 }
 
-/* Table container styles */
+/* Table container styles - Fixed overflow issues */
 .manage-account-table-container {
   background-color: white;
   border-radius: 0.5rem;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  overflow: hidden;
+  overflow: visible; /* Keep as visible */
   width: 100%;
+  position: relative; /* Add relative positioning */
+  /* Add minimum height to prevent collapse with few items */
+  min-height: 200px;
 }
 
 /* Loading styles */
@@ -230,6 +344,7 @@
 .manage-account-empty-container {
   padding: 2rem;
   text-align: center;
+  min-height: 150px; /* Add minimum height */
 }
 
 .manage-account-empty-text {
@@ -254,22 +369,26 @@
   color: #1d4ed8;
 }
 
-/* Table styles */
+/* Table styles - Enhanced for overflow handling */
 .manage-account-table-scroll {
   overflow-x: auto;
+  overflow-y: visible; /* Allow vertical overflow for dropdown */
   width: 100%;
   -webkit-overflow-scrolling: touch;
+  position: relative; /* Add relative positioning */
 }
 
 .manage-account-accounts-table {
   width: 100%;
-  min-width: auto; /* Remove minimum width constraint */
+  min-width: auto;
   border-collapse: collapse;
+  position: relative; /* Add relative positioning */
 }
 
 .manage-account-accounts-table thead {
   background-color: #f9fafb;
   border-bottom: 1px solid #e5e7eb;
+  position: relative; /* Add relative positioning */
 }
 
 .manage-account-accounts-table th {
@@ -281,19 +400,34 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   white-space: nowrap;
+  position: relative; /* Add relative positioning */
 }
 
+/* Enhanced actions header positioning */
 .manage-account-actions-header {
   text-align: right;
+  position: relative;
+  /* Ensure the filter container extends outside table bounds */
+  overflow: visible;
+}
+
+/* Special handling for the last table header cell */
+.manage-account-accounts-table th:last-child {
+  position: relative;
+  overflow: visible;
+  /* Ensure dropdown can extend beyond table */
+  z-index: 10;
 }
 
 .manage-account-accounts-table tbody {
   background-color: white;
+  position: relative;
 }
 
 .manage-account-accounts-table tbody tr {
   border-bottom: 1px solid #e5e7eb;
   transition: background-color 0.2s;
+  position: relative;
 }
 
 .manage-account-accounts-table tbody tr:hover {
@@ -303,6 +437,7 @@
 .manage-account-accounts-table td {
   padding: 1rem 1.5rem;
   vertical-align: middle;
+  position: relative;
 }
 
 .manage-account-account-name {
@@ -327,37 +462,31 @@
   white-space: nowrap;
 }
 
-/* Admin role */
 .manage-account-role-admin {
   background-color: #f3e8ff;
   color: #7c3aed;
 }
 
-/* User role */
 .manage-account-role-user {
   background-color: #dcfce7;
   color: #16a34a;
 }
 
-/* HR role - purple-blue colors */
 .manage-account-role-hr {
   background-color: #e0f2fe;
   color: #0284c7;
 }
 
-/* Accountant role - orange/amber colors */
 .manage-account-role-accountant {
   background-color: #fff7ed;
   color: #ea580c;
 }
 
-/* Employee role - indigo colors */
 .manage-account-role-employee {
   background-color: #eef2ff;
   color: #4f46e5;
 }
 
-/* Applicant role - pink/rose colors */
 .manage-account-role-applicant {
   background-color: #fce7f3;
   color: #db2777;
@@ -372,6 +501,7 @@
 .manage-account-actions-cell {
   text-align: right;
   white-space: nowrap;
+  position: relative; /* Add relative positioning */
 }
 
 .manage-account-actions-buttons {
@@ -440,48 +570,6 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
   margin-bottom: 1rem;
-}
-
-@media (max-width: 767px) {
-  .manage-account-form-row {
-    grid-template-columns: 1fr;
-  }
-  
-  .manage-account-modal-overlay {
-    align-items: flex-start;
-    padding: 0; /* Remove padding */
-    overflow: hidden; /* Prevent any overflow */
-  }
-  
-  .manage-account-modal-content {
-    max-height: 85vh; /* Full height */
-    margin: 0; /* Remove margin */
-    width: 95%; /* Full width */
-    max-width: 100%; /* Full width */
-    border-radius: 15px; /* Remove border radius */
-    position: absolute; /* Position absolutely */
-    top: 80px; /* Align to top */
-    left: 10px; /* Align to left */
-    right: 0; /* Stretch to right */
-    bottom: 0; /* Stretch to bottom if needed */
-    overflow-y: auto; /* Allow scrolling inside modal */
-  }
-  
-  .manage-account-modal-body {
-    padding: 1.5rem;
-    padding-top: 1rem;
-  }
-  
-  .manage-account-modal-actions,
-  .manage-account-confirm-actions {
-    flex-direction: column-reverse;
-    gap: 0.5rem;
-  }
-  
-  .manage-account-button {
-    width: 100%;
-    justify-content: center;
-  }
 }
 
 .manage-account-form-group {
@@ -594,80 +682,63 @@
   gap: 0.75rem;
 }
 
-/* Mobile actions dropdown styling */
-.manage-account-mobile-actions {
-  display: none;
-}
-
-.manage-account-dropdown-container {
-  position: relative;
-}
-
-.manage-account-dropdown-button {
-  background: none;
-  border: none;
-  color: #6b7280;
-  cursor: pointer;
-  padding: 0.25rem;
-  border-radius: 0.25rem;
-  transition: color 0.2s;
-}
-
-.manage-account-dropdown-button:hover {
-  color: #4b5563;
-}
-
-.manage-account-dropdown-menu {
-  position: absolute;
-  right: 0;
-  top: 100%;
-  width: 150px;
-  background-color: white;
-  border-radius: 0.375rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  z-index: 10;
-  margin-top: 0.25rem;
-  border: 1px solid #e5e7eb;
-  overflow: hidden;
-}
-
-.manage-account-dropdown-item {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  padding: 0.75rem 1rem;
-  text-align: left;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #374151;
-  transition: background-color 0.2s;
-}
-
-.manage-account-dropdown-item:hover {
-  background-color: #f3f4f6;
-}
-
-.manage-account-dropdown-delete {
-  color: #dc2626;
-}
-
-.manage-account-dropdown-delete:hover {
-  background-color: #fef2f2;
-}
-
-.manage-account-dropdown-icon {
-  margin-right: 0.5rem;
-  flex-shrink: 0;
-}
-
 .manage-account-message-info {
   background-color: #e3f2fd;
   border-color: #2196f3;
   color: #1976d2;
 }
 
+/* Enhanced mobile responsive styles */
 @media (max-width: 767px) {
+  /* Show mobile filter in header, hide table header filter */
+  .manage-account-mobile-filter-container {
+    display: block;
+  }
+  
+  .manage-account-filter-container {
+    display: none;
+  }
+
+  .manage-account-form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .manage-account-modal-overlay {
+    align-items: flex-start;
+    padding: 0;
+    overflow: hidden;
+  }
+  
+  .manage-account-modal-content {
+    max-height: 85vh;
+    margin: 0;
+    width: 95%;
+    max-width: 100%;
+    border-radius: 15px;
+    position: absolute;
+    top: 80px;
+    left: 10px;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+  }
+  
+  .manage-account-modal-body {
+    padding: 1.5rem;
+    padding-top: 1rem;
+  }
+  
+  .manage-account-modal-actions,
+  .manage-account-confirm-actions {
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+  }
+  
+  .manage-account-button {
+    width: 100%;
+    justify-content: center;
+  }
+
   .manage-account-table-scroll {
     overflow-x: visible;
     width: 100%;
@@ -678,7 +749,7 @@
   }
   
   .manage-account-accounts-table thead {
-    display: none; /* Hide table headers on mobile */
+    display: none;
   }
   
   .manage-account-accounts-table,
@@ -696,7 +767,6 @@
   }
   
   .manage-account-accounts-table td {
-    /* Add a label for each td using pseudo-elements */
     display: flex;
     text-align: left;
     padding: 0.5rem 0;
@@ -708,16 +778,15 @@
     font-weight: 500;
     text-align: left;
     color: #6b7280;
-    margin-right: 5px; /* Add space after the label */
+    margin-right: 5px;
   }
   
   .manage-account-accounts-table td:last-child {
     border-bottom: 0;
   }
   
-  /* Change this to left alignment */
   .manage-account-actions-cell {
-    justify-content: flex-start; /* This moves the action buttons to the left */
+    justify-content: flex-start;
   }
   
   .manage-account-account-name,
@@ -725,4 +794,39 @@
     white-space: normal;
     text-align: left;
   }
+
+  /* Mobile filter adjustments for header */
+  .manage-account-mobile-filter-container .manage-account-filter-button {
+    font-size: 0.875rem;
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .manage-account-mobile-filter-container .manage-account-filter-text {
+    max-width: 140px;
+  }
+  
+  .manage-account-mobile-filter-container .manage-account-filter-dropdown {
+    /* Use fixed positioning for mobile too */
+    position: fixed;
+    min-width: 180px;
+    /* Position will be set dynamically */
+  }
+}
+
+/* Utility class to ensure dropdown stays visible */
+.manage-account-dropdown-visible {
+  overflow: visible !important;
+}
+
+/* Style for when table has few items - add padding to prevent collapse */
+.manage-account-table-container.manage-account-few-items {
+  min-height: 300px;
+  padding-bottom: 100px; /* Extra space for dropdown */
+}
+
+/* Ensure table wrapper allows for dropdown overflow */
+.manage-account-table-wrapper {
+  position: relative;
+  overflow: visible;
+  min-height: 250px; /* Minimum height when few items */
 }

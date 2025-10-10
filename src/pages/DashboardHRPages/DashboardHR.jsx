@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import DashboardHeader from '../../components/DashboardHeader/DashboardHeader';
 import '../../components/HRLayout/DashboardHR.css';
 
 const DashboardHR = () => {
@@ -379,7 +378,6 @@ const DashboardHR = () => {
   if (loading && !isLoaded) {
     return (
       <div className="dashboard-containers11">
-        <DashboardHeader />
         <div className="loading-container">
           <div className="loading-spinner"></div>
           <p>Loading dashboard data...</p>
@@ -391,7 +389,6 @@ const DashboardHR = () => {
   if (error) {
     return (
       <div className="dashboard-containers11">
-        <DashboardHeader />
         <div className="error-container">
           <p>Error: {error}</p>
           <button onClick={fetchDashboardData}>Retry</button>
@@ -402,8 +399,6 @@ const DashboardHR = () => {
 
   return (
     <div className="dashboard-containers11">
-      <DashboardHeader />
-      
       {/* Main Layout: Left Content + Right Calendar */}
       <div className="main-layout-grid11">
         

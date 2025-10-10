@@ -48,6 +48,7 @@ import EmpDetails from './pages/DashboardHRPages/EmpDetails';
 import EmpAttHistory from './pages/DashboardHRPages/EmpAttHistory';
 import EmpDocuments from './pages/DashboardHRPages/EmpDocuments';
 import EADetails from './components/EAProfile/EADetails';
+import OvertimeRequest from './pages/DashboardEmployeePages/OvertimeRequest.jsx';
 
 import DashboardApplicant from './pages/DashboardApplicantPages/DashboardApplicant';
 import UploadRequirements from './pages/DashboardApplicantPages/UploadRequirements';
@@ -114,6 +115,7 @@ export const AuditedManageDocuments = withAuditTrail(ManageDocuments, 'ManageDoc
 export const AuditedMyPayroll = withAuditTrail(MyPayroll, 'MyPayroll');
 export const AuditedTimeKeeping = withAuditTrail(TimeKeeping, 'TimeKeeping');
 export const AuditedFileInquiries = withAuditTrail(FileInquiries, 'FileInquiries');
+export const AuditedOvertimeRequest = withAuditTrail(OvertimeRequest, 'OvertimeRequest');
 
 // Applicant components
 export const AuditedDashboardApplicant = withAuditTrail(DashboardApplicant, 'DashboardApplicant');

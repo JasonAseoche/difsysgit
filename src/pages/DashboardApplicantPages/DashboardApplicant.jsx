@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getCurrentUser, getUserId } from '../../utils/auth'; // Import auth utilities like Employee dashboard
 import difsyslogo from '../../assets/difsyslogo.png'
-import DashboardHeader from '../../components/DashboardHeader/DashboardHeader';
 import '../../components/ApplicantLayout/DashboardApplicant.css';
 
 const DashboardApplicant = () => {
@@ -471,8 +470,6 @@ const DashboardApplicant = () => {
   return (
     <div className="app-dash-container">
       {/* Header Section */}
-      <DashboardHeader/>
-
       {/* Main Content */}
       <div className="app-dash-content">
         {/* Mission, Vision, and Application Status Section */}

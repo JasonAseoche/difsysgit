@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Edit3, Save, X } from 'lucide-react';
 import axios from 'axios';
 import '../../components/HRLayout/EmployeeDetails.css';
-import Men from '../../assets/Men.jpg';
 import EmpDetails from './EmpDetails';
 import EmpDocuments from './EmpDocuments';
 import EmpAttHistory from './EmpAttHistory';
@@ -28,6 +27,7 @@ const EmPersonal = () => {
     residentialAddress: '', // Permanent Address
     emergencyContactName: '',
     emergencyContactRelationship: '',
+    profileImage: '',  // ← ADD THIS LINE
     emergencyContactPhone: '',
     education: [],
     family: []
@@ -86,6 +86,7 @@ const EmPersonal = () => {
           emergencyContactName: response.data.emergencyContactName || '',
           emergencyContactRelationship: response.data.emergencyContactRelationship || '',
           emergencyContactPhone: response.data.emergencyContactPhone || '',
+          profileImage: response.data.profileImage || '',  // ← ADD THIS LINE
           education: response.data.education || [],
           family: response.data.family || []
         };
@@ -266,10 +267,37 @@ const EmPersonal = () => {
         <div className="empdet-basic-content">
           <div className="empdet-left-section">
             {!isEditing && (
-              <div className="empdet-profile-image">
-                <img src={Men} alt="Profile" className="empdet-avatar" />
-              </div>
-            )}
+                <div className="empdet-profile-image">
+                  {employeeData.profileImage ? (
+                    <img 
+                      src={employeeData.profileImage} 
+                      alt="Profile" 
+                      className="empdet-avatar"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                  ) : null}
+                  <div 
+                    className="empdet-avatar-fallback"
+                    style={{
+                      display: employeeData.profileImage ? 'none' : 'flex',
+                      width: '100%',
+                      height: '100%',
+                      borderRadius: '50%',
+                      backgroundColor: '#e2e8f0',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '48px',
+                      fontWeight: 'bold',
+                      color: '#64748b'
+                    }}
+                  >
+                    {employeeData.name ? employeeData.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'N/A'}
+                  </div>
+                </div>
+              )}
             <div className="empdet-profile-details">
               {isEditing ? (
                 <>
