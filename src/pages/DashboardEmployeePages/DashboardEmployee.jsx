@@ -392,10 +392,7 @@ const DashboardEmployee = () => {
     }
   
     try {
-      
-      
-      
-      
+
       const response = await axios.get(`${API_BASE_URL}?action=check_timer_status&emp_id=${employeeInfo.emp_id}`);
       
       
@@ -489,7 +486,7 @@ const DashboardEmployee = () => {
         }
         
         // PRIORITY 2: Check if timer should STOP (shouldStartTimer is false but timer is running)
-        if (isTimeIn && !shouldStartTimer) {
+        if (false && isTimeIn && !shouldStartTimer) {
           
           setIsTimeIn(false);
           setCurrentTime(0);
@@ -506,11 +503,9 @@ const DashboardEmployee = () => {
         }
         
         // PRIORITY 3: Check if timer should START
-        if (shouldStartTimer && !isTimeIn && record && record.time_in && !record.time_out) {
+        if (!isTimeIn && record && record.time_in && !record.time_out) {
           
-          
-          
-          
+
           const currentTimeUTC8 = await getCurrentTimeUTC8(); // CHANGED: Made async
           const currentHour = currentTimeUTC8.getHours();
           
@@ -898,7 +893,7 @@ const DashboardEmployee = () => {
   // Set up auto-refresh for biometric employees
   useEffect(() => {
     if (employeeInfo.emp_id && workArrangement !== 'Work From Home' && autoRefreshEnabled) {
-      statusCheckIntervalRef.current = setInterval(checkTimerStatus, 1200);
+      statusCheckIntervalRef.current = setInterval(checkTimerStatus, 500);
     } else if (statusCheckIntervalRef.current) {
       clearInterval(statusCheckIntervalRef.current);
       statusCheckIntervalRef.current = null;

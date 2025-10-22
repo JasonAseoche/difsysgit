@@ -161,10 +161,27 @@
 }
 
 /* Button Styles */
+
+.exam-btn-export {
+  background: white;
+  color: var(--success);
+  border: solid 2px var(--success);
+  padding: 8px 15px;
+  border-radius: 8px;
+  max-width: 100%;
+
+}
+
+.exam-btn-export:hover {
+  background: var(--success);
+  color: white;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
 .exam-btn-primary {
   background: var(--primary-blue);
   color: white;
-  padding: 12px 24px;
+  padding: 8px 24px;
   border: none;
   border-radius: var(--border-radius);
   font-weight: 500;
@@ -347,9 +364,11 @@
 
 .exam-status-badge {
   padding: 4px 12px;
+  max-width: 130px;
   border-radius: 9999px;
   font-size: 11px;
   font-weight: 600;
+  text-align: center;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   white-space: nowrap;
@@ -1102,6 +1121,7 @@
   color: var(--warning);
   font-size: 13px;
   font-weight: 500;
+  margin-left: 5px;
 }
 
 /* Loading States */
@@ -1231,6 +1251,10 @@
     gap: 6px;
     display: grid;
     grid-template-columns: 1fr 1fr;
+  }
+
+  .exam-btn-export{
+    width: 100%;
   }
   
   .exam-card-actions button {

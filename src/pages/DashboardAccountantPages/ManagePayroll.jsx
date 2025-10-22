@@ -105,6 +105,7 @@ const ManagePayroll = () => {
     'Special Holiday + ROT + ND',
     'Undertime/Late',
     'Absences',
+    'Travel Time'
   ];
 
   const baseRateColumns = [

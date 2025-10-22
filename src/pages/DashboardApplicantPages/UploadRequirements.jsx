@@ -1012,7 +1012,7 @@ const UploadRequirements = () => {
           <div className="upload-req-preview-modal">
             <div className="upload-req-preview-header">
               <div className="upload-req-preview-info">
-                <h3>{selectedDocument.name}</h3>
+                <h3 className="upload-file-title">{selectedDocument.name}</h3>
                 <p>{selectedDocument.type}</p>
               </div>
               <div className="upload-req-preview-actions">

@@ -594,7 +594,7 @@ const closePreviewModal = () => {
           <iframe 
             src={previewUrl} 
             title="Document Preview"
-            style={{ width: '100%', height: '400px', border: 'none' }}
+            style={{ width: '100%', height: '600px', border: 'none' }}
           />
         ) : (
           <div className="upload-resume-file-info">

@@ -38,6 +38,7 @@ import {
   AuditedDashboardEmployee as DashboardEmployee,
   AuditedAttendance as Attendance,
   AuditedOvertimeRequest as OvertimeRequest,
+  AuditedServiceReport as ServiceReport,
   AuditedManageDocuments as ManageDocuments,
   AuditedMyPayroll as MyPayroll,
   AuditedTimeKeeping as TimeKeeping,
@@ -52,7 +53,9 @@ import {
   AuditedSupervisorAttendance as SupervisorAttendance,
   AuditedPerformanceReview as PerformanceReview,
   AuditedLeaveApproval as LeaveApproval,
-  AuditedReports as Reports,
+  AuditedOvertimeApproval as OvertimeApproval,
+  AuditedSRApproval as SRApproval,
+  AuditedTeamOB as TeamOB,
   Unauthorized
 } from './AuditedComponents'
 
@@ -118,6 +121,7 @@ const App = () => {
           <Route path="/employee-personal" element={<EmPersonal />} />
           <Route path="/manage-department" element={<ManageDepartment />} />
           <Route path="/manage-events" element={<ManageEvents />} />
+          <Route path="/sr-approval" element={<SRApproval/>} />
         </Route>
 
         {/* Accountant Routes */}
@@ -135,6 +139,7 @@ const App = () => {
           <Route path="/dashboard-employee" element={<DashboardEmployee />} />
           <Route path="/attendance" element={<Attendance />} />
           <Route path="/overtime-request" element={<OvertimeRequest />} />  
+          <Route path="/service-report" element={<ServiceReport />} />    
           <Route path="/manage-documents" element={<ManageDocuments />} />
           <Route path="/my-payroll" element={<MyPayroll />} />
           <Route path="/time-keeping" element={<TimeKeeping />} />
@@ -148,7 +153,8 @@ const App = () => {
           <Route path="/supervisor-attendance" element={<SupervisorAttendance />} />
           <Route path="/performance-review" element={<PerformanceReview />} />
           <Route path="/leave-approval" element={<LeaveApproval />} />
-          <Route path="/reports" element={<Reports />} />
+          <Route path="/overtime-approval" element={<OvertimeApproval />} />
+          <Route path="/team-ob" element={<TeamOB />} />
         </Route>
 
         {/* Applicant Routes */}

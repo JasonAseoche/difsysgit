@@ -252,7 +252,7 @@ useEffect(() => {
   const determineDisplayStatus = (record) => {
     const recordDate = new Date(record.date + 'T00:00:00');
     if (!isWeekday(recordDate)) {
-      return 'Weekend';
+      return 'Rest Day';
     }
   
     if (!record.time_in) {

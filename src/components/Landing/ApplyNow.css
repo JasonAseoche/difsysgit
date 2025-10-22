@@ -274,8 +274,7 @@
 }
 
 .applynow-modal-close {
-  position: absolute;
-  top: 1.5rem;
+  position: relative;
   right: 1.5rem;
   background: #f3f4f6;
   border: none;
@@ -353,7 +352,7 @@
   background-color: #111827;
   color: white;
   border: none;
-  padding: 1rem 2rem;
+  padding: 0.6rem 2rem;
   border-radius: 10px;
   font-weight: 600;
   cursor: pointer;

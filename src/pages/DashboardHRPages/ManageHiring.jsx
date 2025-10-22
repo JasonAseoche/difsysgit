@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { X } from 'lucide-react';
 import '../../components/HRLayout/ManageHiring.css';
-
 const ManageHiring = () => {
   const [hiringPositions, setHiringPositions] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -10,12 +10,14 @@ const ManageHiring = () => {
   const [formData, setFormData] = useState({
     title: '',
     short_description: '',
+    tags: '',
+    location: 'Cabuyao City',
     requirements: [''],
-    duties: [''],
-    image: null
+    duties: ['']
   });
 
   const API_URL = 'http://localhost/difsysapi/manage_hiring.php';
+  const COMPANY_NAME = "DIFSYS, INC";
 
   useEffect(() => {
     fetchHiringPositions();
@@ -25,9 +27,6 @@ const ManageHiring = () => {
     document.title = "DIFSYS | MANAGE HIRING";
   }, []);
 
-
-
-  // Fetch all hiring positions
   const fetchHiringPositions = async () => {
     try {
       setIsLoading(true);
@@ -42,7 +41,6 @@ const ManageHiring = () => {
     }
   };
 
-  // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -51,15 +49,6 @@ const ManageHiring = () => {
     }));
   };
 
-  // Handle image file change
-  const handleImageChange = (e) => {
-    setFormData(prev => ({
-      ...prev,
-      image: e.target.files[0]
-    }));
-  };
-
-  // Handle requirements array changes
   const handleRequirementsChange = (index, value) => {
     const newRequirements = [...formData.requirements];
     newRequirements[index] = value;
@@ -69,7 +58,6 @@ const ManageHiring = () => {
     }));
   };
 
-  // Handle duties array changes
   const handleDutiesChange = (index, value) => {
     const newDuties = [...formData.duties];
     newDuties[index] = value;
@@ -79,7 +67,6 @@ const ManageHiring = () => {
     }));
   };
 
-  // Add new requirement field
   const addRequirement = () => {
     setFormData(prev => ({
       ...prev,
@@ -87,7 +74,6 @@ const ManageHiring = () => {
     }));
   };
 
-  // Remove requirement field
   const removeRequirement = (index) => {
     const newRequirements = formData.requirements.filter((_, i) => i !== index);
     setFormData(prev => ({
@@ -96,7 +82,6 @@ const ManageHiring = () => {
     }));
   };
 
-  // Add new duty field
   const addDuty = () => {
     setFormData(prev => ({
       ...prev,
@@ -104,7 +89,6 @@ const ManageHiring = () => {
     }));
   };
 
-  // Remove duty field
   const removeDuty = (index) => {
     const newDuties = formData.duties.filter((_, i) => i !== index);
     setFormData(prev => ({
@@ -113,57 +97,53 @@ const ManageHiring = () => {
     }));
   };
 
-  // Open modal for creating new position
   const openCreateModal = () => {
     setEditingPosition(null);
     setFormData({
       title: '',
       short_description: '',
+      tags: '',
+      location: 'Cabuyao City',
       requirements: [''],
-      duties: [''],
-      image: null
+      duties: ['']
     });
     setShowModal(true);
   };
 
-  // Open modal for editing position
   const openEditModal = (position) => {
     setEditingPosition(position);
     setFormData({
       title: position.title,
       short_description: position.short_description,
+      tags: position.tags || '',
+      location: position.location || 'Cabuyao City',
       requirements: position.requirements || [''],
-      duties: position.duties || [''],
-      image: null,
-      current_image: position.image_path
+      duties: position.duties || ['']
     });
     setShowModal(true);
   };
 
-  // Close modal
   const closeModal = () => {
     setShowModal(false);
     setEditingPosition(null);
     setFormData({
       title: '',
       short_description: '',
+      tags: '',
+      location: 'Cabuyao City',
       requirements: [''],
-      duties: [''],
-      image: null
+      duties: ['']
     });
   };
 
-  // Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validate form
     if (!formData.title || !formData.short_description) {
       alert('Please fill in all required fields');
       return;
     }
 
-    // Filter out empty requirements and duties
     const filteredRequirements = formData.requirements.filter(req => req.trim() !== '');
     const filteredDuties = formData.duties.filter(duty => duty.trim() !== '');
 
@@ -172,25 +152,18 @@ const ManageHiring = () => {
       const submitData = new FormData();
       submitData.append('title', formData.title);
       submitData.append('short_description', formData.short_description);
+      submitData.append('tags', formData.tags);
+      submitData.append('location', formData.location);
       submitData.append('requirements', JSON.stringify(filteredRequirements));
       submitData.append('duties', JSON.stringify(filteredDuties));
-      
-      if (formData.image) {
-        submitData.append('image', formData.image);
-      }
-      if (formData.current_image) {
-        submitData.append('current_image', formData.current_image);
-      }
 
       let response;
       if (editingPosition) {
-        // Update existing position
         submitData.append('_method', 'PUT');
         response = await axios.post(`${API_URL}?id=${editingPosition.id}`, submitData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
       } else {
-        // Create new position
         response = await axios.post(API_URL, submitData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
@@ -211,7 +184,6 @@ const ManageHiring = () => {
     }
   };
 
-  // Delete position
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this position?')) {
       try {
@@ -232,6 +204,17 @@ const ManageHiring = () => {
     }
   };
 
+  const formatDate = (dateString) => {
+    if (!dateString) return new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+  };
+
+  const parseTags = (tagsString) => {
+    if (!tagsString) return [];
+    return tagsString.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
+  };
+
   return (
     <div className="managehiring-container">
       <div className="managehiring-header">
@@ -241,48 +224,71 @@ const ManageHiring = () => {
         </button>
       </div>
 
-      {isLoading && (
-        <div className="managehiring-loading">Loading...</div>
-      )}
-
-      <div className="managehiring-grid">
-        {hiringPositions.map((position) => (
-          <div key={position.id} className="managehiring-card">
-            <div className="managehiring-card-image">
-              <img 
-                src={position.image_path ? `http://localhost/difsysapi/${position.image_path}` : '/placeholder-image.jpg'} 
-                alt={position.title}
-                onError={(e) => { e.target.src = '/placeholder-image.jpg'; }}
-              />
-            </div>
-            <div className="managehiring-card-body">
-              <h3 className="managehiring-card-title">{position.title}</h3>
-              <p className="managehiring-card-text">{position.short_description}</p>
-              <div className="managehiring-card-actions">
-                <button 
-                  className="managehiring-edit-btn"
-                  onClick={() => openEditModal(position)}
-                >
-                  Edit
-                </button>
-                <button 
-                  className="managehiring-delete-btn"
-                  onClick={() => handleDelete(position.id)}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
+      <div className="managehiring-content-wrapper">
+        {isLoading && (
+          <div className="managehiring-loading">
+            <div className="managehiring-loading-spinner"></div>
+            <span>Loading...</span>
           </div>
-        ))}
+        )}
+
+        <div className="managehiring-grid">
+          {hiringPositions.map((position, index) => {
+            const tags = parseTags(position.tags);
+            
+            return (
+              <div key={position.id} className="managehiring-card">
+                <div className="managehiring-inner-card" data-index={index % 6}>
+                  <div className="managehiring-card-header">
+                    <span className="managehiring-card-date">
+                      {formatDate(position.created_at)}
+                    </span>
+                  </div>
+
+                  <div>
+                    <div className="managehiring-card-company">{COMPANY_NAME}</div>
+                    <h3 className="managehiring-card-title">{position.title}</h3>
+                    
+                    <div className="managehiring-card-tags">
+                      {tags.map((tag, tagIndex) => (
+                        <span key={tagIndex} className="managehiring-card-tag">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="managehiring-card-footer">
+                  <span className="managehiring-card-footer-location">
+                    {position.location || 'Cabuyao City'}
+                  </span>
+                  <div className="managehiring-card-actions">
+                    <button 
+                      className="managehiring-edit-btn"
+                      onClick={() => openEditModal(position)}
+                    >
+                      Edit
+                    </button>
+                    <button 
+                      className="managehiring-delete-btn"
+                      onClick={() => handleDelete(position.id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Modal */}
       {showModal && (
         <div className="managehiring-modal-overlay" onClick={closeModal}>
           <div className="managehiring-modal-card" onClick={(e) => e.stopPropagation()}>
-            <button className="managehiring-modal-close" onClick={closeModal}>
-              ×
+            <button className="managehiring-modal-close" onClick={closeModal} aria-label="Close modal">
+              <X />
             </button>
             
             <div className="managehiring-modal-header">
@@ -317,18 +323,29 @@ const ManageHiring = () => {
               </div>
 
               <div className="managehiring-form-group">
-                <label className="managehiring-label">Position Image</label>
+                <label className="managehiring-label">Tags (separate with commas) *</label>
                 <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="managehiring-file-input"
+                  type="text"
+                  name="tags"
+                  value={formData.tags}
+                  onChange={handleInputChange}
+                  className="managehiring-input"
+                  placeholder="e.g. Full time, Mid level, Remote"
+                  required
                 />
-                {editingPosition && formData.current_image && (
-                  <div className="managehiring-current-image">
-                    <small>Current image: {formData.current_image.split('/').pop()}</small>
-                  </div>
-                )}
+                <small className="managehiring-hint">Separate multiple tags with commas</small>
+              </div>
+
+              <div className="managehiring-form-group">
+                <label className="managehiring-label">Location *</label>
+                <input
+                  type="text"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleInputChange}
+                  className="managehiring-input"
+                  required
+                />
               </div>
 
               <div className="managehiring-form-group">

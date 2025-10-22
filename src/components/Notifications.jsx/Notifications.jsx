@@ -6,6 +6,8 @@ const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
   const [filteredNotifications, setFilteredNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedNotification, setSelectedNotification] = useState(null);
+  const [showNotificationModal, setShowNotificationModal] = useState(false);
   const [filter, setFilter] = useState('all'); // all, unread, read
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -59,6 +61,21 @@ const Notifications = () => {
     }
 
     setFilteredNotifications(filtered);
+  };
+
+  const openNotificationModal = (notification) => {
+    setSelectedNotification(notification);
+    setShowNotificationModal(true);
+    
+    // Mark as read when opening modal
+    if (!notification.is_read) {
+      markAsRead(notification.id);
+    }
+  };
+  
+  const closeNotificationModal = () => {
+    setShowNotificationModal(false);
+    setSelectedNotification(null);
   };
 
   const markAsRead = async (notificationId) => {
@@ -257,7 +274,7 @@ const Notifications = () => {
             <div
               key={notification.id}
               className={`notification-item ${!notification.is_read ? 'unread' : 'read'}`}
-              onClick={() => !notification.is_read && markAsRead(notification.id)}
+              onClick={() => openNotificationModal(notification)}
             >
               <div className="notification-icon">
                 {getNotificationIcon(notification.type)}
@@ -322,6 +339,95 @@ const Notifications = () => {
           <p>Showing {filteredNotifications.length} of {notifications.length} notifications</p>
         </div>
       )}
+
+{showNotificationModal && selectedNotification && (
+  <div className="notification-modal-overlay" onClick={closeNotificationModal}>
+    <div className="notification-modal" onClick={(e) => e.stopPropagation()}>
+      <button className="modal-close-btn" onClick={closeNotificationModal}>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+        </svg>
+      </button>
+      
+      <div className="modal-header">
+        <div className="modal-icon-large">
+          {getNotificationIcon(selectedNotification.type)}
+        </div>
+        <h2 className="modal-title">{selectedNotification.title}</h2>
+        <span className={`notification-type-badge ${selectedNotification.type}`}>
+          {selectedNotification.type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+        </span>
+      </div>
+      
+      <div className="modal-body">
+        <p className="modal-message">{selectedNotification.message}</p>
+        
+        <div className="modal-meta-info">
+          <div className="modal-meta-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+              <path d="M12 6v6l4 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+            <div className="modal-meta-content">
+              <span className="modal-meta-label">Date & Time</span>
+              <span className="modal-meta-value">
+                {new Date(selectedNotification.created_at).toLocaleString('en-US', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </span>
+            </div>
+          </div>
+          
+          <div className="modal-meta-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              <path d="M22 4L12 14.01l-3-3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <div className="modal-meta-content">
+              <span className="modal-meta-label">Status</span>
+              <span className="modal-meta-value">{selectedNotification.is_read ? 'Read' : 'Unread'}</span>
+            </div>
+          </div>
+          
+          <div className="modal-meta-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2v20M2 12h20" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+            <div className="modal-meta-content">
+              <span className="modal-meta-label">Time Ago</span>
+              <span className="modal-meta-value">{formatTimeAgo(selectedNotification.created_at)}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div className="modal-footer">
+        <button 
+          className="modal-delete-btn"
+          onClick={() => {
+            if (window.confirm('Are you sure you want to delete this notification?')) {
+              deleteNotification(selectedNotification.id);
+              closeNotificationModal();
+            }
+          }}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14zM10 11v6M14 11v6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          Delete
+        </button>
+        <button className="modal-close-footer-btn" onClick={closeNotificationModal}>
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 };

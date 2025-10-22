@@ -762,7 +762,7 @@ const createPayslipPage = (doc, employee, comp, copyType) => {
     ['Rest Day OT (Beyond 8hrs)', parseFloat(comp.rest_day_ot_plus_ot_hours || 0), parseFloat(comp.rest_day_ot_plus_ot_amount || 0)],
     ['Rest Day OT + Night Diff', parseFloat(comp.rest_day_nd_hours || 0), parseFloat(comp.rest_day_nd_amount || 0)],
     ['Site Allowance', '', parseFloat(comp.site_allowance || 0)],
-    ['Salary Adjustment', '', 0]
+    ['Salary Adjustment', '', parseFloat(comp.travel_time_amount || 0)]
   ];
 
   const rightData = [
@@ -1082,6 +1082,8 @@ const formatCurrency = (amount) => {
           comp.transportation_allowance || '-',
           comp.total_allowances || '-',
           comp.training_days || '-',
+          comp.travel_time_hours || '-',
+          comp.travel_time_amount || '-',
           comp.regular_holiday_rate || '-',
           comp.regular_holiday_hours || '-', // Hours - no currency
           comp.regular_holiday_amount || '-',
@@ -2324,6 +2326,7 @@ const createCombinedPayslipSheet = async (worksheet, employee, comp) => {
       'late_undertime_amount',
       'absences_amount', 
       'total_deductions',
+      'travel_time_amount',
       'net_pay',
       // Holiday and overtime rates/amounts (calculated fields)
       'regular_holiday_rate', 'regular_holiday_amount',
@@ -2509,6 +2512,8 @@ const createCombinedPayslipSheet = async (worksheet, employee, comp) => {
               <th rowSpan="2">Rate Per Minute</th>
               <th colSpan="3">Non-taxable Allowances</th>
               <th rowSpan="2">Training Days</th>
+              <th rowSpan="2">Travel Time Hours</th>
+              <th rowSpan="2">Travel Time Amount</th>
               <th colSpan="3">Regular Holiday</th>
               <th colSpan="3">Regular Holiday + Overtime</th>
               <th colSpan="3">Regular Holiday + Night Differential</th>
@@ -2631,6 +2636,8 @@ const createCombinedPayslipSheet = async (worksheet, employee, comp) => {
                   <td>{renderEditableCell('transportation_allowance', comp.transportation_allowance, 'currency', empId)}</td>
                   <td>{renderEditableCell('total_allowances', comp.total_allowances, 'currency', empId)}</td>
                   <td>{renderEditableCell('training_days', comp.training_days, 'number', empId)}</td>
+                  <td>{renderEditableCell('travel_time_hours', comp.travel_time_hours, 'number', empId)}</td>
+                  <td>{renderEditableCell('travel_time_amount', comp.travel_time_amount, 'currency', empId)}</td>
                   
                   {/* Regular Holiday Section */}
                   <td>{renderEditableCell('regular_holiday_rate', comp.regular_holiday_rate, 'currency', empId)}</td>

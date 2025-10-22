@@ -1,218 +1,237 @@
-/* ManageHiring.css - Professional Version */
-
-:root {
-  --primary-blue: #2563eb;
-  --primary-light: #3b82f6;
-  --primary-dark: #1d4ed8;
-  --success: #059669;
-  --danger: #dc2626;
-  --warning: #d97706;
-  --info: #0891b2;
-  --secondary: #64748b;
-  --light: #f8fafc;
-  --dark: #1e293b;
-  --gray-50: #f9fafb;
-  --gray-100: #f3f4f6;
-  --gray-200: #e5e7eb;
-  --gray-300: #d1d5db;
-  --gray-400: #9ca3af;
-  --gray-500: #6b7280;
-  --gray-600: #4b5563;
-  --gray-700: #374151;
-  --gray-800: #1f2937;
-  --gray-900: #111827;
-  --border-radius: 8px;
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-}
-
-
+/* ManageHiring Component Styles - Card within Card Design */
 .managehiring-container {
-  background-color: var(--gray-50);
+  background-color: white;
   min-height: 100vh;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  padding: 20px;
 }
 
 .managehiring-header {
+  background: white;
+  padding: 2rem 3rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 32px;
-  max-width: 1900px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 32px;
-  background-color: white;
-  box-shadow: var(--shadow);
-  border-radius: var(--border-radius);
-  border: 1px solid var(--gray-200);
-  padding: 32px;
 }
 
 .managehiring-title {
-  font-size: 28px;
-  font-weight: 600;
-  color: var(--gray-900);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111827;
   margin: 0;
   letter-spacing: -0.025em;
 }
 
 .managehiring-create-btn {
-  background-color: var(--primary-blue);
+  background-color: #111827;
   color: white;
   border: none;
-  padding: 12px 24px;
-  border-radius: var(--border-radius);
-  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
-  font-size: 14px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .managehiring-create-btn:hover {
-  background-color: var(--primary-dark);
-  box-shadow: var(--shadow-md);
-}
-
-.managehiring-create-btn:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgb(37 99 235 / 0.1);
+  background-color: #1f2937;
+  transform: translateY(-1px);
 }
 
 .managehiring-loading {
-  text-align: center;
-  padding: 60px 20px;
-  font-size: 16px;
-  color: var(--gray-500);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 2rem;
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+.managehiring-loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e5e7eb;
+  border-top: 2px solid #6b7280;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 0.75rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .managehiring-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px;
-  max-width: 1900px;
+  gap: 1.5rem;
   margin: 0 auto;
 }
 
+/* WHITE OUTER CARD */
 .managehiring-card {
   background: white;
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--gray-200);
-  overflow: hidden;
-  transition: all 0.2s ease;
+  border-radius: 18px;
+  border: 1px solid #5e5f6159;
+  padding: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
+  gap: 1rem;
 }
 
 .managehiring-card:hover {
-  border-color: var(--primary-blue);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-.managehiring-card-image {
-  width: 100%;
-  height: 180px;
-  overflow: hidden;
-  background-color: var(--gray-100);
+/* COLORED INNER CARD */
+.managehiring-inner-card {
+  border-radius: 12px;
+  padding: 1.25rem;
+  min-height: 250px;
   position: relative;
-}
-
-.managehiring-card-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.2s ease;
-}
-
-.managehiring-card:hover .managehiring-card-image img {
-  transform: scale(1.02);
-}
-
-.managehiring-card-body {
-  padding: 24px;
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-.managehiring-card-title {
-  font-size: 18px;
+.managehiring-inner-card[data-index="0"] {
+  background: linear-gradient(135deg, #fef3e2 0%, #fed7aa 100%);
+}
+
+.managehiring-inner-card[data-index="1"] {
+  background: linear-gradient(135deg, #ecfdf5 0%, #a7f3d0 100%);
+}
+
+.managehiring-inner-card[data-index="2"] {
+  background: linear-gradient(135deg, #f0f9ff 0%, #bae6fd 100%);
+}
+
+.managehiring-inner-card[data-index="3"] {
+  background: linear-gradient(135deg, #fdf4ff 0%, #e9d5ff 100%);
+}
+
+.managehiring-inner-card[data-index="4"] {
+  background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+}
+
+.managehiring-inner-card[data-index="5"] {
+  background: linear-gradient(135deg, #f9fafb 0%, #d1d5db 100%);
+}
+
+.managehiring-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.managehiring-card-date {
+  background: white;
+  padding: 0.2rem 0.6rem;
+  border-radius: 15px;
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.managehiring-card-company {
+  font-size: 0.875rem;
+  color: #374151;
   font-weight: 600;
-  color: var(--gray-900);
-  margin: 0 0 12px 0;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.managehiring-card-title {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 1.5rem 0;
   line-height: 1.3;
 }
 
-.managehiring-card-text {
-  color: var(--gray-600);
-  margin: 0 0 20px 0;
-  line-height: 1.5;
-  flex: 1;
-  font-size: 14px;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.managehiring-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.managehiring-card-tag {
+  background: transparent;
+  border: 1px solid black;
+  color: #374151;
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.managehiring-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 1rem;
+}
+
+.managehiring-card-footer-location {
+  font-size: 0.975rem;
+  font-weight: 700;
+  color: #6b7280;
 }
 
 .managehiring-card-actions {
   display: flex;
-  gap: 8px;
-  margin-top: auto;
+  gap: 0.5rem;
 }
 
 .managehiring-edit-btn {
-  background-color: var(--secondary);
+  background-color: #6b7280;
   color: white;
   border: none;
-  padding: 10px 16px;
-  border-radius: var(--border-radius);
-  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-  flex: 1;
-  font-size: 13px;
-  text-align: center;
+  transition: all 0.2s ease;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .managehiring-edit-btn:hover {
-  background-color: var(--gray-600);
-}
-
-.managehiring-edit-btn:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgb(100 116 139 / 0.1);
+  background-color: #4b5563;
+  transform: translateY(-1px);
 }
 
 .managehiring-delete-btn {
-  background-color: var(--danger);
+  background-color: #dc2626;
   color: white;
   border: none;
-  padding: 10px 16px;
-  border-radius: var(--border-radius);
-  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-  flex: 1;
-  font-size: 13px;
-  text-align: center;
+  transition: all 0.2s ease;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .managehiring-delete-btn:hover {
   background-color: #b91c1c;
-}
-
-.managehiring-delete-btn:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgb(220 38 38 / 0.1);
+  transform: translateY(-1px);
 }
 
 /* Modal Styles */
@@ -227,82 +246,91 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  padding: 20px;
+  animation: fade-in 0.2s ease;
+  padding: 1rem;
 }
 
 .managehiring-modal-card {
   background: white;
-  border-radius: var(--border-radius);
-  max-width: 700px;
+  border-radius: 20px;
+  max-width: 900px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
-  box-shadow: var(--shadow-lg);
-  border: 1px solid var(--gray-200);
+  animation: slide-up 0.3s ease;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.managehiring-modal-card::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 .managehiring-modal-close {
   position: absolute;
-  top: 16px;
-  right: 16px;
-  background: none;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: #f3f4f6;
   border: none;
-  font-size: 24px;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  font-size: 1.25rem;
   cursor: pointer;
-  color: var(--gray-400);
+  color: #6b7280;
   z-index: 10;
-  width: 32px;
-  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
   transition: all 0.2s ease;
 }
 
 .managehiring-modal-close:hover {
-  color: var(--gray-600);
-  background-color: var(--gray-100);
+  background: #e5e7eb;
+  color: #374151;
 }
 
 .managehiring-modal-header {
-  padding: 24px 24px 16px 24px;
-  border-bottom: 1px solid var(--gray-200);
+  background: linear-gradient(135deg, #f0f9ff 0%, #bae6fd 100%);
+  padding: 2.5rem 2rem 2rem 2rem;
+  border-radius: 20px 20px 0 0;
 }
 
 .managehiring-modal-title {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--gray-900);
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111827;
   margin: 0;
-  padding-right: 32px;
+  line-height: 1.2;
+  padding-right: 3rem;
 }
 
 /* Form Styles */
 .managehiring-form {
-  padding: 24px;
+  padding: 2.5rem 2rem;
 }
 
 .managehiring-form-group {
-  margin-bottom: 20px;
+  margin-bottom: 1.5rem;
 }
 
 .managehiring-label {
   display: block;
-  font-weight: 500;
-  color: var(--gray-900);
-  margin-bottom: 6px;
-  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
 }
 
 .managehiring-input,
 .managehiring-textarea {
   width: 100%;
-  padding: 12px 16px;
-  border: 1px solid var(--gray-300);
-  border-radius: var(--border-radius);
-  font-size: 14px;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.875rem;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   background: white;
   font-family: inherit;
@@ -311,8 +339,8 @@
 .managehiring-input:focus,
 .managehiring-textarea:focus {
   outline: none;
-  border-color: var(--primary-blue);
-  box-shadow: 0 0 0 3px rgb(37 99 235 / 0.1);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .managehiring-textarea {
@@ -320,64 +348,46 @@
   min-height: 80px;
 }
 
-.managehiring-file-input {
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid var(--gray-300);
-  border-radius: var(--border-radius);
-  font-size: 14px;
-  background: white;
-  cursor: pointer;
-}
-
-.managehiring-file-input:focus {
-  outline: none;
-  border-color: var(--primary-blue);
-  box-shadow: 0 0 0 3px rgb(37 99 235 / 0.1);
-}
-
-.managehiring-current-image {
-  margin-top: 8px;
-  color: var(--gray-500);
-  font-size: 13px;
-  padding: 8px 12px;
-  background-color: var(--gray-50);
-  border-radius: 4px;
-  border: 1px solid var(--gray-200);
+.managehiring-hint {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: #6b7280;
 }
 
 .managehiring-list-item {
   display: flex;
-  gap: 8px;
-  margin-bottom: 8px;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
   align-items: center;
 }
 
 .managehiring-list-input {
   flex: 1;
-  padding: 10px 12px;
-  border: 1px solid var(--gray-300);
-  border-radius: var(--border-radius);
-  font-size: 14px;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.875rem;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .managehiring-list-input:focus {
   outline: none;
-  border-color: var(--primary-blue);
-  box-shadow: 0 0 0 3px rgb(37 99 235 / 0.1);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .managehiring-remove-btn {
-  background-color: var(--danger);
+  background-color: #dc2626;
   color: white;
   border: none;
-  padding: 8px 12px;
-  border-radius: var(--border-radius);
-  font-size: 12px;
+  padding: 0.625rem 1rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
   cursor: pointer;
   transition: background-color 0.2s ease;
   white-space: nowrap;
+  font-weight: 600;
 }
 
 .managehiring-remove-btn:hover {
@@ -385,377 +395,189 @@
 }
 
 .managehiring-add-btn {
-  background-color: var(--success);
+  background-color: #059669;
   color: white;
   border: none;
-  padding: 10px 16px;
-  border-radius: var(--border-radius);
-  font-size: 14px;
+  padding: 0.625rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  font-weight: 500;
-  margin-top: 8px;
+  font-weight: 600;
+  margin-top: 0.5rem;
 }
 
 .managehiring-add-btn:hover {
   background-color: #047857;
 }
 
-.managehiring-add-btn:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgb(5 150 105 / 0.1);
-}
-
 .managehiring-form-actions {
   display: flex;
-  gap: 12px;
+  gap: 1rem;
   justify-content: flex-end;
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid var(--gray-200);
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
 }
 
 .managehiring-cancel-btn {
   background-color: white;
-  color: var(--gray-700);
-  border: 1px solid var(--gray-300);
-  padding: 12px 24px;
-  border-radius: var(--border-radius);
-  font-weight: 500;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 
 .managehiring-cancel-btn:hover {
-  background-color: var(--gray-50);
-  border-color: var(--gray-400);
-}
-
-.managehiring-cancel-btn:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgb(107 114 128 / 0.1);
+  background-color: #f9fafb;
+  border-color: #9ca3af;
 }
 
 .managehiring-submit-btn {
-  background-color: var(--primary-blue);
+  background-color: #111827;
   color: white;
   border: none;
-  padding: 12px 24px;
-  border-radius: var(--border-radius);
-  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
-  font-size: 14px;
+  transition: background-color 0.2s ease;
+  font-size: 0.875rem;
 }
 
 .managehiring-submit-btn:hover {
-  background-color: var(--primary-dark);
-  box-shadow: var(--shadow-md);
-}
-
-.managehiring-submit-btn:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgb(37 99 235 / 0.1);
+  background-color: #1f2937;
 }
 
 .managehiring-submit-btn:disabled {
-  background-color: var(--gray-400);
+  background-color: #9ca3af;
   cursor: not-allowed;
-  box-shadow: none;
 }
 
-.managehiring-submit-btn:disabled:hover {
-  background-color: var(--gray-400);
+/* Animations */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-/* Loading States */
-.managehiring-loading-state {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  color: var(--gray-500);
-  font-size: 16px;
-}
-
-/* Empty States */
-.managehiring-empty-state {
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--gray-500);
-}
-
-.managehiring-empty-state h3 {
-  color: var(--gray-700);
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
-.managehiring-empty-state p {
-  margin: 0;
-  font-size: 14px;
-}
-
-/* Required Field Indicator */
-.managehiring-label::after {
-  content: '';
-}
-
-.managehiring-label[data-required]::after {
-  content: ' *';
-  color: var(--danger);
-}
-
-/* Form Validation States */
-.managehiring-input.error,
-.managehiring-textarea.error,
-.managehiring-list-input.error {
-  border-color: var(--danger);
-  box-shadow: 0 0 0 3px rgb(220 38 38 / 0.1);
-}
-
-.managehiring-error-message {
-  color: var(--danger);
-  font-size: 12px;
-  margin-top: 4px;
-  display: block;
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* Responsive Design */
-
-/* Large Desktop */
-@media (min-width: 1400px) {
+@media (max-width: 768px) {
   .managehiring-container {
-    padding: 32px;
-  }
-  
-  .managehiring-grid {
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 32px;
-  }
-  
-  .managehiring-header {
-    padding: 40px;
-  }
-}
-
-@media (max-width: 1400px) {
-  .managehiring-container {
-    padding: 32px;
-  }
-  
-  .managehiring-grid {
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 32px;
-  }
-  
-  .managehiring-header {
-    padding: 40px;
-  }
-}
-
-/* Tablet */
-@media (max-width: 1024px) {
-  .managehiring-container {
-    padding: 20px;
-  }
-  
-  .managehiring-grid {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
+    padding: 1.5rem 1rem;
   }
   
   .managehiring-header {
     flex-direction: column;
-    gap: 16px;
-    align-items: flex-start;
-    padding: 24px;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .managehiring-title {
+    font-size: 1.875rem;
+    text-align: center;
   }
   
   .managehiring-create-btn {
     width: 100%;
-    justify-content: center;
-  }
-}
-
-/* Mobile */
-@media (max-width: 768px) {
-  .managehiring-container {
-    padding: 16px;
-  }
-  
-  .managehiring-title {
-    font-size: 24px;
   }
   
   .managehiring-grid {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 1.25rem;
   }
   
   .managehiring-modal-card {
-    width: 95%;
-    margin: 12px;
-    max-height: 90vh;
+    margin: 0.5rem;
+    max-height: 95vh;
+    border-radius: 16px;
   }
   
-  .managehiring-modal-header,
-  .managehiring-form {
-    padding: 20px;
+  .managehiring-modal-header {
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
+    border-radius: 16px 16px 0 0;
   }
   
   .managehiring-modal-title {
-    font-size: 18px;
-    padding-right: 40px;
+    font-size: 1.5rem;
+  }
+  
+  .managehiring-form {
+    padding: 2rem 1.5rem;
   }
   
   .managehiring-form-actions {
     flex-direction: column;
-    gap: 12px;
   }
   
   .managehiring-cancel-btn,
   .managehiring-submit-btn {
     width: 100%;
-    justify-content: center;
-  }
-  
-  .managehiring-list-item {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-  }
-  
-  .managehiring-remove-btn {
-    align-self: flex-end;
-    width: fit-content;
   }
   
   .managehiring-card-actions {
-    flex-direction: column;
-    gap: 8px;
-  }
-  
-  .managehiring-card-body {
-    padding: 20px;
-  }
-}
-
-/* Small Mobile */
-@media (max-width: 480px) {
-  .managehiring-container {
-    padding: 12px;
-  }
-  
-  .managehiring-title {
-    font-size: 22px;
-  }
-  
-  .managehiring-create-btn {
-    font-size: 13px;
-    padding: 10px 20px;
-  }
-  
-  .managehiring-header {
-    padding: 20px;
-  }
-  
-  .managehiring-card-body {
-    padding: 16px;
-  }
-  
-  .managehiring-modal-header,
-  .managehiring-form {
-    padding: 16px;
-  }
-  
-  .managehiring-modal-title {
-    font-size: 16px;
-  }
-  
-  .managehiring-modal-close {
-    top: 12px;
-    right: 12px;
-  }
-}
-
-/* Focus States for Accessibility */
-.managehiring-edit-btn:focus,
-.managehiring-delete-btn:focus,
-.managehiring-create-btn:focus,
-.managehiring-cancel-btn:focus,
-.managehiring-submit-btn:focus,
-.managehiring-add-btn:focus,
-.managehiring-remove-btn:focus {
-  outline: none;
-}
-
-/* Custom Scrollbar */
-.managehiring-modal-card::-webkit-scrollbar {
-  width: 6px;
-}
-
-.managehiring-modal-card::-webkit-scrollbar-track {
-  background: var(--gray-100);
-  border-radius: 3px;
-}
-
-.managehiring-modal-card::-webkit-scrollbar-thumb {
-  background: var(--gray-400);
-  border-radius: 3px;
-}
-
-.managehiring-modal-card::-webkit-scrollbar-thumb:hover {
-  background: var(--gray-500);
-}
-
-/* Print Styles */
-@media print {
-  .managehiring-container {
-    background: white;
-    padding: 0;
-  }
-  
-  .managehiring-header {
-    border-bottom: 2px solid #000;
-    padding-bottom: 20px;
-    margin-bottom: 30px;
-  }
-  
-  .managehiring-create-btn {
-    display: none;
-  }
-  
-  .managehiring-card-actions {
-    display: none;
-  }
-  
-  .managehiring-card {
-    border: 1px solid #000;
-    break-inside: avoid;
-    margin-bottom: 20px;
-  }
-  
-  .managehiring-modal-overlay {
-    display: none;
-  }
-}
-
-/* High Contrast Mode Support */
-@media (prefers-contrast: high) {
-  .managehiring-card {
-    border-width: 2px;
+    gap: 0.375rem;
   }
   
   .managehiring-edit-btn,
-  .managehiring-delete-btn,
-  .managehiring-create-btn,
-  .managehiring-submit-btn,
-  .managehiring-add-btn,
-  .managehiring-remove-btn {
-    border: 2px solid currentColor;
+  .managehiring-delete-btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.7rem;
   }
 }
 
+@media (max-width: 480px) {
+  .managehiring-container {
+    padding: 1rem 0.75rem;
+  }
+  
+  .managehiring-title {
+    font-size: 1.625rem;
+  }
+  
+  .managehiring-card {
+    padding: 0.875rem;
+  }
+  
+  .managehiring-inner-card {
+    padding: 1rem;
+    min-height: 200px;
+  }
+  
+  .managehiring-card-title {
+    font-size: 1.25rem;
+  }
+  
+  .managehiring-modal-header {
+    padding: 1.5rem 1rem 1.25rem 1rem;
+  }
+  
+  .managehiring-form {
+    padding: 1.5rem 1rem;
+  }
+  
+  .managehiring-modal-title {
+    font-size: 1.25rem;
+  }
+  
+  .managehiring-modal-close {
+    top: 0.875rem;
+    right: 0.875rem;
+    width: 32px;
+    height: 32px;
+  }
+}

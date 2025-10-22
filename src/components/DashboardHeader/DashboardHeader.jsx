@@ -16,6 +16,8 @@ const DashboardHeader = () => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [notificationCount, setNotificationCount] = useState(0);
   const [dashNotifications, setDashNotifications] = useState([]);
+  const [selectedNotification, setSelectedNotification] = useState(null);
+  const [showNotificationModal, setShowNotificationModal] = useState(false);
   const dashNotificationsRef = useRef(null);
   const dashSettingsRef = useRef(null);
 
@@ -123,6 +125,22 @@ const DashboardHeader = () => {
       document.removeEventListener("mousedown", handleDashClickOutside);
     };
   }, []);
+
+  const openNotificationModal = (notification) => {
+    setSelectedNotification(notification);
+    setShowNotificationModal(true);
+    setDashNotificationsOpen(false);
+    
+    // Mark as read when opening modal
+    if (!notification.is_read) {
+      markDashAsRead(notification.id);
+    }
+  };
+  
+  const closeNotificationModal = () => {
+    setShowNotificationModal(false);
+    setSelectedNotification(null);
+  };
 
   const toggleDashNotifications = () => {
     setDashNotificationsOpen(!dashNotificationsOpen);
@@ -294,7 +312,10 @@ const DashboardHeader = () => {
   return (
     <div className="dash-header-container">
       <div className="dash-header-left">
-        <h1 className="dash-header-title">Digitally Intelligent Facility Systems, Inc.</h1>
+      <h1 className="dash-header-title">
+          <span className="dash-header-title-full">Digitally Intelligent Facility Systems, Inc.</span>
+          <span className="dash-header-title-short">DIFSYS, INC.</span>
+        </h1>
       </div>
       
       <div className="dash-header-right">
@@ -328,7 +349,7 @@ const DashboardHeader = () => {
                   <div 
                     key={notification.id} 
                     className={`dash-notification-item ${!notification.is_read ? 'dash-unread' : ''}`}
-                    onClick={() => markDashAsRead(notification.id)}
+                    onClick={() => openNotificationModal(notification)}
                   >
                     <div className="dash-notification-icon">
                       {getDashNotificationIcon(notification.type)}
@@ -428,6 +449,63 @@ const DashboardHeader = () => {
           </div>
         </div>
       </div>
+
+
+      {showNotificationModal && selectedNotification && (
+        <div className="dash-notification-modal-overlay" onClick={closeNotificationModal}>
+          <div className="dash-notification-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="dash-modal-close-btn" onClick={closeNotificationModal}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+            </button>
+            
+            <div className="dash-modal-header">
+              <div className="dash-modal-icon">
+                {getDashNotificationIcon(selectedNotification.type)}
+              </div>
+              <h2 className="dash-modal-title">{selectedNotification.title}</h2>
+              <span className={`notification-type-badge ${selectedNotification.type}`}>
+                {selectedNotification.type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+              </span>
+            </div>
+            
+            <div className="dash-modal-body">
+              <p className="dash-modal-message">{selectedNotification.message}</p>
+              
+              <div className="dash-modal-meta">
+                <div className="dash-modal-meta-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                    <path d="M12 6v6l4 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                  </svg>
+                  <span>{new Date(selectedNotification.created_at).toLocaleString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}</span>
+                </div>
+                
+                <div className="dash-modal-meta-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M20 6L9 17l-5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  <span>{selectedNotification.is_read ? 'Read' : 'Unread'}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="dash-modal-footer">
+              <button className="dash-modal-close-footer-btn" onClick={closeNotificationModal}>
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

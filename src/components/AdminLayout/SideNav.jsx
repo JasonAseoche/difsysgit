@@ -229,6 +229,21 @@ function SideNav({ userRole = "admin" }) {
             text: "Leave Management" 
           },
           { 
+            path: "/sr-approval", 
+            icon: (
+              <svg xmlns="http://www.w3.org/2000/svg" 
+                    width="24" height="24" viewBox="0 0 24 24" 
+                    fill="none" stroke="currentColor" stroke-width="2" 
+                    stroke-linecap="round" stroke-linejoin="round" 
+                    class="lucide lucide-file-check">
+                  <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <path d="m9 15 2 2 4-4"/>
+                </svg>
+            ), 
+            text: "Service Report Approval" 
+          },
+          { 
             path: "/applicants-tracking", 
             icon: (
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round-search-icon lucide-user-round-search"><circle cx="10" cy="8" r="5"/><path d="M2 21a8 8 0 0 1 10.434-7.62"/><circle cx="18" cy="18" r="3"/><path d="m22 22-1.9-1.9"/></svg>
@@ -351,6 +366,23 @@ function SideNav({ userRole = "admin" }) {
             text: "Attendance" 
           },
           { 
+            path: "/service-report", 
+            icon: (
+                <svg xmlns="http://www.w3.org/2000/svg" 
+                    width="20" height="20" viewBox="0 0 24 24" 
+                    fill="none" stroke="currentColor" stroke-width="2" 
+                    stroke-linecap="round" stroke-linejoin="round" 
+                    class="lucide lucide-file-text">
+                  <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                  <line x1="10" y1="9" x2="8" y2="9"/>
+                </svg>
+            ), 
+            text: "Service Report" 
+          },
+          { 
             path: "/manage-documents", 
             icon: (
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -450,14 +482,36 @@ function SideNav({ userRole = "admin" }) {
       text: "Leave Approval" 
     },
     { 
-      path: "/reports", 
+      path: "/overtime-approval", 
       icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path d="M6 2C4.9 2 4 2.9 4 4v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6H6z" fill="currentColor"/>
-          <path d="M13 3.5L18.5 9H13V3.5z" fill="currentColor"/>
+        <svg xmlns="http://www.w3.org/2000/svg"
+          width="24" height="24" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round"
+          class="lucide lucide-file-clock">
+        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <circle cx="12" cy="15" r="5"/>
+        <polyline points="12 13 12 15 14 16"/>
+      </svg>
+      ), 
+      text: "Overtime Approval" 
+    },
+    { 
+      path: "/team-ob", 
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" 
+            width="20" height="20" viewBox="0 0 24 24" 
+            fill="none" stroke="currentColor" stroke-width="2" 
+            stroke-linecap="round" stroke-linejoin="round" 
+            class="lucide lucide-file-user">
+          <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <circle cx="12" cy="13" r="2"/>
+          <path d="M8 19c0-2 2-3 4-3s4 1 4 3"/>
         </svg>
       ), 
-      text: "Reports" 
+      text: "Team Service Report" 
     },
     { 
       path: "/profile", 

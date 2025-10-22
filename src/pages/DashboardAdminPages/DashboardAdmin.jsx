@@ -1,93 +1,182 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../components/AdminLayout/Dashboard.css';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   PieChart, Pie, Cell, LineChart, Line
-} from 'recharts'; // You'll need to install recharts
-
-// Import icons - assuming you're using an icon library like react-icons
+} from 'recharts';
 import { 
   FiUsers,
-  FiCalendar,
   FiClock,
-  FiAlertCircle,
-  FiCheck
+  FiUserCheck,
+  FiActivity
 } from 'react-icons/fi';
+import axios from 'axios';
 
 const Dashboard = () => {
-  // Mock data for charts and stats
-  const [period, setPeriod] = useState('month');
+  const [dashboardData, setDashboardData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   
-  // Analytics data
-  const revenueData = [
-    { name: 'Jan', value: 4000 },
-    { name: 'Feb', value: 3000 },
-    { name: 'Mar', value: 5000 },
-    { name: 'Apr', value: 7000 },
-    { name: 'May', value: 5000 },
-    { name: 'Jun', value: 6000 },
-    { name: 'Jul', value: 8500 },
-  ];
+  const API_URL = 'http://localhost/difsysapi/admin.php';
+  const AUDIT_API_URL = 'http://localhost/difsysapi/audit_trail.php';
   
-  const userActivityData = [
-    { name: 'Mon', active: 20, new: 5 },
-    { name: 'Tue', active: 25, new: 8 },
-    { name: 'Wed', active: 30, new: 6 },
-    { name: 'Thu', active: 28, new: 12 },
-    { name: 'Fri', active: 32, new: 10 },
-    { name: 'Sat', active: 22, new: 3 },
-    { name: 'Sun', active: 18, new: 4 },
-  ];
+  // Fetch dashboard data
+  useEffect(() => {
+    fetchDashboardData();
+    fetchRecentActivities();
+    
+    // Refresh data every 30 seconds for real-time updates
+    const interval = setInterval(() => {
+      fetchDashboardData();
+      fetchRecentActivities();
+    }, 30000);
+    
+    return () => clearInterval(interval);
+  }, []);
   
-  // Updated userTypeData with values from image
-  const userTypeData = [
-    { name: 'Admin', value: 20 },
-    { name: 'Manager', value: 30 },
-    { name: 'Accountant', value: 30 },
-    { name: 'Employee', value: 70 },
-    { name: 'Applicants', value: 35 }
-  ];
+  const fetchDashboardData = async () => {
+    try {
+      const response = await axios.get(`${API_URL}?endpoint=dashboard`);
+      
+      if (response.data.success) {
+        setDashboardData(response.data.data);
+        setError(null);
+      } else {
+        setError('Failed to fetch dashboard data');
+      }
+    } catch (err) {
+      console.error('Error fetching dashboard data:', err);
+      setError('Error connecting to server');
+    } finally {
+      setLoading(false);
+    }
+  };
   
-  // Set the exact matching colors from the image
+  const fetchRecentActivities = async () => {
+    try {
+      const response = await axios.get(`${AUDIT_API_URL}?endpoint=logs&page=1&itemsPerPage=4`);
+      
+      if (response.data.success && response.data.data) {
+        // Update dashboard data with fresh activities
+        setDashboardData(prev => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            recentActivities: response.data.data.map(log => ({
+              user: log.user_email || 'System',
+              action: `${log.component} - ${log.action}`,
+              time: formatRelativeTime(log.timestamp),
+              timestamp: log.timestamp
+            }))
+          };
+        });
+      }
+    } catch (err) {
+      console.error('Error fetching recent activities:', err);
+    }
+  };
+  
+  const formatRelativeTime = (timestamp) => {
+    const now = new Date();
+    const logTime = new Date(timestamp);
+    const diffInMinutes = Math.floor((now - logTime) / (1000 * 60));
+    
+    if (diffInMinutes < 1) return 'Just now';
+    if (diffInMinutes < 60) return `${diffInMinutes} mins ago`;
+    
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) return `${diffInHours} hours ago`;
+    
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays === 1) return 'Yesterday';
+    return `${diffInDays} days ago`;
+  };
+  
+  // Calculate percentage increase for new users
+  const calculateIncrease = (newUsers, totalUsers) => {
+    if (totalUsers === 0) return '0%';
+    const percentage = ((newUsers / totalUsers) * 100).toFixed(1);
+    return `+${percentage}%`;
+  };
+  
+  // Colors for pie chart
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#9575CD'];
   
-  // Updated summary cards data with appropriate icons
-  const summaryCards = [
-    { title: 'Total Users', value: '1,285', increase: '+12%', icon: <FiUsers />, color: '#3498db', showIncrease: true },
-    { title: 'New Account Created', value: '24', increase: '+8%', icon: <FiUsers />, color: '#2ecc71', showIncrease: true },
-    { title: 'HR Account', value: '2', increase: '', icon: <FiUsers />, color: '#9b59b6', showIncrease: false },
-    { title: 'Accountant Account', value: '2', increase: '', icon: <FiUsers />, color: '#e74c3c', showIncrease: false }
-  ];
+  // Default avatar SVG (generic person icon)
+  const defaultAvatar = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23999'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E";
   
-  // Recent activities
-  const recentActivities = [
-    { user: 'Juan Dela Cruz', action: 'Created a new account', time: '5 mins ago', avatar: '/api/placeholder/30/30' },
-    { user: 'Admin', action: 'Updated system settings', time: '2 hours ago', avatar: '/api/placeholder/30/30' },
-    { user: 'Maria Santos', action: 'Completed profile setup', time: '5 hours ago', avatar: '/api/placeholder/30/30' },
-    { user: 'System', action: 'Scheduled maintenance', time: 'Yesterday', avatar: '/api/placeholder/30/30' },
-  ];
+  if (loading) {
+    return (
+      <div className="dashboard-content">
+        <div className="loading-spinner">Loading dashboard...</div>
+      </div>
+    );
+  }
   
-  // Upcoming events
-  const upcomingEvents = [
-    { title: 'Weekly Team Meeting', date: 'Today, 3:00 PM', type: 'meeting' },
-    { title: 'System Maintenance', date: 'Tomorrow, 12:00 AM', type: 'maintenance' },
-    { title: 'Quarterly Review', date: 'May 25, 10:00 AM', type: 'meeting' },
-    { title: 'New Feature Launch', date: 'May 30', type: 'event' },
-  ];
+  if (error) {
+    return (
+      <div className="dashboard-content">
+        <div className="error-message">{error}</div>
+      </div>
+    );
+  }
   
-  // Recent alerts
-  const recentAlerts = [
-    { message: 'System update required', level: 'warning', time: '1 hour ago' },
-    { message: 'Unusual login attempt detected', level: 'danger', time: '3 hours ago' },
-    { message: 'Backup completed successfully', level: 'success', time: '12 hours ago' },
-    { message: 'Storage space running low', level: 'warning', time: 'Yesterday' },
+  if (!dashboardData) {
+    return (
+      <div className="dashboard-content">
+        <div className="error-message">No data available</div>
+      </div>
+    );
+  }
+  
+  const { summaryCards, accountOverview, userActivity, userDistribution, recentActivities } = dashboardData;
+  
+  // Log data for debugging
+  console.log('Dashboard Data:', dashboardData);
+  
+  // Prepare summary cards data
+  const summaryCardsData = [
+    { 
+      title: 'Total Users', 
+      value: summaryCards.totalUsers.toLocaleString(), 
+      increase: calculateIncrease(summaryCards.newUsers, summaryCards.totalUsers), 
+      icon: <FiUsers />, 
+      color: '#3498db', 
+      showIncrease: true 
+    },
+    { 
+      title: 'New Account Created', 
+      value: summaryCards.newUsers.toString(), 
+      increase: '', 
+      icon: <FiUsers />, 
+      color: '#2ecc71', 
+      showIncrease: false,
+      subtitle: 'Last 7 days'
+    },
+    { 
+      title: 'Verified Accounts', 
+      value: summaryCards.verifiedAccounts.toString(), 
+      increase: '', 
+      icon: <FiUserCheck />, 
+      color: '#9b59b6', 
+      showIncrease: false 
+    },
+    { 
+      title: 'Active Users', 
+      value: summaryCards.activeUsers.toString(), 
+      increase: '', 
+      icon: <FiActivity />, 
+      color: '#e74c3c', 
+      showIncrease: false,
+      subtitle: 'Online now'
+    }
   ];
 
   return (
     <div className="dashboard-content">
-  {/* Summary Cards */}
+      {/* Summary Cards */}
       <div className="summary-cards">
-        {summaryCards.map((card, index) => (
+        {summaryCardsData.map((card, index) => (
           <div className="summary-card" key={index}>
             <div className="card-icon" style={{ backgroundColor: card.color }}>
               {card.icon}
@@ -98,9 +187,12 @@ const Dashboard = () => {
               {card.showIncrease && (
                 <div className="card-increase">{card.increase} this week</div>
               )}
+              {card.subtitle && (
+                <div className="card-subtitle">{card.subtitle}</div>
+              )}
             </div>
           </div>
-      ))}
+        ))}
       </div>
           
       {/* Charts Section */}
@@ -109,7 +201,7 @@ const Dashboard = () => {
           <h2>Account Overview</h2>
           <div className="chart-container">
             <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={revenueData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+              <BarChart data={accountOverview} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="name" />
                 <YAxis />
@@ -124,14 +216,13 @@ const Dashboard = () => {
           <h2>User Activity</h2>
           <div className="chart-container">
             <ResponsiveContainer width="100%" height={250}>
-              <LineChart data={userActivityData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+              <LineChart data={userActivity} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip />
                 <Legend />
                 <Line type="monotone" dataKey="active" stroke="#3498db" activeDot={{ r: 8 }} />
-                <Line type="monotone" dataKey="new" stroke="#2ecc71" />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -143,7 +234,7 @@ const Dashboard = () => {
             <ResponsiveContainer width="100%" height={250}>
               <PieChart>
                 <Pie
-                  data={userTypeData}
+                  data={userDistribution}
                   cx="50%"
                   cy="50%"
                   innerRadius={60}
@@ -152,7 +243,7 @@ const Dashboard = () => {
                   dataKey="value"
                   label={({ value }) => `${value}`}
                 >
-                  {userTypeData.map((entry, index) => (
+                  {userDistribution.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
@@ -162,7 +253,6 @@ const Dashboard = () => {
                   verticalAlign="bottom" 
                   align="center"
                   wrapperStyle={{ fontSize: '12px' }}
-                  formatter={(value) => <span style={{ color: COLORS[userTypeData.findIndex(item => item.name === value)], fontWeight: 500 }}>{value}</span>}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -170,59 +260,55 @@ const Dashboard = () => {
         </div>
       </div>
       
-      {/* Bottom Widgets */}
+      {/* Recent Activities Widget */}
       <div className="widgets-grid">
         <div className="widget recent-activities">
-          <h2>Recent Activities</h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+            <h2>Recent Activities</h2>
+            <button 
+              onClick={fetchRecentActivities}
+              style={{
+                padding: '6px 12px',
+                background: '#3498db',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '12px'
+              }}
+            >
+              Refresh
+            </button>
+          </div>
           <div className="activity-list">
-            {recentActivities.map((activity, index) => (
-              <div className="activity-item" key={index}>
-                <img src={activity.avatar} alt={activity.user} className="activity-avatar" />
-                <div className="activity-details">
-                  <div className="activity-text">
-                    <strong>{activity.user}</strong> {activity.action}
+            {recentActivities && recentActivities.length > 0 ? (
+              recentActivities.map((activity, index) => (
+                <div className="activity-item" key={index}>
+                  <img 
+                    src={defaultAvatar} 
+                    alt="User" 
+                    className="activity-avatar" 
+                  />
+                  <div className="activity-details">
+                    <div className="activity-text">
+                      <strong>{activity.user}</strong> {activity.action}
+                    </div>
+                    <div className="activity-time">
+                      <FiClock /> {activity.time}
+                    </div>
                   </div>
-                  <div className="activity-time">
-                    <FiClock /> {activity.time}
-                  </div>
                 </div>
+              ))
+            ) : (
+              <div className="no-activities" style={{ 
+                textAlign: 'center', 
+                padding: '40px 20px', 
+                color: '#7f8c8d',
+                fontSize: '14px'
+              }}>
+                No recent activities found
               </div>
-            ))}
-          </div>
-        </div>
-        
-        <div className="widget upcoming-events">
-          <h2>Upcoming Events</h2>
-          <div className="events-list">
-            {upcomingEvents.map((event, index) => (
-              <div className={`event-item ${event.type}`} key={index}>
-                <div className="event-icon">
-                  <FiCalendar />
-                </div>
-                <div className="event-details">
-                  <div className="event-title">{event.title}</div>
-                  <div className="event-date">{event.date}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        
-        <div className="widget recent-alerts">
-          <h2>System Alerts</h2>
-          <div className="alerts-list">
-            {recentAlerts.map((alert, index) => (
-              <div className={`alert-item ${alert.level}`} key={index}>
-                <div className="alert-icon">
-                  {alert.level === 'danger' || alert.level === 'warning' ? 
-                    <FiAlertCircle /> : <FiCheck />}
-                </div>
-                <div className="alert-details">
-                  <div className="alert-message">{alert.message}</div>
-                  <div className="alert-time">{alert.time}</div>
-                </div>
-              </div>
-            ))}
+            )}
           </div>
         </div>
       </div>

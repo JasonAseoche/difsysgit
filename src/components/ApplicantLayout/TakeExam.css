@@ -985,10 +985,10 @@
 }
 
 .take-exam-back-to-exams-btn {
-  background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
-  color: white;
-  border: none;
-  padding: 14px 30px;
+  background: #EBEBEB;
+  color: rgb(65, 64, 64);
+  border: 1px solid rgb(170, 170, 170);
+  padding: 10px 20px;
   border-radius: 10px;
   font-size: 16px;
   font-weight: 600;
@@ -997,13 +997,11 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
 }
 
 .take-exam-back-to-exams-btn:hover {
-  background: linear-gradient(135deg, #4338ca 0%, #5b21b6 100%);
+  background: #4b5563;
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
 }
 
 /* Responsive Design */

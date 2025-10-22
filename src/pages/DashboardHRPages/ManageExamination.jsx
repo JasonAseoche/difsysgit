@@ -127,158 +127,234 @@ const ManageExamination = () => {
   };
 
   // PDF Export Function
-  const exportToPDF = async () => {
+  // PDF Export Function
+const exportToPDF = async () => {
+  try {
+    const exam = exams.find(e => e.id === selectedResult?.exam_id);
+    const answers = Array.isArray(selectedResult.answers) ? selectedResult.answers : [];
+    const questions = Array.isArray(exam.questions) ? exam.questions : [];
+
+    // Create new PDF document
+    const pdf = new jsPDF();
+    const pageWidth = pdf.internal.pageSize.width;
+    const pageHeight = pdf.internal.pageSize.height;
+    const margin = 20;
+    let currentY = margin;
+
+    // Add logo at top left
     try {
-      const exam = exams.find(e => e.id === selectedResult?.exam_id);
-      const answers = Array.isArray(selectedResult.answers) ? selectedResult.answers : [];
-      const questions = Array.isArray(exam.questions) ? exam.questions : [];
+      const logoWidth = 30;
+      const logoHeight = 20;
+      pdf.addImage(difsyslogo, 'PNG', margin, currentY, logoWidth, logoHeight);
+      currentY += logoHeight + 5;
+    } catch (error) {
+      console.warn('Could not add logo to PDF:', error);
+      currentY += 5;
+    }
 
-      // Create new PDF document
-      const pdf = new jsPDF();
-      const pageWidth = pdf.internal.pageSize.width;
-      const pageHeight = pdf.internal.pageSize.height;
-      const margin = 20;
-      let currentY = margin;
+    // Header section with Name, Date, Position, Score
+    pdf.setFontSize(11);
+    pdf.setFont('helvetica', 'normal');
 
-      // Add logo
-      try {
-        // Convert logo to base64 if needed
-        const logoWidth = 30;
-        const logoHeight = 20;
-        pdf.addImage(difsyslogo, 'PNG', margin, currentY, logoWidth, logoHeight);
-        currentY += logoHeight + 10;
-      } catch (error) {
-        console.warn('Could not add logo to PDF:', error);
-        currentY += 10;
-      }
+    // Name field (left side)
+    const nameLabel = 'Name:';
+    const nameValue = `${selectedResult?.firstName || ''} ${selectedResult?.lastName || ''}`;
+    const nameLabelWidth = pdf.getTextWidth(nameLabel);
+    
+    pdf.text(nameLabel, margin, currentY);
+    
+    // Position name value immediately after label with minimal spacing
+    const nameValueX = margin + nameLabelWidth + 2;
+    pdf.text(nameValue, nameValueX, currentY);
+    
+    // Underline for name value with shorter fixed length
+    const nameUnderlineLength = 60;
+    pdf.setLineWidth(0.3);
+    pdf.line(nameValueX, currentY + 1, nameValueX + nameUnderlineLength, currentY + 1);
 
-      // Add applicant information
-      pdf.setFontSize(16);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text(`${selectedResult?.firstName} ${selectedResult?.lastName}`, margin, currentY);
-      currentY += 8;
+    // Date field (right side) - centered text align
+    const dateLabel = 'Date:';
+    const dateValue = selectedResult?.completed_at 
+      ? new Date(selectedResult.completed_at).toLocaleDateString() 
+      : new Date().toLocaleDateString();
+    const dateLabelWidth = pdf.getTextWidth(dateLabel);
+    const dateValueWidth = pdf.getTextWidth(dateValue);
+    
+    // Center align the date value
+    const dateUnderlineLength = 30;
+    const dateLabelX = pageWidth - margin - dateUnderlineLength - dateLabelWidth - 2;
+    const dateValueX = dateLabelX + dateLabelWidth + 2;
+    const dateCenterOffset = (dateUnderlineLength - dateValueWidth) / 2;
+    
+    pdf.text(dateLabel, dateLabelX, currentY);
+    pdf.text(dateValue, dateValueX + dateCenterOffset, currentY);
+    
+    // Underline for date value
+    pdf.line(dateValueX, currentY + 1, dateValueX + dateUnderlineLength, currentY + 1);
 
-      // Get applicant position from applicants data
-      const applicantInfo = applicants.find(app => 
-        app.name === `${selectedResult?.firstName} ${selectedResult?.lastName}`
-      );
-      const position = applicantInfo?.position || 'Position Not Available';
-      
-      pdf.setFontSize(12);
-      pdf.setFont('helvetica', 'normal');
-      pdf.text(`Position Applying: ${position}`, margin, currentY);
-      currentY += 15;
+    currentY += 8;
 
-      // Add exam title (centered)
-      pdf.setFontSize(18);
-      pdf.setFont('helvetica', 'bold');
-      const examTitle = selectedResult?.exam_title || 'Exam Results';
-      const titleWidth = pdf.getTextWidth(examTitle);
-      pdf.text(examTitle, (pageWidth - titleWidth) / 2, currentY);
-      currentY += 20;
+    // Get applicant position from applicants data
+    const applicantInfo = applicants.find(app => 
+      app.name === `${selectedResult?.firstName} ${selectedResult?.lastName}`
+    );
+    const position = applicantInfo?.position || 'Position Not Available';
 
-      // Add exam summary
-      pdf.setFontSize(12);
-      pdf.setFont('helvetica', 'normal');
-      pdf.text(`Total Score: ${Math.round(selectedResult?.total_score || 0)}%`, margin, currentY);
-      currentY += 6;
-      pdf.text(`Time Taken: ${selectedResult?.time_taken || 'N/A'} minutes`, margin, currentY);
-      currentY += 6;
-      pdf.text(`Date: ${selectedResult?.completed_at ? new Date(selectedResult.completed_at).toLocaleDateString() : 'In Progress'}`, margin, currentY);
-      currentY += 6;
-      pdf.text(`Status: ${selectedResult?.status}`, margin, currentY);
-      currentY += 20;
+    // Position field (left side)
+    const posLabel = 'Position:';
+    const posValue = position;
+    const posLabelWidth = pdf.getTextWidth(posLabel);
+    
+    pdf.text(posLabel, margin, currentY);
+    
+    // Position value immediately after label with minimal spacing
+    const posValueX = margin + posLabelWidth + 2;
+    pdf.text(posValue, posValueX, currentY);
+    
+    // Underline for position value with shorter fixed length
+    const posUnderlineLength = 58;
+    pdf.line(posValueX, currentY + 1, posValueX + posUnderlineLength, currentY + 1);
 
-      // Add questions and answers
-      pdf.setFontSize(14);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Questions and Answers:', margin, currentY);
-      currentY += 15;
+    // Score field (right side) - centered text align
+    const scoreLabel = 'Score:';
+    const scoreValue = `${Math.round(selectedResult?.total_score || 0)}%`;
+    const scoreLabelWidth = pdf.getTextWidth(scoreLabel);
+    const scoreValueWidth = pdf.getTextWidth(scoreValue);
+    
+    // Center align the score value
+    const scoreUnderlineLength = 30;
+    const scoreLabelX = pageWidth - margin - scoreUnderlineLength - scoreLabelWidth - 2;
+    const scoreValueX = scoreLabelX + scoreLabelWidth + 2;
+    const scoreCenterOffset = (scoreUnderlineLength - scoreValueWidth) / 2;
+    
+    pdf.text(scoreLabel, scoreLabelX, currentY);
+    pdf.text(scoreValue, scoreValueX + scoreCenterOffset, currentY);
+    
+    // Underline for score value
+    pdf.line(scoreValueX, currentY + 1, scoreValueX + scoreUnderlineLength, currentY + 1);
 
-      if (answers.length === 0) {
-        pdf.setFontSize(12);
-        pdf.setFont('helvetica', 'italic');
-        pdf.text('No answers available - exam may still be in progress.', margin, currentY);
-      } else {
-        answers.forEach((answer, index) => {
-          const question = questions.find(q => q.id === answer.questionId);
+    currentY += 17;
+
+    // Exam Title (centered and bold)
+    pdf.setFontSize(16);
+    pdf.setFont('helvetica', 'bold');
+    const examTitle = selectedResult?.exam_title || 'EXAM TITLE';
+    const titleWidth = pdf.getTextWidth(examTitle);
+    pdf.text(examTitle, (pageWidth - titleWidth) / 2, currentY);
+    currentY += 15;
+
+    // Questions and Answers
+    if (answers.length === 0) {
+      pdf.setFontSize(11);
+      pdf.setFont('helvetica', 'italic');
+      pdf.setTextColor(0, 0, 0);
+      pdf.text('No answers available - exam may still be in progress.', margin, currentY);
+    } else {
+      answers.forEach((answer, index) => {
+        const question = questions.find(q => q.id === answer.questionId);
+        
+        if (question) {
+          // Check if we need a new page
+          if (currentY > pageHeight - 60) {
+            pdf.addPage();
+            currentY = margin;
+          }
+
+          // Question number and text
+          pdf.setFontSize(11);
+          pdf.setFont('helvetica', 'normal');
+          pdf.setTextColor(0, 0, 0);
           
-          if (question) {
-            // Check if we need a new page
-            if (currentY > pageHeight - 60) {
-              pdf.addPage();
-              currentY = margin;
-            }
+          const questionText = `${index + 1}. ${question.question} (${question.points} pts)`;
+          const questionLines = pdf.splitTextToSize(questionText, pageWidth - 2 * margin);
+          pdf.text(questionLines, margin, currentY);
+          currentY += questionLines.length * 6 + 5;
 
-            // Question number and text
-            pdf.setFontSize(12);
-            pdf.setFont('helvetica', 'bold');
-            const questionText = `Question ${index + 1}: ${question.question}`;
+          // Handle different question types
+          if (question.type === 'multiple-choice' && question.options) {
+            // Display options for multiple choice
+            const studentAnswer = answer.answer || '';
+            const correctAnswer = question.correctAnswer || '';
             
-            // Split long text into multiple lines
-            const questionLines = pdf.splitTextToSize(questionText, pageWidth - 2 * margin);
-            pdf.text(questionLines, margin, currentY);
-            currentY += questionLines.length * 6 + 3;
+            question.options.forEach((option, optIndex) => {
+              if (currentY > pageHeight - 40) {
+                pdf.addPage();
+                currentY = margin;
+              }
 
-            // Question type
-            pdf.setFontSize(10);
-            pdf.setFont('helvetica', 'italic');
-            pdf.text(`(${question.type} - ${question.points} pts)`, margin, currentY);
-            currentY += 8;
+              const optionLetter = String.fromCharCode(65 + optIndex); // A, B, C, D
+              const optionText = `${optionLetter}. ${option}`;
+              
+              // Check if this is the student's answer or correct answer
+              const isStudentAnswer = option === studentAnswer;
+              const isCorrectAnswer = option === correctAnswer;
+              
+              // Set text color based on answer correctness
+              if (isCorrectAnswer) {
+                // Correct answer - Green text
+                pdf.setTextColor(0, 128, 0); // Green
+              } else if (isStudentAnswer && !isCorrectAnswer) {
+                // Wrong answer chosen by student - Red text
+                pdf.setTextColor(255, 0, 0); // Red
+              } else {
+                // Not selected - Normal black text
+                pdf.setTextColor(0, 0, 0);
+              }
 
-            // Student answer
-            pdf.setFontSize(11);
+              pdf.text(optionText, margin + 7, currentY);
+              
+              currentY += 6;
+            });
+
+            // Reset color
+            pdf.setTextColor(0, 0, 0);
+            currentY += 3;
+          } else {
+            // For essay or other types, show the answer
             pdf.setFont('helvetica', 'normal');
-            pdf.text('Answer:', margin, currentY);
-            currentY += 6;
-            
+            pdf.setTextColor(0, 0, 0);
             const studentAnswer = answer.answer || 'No answer provided';
             const answerLines = pdf.splitTextToSize(studentAnswer, pageWidth - 2 * margin - 10);
             pdf.text(answerLines, margin + 10, currentY);
             currentY += answerLines.length * 5 + 5;
-
-            // Correct answer (for non-essay questions)
-            if (question.type !== 'essay' && question.correctAnswer) {
-              pdf.setFont('helvetica', 'bold');
-              pdf.text('Correct Answer:', margin, currentY);
-              currentY += 6;
-              pdf.setFont('helvetica', 'normal');
-              const correctLines = pdf.splitTextToSize(question.correctAnswer, pageWidth - 2 * margin - 10);
-              pdf.text(correctLines, margin + 10, currentY);
-              currentY += correctLines.length * 5 + 5;
-            }
-
-            // Score
-            pdf.setFont('helvetica', 'bold');
-            const score = getDisplayScore(answer.questionId, answer.score || 0);
-            pdf.text(`Score: ${score} / ${question.points} pts`, margin, currentY);
-            currentY += 15;
-
-            // Add separator line
-            pdf.setDrawColor(200, 200, 200);
-            pdf.line(margin, currentY, pageWidth - margin, currentY);
-            currentY += 10;
           }
-        });
-      }
 
-      // Add footer
-      const footerY = pageHeight - 15;
-      pdf.setFontSize(8);
-      pdf.setFont('helvetica', 'italic');
-      pdf.text(`Generated on ${new Date().toLocaleString()}`, margin, footerY);
-      pdf.text('DIFSYS - Digital Information Filing System', pageWidth - margin - 80, footerY);
-
-      // Save the PDF
-      const fileName = `${selectedResult?.firstName}_${selectedResult?.lastName}_${examTitle.replace(/\s+/g, '_')}_Results.pdf`;
-      pdf.save(fileName);
-      
-      showSuccess('PDF exported successfully!');
-    } catch (error) {
-      console.error('Error exporting PDF:', error);
-      showSuccess('Error exporting PDF. Please try again.', 'error');
+          // Score
+          pdf.setFont('helvetica', 'bold');
+          pdf.setTextColor(0, 0, 0);
+          const score = getDisplayScore(answer.questionId, answer.score || 0);
+          pdf.text(`Score: ${score}/${question.points} pts`, margin + 5, currentY);
+          currentY += 12;
+        }
+      });
     }
-  };
+
+    // Footer
+    const footerY = pageHeight - 15;
+    pdf.setFontSize(8);
+    pdf.setFont('helvetica', 'normal');
+    pdf.setTextColor(100, 100, 100);
+    
+    const generatedText = `Generated and Exported: ${new Date().toLocaleString()}`;
+    pdf.text(generatedText, margin, footerY);
+    
+    const companyText = 'DIFSYS, INC. - Digital Intelligent Facility Systems, Incorporated.';
+    const companyTextWidth = pdf.getTextWidth(companyText);
+    pdf.text(companyText, pageWidth - margin - companyTextWidth, footerY);
+
+    // Reset text color
+    pdf.setTextColor(0, 0, 0);
+
+    // Save the PDF
+    const fileName = `${selectedResult?.firstName}_${selectedResult?.lastName}_${examTitle.replace(/\s+/g, '_')}_Results.pdf`;
+    pdf.save(fileName);
+    
+    showSuccess('PDF exported successfully!');
+  } catch (error) {
+    console.error('Error exporting PDF:', error);
+    showSuccess('Error exporting PDF. Please try again.', 'error');
+  }
+};
 
   const handleAddExam = () => {
     setCurrentView('add');
@@ -535,7 +611,7 @@ const ManageExamination = () => {
       const result = selectedResult;
       let updatedAnswers = result.answers ? [...result.answers] : [];
       let newTotalScore = editedScores.total !== undefined ? editedScores.total : result.total_score;
-
+  
       // Update individual question scores
       Object.keys(editedScores).forEach(key => {
         if (key !== 'total') {
@@ -549,7 +625,7 @@ const ManageExamination = () => {
           }
         }
       });
-
+  
       // If total score wasn't manually set, calculate from individual scores
       if (editedScores.total === undefined && Object.keys(editedScores).length > 0) {
         const exam = exams.find(e => e.id === selectedResult?.exam_id);
@@ -563,46 +639,44 @@ const ManageExamination = () => {
           newTotalScore = totalPossiblePoints > 0 ? Math.round((earnedPoints / totalPossiblePoints) * 100) : 0;
         }
       }
-
-      await axios.put('http://localhost/difsysapi/exam_api.php?endpoint=score', {
+  
+      const response = await axios.put('http://localhost/difsysapi/exam_api.php?endpoint=score', {
         attempt_id: result.id,
         total_score: newTotalScore,
         answers: updatedAnswers
       });
-
-      if (response.data.success) {
-        // Send notification to applicant about grade update
-        try {
-          const exam = exams.find(e => e.id === selectedResult?.exam_id);
-          await fetch('http://localhost/difsysapi/notifications_api.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              user_id: selectedResult.app_id,
-              user_role: 'applicant',
-              type: 'exam_graded',
-              title: 'Exam Results Available',
-              message: `Your exam "${exam?.title || 'Unknown Exam'}" has been graded. Your score: ${newTotalScore}%`,
-              related_id: selectedResult.exam_id,
-              related_type: 'exam'
-            })
-          });
-        } catch (error) {
-          console.error('Error sending notification:', error);
-        }
-      
-        // Update the local state
-        setSelectedResult(prev => ({
-          ...prev,
-          total_score: newTotalScore,
-          answers: updatedAnswers
-        }));
-      
-        setEditedScores({});
-        setHasUnsavedChanges(false);
-        await fetchResults();
-        showSuccess('Scores updated successfully!');
+  
+      // Send notification to applicant about grade update
+      try {
+        const exam = exams.find(e => e.id === selectedResult?.exam_id);
+        await fetch('http://localhost/difsysapi/notifications_api.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_id: selectedResult.app_id,
+            user_role: 'applicant',
+            type: 'exam_graded',
+            title: 'Exam Results Available',
+            message: `Your exam "${exam?.title || 'Unknown Exam'}" has been graded. Your score: ${newTotalScore}%`,
+            related_id: selectedResult.exam_id,
+            related_type: 'exam'
+          })
+        });
+      } catch (error) {
+        console.error('Error sending notification:', error);
       }
+    
+      // Update the local state
+      setSelectedResult(prev => ({
+        ...prev,
+        total_score: newTotalScore,
+        answers: updatedAnswers
+      }));
+    
+      setEditedScores({});
+      setHasUnsavedChanges(false);
+      await fetchResults();
+      showSuccess('Scores updated successfully!');
     } catch (error) {
       console.error('Error updating scores:', error);
       showSuccess('Error updating scores. Please try again.', 'error');
@@ -1328,9 +1402,6 @@ const ManageExamination = () => {
           
           <div className="exam-modal-footer">
             <div className="exam-modal-footer-left">
-              {hasUnsavedChanges && (
-                <span className="exam-unsaved-changes">You have unsaved changes</span>
-              )}
               <button 
                 className="exam-btn-export"
                 onClick={exportToPDF}
@@ -1345,6 +1416,9 @@ const ManageExamination = () => {
                 </svg>
                 Export Result
               </button>
+              {hasUnsavedChanges && (
+                <span className="exam-unsaved-changes">You have unsaved changes</span>
+              )}
             </div>
             <div className="exam-modal-footer-right">
               {hasUnsavedChanges && (

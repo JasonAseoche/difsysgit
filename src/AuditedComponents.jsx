@@ -29,6 +29,7 @@ import ManageHiring from './pages/DashboardHRPages/ManageHiring';
 import ManageDepartment from './pages/DashboardHRPages/ManageDepartment';
 import ManageEvents from './pages/DashboardHRPages/ManageEvents';
 import EAProfile from './components/EAProfile/EAProfile';
+import SRApproval from './pages/DashboardHRPages/SRApproval.jsx';
 
 import DashboardAccountant from './pages/DashboardAccountantPages/DashboardAccountant';
 import PayrollAccount from './pages/DashboardAccountantPages/PayrollAccount';
@@ -49,6 +50,7 @@ import EmpAttHistory from './pages/DashboardHRPages/EmpAttHistory';
 import EmpDocuments from './pages/DashboardHRPages/EmpDocuments';
 import EADetails from './components/EAProfile/EADetails';
 import OvertimeRequest from './pages/DashboardEmployeePages/OvertimeRequest.jsx';
+import ServiceReport from './pages/DashboardEmployeePages/ServiceReport.jsx';
 
 import DashboardApplicant from './pages/DashboardApplicantPages/DashboardApplicant';
 import UploadRequirements from './pages/DashboardApplicantPages/UploadRequirements';
@@ -61,7 +63,8 @@ import TeamManagement from './pages/DashboardSupervisorPages/TeamManagement';
 import SupervisorAttendance from './pages/DashboardSupervisorPages/SupervisorAttendance';
 import PerformanceReview from './pages/DashboardSupervisorPages/PerformanceReview';
 import LeaveApproval from './pages/DashboardSupervisorPages/LeaveApproval';
-import Reports from './pages/DashboardSupervisorPages/Reports';
+import OvertimeApproval from './pages/DashboardSupervisorPages/OvertimeApproval.jsx';
+import TeamOB from './pages/DashboardSupervisorPages/TeamOB.jsx';
 
 import Unauthorized from './pages/Unauthorized';
 
@@ -99,6 +102,7 @@ export const AuditedEmPersonal = withAuditTrail(EmPersonal, 'EmPersonal');
 export const AuditedEmpDetails = withAuditTrail(EmpDetails, 'EmpDetails');
 export const AuditedEmpAttHistory = withAuditTrail(EmpAttHistory, 'EmpAttHistory');
 export const AuditedEmpDocuments = withAuditTrail(EmpDocuments, 'EmpDocuments');
+export const AuditedSRApproval = withAuditTrail(SRApproval, 'SRApproval');
 
 // Accountant components
 export const AuditedDashboardAccountant = withAuditTrail(DashboardAccountant, 'DashboardAccountant');
@@ -116,6 +120,7 @@ export const AuditedMyPayroll = withAuditTrail(MyPayroll, 'MyPayroll');
 export const AuditedTimeKeeping = withAuditTrail(TimeKeeping, 'TimeKeeping');
 export const AuditedFileInquiries = withAuditTrail(FileInquiries, 'FileInquiries');
 export const AuditedOvertimeRequest = withAuditTrail(OvertimeRequest, 'OvertimeRequest');
+export const AuditedServiceReport = withAuditTrail(ServiceReport, 'ServiceReport');
 
 // Applicant components
 export const AuditedDashboardApplicant = withAuditTrail(DashboardApplicant, 'DashboardApplicant');
@@ -130,7 +135,8 @@ export const AuditedTeamManagement = withAuditTrail(TeamManagement, 'TeamManagem
 export const AuditedSupervisorAttendance = withAuditTrail(SupervisorAttendance, 'SupervisorAttendance');
 export const AuditedPerformanceReview = withAuditTrail(PerformanceReview, 'PerformanceReview');
 export const AuditedLeaveApproval = withAuditTrail(LeaveApproval, 'LeaveApproval');
-export const AuditedReports = withAuditTrail(Reports, 'Reports');
+export const AuditedOvertimeApproval = withAuditTrail(OvertimeApproval, 'OvertimeApproval');
+export const AuditedTeamOB = withAuditTrail(TeamOB, 'TeamOB');
 
 // Profile components
 export const AuditedEAProfile = withAuditTrail(EAProfile, 'EAProfile');

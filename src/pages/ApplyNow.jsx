@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { X } from 'lucide-react';
 import '../components/Landing/ApplyNow.css';
 
 const ApplyNow = () => {
@@ -56,25 +57,20 @@ const ApplyNow = () => {
     return date.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
   };
 
-  // Generate job tags based on job data
-  const generateJobTags = (job) => {
-    const tags = [];
-    
-    if (job.type) tags.push(job.type);
-    else tags.push('Full time'); // Default
-    
-    if (job.level) tags.push(job.level);
-    else tags.push('Mid level'); // Default
-    
-    if (job.remote_option) tags.push('Remote');
-    else tags.push('On-site'); // Default
-    
-    return tags.slice(0, 3); // Limit to 3 tags
+  // Parse tags from comma-separated string
+  const parseTags = (tagsString) => {
+    if (!tagsString) return [];
+    return tagsString.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
   };
 
-  // Generate location - always show Cabuyao City
+  // Generate job tags based on job data
+  const generateJobTags = (job) => {
+    return parseTags(job.tags);
+  };
+
+  // Generate location from job data
   const generateLocation = (job) => {
-    return 'Cabuyao City';
+    return job.location || 'Cabuyao City';
   };
 
   // Close modal on Escape key press
@@ -180,14 +176,6 @@ const ApplyNow = () => {
       {selectedJob && (
         <div className="applynow-modal-overlay" onClick={handleCloseModal}>
           <div className="applynow-modal-card" onClick={(e) => e.stopPropagation()}>
-            <button 
-              className="applynow-modal-close" 
-              onClick={handleCloseModal}
-              aria-label="Close modal"
-            >
-              ×
-            </button>
-            
             <div className="applynow-modal-header">
               <div className="applynow-modal-header-content">
                 <div className="applynow-modal-title-section">
@@ -212,6 +200,13 @@ const ApplyNow = () => {
                 >
                   Apply Now
                 </button>
+                <button 
+              className="applynow-modal-close" 
+              onClick={handleCloseModal}
+              aria-label="Close modal"
+            >
+              <X/>
+            </button>
               </div>
             </div>
             

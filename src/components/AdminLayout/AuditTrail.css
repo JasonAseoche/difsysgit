@@ -101,16 +101,19 @@
   }
   
   .audit-trail-filter-input {
-    flex: 1;
-    min-width: 200px;
-    padding: 10px 12px;
-    border: 1px solid #d5d5d5;
-    border-radius: 6px;
-    font-size: 14px;
-    color: #2c3e50;
-    background-color: #fefefe;
-    transition: border-color 0.2s ease;
+    flex: 1 !important;
+    min-width: 200px !important;
+    max-height: 50px !important;
+    padding: 10px 12px !important;
+    border: 1px solid #d5d5d5 !important;
+    border-radius: 6px !important;
+    font-size: 14px !important;
+    color: #2c3e50 !important;
+    background-color: #fefefe !important;
+    transition: border-color 0.2s ease !important;
   }
+
+
   
   .audit-trail-filter-input:focus {
     outline: none;

@@ -8,7 +8,7 @@ import slide2 from '../assets/slide2.jpg';
 import slide3 from '../assets/slide3.jpg';
 import slide4 from '../assets/slide4.jpg';
 import slide5 from '../assets/slide5.jpg';
-import difsysbg from '../assets/difsysbg.jpg';
+import difsysbg from '../assets/buildingbackground.png';
 import difsysteam from '../assets/difsysteam.png';
 import difsyslogo from '../assets/difsyslogo.png';
 import Header from '../components/Landing/Header';
@@ -27,7 +27,7 @@ const Landing = () => {
     
     return (
       <main id = "home" className="landing-hero-section">
-        <img src={difsysteam} alt="Background" className="landing-hero-bg" />
+        <img src={difsysbg} alt="Background" className="landing-hero-bg" />
         <div className="landing-hero-content">
           <h1>Digitally Intelligent Facility Systems, Inc.</h1>
           <p className="landing-hero-text">
