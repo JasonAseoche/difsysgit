@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { getCurrentUser, getUserId } from '../../utils/auth';
+import { getUserId, getUserRole, getCurrentUser } from '../../utils/auth';
 import axios from 'axios';
 import '../../components/EmployeeLayout/FileInquiries.css';
 
@@ -153,6 +153,50 @@ const FileInquiries = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [dragActive, setDragActive] = useState(false);
+
+  const userId = getUserId();
+  const userRole = getUserRole();
+  const currentUser = getCurrentUser();
+
+  // Send notification function
+const sendNotification = async (notificationType, title, message, relatedId = null) => {
+  try {
+    // Determine target based on user role
+    let targetUserId = 0; // 0 means send to all HR
+    let targetRole = 'HR'; // Default to HR
+    
+    // If current user is HR, send to applicant/employee
+    if (userRole === 'Employee') {
+      targetUserId = relatedId; // Send to specific user
+      targetRole = 'HR'; // or 'employee' based on context
+    }
+    
+    const notificationData = {
+      user_id: targetUserId,
+      user_role: targetRole,
+      type: notificationType,
+      title: title,
+      message: message,
+      related_id: relatedId,
+      related_type: notificationType.split('_')[0] // Extract type from notification type
+    };
+    
+    const response = await fetch('http://localhost/difsysapi/notifications_api.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(notificationData)
+    });
+    
+    const data = await response.json();
+    if (data.success) {
+      console.log('Notification sent successfully');
+    }
+  } catch (error) {
+    console.error('Error sending notification:', error);
+  }
+};
 
   // Employee information
   const [employeeInfo, setEmployeeInfo] = useState({
@@ -535,6 +579,14 @@ const FileInquiries = () => {
     } else {
       await handleCreateTicket();
     }
+
+    await sendNotification(
+      'file-inquiries',                                    // type
+      'New Inquiries',                               // title
+      `${currentUser.firstName} has submit a inquiry`, // message
+      userId                                                // related_id
+    );
+
   }, [formData, isEditing, selectedTicket?.id, API_BASE_URL, employeeInfo.emp_id, fetchUserTickets, handleCreateTicket]);
 
   // Pagination logic - memoized

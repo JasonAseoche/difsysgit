@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FileText, Download, Plus, X, Upload, Edit3, Trash2 } from 'lucide-react';
-import { getUserId, isAuthenticated } from '../../utils/auth';
+import { getUserId, isAuthenticated, getUserRole, getCurrentUser } from '../../utils/auth';
 import '../../components/EmployeeLayout/ManageDocuments.css';
 
 const ManageDocuments = () => {
@@ -42,6 +42,10 @@ const ManageDocuments = () => {
     'Health Insurance',
     'Emergency Contact Form'
   ];
+
+  const userId = getUserId();
+  const userRole = getUserRole();
+  const currentUser = getCurrentUser();
 
   // Load PDF.js library
   useEffect(() => {
@@ -125,6 +129,46 @@ const ManageDocuments = () => {
       generatePreviewsForDocuments(uploadedFiles);
     }
   }, [pdfJsLoaded, uploadedFiles]);
+
+  // Send notification function
+const sendNotification = async (notificationType, title, message, relatedId = null) => {
+  try {
+    // Determine target based on user role
+    let targetUserId = 0; // 0 means send to all HR
+    let targetRole = 'HR'; // Default to HR
+    
+    // If current user is HR, send to applicant/employee
+    if (userRole === 'Employee') {
+      targetUserId = relatedId; // Send to specific user
+      targetRole = 'HR'; // or 'employee' based on context
+    }
+    
+    const notificationData = {
+      user_id: targetUserId,
+      user_role: targetRole,
+      type: notificationType,
+      title: title,
+      message: message,
+      related_id: relatedId,
+      related_type: notificationType.split('_')[0] // Extract type from notification type
+    };
+    
+    const response = await fetch('http://localhost/difsysapi/notifications_api.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(notificationData)
+    });
+    
+    const data = await response.json();
+    if (data.success) {
+      console.log('Notification sent successfully');
+    }
+  } catch (error) {
+    console.error('Error sending notification:', error);
+  }
+};
 
   const generatePreviewsForDocuments = async (documents) => {
     if (!pdfJsLoaded) {
@@ -386,6 +430,12 @@ const ManageDocuments = () => {
         setMessage({ type: '', text: '' });
       }, 5000);
     }
+    await sendNotification(
+      'manage_document',                                    // type
+      'New Documents Uploaded',                               // title
+      `${currentUser.firstName} has uploaded a documents`, // message
+      userId                                                // related_id
+    );
   };
 
   const clearStagedFile = () => {

@@ -23,6 +23,8 @@ const ChangePassword = () => {
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [passwordStrength, setPasswordStrength] = useState('');
     const [userData, setUserData] = useState(null);
+    const [bypassOTP, setBypassOTP] = useState(false);
+    const [isFirstLogin, setIsFirstLogin] = useState(false);
     
     const navigate = useNavigate();
     const inputRefs = useRef([]);
@@ -35,6 +37,13 @@ const ChangePassword = () => {
             return;
         }
         setUserData(user.user);
+        
+        // Check if this is a first login requiring password change
+        if (user.user.change_pass_status === 'Not Yet') {
+            setBypassOTP(true);
+            setIsFirstLogin(true);
+            setCurrentStep(3); // Skip directly to password change
+        }
     }, [navigate]);
     
     // Timer effect for OTP resend
@@ -133,46 +142,54 @@ const ChangePassword = () => {
     };
     
     // Step 1: Request OTP for password change
-    const handleRequestOTP = async () => {
-        if (!userData) {
-            setError('User data not found. Please login again.');
-            return;
-        }
+    // Step 1: Request OTP for password change
+const handleRequestOTP = async () => {
+    if (!userData) {
+        setError('User data not found. Please login again.');
+        return;
+    }
+    
+    // If bypass OTP (first login), skip to password change
+    if (bypassOTP && isFirstLogin) {
+        setCurrentStep(3);
+        return;
+    }
+    
+    setIsLoading(true);
+    setError('');
+    setSuccess('');
+    
+    try {
+        const response = await axios.post('http://localhost/difsysapi/change_password.php', {
+            action: 'request_otp',
+            user_id: userData.id
+        });
         
-        setIsLoading(true);
-        setError('');
-        setSuccess('');
-        
-        try {
-            const response = await axios.post('http://localhost/difsysapi/change_password.php', {
-                action: 'request_otp',
-                user_id: userData.id
-            });
+        if (response.data.success) {
+            setSuccess('Verification code sent to your email!');
+            setCurrentStep(2);
+            setResendTimer(120);
+            setCanResend(false);
             
-            if (response.data.success) {
-                setSuccess('Verification code sent to your email!');
-                setCurrentStep(2);
-                setResendTimer(120);
-                setCanResend(false);
-                
-                // Focus first OTP input after a short delay
-                setTimeout(() => {
-                    if (inputRefs.current[0]) {
-                        inputRefs.current[0].focus();
-                    }
-                }, 100);
-                
-                setTimeout(() => setSuccess(''), 3000);
-            } else {
-                setError(response.data.message || 'Failed to send verification code');
-            }
-        } catch (error) {
-            console.error('Request OTP error:', error);
-            setError('Failed to send verification code. Please try again.');
-        } finally {
-            setIsLoading(false);
+            // Focus first OTP input after a short delay
+            setTimeout(() => {
+                if (inputRefs.current[0]) {
+                    inputRefs.current[0].focus();
+                }
+            }, 100);
+            
+            setTimeout(() => setSuccess(''), 3000);
+        } else {
+            setError(response.data.message || 'Failed to send verification code');
         }
-    };
+    } catch (error) {
+        console.error('Request OTP error:', error);
+        setError('Failed to send verification code. Please try again.');
+    } finally {
+        setIsLoading(false);
+    }
+};
+
     
     // Step 2: Verify OTP
     const handleVerifyOTP = async () => {
@@ -250,7 +267,9 @@ const ChangePassword = () => {
                 action: 'change_password',
                 user_id: userData.id,
                 current_password: current,
-                new_password: newPassword
+                new_password: newPassword,
+                is_first_login: isFirstLogin,  // Add this
+                bypass_current_check: bypassOTP  // Add this
             });
             
             if (response.data.success) {

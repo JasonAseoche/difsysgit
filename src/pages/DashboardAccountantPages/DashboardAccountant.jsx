@@ -1,42 +1,54 @@
-import React from 'react';
-import { useEffect } from 'react';
-
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../../components/AccountantLayout/DashboardAccountant.css';
 
 const DashboardAccountant = () => {
-  // Sample data for demonstration
-  const tasks = [
-    {
-      id: 1,
-      name: "Monthly Payroll Processing",
-      status: "In Progress",
-      dueBy: "2025-07-20"
-    },
-    {
-      id: 2,
-      name: "Tax Filing Preparation",
-      status: "Pending",
-      dueBy: "2025-07-25"
-    },
-    {
-      id: 3,
-      name: "Employee Benefits Review",
-      status: "Completed",
-      dueBy: "2025-07-15"
-    },
-    {
-      id: 4,
-      name: "Financial Report Analysis",
-      status: "In Progress",
-      dueBy: "2025-07-30"
-    },
-    {
-      id: 5,
-      name: "Overtime Calculation",
-      status: "Pending",
-      dueBy: "2025-07-22"
+  const navigate = useNavigate();
+  
+  // State management
+  const [stats, setStats] = useState({
+    total_employees: 0,
+    completed_tasks: 0,
+    new_tasks: 0
+  });
+  
+  const [tasks, setTasks] = useState([]);
+  const [calendarData, setCalendarData] = useState({
+    current_month_year: '',
+    calendar_events: {},
+    days_with_events: []
+  });
+  
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  // Fetch all dashboard data
+  useEffect(() => {
+    fetchDashboardData();
+    document.title = "DIFSYS | DASHBOARD ACCOUNTANT";
+  }, []);
+
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('http://localhost/difsysapi/dashboard_accountant.php?action=get_all_dashboard_data');
+      const result = await response.json();
+      
+      if (result.success) {
+        setStats(result.data.stats);
+        setTasks(result.data.tasks);
+        setCalendarData(result.data.calendar_events);
+      } else {
+        setError(result.error || 'Failed to fetch dashboard data');
+      }
+    } catch (err) {
+      console.error('Error fetching dashboard data:', err);
+      setError('Network error. Please check your connection.');
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
   const getStatusClass = (status) => {
     switch (status) {
@@ -51,9 +63,77 @@ const DashboardAccountant = () => {
     }
   };
 
-  useEffect(() => {
-    document.title = "DIFSYS | DASHBOARD ACCOUNTANT";
-  }, []);
+  const handleViewDetail = (task) => {
+    if (task.link) {
+      navigate(task.link);
+    }
+  };
+
+  // Calendar generation
+  const generateCalendar = () => {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDayOfWeek = firstDay.getDay();
+    
+    const days = [];
+    
+    // Previous month days
+    const prevMonthLastDay = new Date(year, month, 0).getDate();
+    for (let i = startingDayOfWeek - 1; i >= 0; i--) {
+      days.push({
+        day: prevMonthLastDay - i,
+        isCurrentMonth: false,
+        hasEvent: false
+      });
+    }
+    
+    // Current month days
+    for (let day = 1; day <= daysInMonth; day++) {
+      const hasEvent = calendarData.days_with_events?.includes(day) || false;
+      days.push({
+        day,
+        isCurrentMonth: true,
+        isToday: day === new Date().getDate() && 
+                 month === new Date().getMonth() && 
+                 year === new Date().getFullYear(),
+        hasEvent
+      });
+    }
+    
+    return days;
+  };
+
+  const handlePrevMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1));
+  };
+
+  const handleNextMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1));
+  };
+
+  const getEventsForDay = (day) => {
+    return calendarData.calendar_events?.[day] || [];
+  };
+
+  if (loading) {
+    return (
+      <div className="acc-dashboard-container">
+        <div className="acc-loading">Loading dashboard data...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="acc-dashboard-container">
+        <div className="acc-error">Error: {error}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="acc-dashboard-container">
@@ -73,7 +153,7 @@ const DashboardAccountant = () => {
               </div>
               <div className="acc-card-content">
                 <div className="acc-card-label">Total Employees</div>
-                <div className="acc-card-value">145</div>
+                <div className="acc-card-value">{stats.total_employees}</div>
               </div>
             </div>
 
@@ -85,7 +165,7 @@ const DashboardAccountant = () => {
               </div>
               <div className="acc-card-content">
                 <div className="acc-card-label">New Tasks</div>
-                <div className="acc-card-value">12</div>
+                <div className="acc-card-value">{stats.new_tasks}</div>
               </div>
             </div>
 
@@ -97,7 +177,7 @@ const DashboardAccountant = () => {
               </div>
               <div className="acc-card-content">
                 <div className="acc-card-label">Completed Tasks</div>
-                <div className="acc-card-value">28</div>
+                <div className="acc-card-value">{stats.completed_tasks}</div>
               </div>
             </div>
           </div>
@@ -107,52 +187,59 @@ const DashboardAccountant = () => {
             {/* Table Header */}
             <div className="acc-table-header">
               <h2 className="acc-table-title">My Tasks</h2>
-              <button className="acc-filter-button">
+              <button className="acc-filter-button" onClick={fetchDashboardData}>
                 <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
+                  <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
                 </svg>
-                Filter
+                Refresh
               </button>
             </div>
             
             {/* Table Container */}
             <div className="acc-table-container">
-              <table className="acc-task-table">
-                <thead>
-                  <tr className="acc-table-header-row">
-                    <th className="acc-table-header-cell">Task Name</th>
-                    <th className="acc-table-header-cell">Status</th>
-                    <th className="acc-table-header-cell">Due By</th>
-                    <th className="acc-table-header-cell">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {tasks.map((task) => (
-                    <tr key={task.id} className="acc-table-row">
-                      <td className="acc-table-cell">
-                        <div className="acc-task-name">
-                          {task.name}
-                        </div>
-                      </td>
-                      <td className="acc-table-cell">
-                        <span className={`acc-status-badge ${getStatusClass(task.status)}`}>
-                          {task.status}
-                        </span>
-                      </td>
-                      <td className="acc-table-cell">
-                        <div className="acc-due-date">
-                          {new Date(task.dueBy).toLocaleDateString()}
-                        </div>
-                      </td>
-                      <td className="acc-table-cell">
-                        <button className="acc-view-detail-btn">
-                          View Detail
-                        </button>
-                      </td>
+              {tasks.length === 0 ? (
+                <div className="acc-no-tasks">No tasks available</div>
+              ) : (
+                <table className="acc-task-table">
+                  <thead>
+                    <tr className="acc-table-header-row">
+                      <th className="acc-table-header-cell">Task Name</th>
+                      <th className="acc-table-header-cell">Status</th>
+                      <th className="acc-table-header-cell">Due By</th>
+                      <th className="acc-table-header-cell">Action</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {tasks.map((task) => (
+                      <tr key={task.id} className="acc-table-row">
+                        <td className="acc-table-cell">
+                          <div className="acc-task-name">
+                            {task.name}
+                          </div>
+                        </td>
+                        <td className="acc-table-cell">
+                          <span className={`acc-status-badge ${getStatusClass(task.status)}`}>
+                            {task.status}
+                          </span>
+                        </td>
+                        <td className="acc-table-cell">
+                          <div className="acc-due-date">
+                            {new Date(task.dueBy).toLocaleDateString()}
+                          </div>
+                        </td>
+                        <td className="acc-table-cell">
+                          <button 
+                            className="acc-view-detail-btn"
+                            onClick={() => handleViewDetail(task)}
+                          >
+                            View Detail
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </div>
           </div>
         </div>
@@ -160,13 +247,15 @@ const DashboardAccountant = () => {
         {/* Calendar Card - Right Side */}
         <div className="acc-calendar-card">
           <div className="acc-calendar-header">
-            <button className="acc-calendar-nav">
+            <button className="acc-calendar-nav" onClick={handlePrevMonth}>
               <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
               </svg>
             </button>
-            <h3 className="acc-calendar-title">March 2025</h3>
-            <button className="acc-calendar-nav">
+            <h3 className="acc-calendar-title">
+              {currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+            </h3>
+            <button className="acc-calendar-nav" onClick={handleNextMonth}>
               <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/>
               </svg>
@@ -185,80 +274,58 @@ const DashboardAccountant = () => {
             </div>
 
             <div className="acc-calendar-days">
-              {/* Previous month days */}
-              <div className="acc-calendar-day acc-other-month">26</div>
-              <div className="acc-calendar-day acc-other-month">27</div>
-              <div className="acc-calendar-day acc-other-month">28</div>
-              <div className="acc-calendar-day acc-other-month">29</div>
-              <div className="acc-calendar-day acc-other-month">30</div>
-              <div className="acc-calendar-day acc-other-month">31</div>
-              
-              {/* Current month days */}
-              <div className="acc-calendar-day">1</div>
-              <div className="acc-calendar-day">2</div>
-              <div className="acc-calendar-day">3</div>
-              <div className="acc-calendar-day">4</div>
-              <div className="acc-calendar-day">5</div>
-              <div className="acc-calendar-day">6</div>
-              <div className="acc-calendar-day">7</div>
-              <div className="acc-calendar-day">8</div>
-              <div className="acc-calendar-day">9</div>
-              <div className="acc-calendar-day">10</div>
-              <div className="acc-calendar-day">11</div>
-              <div className="acc-calendar-day">12</div>
-              <div className="acc-calendar-day">13</div>
-              <div className="acc-calendar-day">14</div>
-              <div className="acc-calendar-day acc-today">15</div>
-              <div className="acc-calendar-day">16</div>
-              <div className="acc-calendar-day">17</div>
-              <div className="acc-calendar-day">18</div>
-              <div className="acc-calendar-day">19</div>
-              <div className="acc-calendar-day acc-has-event">20</div>
-              <div className="acc-calendar-day">21</div>
-              <div className="acc-calendar-day acc-has-event">22</div>
-              <div className="acc-calendar-day">23</div>
-              <div className="acc-calendar-day">24</div>
-              <div className="acc-calendar-day acc-has-event">25</div>
-              <div className="acc-calendar-day">26</div>
-              <div className="acc-calendar-day">27</div>
-              <div className="acc-calendar-day">28</div>
-              <div className="acc-calendar-day">29</div>
-              <div className="acc-calendar-day acc-has-event">30</div>
-              <div className="acc-calendar-day">31</div>
+              {generateCalendar().map((dayObj, index) => (
+                <div 
+                  key={index}
+                  className={`acc-calendar-day ${
+                    !dayObj.isCurrentMonth ? 'acc-other-month' : ''
+                  } ${dayObj.isToday ? 'acc-today' : ''} ${
+                    dayObj.hasEvent ? 'acc-has-event' : ''
+                  }`}
+                >
+                  {dayObj.day}
+                </div>
+              ))}
             </div>
           </div>
 
           <div className="acc-upcoming-events">
             <h4 className="acc-events-title">EVENTS</h4>
             <div className="acc-events-list">
-              <div className="acc-event-item">
-                <div className="acc-event-indicator acc-development"></div>
-                <div className="acc-event-info">
-                  <div className="acc-event-name">Payroll Meeting</div>
-                  <div className="acc-event-time">10:00 AM</div>
-                </div>
-              </div>
-              <div className="acc-event-item">
-                <div className="acc-event-indicator acc-ux"></div>
-                <div className="acc-event-info">
-                  <div className="acc-event-name">Tax Review</div>
-                  <div className="acc-event-time">2:00 PM</div>
-                </div>
-              </div>
-              <div className="acc-event-item">
-                <div className="acc-event-indicator acc-development"></div>
-                <div className="acc-event-info">
-                  <div className="acc-event-name">Budget Planning</div>
-                  <div className="acc-event-time">4:00 PM</div>
-                </div>
-              </div>
-              <div className="acc-event-item">
-                <div className="acc-event-indicator acc-ux"></div>
-                <div className="acc-event-info">
-                  <div className="acc-event-name">Financial Audit</div>
-                  <div className="acc-event-time">9:00 AM</div>
-                </div>
-              </div>
+              {(() => {
+                const allEvents = [];
+                const today = new Date().getDate();
+                const month = currentDate.getMonth();
+                const year = currentDate.getFullYear();
+                
+                // Get events for the next 7 days
+                for (let i = 0; i < 7; i++) {
+                  const checkDate = new Date(year, month, today + i);
+                  const checkDay = checkDate.getDate();
+                  const events = getEventsForDay(checkDay);
+                  
+                  events.forEach(event => {
+                    allEvents.push({
+                      ...event,
+                      date: checkDate
+                    });
+                  });
+                }
+                
+                if (allEvents.length === 0) {
+                  return <div className="acc-no-events">No upcoming events</div>;
+                }
+                
+                return allEvents.slice(0, 4).map((event, index) => (
+                  <div key={index} className="acc-event-item">
+                    <div className={`acc-event-indicator acc-${event.color || 'development'}`}></div>
+                    <div className="acc-event-info">
+                      <div className="acc-event-name">{event.title}</div>
+                      <div className="acc-event-time">{event.time}</div>
+                    </div>
+                  </div>
+                ));
+              })()}
             </div>
           </div>
         </div>

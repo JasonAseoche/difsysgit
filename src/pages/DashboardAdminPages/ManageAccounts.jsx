@@ -72,6 +72,17 @@ const ManageAccounts = () => {
     setFilteredAccounts(filtered);
   };
 
+  const generateRandomPassword = () => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
+    let password = '';
+    for (let i = 0; i < 12; i++) {
+      password += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return password;
+  };
+
+  
+
   const fetchAccounts = async () => {
     setIsLoading(true);
     try {
@@ -94,12 +105,13 @@ const ManageAccounts = () => {
   };
 
   const openAddModal = () => {
+    const generatedPassword = generateRandomPassword();
     setCurrentAccount({
       id: '',
       firstName: '',
       lastName: '',
       email: '',
-      password: '',
+      password: generatedPassword,
       role: 'user'
     });
     setModalMode('add');
@@ -150,8 +162,8 @@ const ManageAccounts = () => {
       return;
     }
     
-    if (modalMode === 'add' && (!currentAccount.password || currentAccount.password.length < 6)) {
-      setMessage({ text: 'Password must be at least 6 characters', type: 'error' });
+    if (modalMode === 'add' && (!currentAccount.password || currentAccount.password.length < 12)) {
+      setMessage({ text: 'Password must be at least 12 characters', type: 'error' });
       return;
     }
     
@@ -620,17 +632,31 @@ const ManageAccounts = () => {
                   <label htmlFor="password" className="manage-account-form-label">
                     {modalMode === 'add' ? 'Password*' : 'Password (leave empty to keep current)'}
                   </label>
-                  <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    value={currentAccount.password}
-                    onChange={handleInputChange}
-                    className="manage-account-form-input"
-                    required={modalMode === 'add'}
-                  />
+                  <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                    <input
+                      type="text"
+                      id="password"
+                      name="password"
+                      value={currentAccount.password}
+                      onChange={handleInputChange}
+                      className="manage-account-form-input"
+                      required={modalMode === 'add'}
+                      readOnly={modalMode === 'add'}
+                      style={{ flex: 1 }}
+                    />
+                    {modalMode === 'add' && (
+                      <button
+                        type="button"
+                        onClick={() => setCurrentAccount({...currentAccount, password: generateRandomPassword()})}
+                        className="manage-account-button manage-account-button-secondary"
+                        style={{ whiteSpace: 'nowrap' }}
+                      >
+                        Regenerate
+                      </button>
+                    )}
+                  </div>
                   {modalMode === 'add' && (
-                    <p className="manage-account-form-hint">Password must be at least 6 characters</p>
+                    <p className="manage-account-form-hint">Password auto-generated (12 characters). Will be sent to user's email.</p>
                   )}
                 </div>
                 <div className="manage-account-form-group">

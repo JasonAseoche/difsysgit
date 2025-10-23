@@ -14,6 +14,9 @@ const ManageEmployee = () => {
   const [loadedCards, setLoadedCards] = useState(0);
   const [viewingEmployee, setViewingEmployee] = useState(null);
   const [openDropdownId, setOpenDropdownId] = useState(null);
+  const [showActionMenu, setShowActionMenu] = useState(false);
+  const [selectedDays, setSelectedDays] = useState([]);
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
 
   const [showChangeShiftModal, setShowChangeShiftModal] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
@@ -99,7 +102,31 @@ const ManageEmployee = () => {
     };
 
     fetchEmployees();
-  }, []);
+  },
+   []);
+
+   const handleSort = (sortType) => {
+    let sorted = [...employees];
+    switch(sortType) {
+      case 'latest':
+        sorted.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+        break;
+      case 'oldest':
+        sorted.sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
+        break;
+      case 'ascending':
+        sorted.sort((a, b) => a.firstName.localeCompare(b.firstName));
+        break;
+      case 'descending':
+        sorted.sort((a, b) => b.firstName.localeCompare(a.firstName));
+        break;
+    }
+    setEmployees(sorted);
+  };
+
+  
+
+
 
   const fetchApplicants = async () => {
     try {
@@ -209,6 +236,43 @@ const ManageEmployee = () => {
     return fullName.includes(query) || email.includes(query) || position.includes(query);
   });
 
+  const handleDayToggle = (day) => {
+    const allDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    let newSelectedDays;
+    
+    if (selectedDays.includes(day)) {
+      newSelectedDays = selectedDays.filter(d => d !== day);
+    } else {
+      // Add day in proper order
+      newSelectedDays = [...selectedDays, day].sort((a, b) => 
+        allDays.indexOf(a) - allDays.indexOf(b)
+      );
+    }
+    
+    setSelectedDays(newSelectedDays);
+    
+    // Calculate work days and rest days
+    const unselectedDays = allDays.filter(d => !newSelectedDays.includes(d));
+    
+    // Format work days
+    if (newSelectedDays.length > 0) {
+      setWorkDayFrom(newSelectedDays[0]);
+      setWorkDayTo(newSelectedDays[newSelectedDays.length - 1]);
+    } else {
+      setWorkDayFrom('');
+      setWorkDayTo('');
+    }
+    
+    // Format rest days
+    if (unselectedDays.length > 0) {
+      setRestDayFrom(unselectedDays[0]);
+      setRestDayTo(unselectedDays[unselectedDays.length - 1]);
+    } else {
+      setRestDayFrom('');
+      setRestDayTo('');
+    }
+  };
+
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
     setLoadedCards(0);
@@ -242,16 +306,27 @@ const ManageEmployee = () => {
     if (employee.workDays) {
       const workDaysParts = employee.workDays.split('-');
       if (workDaysParts.length === 2) {
-        setWorkDayFrom(workDaysParts[0]);
-        setWorkDayTo(workDaysParts[1]);
+        setWorkDayFrom(workDaysParts[0].trim());
+        setWorkDayTo(workDaysParts[1].trim());
+        
+        // Initialize selected days from work days
+        const allDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        const workDayStart = allDays.indexOf(workDaysParts[0].trim());
+        const workDayEnd = allDays.indexOf(workDaysParts[1].trim());
+        if (workDayStart !== -1 && workDayEnd !== -1) {
+          const selectedWorkDays = allDays.slice(workDayStart, workDayEnd + 1);
+          setSelectedDays(selectedWorkDays);
+        }
       }
+    } else {
+      setSelectedDays([]);
     }
     
     if (employee.restDay) {
       const restDayParts = employee.restDay.split('-');
       if (restDayParts.length === 2) {
-        setRestDayFrom(restDayParts[0]);
-        setRestDayTo(restDayParts[1]);
+        setRestDayFrom(restDayParts[0].trim());
+        setRestDayTo(restDayParts[1].trim());
       }
     }
   };
@@ -850,10 +925,10 @@ const ManageEmployee = () => {
 
 
       {/* Change Shift Modal */}
-        {showChangeShiftModal && (
-          <div className="me-form-overlay">
-            <div className="me-applicant-container">
-              <div className="me-form-header">
+      {showChangeShiftModal && (
+      <div className="me-form-overlay">
+        <div className="me-shift-modal-container">
+          <div className="me-form-header">
                 <h2>Change Employee Shift</h2>
                 <button className="me-close-button" onClick={handleCloseChangeShiftModal}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -901,69 +976,32 @@ const ManageEmployee = () => {
                       </div>
                     )}
                     
-                    <div className="me-form-dropdowns">
-                      <div className="me-dropdown-group">
-                        <label htmlFor="work-day-from" className="me-dropdown-label">Work Days From</label>
-                        <select
-                          id="work-day-from"
-                          value={workDayFrom}
-                          onChange={(e) => setWorkDayFrom(e.target.value)}
-                          className="me-dropdown-select"
-                        >
-                          <option value="">Select Day</option>
-                          {dayOptions.map((day, index) => (
-                            <option key={index} value={day}>{day}</option>
-                          ))}
-                        </select>
+                    <div className="me-form-section">
+                      <label className="me-section-label">Select Work Days</label>
+                      <div className="me-day-checkboxes">
+                        {dayOptions.map((day) => (
+                          <label key={day} className="me-day-checkbox-label">
+                            <input
+                              type="checkbox"
+                              checked={selectedDays.includes(day)}
+                              onChange={() => handleDayToggle(day)}
+                            />
+                            <span>{day}</span>
+                          </label>
+                        ))}
                       </div>
                       
-                      <div className="me-dropdown-group">
-                        <label htmlFor="work-day-to" className="me-dropdown-label">Work Days To</label>
-                        <select
-                          id="work-day-to"
-                          value={workDayTo}
-                          onChange={(e) => setWorkDayTo(e.target.value)}
-                          className="me-dropdown-select"
-                        >
-                          <option value="">Select Day</option>
-                          {dayOptions.map((day, index) => (
-                            <option key={index} value={day}>{day}</option>
-                          ))}
-                        </select>
+                      <div className="me-schedule-preview1">
+                        <div className="me-preview-row">
+                          <strong>Work Days:</strong> 
+                          <span>{workDayFrom && workDayTo ? `${workDayFrom} - ${workDayTo}` : 'Not set'}</span>
+                        </div>
+                        <div className="me-preview-row">
+                          <strong>Rest Days:</strong> 
+                          <span>{restDayFrom && restDayTo ? `${restDayFrom} - ${restDayTo}` : 'Not set'}</span>
+                        </div>
                       </div>
-                    </div>
-                    
-                    <div className="me-form-dropdowns">
-                      <div className="me-dropdown-group">
-                        <label htmlFor="rest-day-from" className="me-dropdown-label">Rest Day From</label>
-                        <select
-                          id="rest-day-from"
-                          value={restDayFrom}
-                          onChange={(e) => setRestDayFrom(e.target.value)}
-                          className="me-dropdown-select"
-                        >
-                          <option value="">Select Day</option>
-                          {dayOptions.map((day, index) => (
-                            <option key={index} value={day}>{day}</option>
-                          ))}
-                        </select>
-                      </div>
-                      
-                      <div className="me-dropdown-group">
-                        <label htmlFor="rest-day-to" className="me-dropdown-label">Rest Day To</label>
-                        <select
-                          id="rest-day-to"
-                          value={restDayTo}
-                          onChange={(e) => setRestDayTo(e.target.value)}
-                          className="me-dropdown-select"
-                        >
-                          <option value="">Select Day</option>
-                          {dayOptions.map((day, index) => (
-                            <option key={index} value={day}>{day}</option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
+</div>
                   </>
                 )}
                 
@@ -1163,15 +1201,52 @@ const ManageEmployee = () => {
                 </svg>
               </button>
             </div>
-            <button 
-              className={`me-add-button ${isAddingVisible ? 'me-button-active' : ''}`} 
-              onClick={handleAddButtonClick}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-              Add New Employee
-            </button>
+            <div className="me-filter-dropdown">
+              <button 
+                className="me-filter-button"
+                onClick={() => setShowFilterMenu(!showFilterMenu)}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                </svg>
+                Filter
+              </button>
+              {showFilterMenu && (
+                <div className="me-filter-menu">
+                  <button onClick={() => { handleSort('latest'); setShowFilterMenu(false); }}>Latest</button>
+                  <button onClick={() => { handleSort('oldest'); setShowFilterMenu(false); }}>Oldest</button>
+                  <button onClick={() => { handleSort('ascending'); setShowFilterMenu(false); }}>A-Z</button>
+                  <button onClick={() => { handleSort('descending'); setShowFilterMenu(false); }}>Z-A</button>
+                </div>
+              )}
+            </div>
+            <div className="me-action-dropdown">
+              <button 
+                className={`me-add-button ${isAddingVisible ? 'me-button-active' : ''}`} 
+                onClick={() => setShowActionMenu(!showActionMenu)}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+                Select Action
+              </button>
+              {showActionMenu && (
+                <div className="me-action-menu">
+                  <button onClick={() => { handleAddButtonClick(); setShowActionMenu(false); }}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    Add Employee
+                  </button>
+                  <button onClick={() => { navigate('/archieve-emp'); setShowActionMenu(false); }}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                    </svg>
+                    Archive Employee
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -665,7 +665,7 @@
   transition: all 0.2s ease;
   position: relative;
   height: 370px;
-  min-height: 370px;
+  min-height: 385px;
   display: flex;
   flex-direction: column;
 }

@@ -30,6 +30,7 @@ import ManageDepartment from './pages/DashboardHRPages/ManageDepartment';
 import ManageEvents from './pages/DashboardHRPages/ManageEvents';
 import EAProfile from './components/EAProfile/EAProfile';
 import SRApproval from './pages/DashboardHRPages/SRApproval.jsx';
+import ArchieveEmp from './pages/DashboardHRPages/ArchieveEmp.jsx';
 
 import DashboardAccountant from './pages/DashboardAccountantPages/DashboardAccountant';
 import PayrollAccount from './pages/DashboardAccountantPages/PayrollAccount';
@@ -103,6 +104,7 @@ export const AuditedEmpDetails = withAuditTrail(EmpDetails, 'EmpDetails');
 export const AuditedEmpAttHistory = withAuditTrail(EmpAttHistory, 'EmpAttHistory');
 export const AuditedEmpDocuments = withAuditTrail(EmpDocuments, 'EmpDocuments');
 export const AuditedSRApproval = withAuditTrail(SRApproval, 'SRApproval');
+export const AuditedArchieveEmp = withAuditTrail(ArchieveEmp, 'ArchieveEmp');
 
 // Accountant components
 export const AuditedDashboardAccountant = withAuditTrail(DashboardAccountant, 'DashboardAccountant');

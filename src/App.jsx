@@ -55,6 +55,7 @@ import {
   AuditedLeaveApproval as LeaveApproval,
   AuditedOvertimeApproval as OvertimeApproval,
   AuditedSRApproval as SRApproval,
+  AuditedArchieveEmp as ArchieveEmp,
   AuditedTeamOB as TeamOB,
   Unauthorized
 } from './AuditedComponents'
@@ -122,6 +123,7 @@ const App = () => {
           <Route path="/manage-department" element={<ManageDepartment />} />
           <Route path="/manage-events" element={<ManageEvents />} />
           <Route path="/sr-approval" element={<SRApproval/>} />
+          <Route path="/archieve-emp" element={<ArchieveEmp/>} />
         </Route>
 
         {/* Accountant Routes */}

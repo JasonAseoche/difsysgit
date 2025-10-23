@@ -149,38 +149,36 @@ const EmailVerification = () => {
                     setShowSuccessAnimation(true);
                 }, 100);
                 
+                // Get user data from response
+                const verifiedUser = response.data.user;
+                
                 // Set user data in auth system with verified status
                 setUserData({
                     token: 'login-token-' + Date.now(),
-                    role: userData.role.toLowerCase(),
-                    id: userData.id,
-                    user: {
-                        id: userData.id,
-                        firstName: userData.firstName,
-                        lastName: userData.lastName,
-                        email: userData.email,
-                        role: userData.role,
-                        auth_status: 'Verified'
-                    }
+                    role: verifiedUser.role.toLowerCase(),
+                    id: verifiedUser.id,
+                    user: verifiedUser
                 });
                 
                 // Legacy storage with verified status
-                const verifiedUserData = {
-                    ...userData,
-                    auth_status: 'Verified'
-                };
-                
-                localStorage.setItem('user', JSON.stringify(verifiedUserData));
+                localStorage.setItem('user', JSON.stringify(verifiedUser));
                 localStorage.setItem('isAuthenticated', 'true');
-                localStorage.setItem('userRole', userData.role.toLowerCase());
-                localStorage.setItem('userId', userData.id.toString());
+                localStorage.setItem('userRole', verifiedUser.role.toLowerCase());
+                localStorage.setItem('userId', verifiedUser.id.toString());
                 localStorage.removeItem('tempUser');
                 
                 // Wait for animation to complete before redirecting
                 setTimeout(() => {
-                    const redirectPath = getRedirectPath(userData.role);
-                    console.log(`Email verification successful for ${userData.role}, redirecting to ${redirectPath}`);
-                    navigate(redirectPath);
+                    // Check if user needs to change password (first login)
+                    if (verifiedUser.change_pass_status === 'Not Yet') {
+                        console.log('User needs to change password, redirecting to change-password');
+                        navigate('/change-password');
+                    } else {
+                        // Normal flow - go to dashboard
+                        const redirectPath = getRedirectPath(verifiedUser.role);
+                        console.log(`Email verification successful for ${verifiedUser.role}, redirecting to ${redirectPath}`);
+                        navigate(redirectPath);
+                    }
                 }, 4000);
                 
             } else {
@@ -289,6 +287,12 @@ const EmailVerification = () => {
 
         // Dynamic message based on user role
         const getRedirectMessage = () => {
+            // Check if user needs to change password
+            const userDataFromStorage = JSON.parse(localStorage.getItem('user') || '{}');
+            if (userDataFromStorage.change_pass_status === 'Not Yet') {
+                return 'Please set your new password...';
+            }
+            
             const role = userData.role?.toLowerCase();
             if (role === 'applicant') {
                 return 'Redirecting to application form...';

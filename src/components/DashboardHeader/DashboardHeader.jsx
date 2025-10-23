@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { IoDocumentAttachOutline } from "react-icons/io5";
+import { LuMessageSquareQuote } from "react-icons/lu";
 import axios from 'axios';
 import '../../components/DashboardHeader/DashboardHeader.css';
 
@@ -183,8 +185,12 @@ const DashboardHeader = () => {
       case 'exam_graded':
         return <svg xmlns="http://www.w3.org/2000/svg" height="35px" viewBox="0 0 24 24" width="30px" fill="#003979"><g><rect fill="none" height="24" width="24"/></g><g><path d="M4,7h16v2H4V7z M4,13h16v-2H4V13z M4,17h7v-2H4V17z M4,21h7v-2H4V21z M15.41,18.17L14,16.75l-1.41,1.41L15.41,21L20,16.42 L18.58,15L15.41,18.17z M4,3v2h16V3H4z"/></g></svg>;
       // Keep old ones for backwards compatibility
-      case 'leave_request':
+      case 'Leave Request':
         return <svg xmlns="http://www.w3.org/2000/svg" height="35px" viewBox="0 0 24 24" width="30px" fill="#003979"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V9h14v10zM5 7V5h14v2H5zm2 4h10v2H7zm0 4h7v2H7z"/></svg>;
+      case 'manage_document':
+       return <IoDocumentAttachOutline color="#003979"  size={32} />
+       case 'file-inquiries':
+               return  <LuMessageSquareQuote color="#003979"  size={32}/>
       case 'new_employee':
         return '👋';
       case 'document_update':

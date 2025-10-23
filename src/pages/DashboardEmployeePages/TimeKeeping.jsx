@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { getCurrentUser, getUserId } from '../../utils/auth';
+import { getUserId, getUserRole, getCurrentUser } from '../../utils/auth';
 import '../../components/EmployeeLayout/TimeKeeping.css';
 
 // Configure axios base URL
@@ -41,6 +41,49 @@ const TimeKeeping = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedLeave, setSelectedLeave] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const userId = getUserId();
+  const userRole = getUserRole();
+  const currentUser = getCurrentUser();
+
+  const sendNotification = async (notificationType, title, message, relatedId = null) => {
+    try {
+      // Determine target based on user role
+      let targetUserId = 0; // 0 means send to all HR
+      let targetRole = 'HR'; // Default to HR
+      
+      // If current user is HR, send to applicant/employee
+      if (userRole === 'Employee') {
+        targetUserId = relatedId; // Send to specific user
+        targetRole = 'HR'; // or 'employee' based on context
+      }
+      
+      const notificationData = {
+        user_id: targetUserId,
+        user_role: targetRole,
+        type: notificationType,
+        title: title,
+        message: message,
+        related_id: relatedId,
+        related_type: notificationType.split('_')[0] // Extract type from notification type
+      };
+      
+      const response = await fetch('http://localhost/difsysapi/notifications_api.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(notificationData)
+      });
+      
+      const data = await response.json();
+      if (data.success) {
+        console.log('Notification sent successfully');
+      }
+    } catch (error) {
+      console.error('Error sending notification:', error);
+    }
+  };
   
   const [employeeInfo, setEmployeeInfo] = useState({
     firstName: 'Loading...',
@@ -305,6 +348,15 @@ const TimeKeeping = () => {
     } finally {
       setLoading(false);
     }
+
+    setTimeout(async () => {
+      await sendNotification(
+        'Leave Request',
+        'Leave Request',
+        `${currentUser.firstName} has submitted the Leave`,
+        userId
+      );
+    }, 100);
     
     resetForm();
   };

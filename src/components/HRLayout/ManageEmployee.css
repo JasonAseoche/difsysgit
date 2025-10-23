@@ -67,6 +67,435 @@
   width: 100%;
 }
 
+.action-dropdown, .filter-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.action-menu, .filter-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  z-index: 1000;
+  min-width: 180px;
+  margin-top: 5px;
+}
+
+.action-menu button, .filter-menu button {
+  display: block;
+  width: 100%;
+  padding: 10px 15px;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.action-menu button:hover, .filter-menu button:hover {
+  background: #f5f5f5;
+}
+
+.filter-btn {
+  margin-left: 10px;
+}
+
+
+
+/* Action Dropdown */
+.me-action-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.me-action-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  min-width: 200px;
+  overflow: hidden;
+}
+
+.me-action-menu button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  background: white;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 14px;
+  color: #333;
+}
+
+.me-action-menu button:hover {
+  background: #f5f5f5;
+}
+
+.me-action-menu button svg {
+  flex-shrink: 0;
+}
+
+/* Filter Dropdown */
+.me-filter-dropdown {
+  position: relative;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.me-filter-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: white;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #555;
+  transition: all 0.2s;
+}
+
+.me-filter-button:hover {
+  border-color: #007bff;
+  color: #007bff;
+}
+
+.me-filter-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  min-width: 150px;
+  overflow: hidden;
+}
+
+.me-filter-menu button {
+  display: block;
+  width: 100%;
+  padding: 10px 16px;
+  border: none;
+  background: white;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 14px;
+  color: #333;
+}
+
+.me-filter-menu button:hover {
+  background: #f5f5f5;
+}
+
+/* Change Shift Modal Container - Simple Version */
+.me-shift-modal-container {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+
+/* Modal Header */
+.me-shift-modal-container .me-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.me-shift-modal-container .me-form-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+.me-shift-modal-container .me-close-button {
+  background: none;
+  border: none;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.me-shift-modal-container .me-close-button:hover {
+  background: #f0f0f0;
+}
+
+.me-shift-modal-container .me-close-button svg {
+  color: #666;
+}
+
+/* Modal Content */
+.me-shift-modal-container .me-applicant-content {
+  padding: 24px;
+}
+
+/* Employee Info Header */
+.me-shift-modal-container .me-employee-info-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.me-shift-modal-container .me-employee-info-header h3 {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.me-shift-modal-container .me-employee-info-header p {
+  margin: 2px 0;
+  font-size: 13px;
+  color: #666;
+}
+
+/* Form Section */
+.me-shift-modal-container .me-form-section {
+  margin-bottom: 20px;
+}
+
+.me-shift-modal-container .me-section-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+/* Day Checkboxes - Compact */
+.me-shift-modal-container .me-day-checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.me-shift-modal-container .me-day-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 1px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  transition: all 0.2s;
+  background: white;
+}
+
+.me-shift-modal-container .me-day-checkbox-label:hover {
+  border-color: #007bff;
+  background: #f8f9fa;
+}
+
+.me-shift-modal-container .me-day-checkbox-label input[type="checkbox"] {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  accent-color: #007bff;
+}
+
+.me-shift-modal-container .me-day-checkbox-label span {
+  flex: 1;
+  font-size: 14px;
+  color: #555;
+}
+
+.me-shift-modal-container .me-day-checkbox-label:has(input:checked) {
+  border-color: #007bff;
+  background: #f0f8ff;
+}
+
+.me-shift-modal-container .me-day-checkbox-label:has(input:checked) span {
+  color: #007bff;
+  font-weight: 500;
+}
+
+/* Schedule Preview */
+.me-shift-modal-container .me-schedule-preview {
+  margin-top: 16px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border-left: 3px solid #007bff;
+}
+
+.me-shift-modal-container .me-preview-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 6px 0;
+  font-size: 13px;
+}
+
+.me-shift-modal-container .me-preview-row strong {
+  color: #333;
+  font-weight: 600;
+}
+
+.me-shift-modal-container .me-preview-row span {
+  color: #007bff;
+  font-weight: 500;
+}
+
+/* Error Message */
+.me-shift-modal-container .me-form-error-general {
+  background: #fee;
+  color: #c33;
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  border-left: 3px solid #c33;
+  font-size: 13px;
+}
+
+/* Success State */
+.me-shift-modal-container .me-success-state {
+  text-align: center;
+  padding: 32px 20px;
+}
+
+.me-shift-modal-container .me-success-icon {
+  margin: 0 auto 16px;
+  width: 64px;
+  height: 64px;
+  background: #4caf50;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.me-shift-modal-container .me-success-icon svg {
+  color: white;
+}
+
+.me-shift-modal-container .me-success-title {
+  font-size: 20px;
+  color: #333;
+  margin: 0 0 8px 0;
+  font-weight: 600;
+}
+
+.me-shift-modal-container .me-success-message {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 16px;
+}
+
+.me-shift-modal-container .me-success-details {
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 6px;
+  margin-top: 16px;
+}
+
+.me-shift-modal-container .me-success-details p {
+  margin: 6px 0;
+  font-size: 13px;
+  color: #555;
+}
+
+.me-shift-modal-container .me-success-details strong {
+  color: #333;
+  font-weight: 600;
+}
+
+/* Modal Footer */
+.me-shift-modal-container .me-form-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.me-shift-modal-container .me-cancel-button {
+  padding: 8px 20px;
+  border: 1px solid #d0d0d0;
+  background: white;
+  color: #666;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.me-shift-modal-container .me-cancel-button:hover {
+  border-color: #999;
+  background: #f8f9fa;
+}
+
+.me-shift-modal-container .me-submit-button {
+  padding: 8px 20px;
+  border: none;
+  background: #007bff;
+  color: white;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.me-shift-modal-container .me-submit-button:hover {
+  background: #0056b3;
+}
+
+.me-shift-modal-container .me-submit-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+.me-schedule-preview {
+  margin-top: 15px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border-left: 3px solid #007bff;
+}
+
+.me-schedule-preview p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.me-form-group-full {
+  width: 100%;
+}
+
 /* Search and Add Button Container */
 .me-actions {
   display: flex;

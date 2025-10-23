@@ -64,6 +64,56 @@ useEffect(() => {
   return () => window.removeEventListener('resize', handleResize);
 }, []);
 
+const handleRegenerate = async () => {
+  if (selectedEmployees.length === 0) {
+    alert('Please select at least one employee to regenerate payroll.');
+    return;
+  }
+  
+  if (!window.confirm('This will regenerate the payroll and update Rate Per Hour and Rate Per Minute. Continue?')) {
+    return;
+  }
+  
+  setGenerateLoading(true);
+  
+  try {
+    const response = await fetch(`${API_BASE_URL}?action=regenerate_payroll`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        selected_employees: selectedEmployees,
+        regenerate: true
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      setSuccessMessage(`Payroll regenerated successfully for ${data.generated_count} employees!`);
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
+      
+      // Fetch updated data and show preview modal
+      await fetchEmployeesForPayroll();
+      await fetchSelectedEmployeesPayroll();
+      setShowGeneratePreviewModal(true);
+      setShowAllEmployeesModal(true);
+      setIsEditing(false);
+      setEditedData({});
+      setHasChanges(false);
+    } else {
+      alert('Error regenerating payroll: ' + data.message);
+    }
+  } catch (error) {
+    console.error('Error regenerating payroll:', error);
+    alert('Error regenerating payroll. Please try again.');
+  } finally {
+    setGenerateLoading(false);
+  }
+};
+
   // API Functions
   const fetchCurrentPayrollPeriod = async () => {
     try {
@@ -762,7 +812,8 @@ const createPayslipPage = (doc, employee, comp, copyType) => {
     ['Rest Day OT (Beyond 8hrs)', parseFloat(comp.rest_day_ot_plus_ot_hours || 0), parseFloat(comp.rest_day_ot_plus_ot_amount || 0)],
     ['Rest Day OT + Night Diff', parseFloat(comp.rest_day_nd_hours || 0), parseFloat(comp.rest_day_nd_amount || 0)],
     ['Site Allowance', '', parseFloat(comp.site_allowance || 0)],
-    ['Salary Adjustment', '', parseFloat(comp.travel_time_amount || 0)]
+    ['Salary Adjustment', '', 0],  // CHANGE: Set to 0 instead of travel_time_amount
+    ['Travel Time', parseFloat(comp.travel_time_hours || 0), parseFloat(comp.travel_time_amount || 0)]  // ADD THIS NEW LINE
   ];
 
   const rightData = [
@@ -1082,8 +1133,8 @@ const formatCurrency = (amount) => {
           comp.transportation_allowance || '-',
           comp.total_allowances || '-',
           comp.training_days || '-',
-          comp.travel_time_hours || '-',
           comp.travel_time_amount || '-',
+          comp.travel_time_hours || '-',
           comp.regular_holiday_rate || '-',
           comp.regular_holiday_hours || '-', // Hours - no currency
           comp.regular_holiday_amount || '-',
@@ -1597,7 +1648,8 @@ const createCombinedPayslipSheet = async (worksheet, employee, comp) => {
     'Rest Day OT (Beyond 8hrs)',
     'Rest Day OT + Night Diff',
     'Site Allowance',
-    'Salary Adjustment'
+    'Salary Adjustment',
+     'Travel Time',
   ];
 
   earningsLabels.forEach((label, index) => {
@@ -1629,6 +1681,17 @@ const createCombinedPayslipSheet = async (worksheet, employee, comp) => {
       const allowance = comp.site_allowance || '#N/A';
       worksheet.getCell(`D${row}`).value = allowance;
       if (allowance !== '#N/A') {
+        worksheet.getCell(`D${row}`).numFmt = '"₱"#,##0.00';
+      }
+    } else if (index === 7) { // Salary Adjustment - leave empty or put 0
+      worksheet.getCell(`D${row}`).value = '#N/A';
+    } else if (index === 8) { // Travel Time
+      worksheet.getCell(`C${row}`).value = comp.travel_time_hours || 0;
+      worksheet.getCell(`C${row}`).alignment = { horizontal: 'center' };
+      
+      const amount = comp.travel_time_amount || 0;
+      worksheet.getCell(`D${row}`).value = amount;
+      if (amount !== 0) {
         worksheet.getCell(`D${row}`).numFmt = '"₱"#,##0.00';
       }
     }
@@ -1901,6 +1964,17 @@ const createCombinedPayslipSheet = async (worksheet, employee, comp) => {
       const allowance = comp.site_allowance || '#N/A';
       worksheet.getCell(`D${row}`).value = allowance;
       if (allowance !== '#N/A') {
+        worksheet.getCell(`D${row}`).numFmt = '"₱"#,##0.00';
+      }
+    } else if (index === 7) { // Salary Adjustment - leave empty or put 0
+      worksheet.getCell(`D${row}`).value = '#N/A';
+    } else if (index === 8) { // Travel Time
+      worksheet.getCell(`C${row}`).value = comp.travel_time_hours || 0;
+      worksheet.getCell(`C${row}`).alignment = { horizontal: 'center' };
+      
+      const amount = comp.travel_time_amount || 0;
+      worksheet.getCell(`D${row}`).value = amount;
+      if (amount !== 0) {
         worksheet.getCell(`D${row}`).numFmt = '"₱"#,##0.00';
       }
     }
@@ -2857,6 +2931,12 @@ const createCombinedPayslipSheet = async (worksheet, employee, comp) => {
                         <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
                       </svg>
                       Edit
+                    </button>
+                    <button className="generate-payroll-edit-btn" onClick={handleRegenerate} style={{backgroundColor: '#f59e0b'}}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                      </svg>
+                      Re-Generate
                     </button>
                     <button className="generate-payroll-save-btn" onClick={handleSaveAndExport}>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
