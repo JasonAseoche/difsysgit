@@ -101,7 +101,7 @@
 }
 
 .filter-btn {
-  margin-left: 10px;
+  margin-left: 12px;
 }
 
 
@@ -158,8 +158,8 @@
 .me-filter-button {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
+  gap: 1px;
+  padding: 10px 25px;
   background: white;
   border: 1px solid #d0d0d0;
   border-radius: 8px;
@@ -567,7 +567,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 2px;
   padding: 8px 18px;
   background-color: #1e40af;
   color: white;
@@ -576,7 +576,7 @@
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  height: 45px;
+  height: 40px;
   white-space: nowrap;
   transition: all 0.2s ease-in-out;
   position: relative;
@@ -3062,4 +3062,228 @@
   .me-profile-content {
     padding: 10px 12px 12px 12px !important;
   }
+}
+
+/* ============================================
+   ARCHIVE MODAL STYLES - Add to ManageEmployee.css
+   ============================================ */
+
+/* Modal Overlay */
+.me-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: me-fadeIn 0.2s ease;
+  backdrop-filter: blur(2px);
+}
+
+@keyframes me-fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal Content Container */
+.me-modal-content {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 520px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: me-slideUp 0.3s ease;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@keyframes me-slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Modal Title */
+.me-modal-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.me-modal-title::before {
+  content: '⚠️';
+  font-size: 28px;
+}
+
+/* Modal Text */
+.me-modal-text {
+  font-size: 15px;
+  color: #495057;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+/* Modal List */
+.me-modal-list {
+  margin: 16px 0;
+  padding-left: 24px;
+  color: #495057;
+}
+
+.me-modal-list li {
+  margin: 8px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.me-modal-list li::marker {
+  color: #dc3545;
+}
+
+/* Employee Info Box */
+.me-modal-employee-info {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 20px;
+  border-radius: 12px;
+  border-left: 4px solid #007bff;
+  margin: 20px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.me-modal-employee-info p {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #495057;
+  display: flex;
+  align-items: center;
+}
+
+.me-modal-employee-info strong {
+  color: #2c3e50;
+  min-width: 80px;
+  font-weight: 600;
+}
+
+/* Modal Footer */
+.me-modal-footer {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #e9ecef;
+}
+
+/* Modal Buttons */
+.me-modal-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 120px;
+  justify-content: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.me-modal-btn:active {
+  transform: scale(0.98);
+}
+
+/* Cancel Button */
+.me-modal-cancel {
+  background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
+}
+
+.me-modal-cancel:hover {
+  background: linear-gradient(135deg, #5a6268 0%, #495057 100%);
+  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Confirm Button */
+.me-modal-confirm {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+.me-modal-confirm:hover {
+  background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+  transform: translateY(-2px);
+}
+
+.me-modal-confirm:before {
+  content: '🗃️';
+  font-size: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .me-modal-content {
+    padding: 24px;
+    width: 95%;
+  }
+
+  .me-modal-title {
+    font-size: 20px;
+  }
+
+  .me-modal-footer {
+    flex-direction: column;
+  }
+
+  .me-modal-btn {
+    width: 100%;
+  }
+
+  .me-modal-employee-info {
+    padding: 16px;
+  }
+}
+
+/* Smooth Scrollbar for Modal */
+.me-modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.me-modal-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.me-modal-content::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.me-modal-content::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

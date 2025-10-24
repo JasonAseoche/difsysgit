@@ -125,9 +125,12 @@ const getRedirectPath = async (userData) => {
                     // Store user data temporarily for verification page
                     localStorage.setItem('tempUser', JSON.stringify(userData));
                     
-                    // Navigate to verification page with user data
+                    // Navigate to verification page with user data and change_pass_status
                     navigate('/verify-email', { 
-                        state: { user: userData }
+                        state: { 
+                            user: userData,
+                            requiresPasswordChange: userData.change_pass_status === 'Not Yet'
+                        }
                     });
                 } else {
                     // User is already verified, proceed with normal login

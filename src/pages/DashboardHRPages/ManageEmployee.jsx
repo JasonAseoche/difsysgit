@@ -17,6 +17,7 @@ const ManageEmployee = () => {
   const [showActionMenu, setShowActionMenu] = useState(false);
   const [selectedDays, setSelectedDays] = useState([]);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
+  
 
   const [showChangeShiftModal, setShowChangeShiftModal] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
@@ -45,6 +46,8 @@ const ManageEmployee = () => {
   const [selectedPosition, setSelectedPosition] = useState('');
   const [selectedWorkArrangement, setSelectedWorkArrangement] = useState('');
   const [isSubmissionSuccessful, setIsSubmissionSuccessful] = useState(false);
+  const [showArchiveModal, setShowArchiveModal] = useState(false);
+  const [employeeToArchive, setEmployeeToArchive] = useState(null);
 
   const dayOptions = [
     'Monday',
@@ -124,10 +127,6 @@ const ManageEmployee = () => {
     setEmployees(sorted);
   };
 
-  
-
-
-
   const fetchApplicants = async () => {
     try {
       setApplicantLoading(true);
@@ -170,6 +169,45 @@ const ManageEmployee = () => {
       setApplicants([]);
     } finally {
       setApplicantLoading(false);
+    }
+  };
+
+  const handleArchive = (employeeId, e) => {
+    if (e) e.stopPropagation();
+    const employee = employees.find(emp => emp.id === employeeId);
+    if (employee) {
+      setEmployeeToArchive(employee);
+      setShowArchiveModal(true);
+      setOpenDropdownId(null); // Close the dropdown
+    }
+  };
+
+  const confirmArchive = async () => {
+    if (!employeeToArchive) return;
+  
+    try {
+      // Updated URL to match your spelling: archieve_employee.php
+      const response = await axios.post('http://localhost/difsysapi/archieve_employee.php', {
+        action: 'archive',
+        emp_id: employeeToArchive.id
+      });
+  
+      if (response.data.success) {
+        alert('Employee archived successfully!');
+        // Refresh employee list
+        const refreshResponse = await axios.get('http://localhost/difsysapi/fetch_employee.php');
+        if (refreshResponse.data.success) {
+          setEmployees(refreshResponse.data.employees);
+        }
+      } else {
+        alert(response.data.message || 'Failed to archive employee');
+      }
+    } catch (error) {
+      console.error('Error archiving employee:', error);
+      alert('Error archiving employee: ' + error.message);
+    } finally {
+      setShowArchiveModal(false);
+      setEmployeeToArchive(null);
     }
   };
 
@@ -432,14 +470,6 @@ const ManageEmployee = () => {
       event.stopPropagation();
     }
     console.log(`Edit employee ID: ${employeeId}`);
-    setOpenDropdownId(null);
-  };
-
-  const handleArchive = (employeeId, event) => {
-    if (event) {
-      event.stopPropagation();
-    }
-    console.log(`Archive employee ID: ${employeeId}`);
     setOpenDropdownId(null);
   };
 
@@ -1383,6 +1413,48 @@ const ManageEmployee = () => {
           </div>
         )}
       </div>
+
+      {/* Archive Confirmation Modal */}
+      {showArchiveModal && employeeToArchive && (
+        <div 
+          className="me-modal-overlay"
+          onClick={() => setShowArchiveModal(false)}
+        >
+          <div 
+            className="me-modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="me-modal-title">Confirm Archive</h2>
+            <p className="me-modal-text">
+              Are you sure you want to archive this employee? This will:
+            </p>
+            <ul className="me-modal-list">
+              <li>Remove them from the active employee list</li>
+              <li>Prevent them from logging in</li>
+              <li>Move them to the archived employees section</li>
+            </ul>
+            <div className="me-modal-employee-info">
+              <p><strong>Name:</strong> {employeeToArchive.firstName} {employeeToArchive.lastName}</p>
+              <p><strong>Email:</strong> {employeeToArchive.email}</p>
+              <p><strong>Position:</strong> {employeeToArchive.position}</p>
+            </div>
+            <div className="me-modal-footer">
+              <button
+                className="me-modal-btn me-modal-cancel"
+                onClick={() => setShowArchiveModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="me-modal-btn me-modal-confirm"
+                onClick={confirmArchive}
+              >
+                Confirm Archive
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
