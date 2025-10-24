@@ -812,8 +812,7 @@ const createPayslipPage = (doc, employee, comp, copyType) => {
     ['Rest Day OT (Beyond 8hrs)', parseFloat(comp.rest_day_ot_plus_ot_hours || 0), parseFloat(comp.rest_day_ot_plus_ot_amount || 0)],
     ['Rest Day OT + Night Diff', parseFloat(comp.rest_day_nd_hours || 0), parseFloat(comp.rest_day_nd_amount || 0)],
     ['Site Allowance', '', parseFloat(comp.site_allowance || 0)],
-    ['Salary Adjustment', '', 0],  // CHANGE: Set to 0 instead of travel_time_amount
-    ['Travel Time', parseFloat(comp.travel_time_hours || 0), parseFloat(comp.travel_time_amount || 0)]  // ADD THIS NEW LINE
+    ['Salary Adjustment', '', parseFloat(comp.travel_time_amount || 0)]
   ];
 
   const rightData = [
@@ -1133,8 +1132,8 @@ const formatCurrency = (amount) => {
           comp.transportation_allowance || '-',
           comp.total_allowances || '-',
           comp.training_days || '-',
-          comp.travel_time_amount || '-',
           comp.travel_time_hours || '-',
+          comp.travel_time_amount || '-',
           comp.regular_holiday_rate || '-',
           comp.regular_holiday_hours || '-', // Hours - no currency
           comp.regular_holiday_amount || '-',
@@ -1648,8 +1647,7 @@ const createCombinedPayslipSheet = async (worksheet, employee, comp) => {
     'Rest Day OT (Beyond 8hrs)',
     'Rest Day OT + Night Diff',
     'Site Allowance',
-    'Salary Adjustment',
-     'Travel Time',
+    'Salary Adjustment'
   ];
 
   earningsLabels.forEach((label, index) => {
@@ -1681,17 +1679,6 @@ const createCombinedPayslipSheet = async (worksheet, employee, comp) => {
       const allowance = comp.site_allowance || '#N/A';
       worksheet.getCell(`D${row}`).value = allowance;
       if (allowance !== '#N/A') {
-        worksheet.getCell(`D${row}`).numFmt = '"₱"#,##0.00';
-      }
-    } else if (index === 7) { // Salary Adjustment - leave empty or put 0
-      worksheet.getCell(`D${row}`).value = '#N/A';
-    } else if (index === 8) { // Travel Time
-      worksheet.getCell(`C${row}`).value = comp.travel_time_hours || 0;
-      worksheet.getCell(`C${row}`).alignment = { horizontal: 'center' };
-      
-      const amount = comp.travel_time_amount || 0;
-      worksheet.getCell(`D${row}`).value = amount;
-      if (amount !== 0) {
         worksheet.getCell(`D${row}`).numFmt = '"₱"#,##0.00';
       }
     }
@@ -1964,17 +1951,6 @@ const createCombinedPayslipSheet = async (worksheet, employee, comp) => {
       const allowance = comp.site_allowance || '#N/A';
       worksheet.getCell(`D${row}`).value = allowance;
       if (allowance !== '#N/A') {
-        worksheet.getCell(`D${row}`).numFmt = '"₱"#,##0.00';
-      }
-    } else if (index === 7) { // Salary Adjustment - leave empty or put 0
-      worksheet.getCell(`D${row}`).value = '#N/A';
-    } else if (index === 8) { // Travel Time
-      worksheet.getCell(`C${row}`).value = comp.travel_time_hours || 0;
-      worksheet.getCell(`C${row}`).alignment = { horizontal: 'center' };
-      
-      const amount = comp.travel_time_amount || 0;
-      worksheet.getCell(`D${row}`).value = amount;
-      if (amount !== 0) {
         worksheet.getCell(`D${row}`).numFmt = '"₱"#,##0.00';
       }
     }

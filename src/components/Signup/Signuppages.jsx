@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Signup.css';
 
 // Loading Overlay Component
@@ -38,6 +39,7 @@ const Signuppages = () => {
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const [passwordError, setPasswordError] = useState('');
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -239,21 +241,41 @@ const PrivacyModal = () => (
       console.log('Response:', response.data);
       
       if (response.data.success) {
-        setSuccess(response.data.message);
-        // Clear form after successful submission
-        setFormData({
-          firstName: '',
-          lastName: '',
-          email: '',
-          password: '',
-          confirmPassword: '',
-          agreeToTerms: false
-        });
+        setSuccess('Registration successful! Logging you in...');
         
-        // Hide loading after showing success for a moment
-        setTimeout(() => {
+        // Automatically log in the user
+        try {
+          const loginResponse = await axios.post('http://localhost/difsysapi/login.php', {
+            email: formData.email,
+            password: formData.password
+          }, {
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+      
+          if (loginResponse.data.success && loginResponse.data.requires_verification) {
+            const userData = loginResponse.data.user;
+            
+            // Store user data temporarily for verification page
+            localStorage.setItem('tempUser', JSON.stringify(userData));
+            
+            // Navigate to verification page
+            navigate('/verify-email', { 
+              state: { 
+                user: userData,
+                requiresPasswordChange: false
+              }
+            });
+          }
+        } catch (loginError) {
+          console.error('Auto-login error:', loginError);
+          setSuccess('Registration successful! Redirecting to login...');
           setLoading(false);
-        }, 2000);
+          setTimeout(() => {
+            navigate('/login');
+          }, 2000);
+        }
       } else {
         setError(response.data.message || 'Registration failed');
         setLoading(false);

@@ -341,31 +341,48 @@ const ManageEmployee = () => {
     setShowChangeShiftModal(true);
     
     // Pre-populate existing values if they exist
-    if (employee.workDays) {
+    if (employee.workDays && employee.restDay) {
+      const allDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+      
+      // Parse work days
       const workDaysParts = employee.workDays.split('-');
       if (workDaysParts.length === 2) {
         setWorkDayFrom(workDaysParts[0].trim());
         setWorkDayTo(workDaysParts[1].trim());
+      }
+      
+      // Parse rest days
+      const restDayParts = employee.restDay.split('-');
+      if (restDayParts.length === 2) {
+        setRestDayFrom(restDayParts[0].trim());
+        setRestDayTo(restDayParts[1].trim());
         
-        // Initialize selected days from work days
-        const allDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-        const workDayStart = allDays.indexOf(workDaysParts[0].trim());
-        const workDayEnd = allDays.indexOf(workDaysParts[1].trim());
-        if (workDayStart !== -1 && workDayEnd !== -1) {
-          const selectedWorkDays = allDays.slice(workDayStart, workDayEnd + 1);
+        // ✅ FIXED: Calculate selected days by excluding rest days from all days
+        const restDayStart = allDays.indexOf(restDayParts[0].trim());
+        const restDayEnd = allDays.indexOf(restDayParts[1].trim());
+        
+        if (restDayStart !== -1 && restDayEnd !== -1) {
+          // Get all rest days (including wrap around if needed)
+          let restDaysArray = [];
+          if (restDayStart <= restDayEnd) {
+            // Normal case: Friday-Saturday
+            restDaysArray = allDays.slice(restDayStart, restDayEnd + 1);
+          } else {
+            // Wrap around case: Sunday-Monday (if this ever happens)
+            restDaysArray = [...allDays.slice(restDayStart), ...allDays.slice(0, restDayEnd + 1)];
+          }
+          
+          // ✅ Work days are all days EXCEPT rest days
+          const selectedWorkDays = allDays.filter(day => !restDaysArray.includes(day));
           setSelectedDays(selectedWorkDays);
         }
       }
     } else {
       setSelectedDays([]);
-    }
-    
-    if (employee.restDay) {
-      const restDayParts = employee.restDay.split('-');
-      if (restDayParts.length === 2) {
-        setRestDayFrom(restDayParts[0].trim());
-        setRestDayTo(restDayParts[1].trim());
-      }
+      setWorkDayFrom('');
+      setWorkDayTo('');
+      setRestDayFrom('');
+      setRestDayTo('');
     }
   };
 

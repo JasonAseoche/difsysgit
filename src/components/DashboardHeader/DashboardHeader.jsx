@@ -189,8 +189,10 @@ const DashboardHeader = () => {
         return <svg xmlns="http://www.w3.org/2000/svg" height="35px" viewBox="0 0 24 24" width="30px" fill="#003979"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V9h14v10zM5 7V5h14v2H5zm2 4h10v2H7zm0 4h7v2H7z"/></svg>;
       case 'manage_document':
        return <IoDocumentAttachOutline color="#003979"  size={32} />
-       case 'file-inquiries':
-               return  <LuMessageSquareQuote color="#003979"  size={32}/>
+      case 'file-inquiries':
+       return  <LuMessageSquareQuote color="#003979"  size={32}/>
+      case 'payslip_release':
+       return <svg xmlns="http://www.w3.org/2000/svg" height="35px" viewBox="0 0 24 24" width="30px" fill="#003979"><path d="M0 0h24v24H0z" fill="none"/><path d="M21 8V7l-3 2-2-1-3 2-2-1-3 2-2-1-3 2v9h18V8zm-9 10H6v-2h6v2zm6-4H6v-2h12v2zm0-4H6V8h12v2zM3 4h18v2H3z"/></svg>;
       case 'new_employee':
         return '👋';
       case 'document_update':
