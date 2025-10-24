@@ -1081,8 +1081,8 @@ const formatCurrency = (amount) => {
         // First row - main headers
         [
           'No.', 'Employee ID', 'Employee Name', 'Monthly', 'Semi-Monthly', 'Rate Per Day', 'Rate Per Hour', 'Rate Per Minute',
-          'Non-taxable Allowances', '', '', 'Training Days', 'Regular Holiday', '', '', 'Regular Holiday + Overtime', '', '',
-          'Regular Holiday + Night Differential', '', '', 'Regular Holiday + OT + ROT', '', '', 'Special Holiday', '', '',
+          'Non-taxable Allowances', '', '', 'Training Days', 'Travel Time', '', 'Regular Holiday', '', '',
+          'Regular Holiday + Overtime', '', '', 'Regular Holiday + Night Differential', '', '', 'Regular Holiday + OT + ROT', '', '', 'Special Holiday', '', '',
           'Special Holiday + Overtime', '', '', 'Special Holiday + Night Differential', '', '', 'Special Holiday + ROT', '', '',
           'Special Holiday + ROT + OT', '', '', 'Special Holiday + ROT + ND', '', '', 'Total Holiday Pay',
           'Regular OT', '', '', 'Regular OT - Night Diff', '', '', 'Rest Day OT', '', '', 'Rest Day OT + OT', '', '',
@@ -1093,7 +1093,7 @@ const formatCurrency = (amount) => {
         // Second row - sub headers
         [
           '', '', '', 'Basic Pay', 'Basic Pay', '', '', '',
-          'Site Allowance', 'Transpo Allowance', 'Total Allowance', '', 'RH RATE', '# HRS', 'RH AMOUNT',
+          'Site Allowance', 'Transpo Allowance', 'Total Allowance', '', '# HRS', 'AMOUNT', 'RH RATE', '# HRS', 'RH AMOUNT',
           'RH - OT RATE', '# HRS', 'RH-OT AMOUNT', 'RH+ND RATE', '# HRS', 'RH+ND AMOUNT',
           'RH/ROT/OT RATE', '# HRS', 'RH/ROT/OT AMOUNT', 'SH RATE', '# HRS', 'SH AMOUNT',
           'SH - OT RATE', '# HRS', 'SH-OT AMOUNT', 'SH+ND RATE', '# HRS', 'SH+ND AMOUNT',
@@ -1132,53 +1132,53 @@ const formatCurrency = (amount) => {
           comp.transportation_allowance || '-',
           comp.total_allowances || '-',
           comp.training_days || '-',
-          comp.travel_time_hours || '-',
-          comp.travel_time_amount || '-',
+          comp.travel_time_hours || '-',      // Travel Time Hours (column 13)
+          comp.travel_time_amount || '-',     // Travel Time Amount (column 14)
           comp.regular_holiday_rate || '-',
-          comp.regular_holiday_hours || '-', // Hours - no currency
+          comp.regular_holiday_hours || '-',
           comp.regular_holiday_amount || '-',
           comp.regular_holiday_ot_rate || '-',
-          comp.regular_holiday_ot_hours || '-', // Hours - no currency
+          comp.regular_holiday_ot_hours || '-',
           comp.regular_holiday_ot_amount || '-',
           comp.regular_holiday_nd_rate || '-',
-          comp.regular_holiday_nd_hours || '-', // Hours - no currency
+          comp.regular_holiday_nd_hours || '-',
           comp.regular_holiday_nd_amount || '-',
           comp.regular_holiday_rot_rate || '-',
-          comp.regular_holiday_rot_hours || '-', // Hours - no currency
+          comp.regular_holiday_rot_hours || '-',
           comp.regular_holiday_rot_amount || '-',
           comp.special_holiday_rate || '-',
-          comp.special_holiday_hours || '-', // Hours - no currency
+          comp.special_holiday_hours || '-',
           comp.special_holiday_amount || '-',
           comp.special_holiday_ot_rate || '-',
-          comp.special_holiday_ot_hours || '-', // Hours - no currency
+          comp.special_holiday_ot_hours || '-',
           comp.special_holiday_ot_amount || '-',
           comp.special_holiday_nd_rate || '-',
-          comp.special_holiday_nd_hours || '-', // Hours - no currency
+          comp.special_holiday_nd_hours || '-',
           comp.special_holiday_nd_amount || '-',
           comp.special_holiday_rot_rate || '-',
-          comp.special_holiday_rot_hours || '-', // Hours - no currency
+          comp.special_holiday_rot_hours || '-',
           comp.special_holiday_rot_amount || '-',
           comp.special_holiday_rot_ot_rate || '-',
-          comp.special_holiday_rot_ot_hours || '-', // Hours - no currency
+          comp.special_holiday_rot_ot_hours || '-',
           comp.special_holiday_rot_ot_amount || '-',
           comp.special_holiday_rot_nd_rate || '-',
-          comp.special_holiday_rot_nd_hours || '-', // Hours - no currency
+          comp.special_holiday_rot_nd_hours || '-',
           comp.special_holiday_rot_nd_amount || '-',
           comp.total_holiday_pay || '-',
           comp.regular_ot_rate || '-',
-          comp.regular_ot_hours || '-', // Hours - no currency
+          comp.regular_ot_hours || '-',
           comp.regular_ot_amount || '-',
           comp.regular_ot_nd_rate || '-',
-          comp.regular_ot_nd_hours || '-', // Hours - no currency
+          comp.regular_ot_nd_hours || '-',
           comp.regular_ot_nd_amount || '-',
           comp.rest_day_ot_rate || '-',
-          comp.rest_day_ot_hours || '-', // Hours - no currency
+          comp.rest_day_ot_hours || '-',
           comp.rest_day_ot_amount || '-',
           comp.rest_day_ot_plus_ot_rate || '-',
-          comp.rest_day_ot_plus_ot_hours || '-', // Hours - no currency
+          comp.rest_day_ot_plus_ot_hours || '-',
           comp.rest_day_ot_plus_ot_amount || '-',
           comp.rest_day_nd_rate || '-',
-          comp.rest_day_nd_hours || '-', // Hours - no currency
+          comp.rest_day_nd_hours || '-',
           comp.rest_day_nd_amount || '-',
           comp.total_overtime_pay || '-',
           comp.gross_pay || '-',
@@ -1205,7 +1205,7 @@ const formatCurrency = (amount) => {
         });
       });
   
-      // Merge cells for grouped headers
+      // Merge cells for grouped headers (ALL CORRECTED WITH TRAVEL TIME)
       const merges = [
         // No., Employee ID and Name (span both header rows)
         `A${headerStartRow}:A${headerStartRow + 1}`, 
@@ -1221,68 +1221,69 @@ const formatCurrency = (amount) => {
         `G${headerStartRow}:G${headerStartRow + 1}`, 
         `H${headerStartRow}:H${headerStartRow + 1}`,
         
-        // Non-taxable Allowances
+        // Non-taxable Allowances (I, J, K)
         `I${headerStartRow}:K${headerStartRow}`,
         
-        // Training Days
+        // Training Days (L)
         `L${headerStartRow}:L${headerStartRow + 1}`,
         
-        // Regular Holiday
-        `M${headerStartRow}:O${headerStartRow}`,
-        // Regular Holiday + Overtime
-        `P${headerStartRow}:R${headerStartRow}`,
-        // Regular Holiday + Night Differential
-        `S${headerStartRow}:U${headerStartRow}`,
-        // Regular Holiday + OT + ROT
-        `V${headerStartRow}:X${headerStartRow}`,
+        // Travel Time (M, N) - NEW!
+        `M${headerStartRow}:N${headerStartRow}`,
         
-        // Special Holiday
-        `Y${headerStartRow}:AA${headerStartRow}`,
-        // Special Holiday + Overtime
-        `AB${headerStartRow}:AD${headerStartRow}`,
-        // Special Holiday + Night Differential
-        `AE${headerStartRow}:AG${headerStartRow}`,
-        // Special Holiday + ROT
-        `AH${headerStartRow}:AJ${headerStartRow}`,
-        // Special Holiday + ROT + OT
-        `AK${headerStartRow}:AM${headerStartRow}`,
-        // Special Holiday + ROT + ND
-        `AN${headerStartRow}:AP${headerStartRow}`,
+        // Regular Holiday (O, P, Q) - SHIFTED
+        `O${headerStartRow}:Q${headerStartRow}`,
+        // Regular Holiday + Overtime (R, S, T) - SHIFTED
+        `R${headerStartRow}:T${headerStartRow}`,
+        // Regular Holiday + Night Differential (U, V, W) - SHIFTED
+        `U${headerStartRow}:W${headerStartRow}`,
+        // Regular Holiday + OT + ROT (X, Y, Z) - SHIFTED
+        `X${headerStartRow}:Z${headerStartRow}`,
         
-        // Total Holiday Pay
-        `AQ${headerStartRow}:AQ${headerStartRow + 1}`,
+        // Special Holiday (AA, AB, AC) - SHIFTED
+        `AA${headerStartRow}:AC${headerStartRow}`,
+        // Special Holiday + Overtime (AD, AE, AF) - SHIFTED
+        `AD${headerStartRow}:AF${headerStartRow}`,
+        // Special Holiday + Night Differential (AG, AH, AI) - SHIFTED
+        `AG${headerStartRow}:AI${headerStartRow}`,
+        // Special Holiday + ROT (AJ, AK, AL) - SHIFTED
+        `AJ${headerStartRow}:AL${headerStartRow}`,
+        // Special Holiday + ROT + OT (AM, AN, AO) - SHIFTED
+        `AM${headerStartRow}:AO${headerStartRow}`,
+        // Special Holiday + ROT + ND (AP, AQ, AR) - SHIFTED
+        `AP${headerStartRow}:AR${headerStartRow}`,
         
-        // Regular OT
-        `AR${headerStartRow}:AT${headerStartRow}`,
-        // Regular OT - Night Diff
-        `AU${headerStartRow}:AW${headerStartRow}`,
+        // Total Holiday Pay (AS) - SHIFTED
+        `AS${headerStartRow}:AS${headerStartRow + 1}`,
         
-        // REST DAY COLUMNS (NEW)
-        // Rest Day OT
-        `AX${headerStartRow}:AZ${headerStartRow}`,
-        // Rest Day OT + OT
-        `BA${headerStartRow}:BC${headerStartRow}`,
-        // Rest Day + Night Differential
-        `BD${headerStartRow}:BF${headerStartRow}`,
+        // Regular OT (AT, AU, AV) - SHIFTED
+        `AT${headerStartRow}:AV${headerStartRow}`,
+        // Regular OT - Night Diff (AW, AX, AY) - SHIFTED
+        `AW${headerStartRow}:AY${headerStartRow}`,
+        // Rest Day OT (AZ, BA, BB) - SHIFTED
+        `AZ${headerStartRow}:BB${headerStartRow}`,
+        // Rest Day OT + OT (BC, BD, BE) - SHIFTED
+        `BC${headerStartRow}:BE${headerStartRow}`,
+        // Rest Day + Night Differential (BF, BG, BH) - SHIFTED
+        `BF${headerStartRow}:BH${headerStartRow}`,
         
-        // Total OT Pay (shifted)
-        `BG${headerStartRow}:BG${headerStartRow + 1}`,
-        // Gross Pay (shifted)
-        `BH${headerStartRow}:BH${headerStartRow + 1}`,
+        // Total OT Pay (BI) - SHIFTED
+        `BI${headerStartRow}:BI${headerStartRow + 1}`,
+        // Gross Pay (BJ) - SHIFTED
+        `BJ${headerStartRow}:BJ${headerStartRow + 1}`,
         
-        // Undertime / Late (shifted)
-        `BI${headerStartRow}:BJ${headerStartRow}`,
-        // Absences (shifted)
+        // Undertime / Late (BK, BL) - SHIFTED
         `BK${headerStartRow}:BL${headerStartRow}`,
-        // Total Deduction (shifted)
-        `BM${headerStartRow}:BM${headerStartRow + 1}`,
+        // Absences (BM, BN) - SHIFTED
+        `BM${headerStartRow}:BN${headerStartRow}`,
+        // Total Deduction (BO) - SHIFTED
+        `BO${headerStartRow}:BO${headerStartRow + 1}`,
         
-        // Government Mandatory Contribution (shifted)
-        `BN${headerStartRow}:BQ${headerStartRow}`,
-        // Other Deductions (shifted)
-        `BR${headerStartRow}:BV${headerStartRow}`,
-        // Net Pay (shifted)
-        `BW${headerStartRow}:BW${headerStartRow + 1}`
+        // Government Mandatory Contribution (BP, BQ, BR, BS) - SHIFTED
+        `BP${headerStartRow}:BS${headerStartRow}`,
+        // Other Deductions (BT, BU, BV, BW, BX) - SHIFTED
+        `BT${headerStartRow}:BX${headerStartRow}`,
+        // Net Pay (BY) - SHIFTED
+        `BY${headerStartRow}:BY${headerStartRow + 1}`
       ];
   
       // Apply merges
@@ -1330,7 +1331,7 @@ const formatCurrency = (amount) => {
             horizontal: 'right'
           };
           cell.font = {
-            size: 12  // Add this line - change 12 to whatever size you want
+            size: 12
           };
           cell.border = {
             top: { style: 'medium' },
@@ -1341,8 +1342,8 @@ const formatCurrency = (amount) => {
           
           // Format currency columns (Monthly Basic Pay onwards)
           if (colNumber >= 4) {
-            // Skip formatting for hours columns
-            const hoursColumns = [14, 17, 20, 23, 26, 29, 32, 35, 38, 41, 45, 48, 51, 54, 57, 61, 63]; // Days and minutes columns
+            // Skip formatting for hours columns (UPDATED with Travel Time hours at column 13)
+            const hoursColumns = [13, 16, 19, 22, 25, 28, 31, 34, 37, 40, 43, 47, 50, 53, 56, 59, 63, 65]; // Days and minutes columns
             if (!hoursColumns.includes(colNumber)) {
               cell.numFmt = '"₱"#,##0.00';
             }
@@ -1350,9 +1351,6 @@ const formatCurrency = (amount) => {
         });
       }
 
-
- 
-  
       // Set column widths
       worksheet.getColumn('A').width = 5;   // No.
       worksheet.getColumn('B').width = 12;  // Employee ID
@@ -1360,12 +1358,9 @@ const formatCurrency = (amount) => {
       worksheet.getColumn('F').width = 13;  // Rate Per Day
       worksheet.getColumn('G').width = 15;  // Rate Per Hour
       worksheet.getColumn('H').width = 19;  // Rate Per Minute
-      worksheet.getColumn('AQ').width = 14;  // TOTAL HOLIDAY PAY
-      worksheet.getColumn('BM').width = 14;  // TOTAL DEDUCTION
-      worksheet.getColumn('BW').width = 15;  // Net pay
-            
-
-
+      worksheet.getColumn('AS').width = 14;  // TOTAL HOLIDAY PAY (SHIFTED)
+      worksheet.getColumn('BO').width = 14;  // TOTAL DEDUCTION (SHIFTED)
+      worksheet.getColumn('BY').width = 15;  // Net pay (SHIFTED)
 
       //Text Alignment
       for (let row = 10; row <= worksheet.rowCount; row++) {
@@ -1380,22 +1375,7 @@ const formatCurrency = (amount) => {
         worksheet.getCell(`C${row}`).alignment = { horizontal: 'left', vertical: 'middle' };
       }
 
-
-
-
-
-
-
-
-      //Borders
-      //for (let row = 1; row <= 36; row++) {
-        //worksheet.getCell(`B${row}`).border = { left: { style: 'medium' } };
-      //}
-
-
-  
       // Set other columns
-
       for (let i = 4; i <= 5; i++) {
         worksheet.getColumn(i).width = 20;
       }
@@ -1405,47 +1385,46 @@ const formatCurrency = (amount) => {
         worksheet.getColumn(i).width = 15;
       }
       
-      // Set holiday columns (13-42)
-      for (let i = 13; i <= 42; i++) {
-        worksheet.getColumn(i).width = 13;
-      }
-      
       // Set Training Days column
       worksheet.getColumn(12).width = 13;
       
-      // Set Total Holiday Pay
-      worksheet.getColumn(43).width = 14;
+      // Set Travel Time columns (NEW)
+      worksheet.getColumn(13).width = 7;   // Travel Time Hours
+      worksheet.getColumn(14).width = 13;  // Travel Time Amount
       
-      // Set Regular OT columns (44-49)
-      for (let i = 44; i <= 49; i++) {
+      // Set holiday columns (15-44) - SHIFTED by 2
+      for (let i = 15; i <= 44; i++) {
         worksheet.getColumn(i).width = 13;
       }
       
-      // Set Rest Day columns (50-58)
-      for (let i = 50; i <= 58; i++) {
+      // Set Total Holiday Pay (SHIFTED)
+      worksheet.getColumn(45).width = 14;
+      
+      // Set Regular OT columns (46-51) - SHIFTED
+      for (let i = 46; i <= 51; i++) {
         worksheet.getColumn(i).width = 13;
       }
       
-      // Set Total OT Pay and Gross Pay
-  
+      // Set Rest Day columns (52-60) - SHIFTED
+      for (let i = 52; i <= 60; i++) {
+        worksheet.getColumn(i).width = 13;
+      }
       
-      // Set Undertime/Late and Absences columns
-      for (let i = 59; i <= 66; i++) {
+      // Set Undertime/Late and Absences columns (63-68) - SHIFTED
+      for (let i = 63; i <= 68; i++) {
         worksheet.getColumn(i).width = 15;
       }
       
-      // Set Government and Other Deductions
-      for (let i = 67; i <= 75; i++) {
+      // Set Government and Other Deductions (69-77) - SHIFTED
+      for (let i = 69; i <= 77; i++) {
         worksheet.getColumn(i).width = 15;
       }
       
-      // Set specific widths for hours columns to make them smaller
-      const hoursColumnNumbers = [14, 17, 20, 23, 26, 29, 32, 35, 38, 41, 45, 48, 51, 54, 57];
+      // Set specific widths for hours columns to make them smaller (UPDATED)
+      const hoursColumnNumbers = [13, 16, 19, 22, 25, 28, 31, 34, 37, 40, 43, 47, 50, 53, 56, 59];
       hoursColumnNumbers.forEach(colNum => {
         worksheet.getColumn(colNum).width = 7; // Smaller width for hours columns
       });
-
-      
   
       // Set row heights
       worksheet.getRow(headerStartRow).height = 45;

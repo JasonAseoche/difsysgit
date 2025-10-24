@@ -103,6 +103,7 @@ const ManagePayroll = () => {
     'Special Holiday + ROT',
     'Special Holiday + ROT + OT',
     'Special Holiday + ROT + ND',
+    'SSS Contribution',
     'Undertime/Late',
     'Absences',
     'Travel Time'
@@ -128,7 +129,9 @@ const ManagePayroll = () => {
     'Special Holiday + Night Diff Rate',
     'Special Holiday + ROT',
     'Special Holiday + ROT + OT Rate',
-    'Special Holiday + ROT + ND Rate'
+    'Special Holiday + ROT + ND Rate',
+    'SSS Rate'
+
 ];
 
 const autoSelectHolidaysInRange = (dateFrom, dateTo) => {
@@ -783,7 +786,8 @@ const autoSelectHolidaysInRange = (dateFrom, dateTo) => {
       'Rate Per Hour', 
       'Rate Per Min',
       'Basic pay-Monthly',
-      'Basic Pay-Semi-Monthly'
+      'Basic Pay-Semi-Monthly',
+       'SSS Contribution'
     ];
     return !rateTypesWithoutAmount.includes(rateType);
   };
